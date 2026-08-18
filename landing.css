@@ -13,7 +13,7 @@ body {
 
 html {
   color-scheme: dark;
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -91,6 +91,7 @@ body {
 
 .hero__value {
   position: absolute;
+  font-family: var(--font-subtitle);
   color: var(--neo-text);
   font-size: clamp(0.72rem, 0.78vw, 0.92rem);
   font-weight: 500;
@@ -151,6 +152,7 @@ body {
 }
 
 .hero__eyebrow {
+  font-family: var(--font-subtitle);
   margin: 0 0 1.5rem;
   color: var(--neo-blue-highlight);
   font-size: clamp(0.68rem, 0.72vw, 0.82rem);
@@ -162,21 +164,23 @@ body {
 
 .hero__title {
   display: grid;
+  font-family: var(--font-title);
   justify-items: center;
   gap: clamp(0.45rem, 1vw, 0.9rem);
   margin: 0;
   color: var(--neo-text);
   font-weight: 500;
   line-height: 0.88;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.025em;
   text-shadow: var(--glow-title);
 }
 
 .hero__title-main {
-  font-size: clamp(5.2rem, 15vw, 13rem);
+  font-size: clamp(4.8rem, 13vw, 11.5rem);
 }
 
 .hero__title-signature {
+  font-family: var(--font-subtitle);
   color: rgba(245, 245, 245, 0.68);
   font-size: clamp(0.95rem, 1.65vw, 1.55rem);
   font-weight: 450;
@@ -187,6 +191,7 @@ body {
 
 .hero__version {
   position: absolute;
+  font-family: var(--font-ui);
   left: var(--page-padding);
   bottom: var(--page-padding);
   margin: 0;
@@ -253,7 +258,7 @@ body {
   }
 
   .hero__title-main {
-    font-size: clamp(5rem, 29vw, 8rem);
+    font-size: clamp(4.2rem, 24vw, 6.8rem);
   }
 
   .hero__title-signature {

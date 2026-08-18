@@ -8,8 +8,11 @@
   --neo-text-muted: #a0a0a0;
   --neo-border: rgba(255, 255, 255, 0.08);
 
-  /* Typography */
-  --font-sans: Inter, Geist, Manrope, "Helvetica Neue", Arial, sans-serif;
+  /* Typography — famílias oficiais do projeto */
+  --font-title: "Michroma", "Arial Narrow", Arial, sans-serif;
+  --font-subtitle: "Josefin Sans", "Trebuchet MS", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  --font-ui: "IBM Plex Mono", "Courier New", monospace;
 
   /* Layout */
   --page-padding: clamp(1.25rem, 4vw, 4rem);

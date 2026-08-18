@@ -1,6 +1,6 @@
-# Neoeffex Landing — v0.1.0
+# Neoeffex Landing — v0.1.1
 
-Primeira base do novo hero da landing page da Neoeffex.
+Base do novo hero da landing page da Neoeffex com tipografia oficial do projeto.
 
 ## Objetivo desta versão
 
@@ -49,3 +49,15 @@ Sem animação alguma, o hero precisa parecer:
 - coerente em desktop e mobile.
 
 Depois da aprovação visual, a v0.1.1 adicionará somente o **motion passivo da atmosfera/fumaça**.
+
+
+## Tipografia da v0.1.1
+
+| Papel | Fonte |
+|---|---|
+| Título principal | Michroma |
+| Assinatura / microtítulos / palavras-chave | Josefin Sans |
+| Texto corrido | IBM Plex Sans |
+| Números / estados / UI técnica | IBM Plex Mono |
+
+As fontes são carregadas pelo Google Fonts e possuem fallbacks locais. Nenhum arquivo de fonte é incluído no projeto.

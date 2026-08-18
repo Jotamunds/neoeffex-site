@@ -24,9 +24,9 @@
   --motion-slow: 900ms;
 
   /* Atmosphere motion */
-  --smoke-duration-near: 18s;
-  --smoke-duration-mid: 23s;
-  --smoke-duration-far: 29s;
+  --smoke-duration-near: 24s;
+  --smoke-duration-mid: 31s;
+  --smoke-duration-far: 38s;
   --smoke-opacity-near: 0.30;
   --smoke-opacity-mid: 0.22;
   --smoke-opacity-far: 0.15;

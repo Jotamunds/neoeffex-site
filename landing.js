@@ -1,7 +1,6 @@
 /*
- * Neoeffex Landing v0.1.2
+ * Neoeffex Landing v0.1.3
  *
- * A atmosfera desta versão é 100% CSS e passiva.
- * Este arquivo permanece sem lógica para que a camada de motion
- * não fique acoplada ao JavaScript da página.
+ * A atmosfera continua 100% CSS e passiva.
+ * v0.1.3 corrige o fechamento dos loops para eliminar saltos visuais.
  */

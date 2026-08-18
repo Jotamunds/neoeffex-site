@@ -2,6 +2,21 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.3] - 2026-08-18
+
+### Corrigido
+- Removido o salto perceptível quando as animações de fumaça reiniciavam.
+- Todas as trajetórias agora são loops fechados: `0%` e `100%` usam exatamente o mesmo estado.
+- Removida a variação de opacidade durante o ciclo para evitar a sensação de a fumaça desaparecer.
+- Nuvens reposicionadas para permanecerem parcialmente visíveis durante toda a trajetória.
+- Ciclos desacelerados e mais separados entre si para evitar reinícios sincronizados.
+
+### Mantido
+- Atmosfera 100% CSS.
+- Sem Canvas, WebGL, Rive ou JavaScript para motion.
+- Tipografia e composição da v0.1.1.
+- Sem interação com o cursor nesta etapa.
+
 ## [0.1.2] - 2026-08-18
 
 ### Adicionado

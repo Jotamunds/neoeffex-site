@@ -2,6 +2,31 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.2] - 2026-08-18
+
+### Adicionado
+- Primeira camada de motion da nova landing.
+- Atmosfera/fumaça passiva com quatro massas independentes.
+- Movimento contínuo perceptível mesmo sem interação do usuário.
+- Trajetórias, escalas, ritmos e direções diferentes para criar parallax e sobreposição orgânica.
+- `atmosphere.css` isolado do layout principal.
+- Tokens próprios de duração e intensidade da fumaça.
+- Fallback estático para `prefers-reduced-motion`.
+- Redução automática de uma camada e do blur em telas menores.
+
+### Performance
+- Animações limitadas a `transform` e `opacity`.
+- Sem Canvas.
+- Sem WebGL.
+- Sem Rive nesta etapa.
+- Sem JavaScript para a fumaça.
+- Sem imagens, vídeos ou novos assets de mídia.
+
+### Mantido
+- Tipografia oficial da v0.1.1.
+- Composição, palavras-chave e hierarquia visual aprovadas.
+- Nenhuma interação por cursor ainda.
+
 ## [0.1.1] - 2026-08-18
 
 ### Alterado

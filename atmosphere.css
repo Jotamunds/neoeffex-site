@@ -1,0 +1,209 @@
+/*
+ * Neoeffex Landing v0.1.2
+ * Atmosfera passiva.
+ *
+ * Objetivo:
+ * - criar movimento percebido sem depender do cursor;
+ * - usar somente transform + opacity na animação;
+ * - manter a camada visual separada do conteúdo;
+ * - não usar Canvas, WebGL, JS ou bibliotecas de motion.
+ */
+
+.hero__atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  contain: paint;
+}
+
+.smoke-cloud {
+  position: absolute;
+  width: clamp(34rem, 62vmax, 68rem);
+  aspect-ratio: 1.55;
+  border-radius: 50%;
+  transform-origin: center;
+  will-change: transform, opacity;
+  filter: blur(30px);
+  mix-blend-mode: screen;
+  backface-visibility: hidden;
+}
+
+/*
+ * Cada nuvem usa vários gradientes elípticos.
+ * Como as quatro massas se movem em trajetórias e ritmos diferentes,
+ * a sobreposição muda continuamente e evita o efeito de "wallpaper deslizando".
+ */
+
+.smoke-cloud--one {
+  left: -30vmax;
+  top: 4vh;
+  opacity: var(--smoke-opacity-mid);
+  background:
+    radial-gradient(ellipse at 28% 48%, rgba(5, 62, 112, 0.80) 0 12%, rgba(5, 62, 112, 0.46) 27%, transparent 58%),
+    radial-gradient(ellipse at 55% 38%, rgba(11, 135, 244, 0.40) 0 8%, rgba(5, 62, 112, 0.28) 28%, transparent 57%),
+    radial-gradient(ellipse at 73% 61%, rgba(5, 62, 112, 0.58) 0 11%, rgba(5, 62, 112, 0.22) 31%, transparent 62%);
+  animation: smoke-drift-one var(--smoke-duration-mid) cubic-bezier(.45, 0, .55, 1) infinite;
+}
+
+.smoke-cloud--two {
+  right: -31vmax;
+  top: 12vh;
+  opacity: var(--smoke-opacity-near);
+  background:
+    radial-gradient(ellipse at 68% 42%, rgba(11, 135, 244, 0.50) 0 9%, rgba(5, 62, 112, 0.38) 28%, transparent 58%),
+    radial-gradient(ellipse at 42% 61%, rgba(5, 62, 112, 0.72) 0 13%, rgba(5, 62, 112, 0.32) 32%, transparent 63%),
+    radial-gradient(ellipse at 22% 36%, rgba(39, 149, 245, 0.27) 0 7%, rgba(5, 62, 112, 0.20) 25%, transparent 54%);
+  animation: smoke-drift-two var(--smoke-duration-near) cubic-bezier(.4, 0, .6, 1) infinite;
+}
+
+.smoke-cloud--three {
+  left: 12vw;
+  bottom: -29vmax;
+  opacity: var(--smoke-opacity-mid);
+  background:
+    radial-gradient(ellipse at 34% 35%, rgba(5, 62, 112, 0.66) 0 13%, rgba(5, 62, 112, 0.28) 34%, transparent 62%),
+    radial-gradient(ellipse at 61% 49%, rgba(11, 135, 244, 0.34) 0 10%, rgba(5, 62, 112, 0.23) 31%, transparent 60%),
+    radial-gradient(ellipse at 77% 70%, rgba(5, 62, 112, 0.58) 0 10%, rgba(5, 62, 112, 0.20) 28%, transparent 57%);
+  animation: smoke-drift-three var(--smoke-duration-far) cubic-bezier(.42, 0, .58, 1) infinite;
+}
+
+.smoke-cloud--four {
+  right: 7vw;
+  bottom: -17vmax;
+  width: clamp(28rem, 48vmax, 54rem);
+  opacity: var(--smoke-opacity-far);
+  filter: blur(38px);
+  background:
+    radial-gradient(ellipse at 32% 48%, rgba(39, 149, 245, 0.30) 0 8%, rgba(5, 62, 112, 0.26) 28%, transparent 59%),
+    radial-gradient(ellipse at 66% 44%, rgba(5, 62, 112, 0.62) 0 12%, rgba(5, 62, 112, 0.20) 31%, transparent 62%);
+  animation: smoke-drift-four 34s cubic-bezier(.45, 0, .55, 1) infinite;
+}
+
+@keyframes smoke-drift-one {
+  0% {
+    transform: translate3d(-7vw, 2vh, 0) scale(0.92) rotate(-5deg);
+    opacity: 0.172;
+  }
+  34% {
+    transform: translate3d(12vw, -6vh, 0) scale(1.07) rotate(1deg);
+    opacity: var(--smoke-opacity-mid);
+  }
+  68% {
+    transform: translate3d(27vw, 7vh, 0) scale(0.98) rotate(5deg);
+    opacity: 0.194;
+  }
+  100% {
+    transform: translate3d(39vw, -1vh, 0) scale(1.04) rotate(-2deg);
+    opacity: 0.158;
+  }
+}
+
+@keyframes smoke-drift-two {
+  0% {
+    transform: translate3d(9vw, -4vh, 0) scale(1.08) rotate(5deg);
+    opacity: 0.216;
+  }
+  30% {
+    transform: translate3d(-8vw, 5vh, 0) scale(0.96) rotate(-2deg);
+    opacity: var(--smoke-opacity-near);
+  }
+  66% {
+    transform: translate3d(-24vw, -5vh, 0) scale(1.11) rotate(-6deg);
+    opacity: 0.270;
+  }
+  100% {
+    transform: translate3d(-40vw, 4vh, 0) scale(1.00) rotate(1deg);
+    opacity: 0.210;
+  }
+}
+
+@keyframes smoke-drift-three {
+  0% {
+    transform: translate3d(-10vw, 12vh, 0) scale(1.00) rotate(-2deg);
+    opacity: 0.154;
+  }
+  38% {
+    transform: translate3d(5vw, -7vh, 0) scale(1.13) rotate(4deg);
+    opacity: var(--smoke-opacity-mid);
+  }
+  72% {
+    transform: translate3d(21vw, -16vh, 0) scale(0.96) rotate(-4deg);
+    opacity: 0.198;
+  }
+  100% {
+    transform: translate3d(34vw, -8vh, 0) scale(1.06) rotate(2deg);
+    opacity: 0.158;
+  }
+}
+
+@keyframes smoke-drift-four {
+  0% {
+    transform: translate3d(14vw, 5vh, 0) scale(0.92) rotate(4deg);
+    opacity: 0.090;
+  }
+  45% {
+    transform: translate3d(-5vw, -11vh, 0) scale(1.12) rotate(-3deg);
+    opacity: var(--smoke-opacity-far);
+  }
+  100% {
+    transform: translate3d(-25vw, 1vh, 0) scale(0.98) rotate(5deg);
+    opacity: 0.098;
+  }
+}
+
+/* Mobile: menos massa simultânea e menos blur para reduzir custo visual/GPU. */
+@media (max-width: 760px) {
+  .smoke-cloud {
+    width: 88vmax;
+    filter: blur(24px);
+  }
+
+  .smoke-cloud--one {
+    left: -58vmax;
+    top: 8vh;
+  }
+
+  .smoke-cloud--two {
+    right: -60vmax;
+    top: 25vh;
+  }
+
+  .smoke-cloud--three {
+    left: -4vw;
+    bottom: -53vmax;
+  }
+
+  .smoke-cloud--four {
+    display: none;
+  }
+}
+
+/*
+ * A composição continua existindo sem movimento.
+ * Nenhuma informação depende da animação.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .smoke-cloud {
+    animation: none !important;
+    will-change: auto;
+  }
+
+  .smoke-cloud--one {
+    transform: translate3d(12vw, 0, 0) scale(1);
+  }
+
+  .smoke-cloud--two {
+    transform: translate3d(-13vw, 0, 0) scale(1);
+  }
+
+  .smoke-cloud--three {
+    transform: translate3d(7vw, -8vh, 0) scale(1);
+  }
+
+  .smoke-cloud--four {
+    transform: translate3d(-7vw, -3vh, 0) scale(1);
+  }
+}

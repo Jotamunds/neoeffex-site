@@ -18,10 +18,18 @@
   --page-padding: clamp(1.25rem, 4vw, 4rem);
   --hero-max-width: 96rem;
 
-  /* Motion — reserved for later versions */
+  /* Motion */
   --motion-fast: 180ms;
   --motion-medium: 420ms;
   --motion-slow: 900ms;
+
+  /* Atmosphere motion */
+  --smoke-duration-near: 18s;
+  --smoke-duration-mid: 23s;
+  --smoke-duration-far: 29s;
+  --smoke-opacity-near: 0.30;
+  --smoke-opacity-mid: 0.22;
+  --smoke-opacity-far: 0.15;
 
   /* Effects */
   --glow-soft: 0 0 80px rgba(11, 135, 244, 0.10);

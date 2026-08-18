@@ -1,7 +1,7 @@
 /*
- * Neoeffex Landing v0.1.1
+ * Neoeffex Landing v0.1.2
  *
- * Esta versão é propositalmente estática.
- * Interações, fumaça animada e Rive entram somente nas próximas versões,
- * depois que a composição visual estiver aprovada.
+ * A atmosfera desta versão é 100% CSS e passiva.
+ * Este arquivo permanece sem lógica para que a camada de motion
+ * não fique acoplada ao JavaScript da página.
  */

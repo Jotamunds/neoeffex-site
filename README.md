@@ -1,6 +1,6 @@
-# Neoeffex Landing — v0.1.1
+# Neoeffex Landing — v0.1.2
 
-Base do novo hero da landing page da Neoeffex com tipografia oficial do projeto.
+Base do hero da Neoeffex com tipografia oficial e primeira atmosfera passiva animada.
 
 ## Objetivo desta versão
 
@@ -39,7 +39,7 @@ Teste pelo menos:
 4. Zoom de 125% e 150%.
 5. Verifique se nenhuma palavra importante encosta no título.
 
-## Critério para avançar para v0.1.1
+## Critério para avançar para v0.1.2
 
 Sem animação alguma, o hero precisa parecer:
 - premium;
@@ -48,10 +48,10 @@ Sem animação alguma, o hero precisa parecer:
 - reconhecível como Neo by Neoeffex;
 - coerente em desktop e mobile.
 
-Depois da aprovação visual, a v0.1.1 adicionará somente o **motion passivo da atmosfera/fumaça**.
+Depois da aprovação visual, a v0.1.2 adicionará somente o **motion passivo da atmosfera/fumaça**.
 
 
-## Tipografia da v0.1.1
+## Tipografia da v0.1.2
 
 | Papel | Fonte |
 |---|---|
@@ -61,3 +61,35 @@ Depois da aprovação visual, a v0.1.1 adicionará somente o **motion passivo da
 | Números / estados / UI técnica | IBM Plex Mono |
 
 As fontes são carregadas pelo Google Fonts e possuem fallbacks locais. Nenhum arquivo de fonte é incluído no projeto.
+
+
+## Motion da v0.1.2
+
+A fumaça é implementada como uma camada independente em `atmosphere.css`.
+
+Ela usa quatro massas de gradientes elípticos sobrepostas. Cada massa possui:
+- trajetória própria;
+- velocidade diferente;
+- escala diferente;
+- rotação discreta;
+- variação leve de opacidade.
+
+A animação não responde ao mouse nesta etapa.
+
+### Teste visual obrigatório
+
+Abra o hero e permaneça **5 segundos sem mover o mouse**.
+
+Critério:
+> deve ser claramente perceptível que a atmosfera está circulando pela tela, sem parecer frenética.
+
+Depois teste:
+1. desktop em tela cheia;
+2. janela reduzida;
+3. mobile;
+4. scroll e responsividade;
+5. `prefers-reduced-motion`.
+
+## Próxima etapa prevista
+
+A v0.1.3 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.

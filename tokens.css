@@ -1,4 +1,4 @@
-/* Neoeffex Landing v0.1.6 — tokens */
+/* Neoeffex Landing v0.1.7 — tokens */
 
 :root {
   /* Brand */
@@ -32,6 +32,10 @@
   --smoke-opacity-near: 0.30;
   --smoke-opacity-mid: 0.22;
   --smoke-opacity-far: 0.15;
+
+  /* Reveal de valores */
+  --reveal-duration: 180ms;
+  --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Effects */
   --glow-soft: 0 0 80px rgba(11, 135, 244, 0.10);

@@ -2,6 +2,26 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.7] - 2026-08-18
+
+### Refinado
+- Reveal das palavras agora considera a distância até a área real de cada texto, em vez de somente o centro.
+- Curva alterada para `smoothstep`, deixando entrada e saída mais graduais.
+- Raio de influência ajustado para 320 px no desktop, 225 px em telas médias e 175 px em telas pequenas.
+- Opacidade máxima mantida em `0.60`.
+- Transição de opacidade centralizada nos tokens `--reveal-duration` e `--reveal-ease`.
+- Em touch/caneta, o reveal é encerrado no `pointerup` para evitar palavras presas após o gesto.
+- Bounds continuam cacheados e são recalculados após carregamento das fontes ou `resize`.
+
+### Cache
+- Assets locais do hero atualizados para `?v=0.1.7`.
+
+### Mantido
+- Movimento da fumaça sem alterações visuais.
+- Tipografia oficial.
+- Paleta e composição.
+- Sem Canvas, WebGL, Rive ou novas bibliotecas.
+
 ## [0.1.6] - 2026-08-18
 
 ### Corrigido

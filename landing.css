@@ -1,4 +1,4 @@
-/* Neoeffex Landing v0.1.6 — layout + reveal */
+/* Neoeffex Landing v0.1.7 — layout + reveal */
 
 *,
 *::before,
@@ -101,7 +101,7 @@ body {
   text-transform: uppercase;
   white-space: nowrap;
   opacity: var(--value-opacity, 0);
-  transition: opacity 140ms linear;
+  transition: opacity var(--reveal-duration) var(--reveal-ease);
 }
 
 .hero__value::before {

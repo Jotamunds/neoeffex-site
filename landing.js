@@ -1,12 +1,8 @@
 /*
- * Neoeffex Landing v0.1.6
+ * Neoeffex Landing v0.1.7
  *
- * Reveal de palavras por proximidade do ponteiro.
- *
- * Correções desta versão:
- * - o arquivo agora é efetivamente carregado pelo index.html;
- * - assets locais usam cache busting por versão;
- * - bounds/centros são cacheados e recalculados só quando necessário.
+ * Reveal refinado de palavras por proximidade do ponteiro.
+ * A atmosfera permanece independente.
  */
 
 (() => {
@@ -20,36 +16,52 @@
   let pointerX = 0;
   let pointerY = 0;
   let pointerActive = false;
+  let activePointerType = "mouse";
   let framePending = false;
-  let centers = [];
+  let bounds = [];
 
   function getRevealRadius() {
-    if (window.innerWidth <= 480) return 170;
-    if (window.innerWidth <= 760) return 210;
-    return 280;
+    if (window.innerWidth <= 480) return 175;
+    if (window.innerWidth <= 760) return 225;
+    return 320;
   }
 
   function getInnerRadius() {
-    return window.innerWidth <= 760 ? 42 : 64;
+    if (window.innerWidth <= 480) return 28;
+    if (window.innerWidth <= 760) return 38;
+    return 52;
   }
 
   function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
   }
 
-  function easeOutCubic(value) {
-    return 1 - Math.pow(1 - value, 3);
+  function smoothstep(value) {
+    const t = clamp(value, 0, 1);
+    return t * t * (3 - 2 * t);
   }
 
-  function cacheCenters() {
-    centers = values.map((value) => {
+  function cacheBounds() {
+    bounds = values.map((value) => {
       const rect = value.getBoundingClientRect();
 
       return {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
+        left: rect.left,
+        right: rect.right,
+        top: rect.top,
+        bottom: rect.bottom,
       };
     });
+  }
+
+  function distanceToRect(x, y, rect) {
+    const nearestX = clamp(x, rect.left, rect.right);
+    const nearestY = clamp(y, rect.top, rect.bottom);
+
+    return Math.hypot(
+      x - nearestX,
+      y - nearestY
+    );
   }
 
   function setAllHidden() {
@@ -71,21 +83,18 @@
     const falloffRange = Math.max(radius - innerRadius, 1);
 
     values.forEach((value, index) => {
-      const center = centers[index];
-      if (!center) return;
+      const rect = bounds[index];
+      if (!rect) return;
 
-      const distance = Math.hypot(
-        pointerX - center.x,
-        pointerY - center.y
-      );
+      const distance = distanceToRect(pointerX, pointerY, rect);
 
-      const normalized = 1 - clamp(
+      const proximity = 1 - clamp(
         (distance - innerRadius) / falloffRange,
         0,
         1
       );
 
-      const opacity = easeOutCubic(normalized) * MAX_OPACITY;
+      const opacity = smoothstep(proximity) * MAX_OPACITY;
 
       value.style.setProperty(
         "--value-opacity",
@@ -104,12 +113,18 @@
   function updatePointer(event) {
     pointerX = event.clientX;
     pointerY = event.clientY;
+    activePointerType = event.pointerType || "mouse";
     pointerActive = true;
     requestRevealFrame();
   }
 
+  function hidePointerReveal() {
+    pointerActive = false;
+    requestRevealFrame();
+  }
+
   function refreshLayout() {
-    cacheCenters();
+    cacheBounds();
 
     if (pointerActive) {
       requestRevealFrame();
@@ -119,30 +134,24 @@
   hero.addEventListener("pointermove", updatePointer, { passive: true });
   hero.addEventListener("pointerdown", updatePointer, { passive: true });
 
-  hero.addEventListener("pointerleave", () => {
-    pointerActive = false;
-    requestRevealFrame();
-  });
+  hero.addEventListener("pointerup", () => {
+    if (activePointerType !== "mouse") {
+      hidePointerReveal();
+    }
+  }, { passive: true });
 
-  hero.addEventListener("pointercancel", () => {
-    pointerActive = false;
-    requestRevealFrame();
-  });
-
-  window.addEventListener("blur", () => {
-    pointerActive = false;
-    requestRevealFrame();
-  });
+  hero.addEventListener("pointerleave", hidePointerReveal);
+  hero.addEventListener("pointercancel", hidePointerReveal);
+  window.addEventListener("blur", hidePointerReveal);
 
   window.addEventListener("resize", refreshLayout, { passive: true });
 
-  // Garante centros corretos após o carregamento das webfonts.
   if (document.fonts?.ready) {
     document.fonts.ready.then(refreshLayout);
   } else {
     window.addEventListener("load", refreshLayout, { once: true });
   }
 
-  cacheCenters();
+  cacheBounds();
   setAllHidden();
 })();

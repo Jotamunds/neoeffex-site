@@ -1,4 +1,4 @@
-# Neoeffex Landing — v0.1.7
+# Neoeffex Landing — v0.1.8
 
 Base do hero da Neoeffex com tipografia oficial e primeira atmosfera passiva animada.
 
@@ -39,7 +39,7 @@ Teste pelo menos:
 4. Zoom de 125% e 150%.
 5. Verifique se nenhuma palavra importante encosta no título.
 
-## Critério para avançar para v0.1.7
+## Critério para avançar para v0.1.8
 
 Sem animação alguma, o hero precisa parecer:
 - premium;
@@ -48,10 +48,10 @@ Sem animação alguma, o hero precisa parecer:
 - reconhecível como Neo by Neoeffex;
 - coerente em desktop e mobile.
 
-Depois da aprovação visual, a v0.1.7 adicionará somente o **motion passivo da atmosfera/fumaça**.
+Depois da aprovação visual, a v0.1.8 adicionará somente o **motion passivo da atmosfera/fumaça**.
 
 
-## Tipografia da v0.1.7
+## Tipografia da v0.1.8
 
 | Papel | Fonte |
 |---|---|
@@ -63,7 +63,7 @@ Depois da aprovação visual, a v0.1.7 adicionará somente o **motion passivo da
 As fontes são carregadas pelo Google Fonts e possuem fallbacks locais. Nenhum arquivo de fonte é incluído no projeto.
 
 
-## Motion da v0.1.7
+## Motion da v0.1.8
 
 A fumaça é implementada como uma camada independente em `atmosphere.css`.
 
@@ -92,16 +92,16 @@ Depois teste:
 
 ## Próxima etapa prevista
 
-A v0.1.7 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.
+A v0.1.8 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.
 
 
-## Correção de continuidade da v0.1.7
+## Correção de continuidade da v0.1.8
 
 Na v0.1.2 algumas nuvens saíam parcialmente da cena e o fim do `@keyframes`
 não coincidia com o começo. Quando o ciclo reiniciava, a camada voltava
 instantaneamente à posição inicial.
 
-A v0.1.7 usa trajetórias fechadas:
+A v0.1.8 usa trajetórias fechadas:
 
 `0% → 25% → 50% → 75% → 100% (= 0%)`
 
@@ -111,7 +111,7 @@ animação, sem salto de posição no reinício.
 A opacidade também permanece constante durante cada ciclo.
 
 
-## Movimento alternado da v0.1.7
+## Movimento alternado da v0.1.8
 
 A fumaça deixou de percorrer uma órbita fechada.
 
@@ -140,7 +140,7 @@ nuvens já aparecem em pontos distintos de seus trajetos.
    suavemente — isso é esperado.
 
 
-## Reveal por proximidade da v0.1.7
+## Reveal por proximidade da v0.1.8
 
 As palavras-chave agora começam completamente invisíveis.
 
@@ -174,7 +174,7 @@ executar várias atualizações no mesmo frame.
 8. No celular, toque ou arraste o dedo sobre o hero para testar a mesma lógica.
 
 
-## Cache busting — v0.1.7
+## Cache busting — v0.1.8
 
 Os recursos locais do hero agora são chamados com a versão da landing:
 
@@ -209,7 +209,7 @@ como `landing-0.1.5.css`, `landing-0.1.6.css`, etc.
 5. Ao aproximar o ponteiro das regiões das palavras, elas devem aparecer gradualmente.
 
 
-## Refinamento do reveal — v0.1.7
+## Refinamento do reveal — v0.1.8
 
 A proximidade agora é medida até a área ocupada pela palavra, não apenas até seu centro.
 
@@ -231,3 +231,34 @@ A fumaça não participa do cálculo e continua igual à versão estável anteri
 5. Afaste o cursor e verifique o fade de saída.
 6. Em touch, solte o dedo e confirme que nenhuma palavra fica presa.
 7. Observe a fumaça por pelo menos 60 segundos e confirme que não houve alteração no movimento.
+
+
+## Interação local da atmosfera — v0.1.8
+
+A fumaça continua com o mesmo movimento passivo da versão estável.
+
+A novidade é uma camada independente posicionada entre a fumaça e as palavras.
+Ela acompanha o ponteiro e escurece suavemente a região próxima ao cursor,
+fazendo parecer que a atmosfera abre espaço localmente.
+
+Essa solução evita:
+- mover individualmente as quatro nuvens com o mouse;
+- alterar os `transform` usados pelas animações `alternate`;
+- criar uma simulação física;
+- adicionar Canvas, WebGL ou runtime gráfico.
+
+### Opacidade dos valores
+
+A opacidade máxima das palavras agora é `0.40`.
+
+### Teste da v0.1.8
+
+1. Abra a página e deixe o ponteiro parado.
+2. A fumaça deve continuar se movimentando exatamente como antes.
+3. As palavras devem começar invisíveis.
+4. Mova lentamente o ponteiro pela cena.
+5. A área próxima ao cursor deve parecer ligeiramente mais limpa/aberta.
+6. Ao se aproximar de uma palavra, ela deve aparecer gradualmente até no máximo 40%.
+7. O campo local não deve parecer um círculo sólido ou um spotlight evidente.
+8. Observe a fumaça por pelo menos 60 segundos e confirme ausência de teleporte.
+9. Ative `prefers-reduced-motion`: o campo reativo deve ser desativado.

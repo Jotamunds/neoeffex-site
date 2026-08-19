@@ -1,17 +1,24 @@
 /*
- * Neoeffex Landing v0.1.7
+ * Neoeffex Landing v0.1.8
  *
- * Reveal refinado de palavras por proximidade do ponteiro.
- * A atmosfera permanece independente.
+ * Reveal de valores + interação local leve da atmosfera.
+ *
+ * Regras:
+ * - palavras chegam no máximo a 40% de opacidade;
+ * - fumaça mantém o movimento CSS independente;
+ * - uma camada visual separada acompanha o ponteiro;
+ * - nenhuma física, Canvas, WebGL, Rive ou biblioteca adicional;
+ * - reveal e campo local são atualizados no mesmo requestAnimationFrame.
  */
 
 (() => {
   const hero = document.querySelector(".hero");
   const values = Array.from(document.querySelectorAll(".hero__value"));
+  const interactionField = document.querySelector(".hero__interaction-field");
 
   if (!hero || values.length === 0) return;
 
-  const MAX_OPACITY = 0.60;
+  const MAX_OPACITY = 0.40;
 
   let pointerX = 0;
   let pointerY = 0;
@@ -70,12 +77,24 @@
     });
   }
 
-  function renderReveal() {
+  function hideInteractionField() {
+    if (!interactionField) return;
+    interactionField.style.setProperty("--field-opacity", "0");
+  }
+
+  function renderFrame() {
     framePending = false;
 
     if (!pointerActive) {
       setAllHidden();
+      hideInteractionField();
       return;
+    }
+
+    if (interactionField) {
+      interactionField.style.setProperty("--pointer-x", `${pointerX}px`);
+      interactionField.style.setProperty("--pointer-y", `${pointerY}px`);
+      interactionField.style.setProperty("--field-opacity", "1");
     }
 
     const radius = getRevealRadius();
@@ -103,11 +122,11 @@
     });
   }
 
-  function requestRevealFrame() {
+  function requestFrame() {
     if (framePending) return;
 
     framePending = true;
-    requestAnimationFrame(renderReveal);
+    requestAnimationFrame(renderFrame);
   }
 
   function updatePointer(event) {
@@ -115,19 +134,19 @@
     pointerY = event.clientY;
     activePointerType = event.pointerType || "mouse";
     pointerActive = true;
-    requestRevealFrame();
+    requestFrame();
   }
 
-  function hidePointerReveal() {
+  function hidePointerEffects() {
     pointerActive = false;
-    requestRevealFrame();
+    requestFrame();
   }
 
   function refreshLayout() {
     cacheBounds();
 
     if (pointerActive) {
-      requestRevealFrame();
+      requestFrame();
     }
   }
 
@@ -136,13 +155,13 @@
 
   hero.addEventListener("pointerup", () => {
     if (activePointerType !== "mouse") {
-      hidePointerReveal();
+      hidePointerEffects();
     }
   }, { passive: true });
 
-  hero.addEventListener("pointerleave", hidePointerReveal);
-  hero.addEventListener("pointercancel", hidePointerReveal);
-  window.addEventListener("blur", hidePointerReveal);
+  hero.addEventListener("pointerleave", hidePointerEffects);
+  hero.addEventListener("pointercancel", hidePointerEffects);
+  window.addEventListener("blur", hidePointerEffects);
 
   window.addEventListener("resize", refreshLayout, { passive: true });
 
@@ -154,4 +173,5 @@
 
   cacheBounds();
   setAllHidden();
+  hideInteractionField();
 })();

@@ -2,6 +2,37 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.8] - 2026-08-18
+
+### Adicionado
+- Primeira interação local da atmosfera com o ponteiro.
+- Nova camada `hero__interaction-field`, totalmente separada das nuvens.
+- A região próxima ao cursor recebe uma abertura visual sutil, reduzindo a presença da fumaça naquele ponto sem alterar a animação das massas.
+- Halo azul muito discreto ao redor da área interativa para reforçar profundidade.
+- `interaction.css` criado como módulo visual independente.
+- Campo local e reveal das palavras são atualizados no mesmo `requestAnimationFrame`.
+
+### Alterado
+- Opacidade máxima das palavras-chave reduzida de `0.60` para `0.40`.
+- Assets do hero atualizados para `?v=0.1.8`.
+- Novos tokens de interação adicionados em `tokens.css`.
+
+### Performance
+- A fumaça continua 100% CSS e não reage fisicamente ao mouse.
+- Nenhuma leitura adicional de layout durante `pointermove`.
+- Sem Canvas.
+- Sem WebGL.
+- Sem Rive.
+- Sem nova biblioteca.
+- A interação local é desativada em `prefers-reduced-motion`.
+
+### Mantido
+- Movimento `alternate` da atmosfera já aprovado.
+- Reveal por distância até a área real das palavras.
+- Curva `smoothstep`.
+- Tipografia oficial.
+- Paleta e composição do hero.
+
 ## [0.1.7] - 2026-08-18
 
 ### Refinado

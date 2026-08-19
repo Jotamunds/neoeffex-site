@@ -1,4 +1,4 @@
-/* Neoeffex Landing v0.1.7 — tokens */
+/* Neoeffex Landing v0.1.8 — tokens */
 
 :root {
   /* Brand */
@@ -36,6 +36,12 @@
   /* Reveal de valores */
   --reveal-duration: 180ms;
   --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Interação local da atmosfera */
+  --interaction-core-radius: 150px;
+  --interaction-field-radius: 270px;
+  --interaction-field-duration: 220ms;
+  --interaction-field-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Effects */
   --glow-soft: 0 0 80px rgba(11, 135, 244, 0.10);

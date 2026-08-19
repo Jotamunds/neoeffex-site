@@ -1,0 +1,60 @@
+/*
+ * Neoeffex Landing v0.1.8
+ * Interação local da atmosfera.
+ *
+ * Esta camada NÃO move as nuvens.
+ * Ela cria uma abertura visual discreta ao redor do ponteiro,
+ * preservando o motion passivo aprovado.
+ */
+
+.hero__interaction-field {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --field-opacity: 0;
+
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+  opacity: var(--field-opacity);
+  transition: opacity var(--interaction-field-duration) var(--interaction-field-ease);
+  background:
+    radial-gradient(
+      circle var(--interaction-core-radius) at var(--pointer-x) var(--pointer-y),
+      rgba(20, 20, 20, 0.56) 0%,
+      rgba(20, 20, 20, 0.42) 38%,
+      rgba(20, 20, 20, 0.18) 66%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle var(--interaction-field-radius) at var(--pointer-x) var(--pointer-y),
+      transparent 34%,
+      rgba(11, 135, 244, 0.035) 58%,
+      transparent 78%
+    );
+}
+
+@media (max-width: 760px) {
+  .hero__interaction-field {
+    background:
+      radial-gradient(
+        circle 120px at var(--pointer-x) var(--pointer-y),
+        rgba(20, 20, 20, 0.48) 0%,
+        rgba(20, 20, 20, 0.28) 48%,
+        transparent 100%
+      ),
+      radial-gradient(
+        circle 210px at var(--pointer-x) var(--pointer-y),
+        transparent 38%,
+        rgba(11, 135, 244, 0.028) 61%,
+        transparent 80%
+      );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__interaction-field {
+    display: none;
+  }
+}

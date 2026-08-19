@@ -2,6 +2,32 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.6] - 2026-08-18
+
+### Corrigido
+- `landing.js` agora é carregado pelo `index.html` com `defer`.
+- Corrigido o bug que impedia o reveal por proximidade de executar.
+- Adicionado cache busting por versão aos assets locais usados pelo hero:
+  - `tokens.css?v=0.1.6`
+  - `landing.css?v=0.1.6`
+  - `atmosphere.css?v=0.1.6`
+  - `landing.js?v=0.1.6`
+  - favicon/logo do `<head>`.
+- Adicionado `<meta name="application-version" content="0.1.6">` para facilitar diagnóstico no DevTools.
+- Centros das palavras agora são cacheados e recalculados somente após carregamento das fontes ou `resize`, em vez de usar `getBoundingClientRect()` a cada frame.
+- Mantido o comportamento da atmosfera aprovado na v0.1.4; nenhuma regra de movimento foi alterada.
+
+### Cache
+- O versionamento por query string força o navegador/CDN a solicitar a versão correspondente do CSS e JavaScript quando o número da landing muda.
+- Recursos externos do Google Fonts não recebem o número da landing, pois sua própria URL já identifica famílias e pesos.
+- `style.css` das páginas legadas não foi invalidado porque não mudou nesta versão.
+
+### Mantido
+- Fumaça passiva em CSS com movimento `alternate`.
+- Reveal máximo de 60% de opacidade.
+- Tipografia oficial.
+- Sem Canvas, WebGL ou Rive.
+
 ## [0.1.5] - 2026-08-18
 
 ### Adicionado

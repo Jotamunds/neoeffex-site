@@ -1,16 +1,12 @@
 /*
- * Neoeffex Landing v0.1.5
+ * Neoeffex Landing v0.1.6
  *
  * Reveal de palavras por proximidade do ponteiro.
  *
- * Regras:
- * - a atmosfera da v0.1.4 não é alterada;
- * - palavras começam 100% transparentes;
- * - cada palavra reage individualmente;
- * - opacidade máxima: 0.60;
- * - cálculo limitado a no máximo 1 atualização por frame;
- * - funciona com mouse, caneta e toque via Pointer Events;
- * - nenhuma física, Canvas, WebGL ou biblioteca externa.
+ * Correções desta versão:
+ * - o arquivo agora é efetivamente carregado pelo index.html;
+ * - assets locais usam cache busting por versão;
+ * - bounds/centros são cacheados e recalculados só quando necessário.
  */
 
 (() => {
@@ -25,6 +21,7 @@
   let pointerY = 0;
   let pointerActive = false;
   let framePending = false;
+  let centers = [];
 
   function getRevealRadius() {
     if (window.innerWidth <= 480) return 170;
@@ -33,8 +30,7 @@
   }
 
   function getInnerRadius() {
-    if (window.innerWidth <= 760) return 42;
-    return 64;
+    return window.innerWidth <= 760 ? 42 : 64;
   }
 
   function clamp(value, min, max) {
@@ -43,6 +39,17 @@
 
   function easeOutCubic(value) {
     return 1 - Math.pow(1 - value, 3);
+  }
+
+  function cacheCenters() {
+    centers = values.map((value) => {
+      const rect = value.getBoundingClientRect();
+
+      return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+      };
+    });
   }
 
   function setAllHidden() {
@@ -63,14 +70,13 @@
     const innerRadius = getInnerRadius();
     const falloffRange = Math.max(radius - innerRadius, 1);
 
-    values.forEach((value) => {
-      const rect = value.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
+    values.forEach((value, index) => {
+      const center = centers[index];
+      if (!center) return;
 
       const distance = Math.hypot(
-        pointerX - centerX,
-        pointerY - centerY
+        pointerX - center.x,
+        pointerY - center.y
       );
 
       const normalized = 1 - clamp(
@@ -102,8 +108,15 @@
     requestRevealFrame();
   }
 
-  hero.addEventListener("pointermove", updatePointer, { passive: true });
+  function refreshLayout() {
+    cacheCenters();
 
+    if (pointerActive) {
+      requestRevealFrame();
+    }
+  }
+
+  hero.addEventListener("pointermove", updatePointer, { passive: true });
   hero.addEventListener("pointerdown", updatePointer, { passive: true });
 
   hero.addEventListener("pointerleave", () => {
@@ -121,9 +134,15 @@
     requestRevealFrame();
   });
 
-  window.addEventListener("resize", () => {
-    if (pointerActive) requestRevealFrame();
-  }, { passive: true });
+  window.addEventListener("resize", refreshLayout, { passive: true });
 
+  // Garante centros corretos após o carregamento das webfonts.
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(refreshLayout);
+  } else {
+    window.addEventListener("load", refreshLayout, { once: true });
+  }
+
+  cacheCenters();
   setAllHidden();
 })();

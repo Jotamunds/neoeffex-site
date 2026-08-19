@@ -1,4 +1,4 @@
-# Neoeffex Landing — v0.1.5
+# Neoeffex Landing — v0.1.6
 
 Base do hero da Neoeffex com tipografia oficial e primeira atmosfera passiva animada.
 
@@ -39,7 +39,7 @@ Teste pelo menos:
 4. Zoom de 125% e 150%.
 5. Verifique se nenhuma palavra importante encosta no título.
 
-## Critério para avançar para v0.1.5
+## Critério para avançar para v0.1.6
 
 Sem animação alguma, o hero precisa parecer:
 - premium;
@@ -48,10 +48,10 @@ Sem animação alguma, o hero precisa parecer:
 - reconhecível como Neo by Neoeffex;
 - coerente em desktop e mobile.
 
-Depois da aprovação visual, a v0.1.5 adicionará somente o **motion passivo da atmosfera/fumaça**.
+Depois da aprovação visual, a v0.1.6 adicionará somente o **motion passivo da atmosfera/fumaça**.
 
 
-## Tipografia da v0.1.5
+## Tipografia da v0.1.6
 
 | Papel | Fonte |
 |---|---|
@@ -63,7 +63,7 @@ Depois da aprovação visual, a v0.1.5 adicionará somente o **motion passivo da
 As fontes são carregadas pelo Google Fonts e possuem fallbacks locais. Nenhum arquivo de fonte é incluído no projeto.
 
 
-## Motion da v0.1.5
+## Motion da v0.1.6
 
 A fumaça é implementada como uma camada independente em `atmosphere.css`.
 
@@ -92,16 +92,16 @@ Depois teste:
 
 ## Próxima etapa prevista
 
-A v0.1.5 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.
+A v0.1.6 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.
 
 
-## Correção de continuidade da v0.1.5
+## Correção de continuidade da v0.1.6
 
 Na v0.1.2 algumas nuvens saíam parcialmente da cena e o fim do `@keyframes`
 não coincidia com o começo. Quando o ciclo reiniciava, a camada voltava
 instantaneamente à posição inicial.
 
-A v0.1.5 usa trajetórias fechadas:
+A v0.1.6 usa trajetórias fechadas:
 
 `0% → 25% → 50% → 75% → 100% (= 0%)`
 
@@ -111,7 +111,7 @@ animação, sem salto de posição no reinício.
 A opacidade também permanece constante durante cada ciclo.
 
 
-## Movimento alternado da v0.1.5
+## Movimento alternado da v0.1.6
 
 A fumaça deixou de percorrer uma órbita fechada.
 
@@ -140,7 +140,7 @@ nuvens já aparecem em pontos distintos de seus trajetos.
    suavemente — isso é esperado.
 
 
-## Reveal por proximidade da v0.1.5
+## Reveal por proximidade da v0.1.6
 
 As palavras-chave agora começam completamente invisíveis.
 
@@ -172,3 +172,38 @@ executar várias atualizações no mesmo frame.
 6. Afaste o cursor e confirme que ela desaparece novamente.
 7. Confirme que a fumaça continua se movimentando exatamente como na v0.1.4.
 8. No celular, toque ou arraste o dedo sobre o hero para testar a mesma lógica.
+
+
+## Cache busting — v0.1.6
+
+Os recursos locais do hero agora são chamados com a versão da landing:
+
+```html
+<link rel="stylesheet" href="tokens.css?v=0.1.6">
+<link rel="stylesheet" href="landing.css?v=0.1.6">
+<link rel="stylesheet" href="atmosphere.css?v=0.1.6">
+<script src="landing.js?v=0.1.6" defer></script>
+```
+
+Ao criar uma nova versão que altere esses arquivos, atualize a query string para
+o mesmo número registrado em `VERSION`.
+
+Isso evita misturar HTML novo com CSS ou JavaScript antigos armazenados em cache.
+
+### Importante
+
+Não renomeie os arquivos a cada versão. O nome continua estável e apenas o
+parâmetro `?v=` muda. Isso mantém o repositório simples e evita acumular cópias
+como `landing-0.1.5.css`, `landing-0.1.6.css`, etc.
+
+### Teste da correção
+
+1. Abra o site.
+2. No DevTools > Network, confirme requests para:
+   - `tokens.css?v=0.1.6`
+   - `landing.css?v=0.1.6`
+   - `atmosphere.css?v=0.1.6`
+   - `landing.js?v=0.1.6`
+3. Sem mover o mouse, as palavras devem ficar invisíveis.
+4. A fumaça deve continuar se movendo.
+5. Ao aproximar o ponteiro das regiões das palavras, elas devem aparecer gradualmente.

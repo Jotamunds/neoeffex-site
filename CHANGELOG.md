@@ -2,6 +2,29 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.4] - 2026-08-18
+
+### Corrigido
+- Removida a lógica de órbita/retorno obrigatório das nuvens.
+- As quatro camadas agora usam `animation-direction: alternate`.
+- Cada massa deriva entre apenas dois extremos e percorre o caminho inverso suavemente.
+- Não existe mais salto de B para A ao terminar uma animação.
+- Adicionados `animation-delay` negativos diferentes para que as nuvens já iniciem em pontos distintos do percurso.
+- Mantida opacidade fixa durante cada animação.
+- Ajustados tempos para 28s, 36s, 44s e 52s, evitando sincronização perceptível.
+
+### Performance
+- Continua usando somente CSS.
+- Animação limitada a `transform`.
+- Sem Canvas, WebGL, Rive ou JavaScript para motion.
+
+### Mantido
+- Tipografia oficial.
+- Composição do hero.
+- Paleta.
+- `prefers-reduced-motion`.
+- Sem interação por cursor nesta etapa.
+
 ## [0.1.3] - 2026-08-18
 
 ### Corrigido

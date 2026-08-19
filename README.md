@@ -1,4 +1,4 @@
-# Neoeffex Landing — v0.1.3
+# Neoeffex Landing — v0.1.4
 
 Base do hero da Neoeffex com tipografia oficial e primeira atmosfera passiva animada.
 
@@ -39,7 +39,7 @@ Teste pelo menos:
 4. Zoom de 125% e 150%.
 5. Verifique se nenhuma palavra importante encosta no título.
 
-## Critério para avançar para v0.1.3
+## Critério para avançar para v0.1.4
 
 Sem animação alguma, o hero precisa parecer:
 - premium;
@@ -48,10 +48,10 @@ Sem animação alguma, o hero precisa parecer:
 - reconhecível como Neo by Neoeffex;
 - coerente em desktop e mobile.
 
-Depois da aprovação visual, a v0.1.3 adicionará somente o **motion passivo da atmosfera/fumaça**.
+Depois da aprovação visual, a v0.1.4 adicionará somente o **motion passivo da atmosfera/fumaça**.
 
 
-## Tipografia da v0.1.3
+## Tipografia da v0.1.4
 
 | Papel | Fonte |
 |---|---|
@@ -63,7 +63,7 @@ Depois da aprovação visual, a v0.1.3 adicionará somente o **motion passivo da
 As fontes são carregadas pelo Google Fonts e possuem fallbacks locais. Nenhum arquivo de fonte é incluído no projeto.
 
 
-## Motion da v0.1.3
+## Motion da v0.1.4
 
 A fumaça é implementada como uma camada independente em `atmosphere.css`.
 
@@ -92,16 +92,16 @@ Depois teste:
 
 ## Próxima etapa prevista
 
-A v0.1.3 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.
+A v0.1.4 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.
 
 
-## Correção de continuidade da v0.1.3
+## Correção de continuidade da v0.1.4
 
 Na v0.1.2 algumas nuvens saíam parcialmente da cena e o fim do `@keyframes`
 não coincidia com o começo. Quando o ciclo reiniciava, a camada voltava
 instantaneamente à posição inicial.
 
-A v0.1.3 usa trajetórias fechadas:
+A v0.1.4 usa trajetórias fechadas:
 
 `0% → 25% → 50% → 75% → 100% (= 0%)`
 
@@ -109,3 +109,32 @@ Assim a nuvem retorna gradualmente ao ponto de origem durante a própria
 animação, sem salto de posição no reinício.
 
 A opacidade também permanece constante durante cada ciclo.
+
+
+## Movimento alternado da v0.1.4
+
+A fumaça deixou de percorrer uma órbita fechada.
+
+Agora cada camada faz:
+
+`A → B → A → B → A...`
+
+Isso é obtido com:
+
+```css
+animation: smoke-drift 36s ease-in-out infinite alternate;
+```
+
+Não existe uma etapa separada de retorno nem um reset de posição.
+
+Também são usados delays negativos diferentes, então ao abrir a página as
+nuvens já aparecem em pontos distintos de seus trajetos.
+
+### Teste específico desta correção
+
+1. Abra a página.
+2. Não mova o mouse.
+3. Observe por pelo menos 60 segundos.
+4. Nenhuma nuvem deve "teleportar".
+5. Nos extremos do percurso ela pode desacelerar e inverter o sentido
+   suavemente — isso é esperado.

@@ -1,6 +1,6 @@
 /*
- * Neoeffex Landing v0.1.3
+ * Neoeffex Landing v0.1.4
  *
- * A atmosfera continua 100% CSS e passiva.
- * v0.1.3 corrige o fechamento dos loops para eliminar saltos visuais.
+ * Motion continua 100% em CSS.
+ * A fumaça usa animações alternadas, sem reset de posição.
  */

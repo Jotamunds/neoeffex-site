@@ -1,11 +1,13 @@
 /*
- * Neoeffex Landing v0.1.3
- * Atmosfera passiva com loops contínuos.
+ * Neoeffex Landing v0.1.4
+ * Atmosfera passiva com movimento alternado contínuo.
  *
  * Correção principal:
- * 0% e 100% de cada animação são idênticos.
- * As nuvens percorrem trajetórias fechadas e retornam gradualmente,
- * evitando o "teleporte" visual no reinício do ciclo.
+ * cada nuvem deriva de um ponto A até um ponto B e depois percorre
+ * o MESMO caminho no sentido inverso usando animation-direction: alternate.
+ *
+ * Não existe mais uma etapa de "voltar para o começo".
+ * Portanto, não existe reset de posição entre ciclos.
  */
 
 .hero__atmosphere {
@@ -31,122 +33,116 @@
 }
 
 /*
- * Nesta versão a opacidade de cada camada é estável.
- * O movimento vem exclusivamente da trajetória/escala/rotação,
- * evitando a sensação de a nuvem "sumir" antes de reiniciar.
+ * Opacidade fixa por camada.
+ * Só transform é animado, reduzindo variações visuais desnecessárias.
  */
 
 .smoke-cloud--one {
-  left: -24vmax;
-  top: 7vh;
+  left: -20vmax;
+  top: 8vh;
   opacity: var(--smoke-opacity-mid);
   background:
     radial-gradient(ellipse at 28% 48%, rgba(5, 62, 112, 0.80) 0 12%, rgba(5, 62, 112, 0.46) 27%, transparent 58%),
     radial-gradient(ellipse at 55% 38%, rgba(11, 135, 244, 0.40) 0 8%, rgba(5, 62, 112, 0.28) 28%, transparent 57%),
     radial-gradient(ellipse at 73% 61%, rgba(5, 62, 112, 0.58) 0 11%, rgba(5, 62, 112, 0.22) 31%, transparent 62%);
-  animation: smoke-orbit-one var(--smoke-duration-mid) linear infinite;
+  animation:
+    smoke-drift-one var(--smoke-duration-mid) ease-in-out -11s infinite alternate;
 }
 
 .smoke-cloud--two {
-  right: -25vmax;
-  top: 16vh;
+  right: -21vmax;
+  top: 17vh;
   opacity: var(--smoke-opacity-near);
   background:
     radial-gradient(ellipse at 68% 42%, rgba(11, 135, 244, 0.50) 0 9%, rgba(5, 62, 112, 0.38) 28%, transparent 58%),
     radial-gradient(ellipse at 42% 61%, rgba(5, 62, 112, 0.72) 0 13%, rgba(5, 62, 112, 0.32) 32%, transparent 63%),
     radial-gradient(ellipse at 22% 36%, rgba(39, 149, 245, 0.27) 0 7%, rgba(5, 62, 112, 0.20) 25%, transparent 54%);
-  animation: smoke-orbit-two var(--smoke-duration-near) linear infinite;
+  animation:
+    smoke-drift-two var(--smoke-duration-near) ease-in-out -19s infinite alternate;
 }
 
 .smoke-cloud--three {
-  left: 7vw;
-  bottom: -23vmax;
+  left: 4vw;
+  bottom: -20vmax;
   opacity: var(--smoke-opacity-mid);
   background:
     radial-gradient(ellipse at 34% 35%, rgba(5, 62, 112, 0.66) 0 13%, rgba(5, 62, 112, 0.28) 34%, transparent 62%),
     radial-gradient(ellipse at 61% 49%, rgba(11, 135, 244, 0.34) 0 10%, rgba(5, 62, 112, 0.23) 31%, transparent 60%),
     radial-gradient(ellipse at 77% 70%, rgba(5, 62, 112, 0.58) 0 10%, rgba(5, 62, 112, 0.20) 28%, transparent 57%);
-  animation: smoke-orbit-three var(--smoke-duration-far) linear infinite;
+  animation:
+    smoke-drift-three var(--smoke-duration-far) ease-in-out -27s infinite alternate;
 }
 
 .smoke-cloud--four {
-  right: 8vw;
-  bottom: -14vmax;
+  right: 10vw;
+  bottom: -12vmax;
   width: clamp(28rem, 48vmax, 54rem);
   opacity: var(--smoke-opacity-far);
   filter: blur(38px);
   background:
     radial-gradient(ellipse at 32% 48%, rgba(39, 149, 245, 0.30) 0 8%, rgba(5, 62, 112, 0.26) 28%, transparent 59%),
     radial-gradient(ellipse at 66% 44%, rgba(5, 62, 112, 0.62) 0 12%, rgba(5, 62, 112, 0.20) 31%, transparent 62%);
-  animation: smoke-orbit-four 43s linear infinite;
+  animation:
+    smoke-drift-four 52s ease-in-out -34s infinite alternate;
 }
 
 /*
- * Trajetórias fechadas.
- * O último quadro repete exatamente o primeiro.
- * Assim o navegador reinicia no mesmo ponto visual.
+ * Cada @keyframes possui apenas dois extremos.
+ *
+ * Como a direção é "alternate":
+ * A → B → A → B → A...
+ *
+ * O navegador NÃO precisa saltar de B para A.
+ * Ele simplesmente inverte o sentido do movimento.
  */
 
-@keyframes smoke-orbit-one {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) scale(0.98) rotate(-4deg);
+@keyframes smoke-drift-one {
+  from {
+    transform: translate3d(-2vw, 2vh, 0) scale(0.97) rotate(-4deg);
   }
-  25% {
-    transform: translate3d(12vw, -5vh, 0) scale(1.05) rotate(0deg);
-  }
-  50% {
-    transform: translate3d(20vw, 3vh, 0) scale(1.01) rotate(4deg);
-  }
-  75% {
-    transform: translate3d(8vw, 8vh, 0) scale(0.96) rotate(1deg);
+
+  to {
+    transform: translate3d(24vw, -5vh, 0) scale(1.06) rotate(4deg);
   }
 }
 
-@keyframes smoke-orbit-two {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) scale(1.04) rotate(5deg);
+@keyframes smoke-drift-two {
+  from {
+    transform: translate3d(3vw, -3vh, 0) scale(1.06) rotate(5deg);
   }
-  25% {
-    transform: translate3d(-11vw, 7vh, 0) scale(0.97) rotate(1deg);
-  }
-  50% {
-    transform: translate3d(-21vw, -2vh, 0) scale(1.08) rotate(-5deg);
-  }
-  75% {
-    transform: translate3d(-9vw, -8vh, 0) scale(1.01) rotate(-1deg);
+
+  to {
+    transform: translate3d(-25vw, 7vh, 0) scale(0.98) rotate(-5deg);
   }
 }
 
-@keyframes smoke-orbit-three {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) scale(1.00) rotate(-2deg);
+@keyframes smoke-drift-three {
+  from {
+    transform: translate3d(-5vw, 6vh, 0) scale(0.98) rotate(-3deg);
   }
-  25% {
-    transform: translate3d(9vw, -10vh, 0) scale(1.09) rotate(3deg);
-  }
-  50% {
-    transform: translate3d(18vw, -15vh, 0) scale(1.03) rotate(1deg);
-  }
-  75% {
-    transform: translate3d(5vw, -7vh, 0) scale(0.96) rotate(-4deg);
+
+  to {
+    transform: translate3d(19vw, -14vh, 0) scale(1.10) rotate(4deg);
   }
 }
 
-@keyframes smoke-orbit-four {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) scale(0.96) rotate(3deg);
+@keyframes smoke-drift-four {
+  from {
+    transform: translate3d(7vw, 3vh, 0) scale(0.96) rotate(3deg);
   }
-  25% {
-    transform: translate3d(-7vw, -8vh, 0) scale(1.05) rotate(-1deg);
-  }
-  50% {
-    transform: translate3d(-14vw, -4vh, 0) scale(1.09) rotate(-4deg);
-  }
-  75% {
-    transform: translate3d(-5vw, 5vh, 0) scale(1.00) rotate(1deg);
+
+  to {
+    transform: translate3d(-15vw, -9vh, 0) scale(1.08) rotate(-4deg);
   }
 }
 
+/*
+ * Mobile:
+ * - três camadas;
+ * - menos blur;
+ * - deslocamentos continuam alternados;
+ * - nenhuma dependência de hover.
+ */
 @media (max-width: 760px) {
   .smoke-cloud {
     width: 88vmax;
@@ -154,18 +150,18 @@
   }
 
   .smoke-cloud--one {
-    left: -52vmax;
-    top: 9vh;
+    left: -49vmax;
+    top: 10vh;
   }
 
   .smoke-cloud--two {
-    right: -54vmax;
-    top: 26vh;
+    right: -51vmax;
+    top: 27vh;
   }
 
   .smoke-cloud--three {
-    left: -2vw;
-    bottom: -48vmax;
+    left: 0;
+    bottom: -45vmax;
   }
 
   .smoke-cloud--four {
@@ -173,6 +169,9 @@
   }
 }
 
+/*
+ * A landing continua compreensível sem movimento.
+ */
 @media (prefers-reduced-motion: reduce) {
   .smoke-cloud {
     animation: none !important;
@@ -180,11 +179,11 @@
   }
 
   .smoke-cloud--one {
-    transform: translate3d(9vw, 0, 0) scale(1);
+    transform: translate3d(8vw, 0, 0) scale(1);
   }
 
   .smoke-cloud--two {
-    transform: translate3d(-10vw, 0, 0) scale(1);
+    transform: translate3d(-9vw, 0, 0) scale(1);
   }
 
   .smoke-cloud--three {

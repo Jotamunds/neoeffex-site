@@ -2,6 +2,32 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.5] - 2026-08-18
+
+### Adicionado
+- Reveal das palavras-chave por proximidade do ponteiro.
+- Palavras começam com `opacity: 0`, ficando 100% transparentes.
+- Cada palavra reage individualmente à distância do cursor.
+- Opacidade cresce suavemente até no máximo `0.60`.
+- Raio de revelação adaptado para desktop, tablet e celular.
+- Suporte a Pointer Events para mouse, caneta e toque.
+- Atualizações limitadas a um `requestAnimationFrame` por frame.
+- Reset automático quando o ponteiro sai do hero, é cancelado ou a janela perde foco.
+
+### Performance
+- Apenas 6 elementos participam do cálculo de proximidade.
+- Nenhuma física.
+- Nenhum Canvas.
+- Nenhum WebGL.
+- Nenhuma biblioteca externa.
+- A atmosfera da v0.1.4 permanece 100% CSS e não recebe interação.
+
+### Mantido
+- Movimento `alternate` da fumaça exatamente como na v0.1.4.
+- Tipografia oficial.
+- Paleta e composição do hero.
+- `prefers-reduced-motion`.
+
 ## [0.1.4] - 2026-08-18
 
 ### Corrigido

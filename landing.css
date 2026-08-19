@@ -98,7 +98,8 @@ body {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   white-space: nowrap;
-  opacity: 0.16;
+  opacity: var(--value-opacity, 0);
+  transition: opacity 140ms linear;
 }
 
 .hero__value::before {
@@ -269,7 +270,6 @@ body {
   .hero__value {
     font-size: 0.62rem;
     letter-spacing: 0.13em;
-    opacity: 0.13;
   }
 
   .hero__value::before {

@@ -1,4 +1,4 @@
-# Neoeffex Landing — v0.1.4
+# Neoeffex Landing — v0.1.5
 
 Base do hero da Neoeffex com tipografia oficial e primeira atmosfera passiva animada.
 
@@ -39,7 +39,7 @@ Teste pelo menos:
 4. Zoom de 125% e 150%.
 5. Verifique se nenhuma palavra importante encosta no título.
 
-## Critério para avançar para v0.1.4
+## Critério para avançar para v0.1.5
 
 Sem animação alguma, o hero precisa parecer:
 - premium;
@@ -48,10 +48,10 @@ Sem animação alguma, o hero precisa parecer:
 - reconhecível como Neo by Neoeffex;
 - coerente em desktop e mobile.
 
-Depois da aprovação visual, a v0.1.4 adicionará somente o **motion passivo da atmosfera/fumaça**.
+Depois da aprovação visual, a v0.1.5 adicionará somente o **motion passivo da atmosfera/fumaça**.
 
 
-## Tipografia da v0.1.4
+## Tipografia da v0.1.5
 
 | Papel | Fonte |
 |---|---|
@@ -63,7 +63,7 @@ Depois da aprovação visual, a v0.1.4 adicionará somente o **motion passivo da
 As fontes são carregadas pelo Google Fonts e possuem fallbacks locais. Nenhum arquivo de fonte é incluído no projeto.
 
 
-## Motion da v0.1.4
+## Motion da v0.1.5
 
 A fumaça é implementada como uma camada independente em `atmosphere.css`.
 
@@ -92,16 +92,16 @@ Depois teste:
 
 ## Próxima etapa prevista
 
-A v0.1.4 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.
+A v0.1.5 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.
 
 
-## Correção de continuidade da v0.1.4
+## Correção de continuidade da v0.1.5
 
 Na v0.1.2 algumas nuvens saíam parcialmente da cena e o fim do `@keyframes`
 não coincidia com o começo. Quando o ciclo reiniciava, a camada voltava
 instantaneamente à posição inicial.
 
-A v0.1.4 usa trajetórias fechadas:
+A v0.1.5 usa trajetórias fechadas:
 
 `0% → 25% → 50% → 75% → 100% (= 0%)`
 
@@ -111,7 +111,7 @@ animação, sem salto de posição no reinício.
 A opacidade também permanece constante durante cada ciclo.
 
 
-## Movimento alternado da v0.1.4
+## Movimento alternado da v0.1.5
 
 A fumaça deixou de percorrer uma órbita fechada.
 
@@ -138,3 +138,37 @@ nuvens já aparecem em pontos distintos de seus trajetos.
 4. Nenhuma nuvem deve "teleportar".
 5. Nos extremos do percurso ela pode desacelerar e inverter o sentido
    suavemente — isso é esperado.
+
+
+## Reveal por proximidade da v0.1.5
+
+As palavras-chave agora começam completamente invisíveis.
+
+O JavaScript mede apenas a distância do ponteiro ao centro de cada uma das
+seis palavras.
+
+Comportamento:
+
+- longe: `opacity: 0`;
+- aproximando: opacidade cresce progressivamente;
+- muito perto: opacidade máxima de `0.60`;
+- afastando: volta gradualmente para `0`.
+
+A fumaça não participa desse cálculo e continua exatamente como na v0.1.4.
+
+### Performance
+
+O evento de ponteiro apenas atualiza as coordenadas.
+Os cálculos visuais são agrupados com `requestAnimationFrame`, evitando
+executar várias atualizações no mesmo frame.
+
+### Teste desta versão
+
+1. Abra a página e não mova o cursor.
+2. As palavras devem permanecer invisíveis.
+3. Passe o cursor lentamente perto de cada região onde existe uma palavra.
+4. A palavra mais próxima deve aparecer gradualmente.
+5. Muito perto, a palavra deve chegar a aproximadamente 60% de opacidade.
+6. Afaste o cursor e confirme que ela desaparece novamente.
+7. Confirme que a fumaça continua se movimentando exatamente como na v0.1.4.
+8. No celular, toque ou arraste o dedo sobre o hero para testar a mesma lógica.

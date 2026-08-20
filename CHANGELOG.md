@@ -2,6 +2,28 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.9] - 2026-08-19
+
+### Refinado
+- Raio de revelação das palavras-chave reduzido.
+- Desktop: `320px` → `220px`.
+- Telas médias: `225px` → `165px`.
+- Mobile: `175px` → `125px`.
+- Raio interno de opacidade máxima também reduzido.
+- Ponteiro e bounds agora usam coordenadas do documento (`pageX/pageY`), preparando a interação para uma landing com scroll.
+- Efeitos são ocultados quando a página perde visibilidade.
+
+### Cache
+- Assets locais do hero atualizados para `?v=0.1.9`.
+
+### Mantido
+- Opacidade máxima dos valores em `0.40`.
+- Movimento da fumaça.
+- Campo local da atmosfera.
+- Curva `smoothstep`.
+- Tipografia e composição.
+- Sem Canvas, WebGL, Rive ou novas bibliotecas.
+
 ## [0.1.8] - 2026-08-18
 
 ### Adicionado

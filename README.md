@@ -1,4 +1,4 @@
-# Neoeffex Landing — v0.1.8
+# Neoeffex Landing — v0.1.9
 
 Base do hero da Neoeffex com tipografia oficial e primeira atmosfera passiva animada.
 
@@ -39,7 +39,7 @@ Teste pelo menos:
 4. Zoom de 125% e 150%.
 5. Verifique se nenhuma palavra importante encosta no título.
 
-## Critério para avançar para v0.1.8
+## Critério para avançar para v0.1.9
 
 Sem animação alguma, o hero precisa parecer:
 - premium;
@@ -48,10 +48,10 @@ Sem animação alguma, o hero precisa parecer:
 - reconhecível como Neo by Neoeffex;
 - coerente em desktop e mobile.
 
-Depois da aprovação visual, a v0.1.8 adicionará somente o **motion passivo da atmosfera/fumaça**.
+Depois da aprovação visual, a v0.1.9 adicionará somente o **motion passivo da atmosfera/fumaça**.
 
 
-## Tipografia da v0.1.8
+## Tipografia da v0.1.9
 
 | Papel | Fonte |
 |---|---|
@@ -63,7 +63,7 @@ Depois da aprovação visual, a v0.1.8 adicionará somente o **motion passivo da
 As fontes são carregadas pelo Google Fonts e possuem fallbacks locais. Nenhum arquivo de fonte é incluído no projeto.
 
 
-## Motion da v0.1.8
+## Motion da v0.1.9
 
 A fumaça é implementada como uma camada independente em `atmosphere.css`.
 
@@ -92,16 +92,16 @@ Depois teste:
 
 ## Próxima etapa prevista
 
-A v0.1.8 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.
+A v0.1.9 deverá adicionar apenas a revelação das palavras-chave por proximidade do cursor, sem transformar toda a fumaça em uma simulação interativa.
 
 
-## Correção de continuidade da v0.1.8
+## Correção de continuidade da v0.1.9
 
 Na v0.1.2 algumas nuvens saíam parcialmente da cena e o fim do `@keyframes`
 não coincidia com o começo. Quando o ciclo reiniciava, a camada voltava
 instantaneamente à posição inicial.
 
-A v0.1.8 usa trajetórias fechadas:
+A v0.1.9 usa trajetórias fechadas:
 
 `0% → 25% → 50% → 75% → 100% (= 0%)`
 
@@ -111,7 +111,7 @@ animação, sem salto de posição no reinício.
 A opacidade também permanece constante durante cada ciclo.
 
 
-## Movimento alternado da v0.1.8
+## Movimento alternado da v0.1.9
 
 A fumaça deixou de percorrer uma órbita fechada.
 
@@ -140,7 +140,7 @@ nuvens já aparecem em pontos distintos de seus trajetos.
    suavemente — isso é esperado.
 
 
-## Reveal por proximidade da v0.1.8
+## Reveal por proximidade da v0.1.9
 
 As palavras-chave agora começam completamente invisíveis.
 
@@ -174,7 +174,7 @@ executar várias atualizações no mesmo frame.
 8. No celular, toque ou arraste o dedo sobre o hero para testar a mesma lógica.
 
 
-## Cache busting — v0.1.8
+## Cache busting — v0.1.9
 
 Os recursos locais do hero agora são chamados com a versão da landing:
 
@@ -209,7 +209,7 @@ como `landing-0.1.5.css`, `landing-0.1.6.css`, etc.
 5. Ao aproximar o ponteiro das regiões das palavras, elas devem aparecer gradualmente.
 
 
-## Refinamento do reveal — v0.1.8
+## Refinamento do reveal — v0.1.9
 
 A proximidade agora é medida até a área ocupada pela palavra, não apenas até seu centro.
 
@@ -233,7 +233,7 @@ A fumaça não participa do cálculo e continua igual à versão estável anteri
 7. Observe a fumaça por pelo menos 60 segundos e confirme que não houve alteração no movimento.
 
 
-## Interação local da atmosfera — v0.1.8
+## Interação local da atmosfera — v0.1.9
 
 A fumaça continua com o mesmo movimento passivo da versão estável.
 
@@ -251,7 +251,7 @@ Essa solução evita:
 
 A opacidade máxima das palavras agora é `0.40`.
 
-### Teste da v0.1.8
+### Teste da v0.1.9
 
 1. Abra a página e deixe o ponteiro parado.
 2. A fumaça deve continuar se movimentando exatamente como antes.
@@ -262,3 +262,22 @@ A opacidade máxima das palavras agora é `0.40`.
 7. O campo local não deve parecer um círculo sólido ou um spotlight evidente.
 8. Observe a fumaça por pelo menos 60 segundos e confirme ausência de teleporte.
 9. Ative `prefers-reduced-motion`: o campo reativo deve ser desativado.
+
+
+## Reveal mais localizado — v0.1.9
+
+| Tela | Antes | Agora |
+|---|---:|---:|
+| Desktop | 320 px | 220 px |
+| Tablet / telas médias | 225 px | 165 px |
+| Mobile | 175 px | 125 px |
+
+A opacidade máxima continua em `0.40`.
+
+O sistema de coordenadas também foi preparado para continuar correto quando a landing ganhar scroll.
+
+### Teste
+1. As palavras devem demorar mais para começar a aparecer.
+2. Aproximando o cursor, o fade deve continuar suave.
+3. Sobre o texto, a opacidade máxima continua em 40%.
+4. Fumaça e campo local devem permanecer visualmente iguais.

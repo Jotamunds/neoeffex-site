@@ -1,4 +1,4 @@
-/* Neoeffex Landing v0.1.9 — tokens */
+/* Neoeffex Landing v0.1.10 — tokens */
 
 :root {
   /* Brand */
@@ -38,10 +38,16 @@
   --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Interação local da atmosfera */
-  --interaction-core-radius: 150px;
-  --interaction-field-radius: 270px;
-  --interaction-field-duration: 220ms;
+  --interaction-field-duration: 240ms;
   --interaction-field-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --interaction-dark-opacity: 0.36;
+  --interaction-blue-opacity: 0.055;
+
+  /* Profundidade e acabamento */
+  --title-parallax-max: 4.5px;
+  --title-parallax-duration: 260ms;
+  --title-breathe-duration: 11s;
+  --grain-opacity: 0.026;
 
   /* Effects */
   --glow-soft: 0 0 80px rgba(11, 135, 244, 0.10);

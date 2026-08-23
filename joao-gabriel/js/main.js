@@ -63,6 +63,36 @@ let dragPointerId = null;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 
+let highestWindowZIndex = 10;
+
+function activateAboutWindow() {
+    if (aboutWindowState !== "open") {
+        return;
+    }
+
+    highestWindowZIndex += 1;
+
+    aboutWindow.style.zIndex =
+        String(highestWindowZIndex);
+
+    aboutWindow.classList.add("is-active");
+    runningAppButton.classList.add("is-active");
+
+    runningAppButton.setAttribute(
+        "aria-current",
+        "true"
+    );
+}
+
+function deactivateAboutWindow() {
+    aboutWindow.classList.remove("is-active");
+    runningAppButton.classList.remove("is-active");
+
+    runningAppButton.removeAttribute(
+        "aria-current"
+    );  
+}
+
 function openAboutWindow() {
     aboutWindowState = "open";
 
@@ -70,12 +100,16 @@ function openAboutWindow() {
     aboutAppButton.setAttribute("aria-expanded", "true");
 
     updateRunningAppButton();
+    activateAboutWindow();
+
     closeAboutButton.focus();
 }
 
 function closeAboutWindow() {
     aboutWindowState = "closed";
     isAboutMaximized = false;
+
+    deactivateAboutWindow();
 
     aboutWindow.hidden = true;
     aboutWindow.classList.remove("is-maximized");
@@ -94,14 +128,19 @@ function closeAboutWindow() {
     aboutAppButton.focus();
 }
 
-function minimizeAboutWindow() {
+function minimizeAboutWindow(shouldMoveFocus = true) {
     aboutWindowState = "minimized";
+
+    deactivateAboutWindow();
 
     aboutWindow.hidden = true;
     aboutAppButton.setAttribute("aria-expanded", "false");
 
     updateRunningAppButton();
-    runningAppButton.focus();
+
+    if (shouldMoveFocus) {
+        runningAppButton.focus();
+    }
 }
 
 function restoreAboutWindow() {
@@ -115,6 +154,8 @@ function restoreAboutWindow() {
     aboutAppButton.setAttribute("aria-expanded", "true");
 
     updateRunningAppButton();
+    activateAboutWindow();
+
     minimizeAboutButton.focus();
 }
 
@@ -151,7 +192,10 @@ function updateRunningAppButton() {
         runningAppButton.textContent = "Nenhum aplicativo aberto";
         runningAppButton.disabled = true;
         runningAppButton.removeAttribute("aria-pressed");
+        runningAppButton.removeAttribute("aria-current");
+        runningAppButton.classList.remove("is-active");
         runningAppButton.title = "";
+        
         return;
     }
 
@@ -346,6 +390,33 @@ const aboutWindowTitlebar = aboutWindow.querySelector(
 --- ADD EVENT LISTENER ---
 */
 
+document.addEventListener(
+    "pointerdown",
+    function (event) {
+        const clickedWindow = event.target.closest(
+            ".system-window"
+        );
+
+        const clickedTaskbar = event.target.closest(
+            ".taskbar"
+        );
+
+        const clickedAppIcon = event.target.closest(
+            ".app-icon"
+        );
+
+        if (
+            clickedWindow ||
+            clickedTaskbar ||
+            clickedAppIcon
+        ) {
+            return;
+        }
+
+        deactivateAboutWindow();
+    }
+);
+
 aboutAppButton.addEventListener("click", openAboutWindow);
 
 minimizeAboutButton.addEventListener(
@@ -361,10 +432,19 @@ maximizeAboutButton.addEventListener(
 closeAboutButton.addEventListener("click", closeAboutWindow);
 
 runningAppButton.addEventListener(
+    "pointerdown",
+    function (event) {
+        if (event.pointerType === "mouse") {
+            event.preventDefault();
+        }
+    }
+);
+
+runningAppButton.addEventListener(
     "click",
     function () {
         if (aboutWindowState === "open") {
-            minimizeAboutWindow();
+            minimizeAboutWindow(false);
             return;
         }
 
@@ -398,6 +478,29 @@ aboutWindowTitlebar.addEventListener(
 aboutWindowTitlebar.addEventListener(
     "pointercancel",
     stopDraggingAboutWindow
+);
+
+aboutWindow.addEventListener(
+    "pointerdown",
+    function (event) {
+        const windowControl = event.target.closest(
+            "[data-window-action]"
+        );
+
+        if (windowControl) {
+            const action =
+                windowControl.dataset.windowAction;
+
+            if (
+                action === "minimize" ||
+                action === "close"
+            ) {
+                return;
+            }
+        }
+
+        activateAboutWindow();
+    }
 );
 
 window.addEventListener(

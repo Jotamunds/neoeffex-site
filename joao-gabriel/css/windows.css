@@ -20,14 +20,31 @@
     overflow: hidden;
     border: 1px solid var(--system-border);
     border-radius: var(--radius-large);
+    border-color: rgba(255, 255, 255, 0.09);
 
     background: rgba(18, 21, 26, 0.94);
-    box-shadow: var(--shadow-window);
+    box-shadow:
+        0 1.5rem 4rem rgba(0, 0, 0, 0.28),
+        inset 0 1px rgba(255, 255, 255, 0.025);
 
     pointer-events: auto;
 
     transform: translate(-50%, -50%);
     animation: window-open var(--motion-medium) var(--motion-ease);
+
+    z-index: 10;
+
+    transition:
+        border-color var(--motion-fast) ease,
+        box-shadow var(--motion-fast) ease;
+}
+
+.system-window.is-active {
+    border-color: rgba(39, 149, 245, 0.24);
+    box-shadow:
+        0 1.8rem 4.5rem rgba(0, 0, 0, 0.38),
+        0 0 1.5rem rgba(11, 135, 244, 0.045),
+        inset 0 1px rgba(255, 255, 255, 0.04);
 }
 
 .system-window.is-maximized {

@@ -1,0 +1,43 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+html {
+  color-scheme: dark;
+  font-family: var(--font-body);
+  background: var(--system-background);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  color: var(--text-primary);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button:focus-visible {
+    outline: 1px solid rgba(39, 149, 245, 0.48);
+    outline-offset: 1px;
+    box-shadow: 0 0 0.8rem rgba(11, 135, 244, 0.09);
+}

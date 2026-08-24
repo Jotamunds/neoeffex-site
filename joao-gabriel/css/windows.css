@@ -461,3 +461,12 @@
         transition: none;
     }
 }
+
+.system-window:focus {
+    outline: none;
+}
+
+.system-window:focus-visible {
+    outline: 1px solid rgba(39, 149, 245, 0.32);
+    outline-offset: -2px;
+}

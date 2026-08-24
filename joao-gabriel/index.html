@@ -27,10 +27,8 @@
     <link rel="stylesheet" href="css/desktop.css?v=0.1.0">
     <link rel="stylesheet" href="css/windows.css?v=0.1.0">
     <link rel="stylesheet" href="css/system-menu.css?v=0.1.0">
-<<<<<<< HEAD
     <link rel="stylesheet" href="css/notifications.css?v=0.1.0">
-=======
->>>>>>> df58b2a2ed9df01130aa261f57f393f0c760386a
+    <link rel="stylesheet" href="css/terminal.css?v=0.1.0">
 
     <script type="module" src="js/main.js?v=0.1.0"></script>
 </head>
@@ -85,7 +83,8 @@
                     class="app-icon"
                     type="button"
                     data-app="terminal"
-                    data-app-status="unavailable"
+                    aria-controls="terminal-window"
+                    aria-expanded="false"
                 >
                     <span class="app-icon__symbol" aria-hidden="true">&gt;_</span>
                     <span class="app-icon__name">Terminal</span>
@@ -260,6 +259,94 @@
                 </footer>
             </article>
 
+            <article
+                class="system-window system-window--terminal"
+                id="terminal-window"
+                data-window="terminal"
+                role="dialog"
+                aria-labelledby="terminal-window-title"
+                hidden
+            >
+                <header class="system-window__titlebar" data-window-drag-handle>
+                    <div class="system-window__identity">
+                        <span class="system-window__app-symbol" aria-hidden="true">
+                            &gt;_
+                        </span>
+
+                        <h2 class="system-window__title" id="terminal-window-title">
+                            Terminal do sistema
+                        </h2>
+                    </div>
+
+                    <div class="system-window__controls" aria-label="Controles da janela">
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Minimizar janela"
+                            data-window-action="minimize"
+                        >
+                            <span aria-hidden="true">−</span>
+                        </button>
+
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Maximizar janela"
+                            data-window-action="maximize"
+                        >
+                            <span data-maximize-symbol aria-hidden="true">□</span>
+                        </button>
+
+                        <button
+                            class="system-window__control system-window__control--close"
+                            type="button"
+                            aria-label="Fechar janela"
+                            data-window-action="close"
+                        >
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="system-window__content terminal">
+                    <div
+                        class="terminal__output"
+                        data-terminal-output
+                        role="log"
+                        aria-live="polite"
+                        aria-relevant="additions"
+                    >
+                        <div class="terminal__entry terminal__entry--system">
+                            <span>JOÃO/OS TERMINAL 0.1.0</span>
+                            <span>Digite “help” para ver os comandos disponíveis.</span>
+                        </div>
+                    </div>
+
+                    <form class="terminal__form" data-terminal-form autocomplete="off">
+                        <label class="terminal__prompt" for="terminal-command">
+                            joao@os:~$
+                        </label>
+
+                        <input
+                            class="terminal__input"
+                            id="terminal-command"
+                            data-terminal-input
+                            data-window-autofocus
+                            type="text"
+                            aria-label="Comando do terminal"
+                            autocomplete="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                        >
+                    </form>
+                </div>
+
+                <footer class="system-window__footer">
+                    <span>LOCAL SESSION</span>
+                    <span>↑ ↓ HISTÓRICO</span>
+                </footer>
+            </article>
+
         </div>
 
         <section
@@ -322,6 +409,25 @@
                         Fechado
                     </span>
                 </button>
+
+                <button
+                    class="system-menu__app"
+                    type="button"
+                    data-system-menu-app="terminal"
+                >
+                    <span class="system-menu__app-symbol" aria-hidden="true">&gt;_</span>
+
+                    <span class="system-menu__app-content">
+                        <span class="system-menu__app-name">Terminal</span>
+                        <span class="system-menu__app-description">
+                            Comandos do JOÃO/OS
+                        </span>
+                    </span>
+
+                    <span class="system-menu__app-status" data-system-menu-status>
+                        Fechado
+                    </span>
+                </button>
             </div>
 
             <footer class="system-menu__footer">
@@ -333,7 +439,6 @@
             </footer>
         </section>
 
-<<<<<<< HEAD
         <section
             class="notification-center"
             data-notification-center
@@ -342,8 +447,6 @@
             aria-relevant="additions text"
         ></section>
 
-=======
->>>>>>> df58b2a2ed9df01130aa261f57f393f0c760386a
         <footer class="taskbar">
             <button
                 class="taskbar__launcher"
@@ -368,6 +471,10 @@
 
                 <button class="taskbar__app-button" type="button" data-running-app="projects" hidden>
                     Projetos
+                </button>
+
+                <button class="taskbar__app-button" type="button" data-running-app="terminal" hidden>
+                    Terminal
                 </button>
             </div>
 

@@ -43,6 +43,10 @@ function createAppRegistry() {
                 "[data-window-drag-handle]"
             );
 
+            const customFocusTarget = windowElement.querySelector(
+                "[data-window-autofocus]"
+            );
+
             const name = appButton
                 .querySelector(".app-icon__name")
                 .textContent
@@ -74,6 +78,9 @@ function createAppRegistry() {
                 maximizeButton,
                 maximizeSymbol,
                 closeButton,
+                openFocusTarget: customFocusTarget || closeButton,
+                restoreFocusTarget:
+                    customFocusTarget || minimizeButton,
 
                 state: "closed",
                 isMaximized: false,
@@ -337,7 +344,7 @@ export function initializeWindowManager() {
         updateRunningButton(app);
         activateWindow(app);
 
-        app.closeButton.focus();
+        app.openFocusTarget.focus();
     }
 
     function minimizeWindow(app, shouldMoveFocus = true) {
@@ -378,7 +385,7 @@ export function initializeWindowManager() {
         activateWindow(app);
 
         if (shouldMoveFocus) {
-            app.minimizeButton.focus();
+            app.restoreFocusTarget.focus();
         }
     }
 
@@ -708,10 +715,7 @@ export function initializeWindowManager() {
             event.target.closest(".system-window") ||
             event.target.closest(".taskbar") ||
             event.target.closest("[data-system-menu]") ||
-<<<<<<< HEAD
             event.target.closest("[data-notification-center]") ||
-=======
->>>>>>> df58b2a2ed9df01130aa261f57f393f0c760386a
             event.target.closest(".app-icon")
         ) {
             return;
@@ -761,6 +765,28 @@ export function initializeWindowManager() {
             }
 
             toggleWindowFromDesktop(app);
+            return true;
+        },
+
+        showWindow(appId) {
+            const app = apps.get(appId);
+
+            if (!app) {
+                return false;
+            }
+
+            if (app.state === "closed") {
+                openWindow(app);
+                return true;
+            }
+
+            if (app.state === "minimized") {
+                restoreWindow(app);
+                return true;
+            }
+
+            activateWindow(app);
+            app.openFocusTarget.focus();
             return true;
         },
 

@@ -391,7 +391,17 @@
     }
 
     .taskbar__app-button {
+        flex: 0 0 7rem;
         text-align: center;
+    }
+
+    .taskbar__running-apps {
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .taskbar__running-apps::-webkit-scrollbar {
+        display: none;
     }
 
     .taskbar__app-button[hidden] {

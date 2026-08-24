@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="css/system-menu.css?v=0.1.0">
     <link rel="stylesheet" href="css/notifications.css?v=0.1.0">
     <link rel="stylesheet" href="css/terminal.css?v=0.1.0">
+    <link rel="stylesheet" href="css/files.css?v=0.1.0">
 
     <script type="module" src="js/main.js?v=0.1.0"></script>
 </head>
@@ -104,7 +105,8 @@
                     class="app-icon"
                     type="button"
                     data-app="files"
-                    data-app-status="unavailable"
+                    aria-controls="files-window"
+                    aria-expanded="false"
                 >
                     <span class="app-icon__symbol" aria-hidden="true">A</span>
                     <span class="app-icon__name">Arquivos</span>
@@ -347,6 +349,165 @@
                 </footer>
             </article>
 
+            <article
+                class="system-window system-window--files"
+                id="files-window"
+                data-window="files"
+                role="dialog"
+                aria-labelledby="files-window-title"
+                hidden
+            >
+                <header class="system-window__titlebar" data-window-drag-handle>
+                    <div class="system-window__identity">
+                        <span class="system-window__app-symbol" aria-hidden="true">
+                            A
+                        </span>
+
+                        <h2 class="system-window__title" id="files-window-title">
+                            Explorador de arquivos
+                        </h2>
+                    </div>
+
+                    <div class="system-window__controls" aria-label="Controles da janela">
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Minimizar janela"
+                            data-window-action="minimize"
+                        >
+                            <span aria-hidden="true">−</span>
+                        </button>
+
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Maximizar janela"
+                            data-window-action="maximize"
+                        >
+                            <span data-maximize-symbol aria-hidden="true">□</span>
+                        </button>
+
+                        <button
+                            class="system-window__control system-window__control--close"
+                            type="button"
+                            aria-label="Fechar janela"
+                            data-window-action="close"
+                        >
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="system-window__content file-explorer">
+                    <header class="file-explorer__toolbar">
+                        <button
+                            class="file-explorer__back"
+                            type="button"
+                            data-files-back
+                            aria-label="Voltar"
+                            title="Voltar"
+                        >
+                            ←
+                        </button>
+
+                        <span class="file-explorer__path" data-files-path>
+                            /home/joao
+                        </span>
+                    </header>
+
+                    <div class="file-explorer__layout">
+                        <nav class="file-explorer__sidebar" aria-label="Pastas">
+                            <button
+                                class="file-explorer__folder"
+                                type="button"
+                                data-files-folder="home"
+                                data-window-autofocus
+                            >
+                                <span aria-hidden="true">⌂</span>
+                                Início
+                            </button>
+
+                            <button
+                                class="file-explorer__folder"
+                                type="button"
+                                data-files-folder="projects"
+                            >
+                                <span aria-hidden="true">P</span>
+                                Projetos
+                            </button>
+
+                            <button
+                                class="file-explorer__folder"
+                                type="button"
+                                data-files-folder="stack"
+                            >
+                                <span aria-hidden="true">{ }</span>
+                                Stack
+                            </button>
+
+                            <button
+                                class="file-explorer__folder"
+                                type="button"
+                                data-files-folder="contact"
+                            >
+                                <span aria-hidden="true">@</span>
+                                Contato
+                            </button>
+                        </nav>
+
+                        <section class="file-explorer__browser">
+                            <header class="file-explorer__browser-header">
+                                <div>
+                                    <p class="file-explorer__eyebrow">Diretório</p>
+                                    <h3 class="file-explorer__heading" data-files-heading>
+                                        Início
+                                    </h3>
+                                </div>
+
+                                <span class="file-explorer__count" data-files-count>
+                                    0 itens
+                                </span>
+                            </header>
+
+                            <div class="file-explorer__list" data-file-list></div>
+
+                            <article
+                                class="file-preview"
+                                data-file-preview
+                                aria-live="polite"
+                                hidden
+                            >
+                                <header class="file-preview__header">
+                                    <div>
+                                        <p class="file-preview__type" data-file-preview-type></p>
+                                        <h3 class="file-preview__title" data-file-preview-title></h3>
+                                    </div>
+
+                                    <span class="file-preview__meta" data-file-preview-meta></span>
+                                </header>
+
+                                <pre class="file-preview__content" data-file-preview-content></pre>
+
+                                <a
+                                    class="file-preview__link"
+                                    data-file-preview-link
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    hidden
+                                >
+                                    Abrir link ↗
+                                </a>
+                            </article>
+                        </section>
+                    </div>
+                </div>
+
+                <footer class="system-window__footer">
+                    <span>VIRTUAL FILE SYSTEM</span>
+                    <span data-files-status>0 ITEMS</span>
+                </footer>
+            </article>
+
         </div>
 
         <section
@@ -428,6 +589,25 @@
                         Fechado
                     </span>
                 </button>
+
+                <button
+                    class="system-menu__app"
+                    type="button"
+                    data-system-menu-app="files"
+                >
+                    <span class="system-menu__app-symbol" aria-hidden="true">A</span>
+
+                    <span class="system-menu__app-content">
+                        <span class="system-menu__app-name">Arquivos</span>
+                        <span class="system-menu__app-description">
+                            Conteúdo do portfólio
+                        </span>
+                    </span>
+
+                    <span class="system-menu__app-status" data-system-menu-status>
+                        Fechado
+                    </span>
+                </button>
             </div>
 
             <footer class="system-menu__footer">
@@ -475,6 +655,10 @@
 
                 <button class="taskbar__app-button" type="button" data-running-app="terminal" hidden>
                     Terminal
+                </button>
+
+                <button class="taskbar__app-button" type="button" data-running-app="files" hidden>
+                    Arquivos
                 </button>
             </div>
 

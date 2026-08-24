@@ -6,6 +6,7 @@
 
 import { startClock } from "./clock.js";
 import { initializeUnavailableApps } from "./desktop-apps.js";
+import { initializeFilesApp } from "./files.js";
 import { createNotificationCenter } from "./notification-center.js";
 import { initializeSystemMenu } from "./system-menu.js";
 import { initializeTerminal } from "./terminal.js";
@@ -15,6 +16,8 @@ startClock();
 
 const notificationCenter = createNotificationCenter();
 const windowManager = initializeWindowManager();
+
+initializeFilesApp();
 
 initializeTerminal({
     showWindow: windowManager.showWindow,

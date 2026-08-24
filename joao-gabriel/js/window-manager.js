@@ -708,7 +708,10 @@ export function initializeWindowManager() {
             event.target.closest(".system-window") ||
             event.target.closest(".taskbar") ||
             event.target.closest("[data-system-menu]") ||
+<<<<<<< HEAD
             event.target.closest("[data-notification-center]") ||
+=======
+>>>>>>> df58b2a2ed9df01130aa261f57f393f0c760386a
             event.target.closest(".app-icon")
         ) {
             return;

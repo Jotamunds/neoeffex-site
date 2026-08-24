@@ -159,6 +159,36 @@
 .system-window__content {
     overflow-y: auto;
     padding: clamp(1.5rem, 4vw, 3rem);
+    scrollbar-width: thin;
+    scrollbar-color:
+        rgba(39, 149, 245, 0.28)
+        transparent;
+    scrollbar-gutter: stable;
+}
+
+.system-window__content::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.system-window__content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.system-window__content::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 999px;
+
+    background:
+        rgba(39, 149, 245, 0.24);
+    background-clip: padding-box;
+
+    transition: background var(--motion-fast) ease;
+}
+
+.system-window__content::-webkit-scrollbar-thumb:hover {
+    background:
+        rgba(39, 149, 245, 0.48);
+    background-clip: padding-box;
 }
 
 .system-window__eyebrow {
@@ -399,7 +429,7 @@
     .system-window__control[data-window-action="maximize"] {
         display: none;
     }
-    
+
     .system-window__control {
         width: 3.25rem;
     }

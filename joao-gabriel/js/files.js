@@ -211,6 +211,11 @@ export function initializeFilesApp() {
         });
     }
 
+    function updateBackButtonVisibility() {
+        backButton.hidden =
+            currentFolderId === "home" && selectedFile === null;
+    }
+
     function closePreview() {
         const folder = FOLDERS[currentFolderId];
 
@@ -219,6 +224,8 @@ export function initializeFilesApp() {
         fileList.hidden = false;
         pathElement.textContent = folder.path;
         headingElement.textContent = folder.name;
+
+        updateBackButtonVisibility();
     }
 
     function openFile(file) {
@@ -229,7 +236,7 @@ export function initializeFilesApp() {
         preview.hidden = false;
 
         pathElement.textContent = `${folder.path}/${file.name}`;
-        headingElement.textContent = file.name;
+        headingElement.textContent = folder.name;
         previewType.textContent = file.type;
         previewTitle.textContent = file.name;
         previewMeta.textContent = file.size;
@@ -242,6 +249,8 @@ export function initializeFilesApp() {
             previewLink.hidden = true;
             previewLink.removeAttribute("href");
         }
+
+        updateBackButtonVisibility();
     }
 
     function createFileButton(file) {
@@ -302,6 +311,7 @@ export function initializeFilesApp() {
         statusElement.textContent = `${folder.files.length} ITEMS`;
 
         updateFolderSelection();
+        updateBackButtonVisibility();
     }
 
     folderButtons.forEach(function (button) {

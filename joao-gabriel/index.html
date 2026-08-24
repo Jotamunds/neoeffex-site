@@ -330,9 +330,56 @@
                             </div>
                         </header>
 
-                        <div class="project-detail__section">
-                            <h4>Sobre o projeto</h4>
-                            <p data-project-description></p>
+                        <figure
+                            class="project-detail__visual"
+                            data-project-visual
+                        >
+                            <div class="project-detail__visual-grid" aria-hidden="true"></div>
+
+                            <div class="project-detail__visual-content">
+                                <span data-project-visual-eyebrow></span>
+                                <strong data-project-visual-title></strong>
+                            </div>
+
+                            <span
+                                class="project-detail__visual-code"
+                                data-project-visual-code
+                                aria-hidden="true"
+                            ></span>
+                        </figure>
+
+                        <dl class="project-detail__metadata">
+                            <div>
+                                <dt>Categoria</dt>
+                                <dd data-project-category></dd>
+                            </div>
+
+                            <div>
+                                <dt>Período</dt>
+                                <dd data-project-period></dd>
+                            </div>
+
+                            <div>
+                                <dt>Disponibilidade</dt>
+                                <dd data-project-availability></dd>
+                            </div>
+                        </dl>
+
+                        <div class="project-detail__case-study">
+                            <section class="project-detail__section">
+                                <h4>Desafio</h4>
+                                <p data-project-challenge></p>
+                            </section>
+
+                            <section class="project-detail__section">
+                                <h4>Solução</h4>
+                                <p data-project-solution></p>
+                            </section>
+
+                            <section class="project-detail__section project-detail__section--result">
+                                <h4>Resultado</h4>
+                                <p data-project-result></p>
+                            </section>
                         </div>
 
                         <div class="project-detail__section">
@@ -344,6 +391,8 @@
                             <h4>Tecnologias</h4>
                             <ul class="project-detail__stack" data-project-stack></ul>
                         </div>
+
+                        <div class="project-detail__actions" data-project-actions></div>
                     </article>
                 </div>
 

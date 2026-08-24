@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="css/notifications.css?v=0.1.0">
     <link rel="stylesheet" href="css/terminal.css?v=0.1.0">
     <link rel="stylesheet" href="css/files.css?v=0.1.0">
+    <link rel="stylesheet" href="css/projects.css?v=0.1.0">
 
     <script type="module" src="js/main.js?v=0.1.0"></script>
 </head>
@@ -223,41 +224,76 @@
                     </div>
                 </header>
 
-                <div class="system-window__content">
-                    <p class="system-window__eyebrow">
-                        Project directory
-                    </p>
+                <div class="system-window__content projects" data-projects-browser>
+                    <section class="projects__catalog" data-projects-catalog>
+                        <header class="projects__catalog-header">
+                            <div>
+                                <p class="projects__eyebrow">Project directory</p>
+                                <h3 class="projects__heading">Projetos selecionados</h3>
+                            </div>
 
-                    <h3 class="system-window__system-name">
-                        PROJETOS
-                    </h3>
+                            <span class="projects__catalog-code" aria-hidden="true">
+                                04
+                            </span>
+                        </header>
 
-                    <p class="system-window__description">
-                        Este espaço está preparado para receber projetos,
-                        estudos e experimentos de João Gabriel.
-                    </p>
+                        <p class="projects__introduction">
+                            Produtos, experimentos e automações desenvolvidos para
+                            resolver problemas reais e explorar novas tecnologias.
+                        </p>
 
-                    <div class="empty-state">
-                        <span class="empty-state__code" aria-hidden="true">
-                            000
-                        </span>
+                        <div
+                            class="projects__list"
+                            data-projects-list
+                            data-window-autofocus
+                            tabindex="-1"
+                        ></div>
+                    </section>
 
-                        <div>
-                            <h4 class="empty-state__title">
-                                Nenhum projeto publicado
-                            </h4>
+                    <article class="project-detail" data-project-detail hidden>
+                        <button
+                            class="project-detail__back"
+                            type="button"
+                            data-project-back
+                        >
+                            <span aria-hidden="true">←</span>
+                            Todos os projetos
+                        </button>
 
-                            <p class="empty-state__description">
-                                O diretório permanece vazio até a primeira
-                                publicação.
-                            </p>
+                        <header class="project-detail__header">
+                            <span
+                                class="project-detail__symbol"
+                                data-project-symbol
+                                aria-hidden="true"
+                            ></span>
+
+                            <div class="project-detail__identity">
+                                <p class="project-detail__status" data-project-status></p>
+                                <h3 class="project-detail__title" data-project-title></h3>
+                                <p class="project-detail__summary" data-project-summary></p>
+                            </div>
+                        </header>
+
+                        <div class="project-detail__section">
+                            <h4>Sobre o projeto</h4>
+                            <p data-project-description></p>
                         </div>
-                    </div>
+
+                        <div class="project-detail__section">
+                            <h4>Principais recursos</h4>
+                            <ul class="project-detail__highlights" data-project-highlights></ul>
+                        </div>
+
+                        <div class="project-detail__section">
+                            <h4>Tecnologias</h4>
+                            <ul class="project-detail__stack" data-project-stack></ul>
+                        </div>
+                    </article>
                 </div>
 
                 <footer class="system-window__footer">
                     <span>PROJECT DIRECTORY</span>
-                    <span>0 ITEMS</span>
+                    <span data-projects-status>4 PROJETOS</span>
                 </footer>
             </article>
 

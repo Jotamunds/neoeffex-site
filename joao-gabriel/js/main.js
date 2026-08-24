@@ -8,6 +8,7 @@ import { startClock } from "./clock.js";
 import { initializeUnavailableApps } from "./desktop-apps.js";
 import { initializeFilesApp } from "./files.js";
 import { createNotificationCenter } from "./notification-center.js";
+import { initializeProjectsApp } from "./projects.js";
 import { initializeSystemMenu } from "./system-menu.js";
 import { initializeTerminal } from "./terminal.js";
 import { initializeWindowManager } from "./window-manager.js";
@@ -18,6 +19,7 @@ const notificationCenter = createNotificationCenter();
 const windowManager = initializeWindowManager();
 
 initializeFilesApp();
+initializeProjectsApp();
 
 initializeTerminal({
     showWindow: windowManager.showWindow,

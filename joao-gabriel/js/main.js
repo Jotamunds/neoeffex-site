@@ -4,6 +4,7 @@
  * Ponto de entrada do sistema.
  */
 
+import { initializeBootSequence } from "./boot-sequence.js";
 import { startClock } from "./clock.js";
 import { initializeUnavailableApps } from "./desktop-apps.js";
 import { initializeFilesApp } from "./files.js";
@@ -13,6 +14,7 @@ import { initializeSystemMenu } from "./system-menu.js";
 import { initializeTerminal } from "./terminal.js";
 import { initializeWindowManager } from "./window-manager.js";
 
+initializeBootSequence();
 startClock();
 
 const notificationCenter = createNotificationCenter();

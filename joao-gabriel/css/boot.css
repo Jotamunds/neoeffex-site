@@ -1,0 +1,181 @@
+html.has-boot-sequence,
+html.has-boot-sequence body {
+    overflow: hidden;
+    background: #000000;
+}
+
+.boot-sequence {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: none;
+    overflow: hidden;
+    pointer-events: auto;
+}
+
+html.has-boot-sequence .boot-sequence {
+    display: block;
+}
+
+.boot-sequence__panel {
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 1;
+
+    height: 50%;
+    background: #000000;
+    will-change: transform;
+}
+
+.boot-sequence__panel--top {
+    top: 0;
+}
+
+.boot-sequence__panel--bottom {
+    bottom: 0;
+}
+
+.boot-sequence__identity {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+
+    display: grid;
+    place-items: center;
+
+    opacity: 0;
+    transform: translateY(0.45rem);
+    transition:
+        opacity 0.55s ease,
+        transform 0.55s var(--motion-ease);
+}
+
+.boot-sequence__name {
+    color: #f3f3f3;
+    font-family: var(--font-heading);
+    font-size: clamp(1.7rem, 5vw, 3.6rem);
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    text-align: center;
+}
+
+.boot-sequence__line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 3;
+
+    width: 100%;
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 0 0.65rem rgba(255, 255, 255, 0.28);
+
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
+}
+
+.boot-sequence.is-name-visible .boot-sequence__identity {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.boot-sequence.is-line-drawn .boot-sequence__line {
+    opacity: 1;
+    transform: scaleX(1);
+    transition:
+        transform 0.8s cubic-bezier(0.65, 0, 0.35, 1),
+        opacity 0.15s ease;
+}
+
+.boot-sequence.is-opening .boot-sequence__panel--top {
+    transform: translateY(-101%);
+}
+
+.boot-sequence.is-opening .boot-sequence__panel--bottom {
+    transform: translateY(101%);
+}
+
+.boot-sequence.is-opening .boot-sequence__panel {
+    transition: transform 0.88s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.boot-sequence.is-opening .boot-sequence__identity,
+.boot-sequence.is-opening .boot-sequence__line {
+    opacity: 0;
+    transition: opacity 0.24s ease;
+}
+
+/*
+ * O papel de parede é revelado primeiro. Os controles permanecem
+ * ocultos até o fim da pausa definida no JavaScript.
+ */
+html.has-boot-sequence .system-status,
+html.has-boot-sequence .app-icon,
+html.has-boot-sequence .window-layer,
+html.has-boot-sequence .taskbar,
+html.has-boot-sequence .notification-center {
+    opacity: 0;
+}
+
+html.has-boot-sequence .app-icon {
+    transform: translateY(0.55rem);
+}
+
+html.has-boot-sequence.is-desktop-ready .system-status,
+html.has-boot-sequence.is-desktop-ready .window-layer,
+html.has-boot-sequence.is-desktop-ready .taskbar,
+html.has-boot-sequence.is-desktop-ready .notification-center {
+    animation: boot-element-entrance 0.3s ease forwards;
+}
+
+html.has-boot-sequence.is-desktop-ready .app-icon {
+    animation: boot-app-entrance 0.3s var(--motion-ease) forwards;
+}
+
+@keyframes boot-element-entrance {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes boot-app-entrance {
+    from {
+        opacity: 0;
+        transform: translateY(0.55rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 600px) {
+    .boot-sequence__name {
+        padding: 0 1.25rem;
+        font-size: clamp(1.6rem, 9vw, 2.5rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .boot-sequence__panel,
+    .boot-sequence__identity,
+    .boot-sequence__line,
+    html.has-boot-sequence.is-desktop-ready .system-status,
+    html.has-boot-sequence.is-desktop-ready .app-icon,
+    html.has-boot-sequence.is-desktop-ready .window-layer,
+    html.has-boot-sequence.is-desktop-ready .taskbar,
+    html.has-boot-sequence.is-desktop-ready .notification-center {
+        animation: none;
+        transition: none;
+    }
+}

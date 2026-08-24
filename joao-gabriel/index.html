@@ -13,6 +13,38 @@
 
     <title>JOÃO/OS</title>
 
+    <script>
+        /*
+         * Define o estado inicial antes da primeira renderização.
+         * O parâmetro ?intro=1 permite rever a abertura durante os testes.
+         */
+        (function () {
+            const bootSessionKey = "joaoos:boot-seen";
+
+            try {
+                const searchParameters = new URLSearchParams(
+                    window.location.search
+                );
+
+                const shouldForceIntro =
+                    searchParameters.get("intro") === "1";
+
+                const hasSeenIntro =
+                    sessionStorage.getItem(bootSessionKey) === "true";
+
+                if (shouldForceIntro || !hasSeenIntro) {
+                    document.documentElement.classList.add(
+                        "has-boot-sequence"
+                    );
+                }
+            } catch (error) {
+                document.documentElement.classList.add(
+                    "has-boot-sequence"
+                );
+            }
+        })();
+    </script>
+
     <link rel="icon" type="image/png" href="../img/LogoNeoeffexsemtexto.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,6 +56,7 @@
 
     <link rel="stylesheet" href="css/tokens.css?v=0.1.0">
     <link rel="stylesheet" href="css/reset.css?v=0.1.0">
+    <link rel="stylesheet" href="css/boot.css?v=0.1.0">
     <link rel="stylesheet" href="css/desktop.css?v=0.1.0">
     <link rel="stylesheet" href="css/windows.css?v=0.1.0">
     <link rel="stylesheet" href="css/system-menu.css?v=0.1.0">
@@ -36,6 +69,29 @@
 </head>
 
 <body>
+    <div
+        class="boot-sequence"
+        data-boot-sequence
+        role="status"
+        aria-label="Inicializando JOÃO OS"
+    >
+        <div
+            class="boot-sequence__panel boot-sequence__panel--top"
+            aria-hidden="true"
+        ></div>
+
+        <div
+            class="boot-sequence__panel boot-sequence__panel--bottom"
+            aria-hidden="true"
+        ></div>
+
+        <div class="boot-sequence__identity" aria-hidden="true">
+            <span class="boot-sequence__name">João Gabriel</span>
+        </div>
+
+        <span class="boot-sequence__line" aria-hidden="true"></span>
+    </div>
+
     <main
         class="desktop"
         aria-label="Área de trabalho do JOÃO OS"

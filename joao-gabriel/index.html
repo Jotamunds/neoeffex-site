@@ -26,12 +26,17 @@
     <link rel="stylesheet" href="css/reset.css?v=0.1.0">
     <link rel="stylesheet" href="css/desktop.css?v=0.1.0">
     <link rel="stylesheet" href="css/windows.css?v=0.1.0">
+    <link rel="stylesheet" href="css/system-menu.css?v=0.1.0">
 
-    <script src="js/main.js?v=0.1.0" defer></script>
+    <script type="module" src="js/main.js?v=0.1.0"></script>
 </head>
 
 <body>
-    <main class="desktop" aria-label="Área de trabalho do JOÃO OS">
+    <main
+        class="desktop"
+        aria-label="Área de trabalho do JOÃO OS"
+        aria-keyshortcuts="Alt+W Shift+Alt+W"
+    >
         <div class="desktop__wallpaper" aria-hidden="true">
             <div class="desktop__light desktop__light--left"></div>
             <div class="desktop__light desktop__light--right"></div>
@@ -233,8 +238,84 @@
 
         </div>
 
+        <section
+            class="system-menu"
+            id="system-menu"
+            data-system-menu
+            role="dialog"
+            aria-labelledby="system-menu-title"
+            hidden
+        >
+            <header class="system-menu__header">
+                <span class="system-menu__brand" aria-hidden="true">N</span>
+
+                <div>
+                    <h2 class="system-menu__title" id="system-menu-title">
+                        JOÃO/OS
+                    </h2>
+
+                    <p class="system-menu__subtitle">
+                        Aplicativos do sistema
+                    </p>
+                </div>
+            </header>
+
+            <div class="system-menu__apps" aria-label="Aplicativos disponíveis">
+                <button
+                    class="system-menu__app"
+                    type="button"
+                    data-system-menu-app="about"
+                >
+                    <span class="system-menu__app-symbol" aria-hidden="true">J</span>
+
+                    <span class="system-menu__app-content">
+                        <span class="system-menu__app-name">Sistema</span>
+                        <span class="system-menu__app-description">
+                            Informações do ambiente
+                        </span>
+                    </span>
+
+                    <span class="system-menu__app-status" data-system-menu-status>
+                        Fechado
+                    </span>
+                </button>
+
+                <button
+                    class="system-menu__app"
+                    type="button"
+                    data-system-menu-app="projects"
+                >
+                    <span class="system-menu__app-symbol" aria-hidden="true">P</span>
+
+                    <span class="system-menu__app-content">
+                        <span class="system-menu__app-name">Projetos</span>
+                        <span class="system-menu__app-description">
+                            Diretório de trabalhos
+                        </span>
+                    </span>
+
+                    <span class="system-menu__app-status" data-system-menu-status>
+                        Fechado
+                    </span>
+                </button>
+            </div>
+
+            <footer class="system-menu__footer">
+                <span>ALT + W</span>
+                <span>Alternar janelas</span>
+            </footer>
+        </section>
+
         <footer class="taskbar">
-            <button class="taskbar__launcher" type="button" aria-label="Abrir menu do sistema">
+            <button
+                class="taskbar__launcher"
+                type="button"
+                aria-label="Abrir menu do sistema"
+                aria-controls="system-menu"
+                aria-expanded="false"
+                aria-haspopup="dialog"
+                data-system-menu-launcher
+            >
                 <span aria-hidden="true">N</span>
             </button>
 

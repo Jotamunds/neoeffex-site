@@ -159,6 +159,20 @@ function restoreAboutWindow() {
     minimizeAboutButton.focus();
 }
 
+function toggleAboutWindowFromDesktop() {
+    if (aboutWindowState === "closed") {
+        openAboutWindow();
+        return;
+    }
+    
+    if (aboutWindowState === "open") {
+        minimizeAboutWindow(false);
+        return;
+    }
+
+    restoreAboutWindow();
+}
+
 function toggleMaximizeAboutWindow() {
     isAboutMaximized = !isAboutMaximized;
 
@@ -417,7 +431,10 @@ document.addEventListener(
     }
 );
 
-aboutAppButton.addEventListener("click", openAboutWindow);
+aboutAppButton.addEventListener(
+    "click",
+    toggleAboutWindowFromDesktop
+);
 
 minimizeAboutButton.addEventListener(
     "click",

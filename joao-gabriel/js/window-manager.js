@@ -6,6 +6,7 @@
  */
 
 import { createWindowDragManager } from "./window-drag.js";
+import { createWindowSessionStore } from "./session-store.js";
 
 function createAppRegistry() {
     const apps = new Map();
@@ -47,10 +48,6 @@ function createAppRegistry() {
                 .textContent
                 .trim();
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
             /*
              * A própria janela pode receber foco quando o usuário
              * alterna aplicativos pelo teclado.
@@ -64,11 +61,6 @@ function createAppRegistry() {
                 windowElement.id
             );
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
             apps.set(id, {
                 id,
                 name,
@@ -107,11 +99,69 @@ export function initializeWindowManager() {
     );
 
     const apps = createAppRegistry();
+    const sessionStore = createWindowSessionStore(apps.keys());
 
     let highestWindowZIndex = 10;
     let activeApp = null;
-<<<<<<< HEAD
     let lastInputWasKeyboard = false;
+    let isRestoringSession = true;
+
+    function getSavedPosition(app) {
+        if (
+            !app.windowElement.classList.contains("is-positioned")
+        ) {
+            return null;
+        }
+
+        const left = Number.parseFloat(
+            app.windowElement.style.getPropertyValue(
+                "--window-left"
+            )
+        );
+
+        const top = Number.parseFloat(
+            app.windowElement.style.getPropertyValue(
+                "--window-top"
+            )
+        );
+
+        if (!Number.isFinite(left) || !Number.isFinite(top)) {
+            return null;
+        }
+
+        return {
+            left,
+            top,
+        };
+    }
+
+    function createSessionSnapshot() {
+        const savedApps = {};
+
+        apps.forEach(function (app) {
+            savedApps[app.id] = {
+                state: app.state,
+                isMaximized: app.isMaximized,
+                position: getSavedPosition(app),
+                zIndex: Number(
+                    app.windowElement.style.zIndex || 10
+                ),
+            };
+        });
+
+        return {
+            activeAppId: activeApp ? activeApp.id : null,
+            apps: savedApps,
+        };
+    }
+
+    function persistSession() {
+        if (isRestoringSession) {
+            return;
+        }
+
+        sessionStore.write(createSessionSnapshot());
+    }
 
     function notifyAppStateChange(app) {
         document.dispatchEvent(
@@ -124,11 +174,6 @@ export function initializeWindowManager() {
         );
     }
 
-=======
-<<<<<<< HEAD
-    let lastInputWasKeyboard = false;
-
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
     function updateRunningButtonLabel(app) {
         if (app.state === "closed") {
             app.runningButton.removeAttribute("aria-label");
@@ -156,11 +201,6 @@ export function initializeWindowManager() {
             `${app.name}, aberto em segundo plano. Ativar para minimizar.`
         );
     }
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
 
     function updateEmptyRunningState() {
         const hasOpenApplication = Array
@@ -180,17 +220,9 @@ export function initializeWindowManager() {
             app.runningButton.removeAttribute("aria-current");
             app.runningButton.title = "";
 
-<<<<<<< HEAD
             updateRunningButtonLabel(app);
             updateEmptyRunningState();
             notifyAppStateChange(app);
-=======
-<<<<<<< HEAD
-            updateRunningButtonLabel(app);
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
-            updateEmptyRunningState();
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
             return;
         }
 
@@ -201,17 +233,9 @@ export function initializeWindowManager() {
             app.runningButton.setAttribute("aria-pressed", "false");
             app.runningButton.title = `Restaurar ${app.name}`;
 
-<<<<<<< HEAD
             updateRunningButtonLabel(app);
             updateEmptyRunningState();
             notifyAppStateChange(app);
-=======
-<<<<<<< HEAD
-            updateRunningButtonLabel(app);
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
-            updateEmptyRunningState();
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
             return;
         }
 
@@ -219,17 +243,9 @@ export function initializeWindowManager() {
         app.runningButton.setAttribute("aria-pressed", "true");
         app.runningButton.title = `Minimizar ${app.name}`;
 
-<<<<<<< HEAD
         updateRunningButtonLabel(app);
         updateEmptyRunningState();
         notifyAppStateChange(app);
-=======
-<<<<<<< HEAD
-        updateRunningButtonLabel(app);
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
-        updateEmptyRunningState();
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
     }
 
     function deactivateWindow(app) {
@@ -240,16 +256,8 @@ export function initializeWindowManager() {
         if (activeApp === app) {
             activeApp = null;
         }
-<<<<<<< HEAD
 
         updateRunningButtonLabel(app);
-=======
-<<<<<<< HEAD
-
-        updateRunningButtonLabel(app);
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
     }
 
     function activateWindow(app) {
@@ -274,14 +282,8 @@ export function initializeWindowManager() {
         app.runningButton.setAttribute("aria-current", "true");
 
         activeApp = app;
-<<<<<<< HEAD
         updateRunningButtonLabel(app);
-=======
-<<<<<<< HEAD
-        updateRunningButtonLabel(app);
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
+        persistSession();
     }
 
     function getTopVisibleWindow(excludedApp = null) {
@@ -315,10 +317,6 @@ export function initializeWindowManager() {
         if (nextApp) {
             activateWindow(nextApp);
         }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
 
         return nextApp;
     }
@@ -327,26 +325,15 @@ export function initializeWindowManager() {
         app.windowElement.focus({
             preventScroll: true,
         });
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
     }
 
     function openWindow(app) {
         app.state = "open";
         app.windowElement.hidden = false;
-<<<<<<< HEAD
         app.windowElement.removeAttribute("aria-hidden");
-=======
-<<<<<<< HEAD
-        app.windowElement.removeAttribute("aria-hidden");
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         app.appButton.setAttribute("aria-expanded", "true");
 
+        dragManager.keepWindowInsideBounds(app);
         updateRunningButton(app);
         activateWindow(app);
 
@@ -360,14 +347,7 @@ export function initializeWindowManager() {
         deactivateWindow(app);
 
         app.windowElement.hidden = true;
-<<<<<<< HEAD
         app.windowElement.setAttribute("aria-hidden", "true");
-=======
-<<<<<<< HEAD
-        app.windowElement.setAttribute("aria-hidden", "true");
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         app.appButton.setAttribute("aria-expanded", "false");
 
         updateRunningButton(app);
@@ -379,49 +359,27 @@ export function initializeWindowManager() {
         if (shouldMoveFocus) {
             app.runningButton.focus();
         }
+
+        persistSession();
     }
 
-<<<<<<< HEAD
     function restoreWindow(app, shouldMoveFocus = true) {
-=======
-<<<<<<< HEAD
-    function restoreWindow(app, shouldMoveFocus = true) {
-=======
-    function restoreWindow(app) {
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         if (app.state !== "minimized") {
             return;
         }
 
         app.state = "open";
         app.windowElement.hidden = false;
-<<<<<<< HEAD
         app.windowElement.removeAttribute("aria-hidden");
-=======
-<<<<<<< HEAD
-        app.windowElement.removeAttribute("aria-hidden");
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         app.appButton.setAttribute("aria-expanded", "true");
 
+        dragManager.keepWindowInsideBounds(app);
         updateRunningButton(app);
         activateWindow(app);
 
-<<<<<<< HEAD
         if (shouldMoveFocus) {
             app.minimizeButton.focus();
         }
-=======
-<<<<<<< HEAD
-        if (shouldMoveFocus) {
-            app.minimizeButton.focus();
-        }
-=======
-        app.minimizeButton.focus();
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
     }
 
     function resetMaximizeButton(app) {
@@ -443,38 +401,22 @@ export function initializeWindowManager() {
         deactivateWindow(app);
 
         app.windowElement.hidden = true;
-<<<<<<< HEAD
         app.windowElement.setAttribute("aria-hidden", "true");
-=======
-<<<<<<< HEAD
-        app.windowElement.setAttribute("aria-hidden", "true");
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         app.windowElement.classList.remove("is-maximized");
         app.appButton.setAttribute("aria-expanded", "false");
 
         resetMaximizeButton(app);
         updateRunningButton(app);
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         const nextApp = wasActive
             ? activateTopVisibleWindow(app)
             : null;
 
+        persistSession();
+
         if (nextApp) {
             focusWindow(nextApp);
             return;
-<<<<<<< HEAD
-=======
-=======
-        if (wasActive) {
-            activateTopVisibleWindow(app);
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         }
 
         app.appButton.focus();
@@ -500,10 +442,12 @@ export function initializeWindowManager() {
 
             app.maximizeButton.title = "Restaurar tamanho";
             app.maximizeSymbol.textContent = "❐";
+            persistSession();
             return;
         }
 
         resetMaximizeButton(app);
+        persistSession();
     }
 
     function toggleWindowFromDesktop(app) {
@@ -531,10 +475,6 @@ export function initializeWindowManager() {
         }
     }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
     /*
      * Alt + W percorre as aplicações abertas.
      * Shift + Alt + W percorre na direção contrária.
@@ -573,16 +513,112 @@ export function initializeWindowManager() {
         focusWindow(nextApp);
     }
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
     const dragManager = createWindowDragManager({
         windowLayer,
         taskbar,
         activateWindow,
+        onPositionChange: persistSession,
     });
+
+    function restoreAppFromSession(app, savedApp) {
+        if (!savedApp) {
+            updateRunningButton(app);
+            return;
+        }
+
+        app.state = savedApp.state;
+        app.isMaximized =
+            savedApp.isMaximized && app.state !== "closed";
+
+        if (savedApp.position) {
+            app.windowElement.style.setProperty(
+                "--window-left",
+                `${savedApp.position.left}px`
+            );
+
+            app.windowElement.style.setProperty(
+                "--window-top",
+                `${savedApp.position.top}px`
+            );
+
+            app.windowElement.classList.add("is-positioned");
+        }
+
+        app.windowElement.style.zIndex = String(savedApp.zIndex);
+        highestWindowZIndex = Math.max(
+            highestWindowZIndex,
+            savedApp.zIndex
+        );
+
+        app.windowElement.classList.toggle(
+            "is-maximized",
+            app.isMaximized
+        );
+
+        if (app.isMaximized) {
+            app.maximizeButton.setAttribute(
+                "aria-label",
+                "Restaurar tamanho da janela"
+            );
+
+            app.maximizeButton.title = "Restaurar tamanho";
+            app.maximizeSymbol.textContent = "❐";
+        } else {
+            resetMaximizeButton(app);
+        }
+
+        const isOpen = app.state === "open";
+
+        app.windowElement.hidden = !isOpen;
+        app.appButton.setAttribute(
+            "aria-expanded",
+            String(isOpen)
+        );
+
+        if (isOpen) {
+            app.windowElement.removeAttribute("aria-hidden");
+        } else {
+            app.windowElement.setAttribute("aria-hidden", "true");
+        }
+
+        updateRunningButton(app);
+    }
+
+    function restoreSession() {
+        const savedSession = sessionStore.read();
+
+        apps.forEach(function (app) {
+            restoreAppFromSession(
+                app,
+                savedSession?.apps[app.id]
+            );
+        });
+
+        if (savedSession) {
+            const savedActiveApp = apps.get(
+                savedSession.activeAppId
+            );
+
+            if (
+                savedActiveApp &&
+                savedActiveApp.state === "open"
+            ) {
+                activateWindow(savedActiveApp);
+            } else {
+                activateTopVisibleWindow();
+            }
+        }
+
+        isRestoringSession = false;
+
+        requestAnimationFrame(function () {
+            apps.forEach(function (app) {
+                dragManager.keepWindowInsideBounds(app);
+            });
+
+            persistSession();
+        });
+    }
 
     function connectAppEvents(app) {
         app.appButton.addEventListener("click", function () {
@@ -636,10 +672,6 @@ export function initializeWindowManager() {
             }
         );
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         /*
          * Ao alcançar uma janela de segundo plano usando Tab,
          * ela passa a ser a janela ativa.
@@ -657,20 +689,12 @@ export function initializeWindowManager() {
             }
         );
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         dragManager.connect(app);
     }
 
     apps.forEach(connectAppEvents);
+    restoreSession();
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
     document.addEventListener(
         "pointerdown",
         function () {
@@ -679,19 +703,11 @@ export function initializeWindowManager() {
         true
     );
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
     document.addEventListener("pointerdown", function (event) {
         if (
             event.target.closest(".system-window") ||
             event.target.closest(".taskbar") ||
-<<<<<<< HEAD
             event.target.closest("[data-system-menu]") ||
-=======
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
             event.target.closest(".app-icon")
         ) {
             return;
@@ -700,13 +716,11 @@ export function initializeWindowManager() {
         apps.forEach(function (app) {
             deactivateWindow(app);
         });
+
+        persistSession();
     });
 
     document.addEventListener("keydown", function (event) {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         lastInputWasKeyboard = true;
 
         if (
@@ -721,19 +735,6 @@ export function initializeWindowManager() {
         if (event.key === "Escape" && activeApp) {
             event.preventDefault();
             closeWindow(activeApp);
-<<<<<<< HEAD
-=======
-=======
-        if (event.key !== "Escape") {
-            return;
-        }
-
-        const targetApp = activeApp || getTopVisibleWindow();
-
-        if (targetApp) {
-            closeWindow(targetApp);
->>>>>>> 0256313400664563c125250d3fef97c988119cfa
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
         }
     });
 
@@ -743,8 +744,9 @@ export function initializeWindowManager() {
         });
     });
 
+    window.addEventListener("pagehide", persistSession);
+
     updateEmptyRunningState();
-<<<<<<< HEAD
 
     return Object.freeze({
         toggleWindow(appId) {
@@ -763,6 +765,4 @@ export function initializeWindowManager() {
             return app ? app.state : null;
         },
     });
-=======
->>>>>>> 14427b88b6dd0f55a7f7761fa1a87e1941ed7ee7
 }

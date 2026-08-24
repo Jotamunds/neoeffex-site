@@ -184,6 +184,24 @@
     text-transform: uppercase;
 }
 
+.system-menu__session-status {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.system-menu__session-status::before {
+    content: "";
+
+    width: 0.32rem;
+    height: 0.32rem;
+    flex-shrink: 0;
+
+    border-radius: 50%;
+    background: var(--status-online);
+    box-shadow: 0 0 0.45rem rgba(85, 214, 139, 0.35);
+}
+
 @keyframes system-menu-open {
     from {
         opacity: 0;

@@ -13,6 +13,7 @@ export function createWindowDragManager({
     windowLayer,
     taskbar,
     activateWindow,
+    onPositionChange = function () {},
 }) {
     function getWindowBounds(app) {
         const safeGap = 12;
@@ -135,11 +136,13 @@ export function createWindowDragManager({
         if (app.titlebar.hasPointerCapture(event.pointerId)) {
             app.titlebar.releasePointerCapture(event.pointerId);
         }
+
+        onPositionChange(app);
     }
 
     function keepWindowInsideBounds(app) {
         if (
-            app.state === "closed" ||
+            app.state !== "open" ||
             app.isMaximized ||
             !app.windowElement.classList.contains("is-positioned")
         ) {
@@ -174,6 +177,8 @@ export function createWindowDragManager({
             "--window-top",
             `${correctedTop}px`
         );
+
+        onPositionChange(app);
     }
 
     function connect(app) {

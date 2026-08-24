@@ -71,9 +71,15 @@
             <span class="app-icon__name">Sistema</span>
         </button>
 
-        <button class="app-icon" type="button" data-app="projects">
-          <span class="app-icon__symbol" aria-hidden="true">P</span>
-          <span class="app-icon__name">Projetos</span>
+        <button
+            class="app-icon"
+            type="button"
+            data-app="projects"
+            aria-controls="projects-window"
+            aria-expanded="false"
+        >
+            <span class="app-icon__symbol" aria-hidden="true">P</span>
+            <span class="app-icon__name">Projetos</span>
         </button>
 
         <button class="app-icon" type="button" data-app="laboratory">
@@ -102,6 +108,7 @@
         <article
             class="system-window"
             id="about-window"
+            data-window="about"
             role="dialog"
             aria-labelledby="about-window-title"
             hidden
@@ -199,6 +206,114 @@
                 <span>BUILD 001</span>
             </footer>
         </article>
+
+        <article
+            class="system-window system-window--projects"
+            id="projects-window"
+            data-window="projects"
+            role="dialog"
+            aria-labelledby="projects-window-title"
+            hidden
+        >
+            <header
+                class="system-window__titlebar"
+                data-window-drag-handle
+            >
+                <div class="system-window__identity">
+                    <span
+                        class="system-window__app-symbol"
+                        aria-hidden="true"
+                    >
+                        P
+                    </span>
+
+                    <h2
+                        class="system-window__title"
+                        id="projects-window-title"
+                    >
+                        Diretório de projetos
+                    </h2>
+                </div>
+
+                <div
+                    class="system-window__controls"
+                    aria-label="Controles da janela"
+                >
+                    <button
+                        class="system-window__control"
+                        type="button"
+                        aria-label="Minimizar janela"
+                        data-window-action="minimize"
+                    >
+                        <span aria-hidden="true">−</span>
+                    </button>
+
+                    <button
+                        class="system-window__control"
+                        type="button"
+                        aria-label="Maximizar janela"
+                        data-window-action="maximize"
+                    >
+                        <span
+                            data-maximize-symbol
+                            aria-hidden="true"
+                        >
+                            □
+                        </span>
+                    </button>
+
+                    <button
+                        class="system-window__control system-window__control--close"
+                        type="button"
+                        aria-label="Fechar janela"
+                        data-window-action="close"
+                    >
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="system-window__content">
+                <p class="system-window__eyebrow">
+                    Project directory
+                </p>
+
+                <h3 class="system-window__system-name">
+                    PROJETOS
+                </h3>
+
+                <p class="system-window__description">
+                    Este espaço está preparado para receber projetos,
+                    estudos e experimentos de João Gabriel.
+                </p>
+
+                <div class="empty-state">
+                    <span
+                        class="empty-state__code"
+                        aria-hidden="true"
+                    >
+                        000
+                    </span>
+
+                    <div>
+                        <h4 class="empty-state__title">
+                            Nenhum projeto publicado
+                        </h4>
+
+                        <p class="empty-state__description">
+                            O diretório permanece vazio até a primeira
+                            publicação.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="system-window__footer">
+                <span>PROJECT DIRECTORY</span>
+                <span>0 ITEMS</span>
+            </footer>
+        </article>
+
     </div>
 
     <footer class="taskbar">
@@ -214,10 +329,19 @@
             <button
                 class="taskbar__app-button"
                 type="button"
-                data-running-app
+                data-running-app="about"
                 disabled
             >
                 Nenhum aplicativo aberto
+            </button>
+
+            <button
+                class="taskbar__app-button"
+                type="button"
+                data-running-app="projects"
+                hidden
+            >
+                Projetos
             </button>
       </div>
 

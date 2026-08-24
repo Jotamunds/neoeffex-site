@@ -243,12 +243,16 @@
 }
 
 .taskbar__running-apps {
-  min-width: 0;
+    display: flex;
+    gap: 0.4rem;
+    min-width: 0;
 }
 
 .taskbar__app-button {
     display: block;
-    width: 100%;
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
     overflow: hidden;
 
     padding: 0.48rem 0.65rem;
@@ -269,6 +273,10 @@
         background var(--motion-fast) ease,
         border-color var(--motion-fast) ease,
         color var(--motion-fast) ease;
+}
+
+.taskbar__app-button[hidden] {
+    display: none;
 }
 
 .taskbar__launcher:focus-visible,

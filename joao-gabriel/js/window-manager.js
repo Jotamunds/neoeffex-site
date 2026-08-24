@@ -47,6 +47,7 @@ function createAppRegistry() {
                 .textContent
                 .trim();
 
+<<<<<<< HEAD
             /*
              * A própria janela pode receber foco quando o usuário
              * alterna aplicativos pelo teclado.
@@ -60,6 +61,8 @@ function createAppRegistry() {
                 windowElement.id
             );
 
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
             apps.set(id, {
                 id,
                 name,
@@ -101,6 +104,7 @@ export function initializeWindowManager() {
 
     let highestWindowZIndex = 10;
     let activeApp = null;
+<<<<<<< HEAD
     let lastInputWasKeyboard = false;
 
     function updateRunningButtonLabel(app) {
@@ -130,6 +134,8 @@ export function initializeWindowManager() {
             `${app.name}, aberto em segundo plano. Ativar para minimizar.`
         );
     }
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
 
     function updateEmptyRunningState() {
         const hasOpenApplication = Array
@@ -149,7 +155,10 @@ export function initializeWindowManager() {
             app.runningButton.removeAttribute("aria-current");
             app.runningButton.title = "";
 
+<<<<<<< HEAD
             updateRunningButtonLabel(app);
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
             updateEmptyRunningState();
             return;
         }
@@ -161,7 +170,10 @@ export function initializeWindowManager() {
             app.runningButton.setAttribute("aria-pressed", "false");
             app.runningButton.title = `Restaurar ${app.name}`;
 
+<<<<<<< HEAD
             updateRunningButtonLabel(app);
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
             updateEmptyRunningState();
             return;
         }
@@ -170,7 +182,10 @@ export function initializeWindowManager() {
         app.runningButton.setAttribute("aria-pressed", "true");
         app.runningButton.title = `Minimizar ${app.name}`;
 
+<<<<<<< HEAD
         updateRunningButtonLabel(app);
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
         updateEmptyRunningState();
     }
 
@@ -182,8 +197,11 @@ export function initializeWindowManager() {
         if (activeApp === app) {
             activeApp = null;
         }
+<<<<<<< HEAD
 
         updateRunningButtonLabel(app);
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
     }
 
     function activateWindow(app) {
@@ -208,7 +226,10 @@ export function initializeWindowManager() {
         app.runningButton.setAttribute("aria-current", "true");
 
         activeApp = app;
+<<<<<<< HEAD
         updateRunningButtonLabel(app);
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
     }
 
     function getTopVisibleWindow(excludedApp = null) {
@@ -242,6 +263,7 @@ export function initializeWindowManager() {
         if (nextApp) {
             activateWindow(nextApp);
         }
+<<<<<<< HEAD
 
         return nextApp;
     }
@@ -250,12 +272,17 @@ export function initializeWindowManager() {
         app.windowElement.focus({
             preventScroll: true,
         });
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
     }
 
     function openWindow(app) {
         app.state = "open";
         app.windowElement.hidden = false;
+<<<<<<< HEAD
         app.windowElement.removeAttribute("aria-hidden");
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
         app.appButton.setAttribute("aria-expanded", "true");
 
         updateRunningButton(app);
@@ -271,7 +298,10 @@ export function initializeWindowManager() {
         deactivateWindow(app);
 
         app.windowElement.hidden = true;
+<<<<<<< HEAD
         app.windowElement.setAttribute("aria-hidden", "true");
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
         app.appButton.setAttribute("aria-expanded", "false");
 
         updateRunningButton(app);
@@ -285,22 +315,33 @@ export function initializeWindowManager() {
         }
     }
 
+<<<<<<< HEAD
     function restoreWindow(app, shouldMoveFocus = true) {
+=======
+    function restoreWindow(app) {
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
         if (app.state !== "minimized") {
             return;
         }
 
         app.state = "open";
         app.windowElement.hidden = false;
+<<<<<<< HEAD
         app.windowElement.removeAttribute("aria-hidden");
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
         app.appButton.setAttribute("aria-expanded", "true");
 
         updateRunningButton(app);
         activateWindow(app);
 
+<<<<<<< HEAD
         if (shouldMoveFocus) {
             app.minimizeButton.focus();
         }
+=======
+        app.minimizeButton.focus();
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
     }
 
     function resetMaximizeButton(app) {
@@ -322,13 +363,17 @@ export function initializeWindowManager() {
         deactivateWindow(app);
 
         app.windowElement.hidden = true;
+<<<<<<< HEAD
         app.windowElement.setAttribute("aria-hidden", "true");
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
         app.windowElement.classList.remove("is-maximized");
         app.appButton.setAttribute("aria-expanded", "false");
 
         resetMaximizeButton(app);
         updateRunningButton(app);
 
+<<<<<<< HEAD
         const nextApp = wasActive
             ? activateTopVisibleWindow(app)
             : null;
@@ -336,6 +381,10 @@ export function initializeWindowManager() {
         if (nextApp) {
             focusWindow(nextApp);
             return;
+=======
+        if (wasActive) {
+            activateTopVisibleWindow(app);
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
         }
 
         app.appButton.focus();
@@ -392,6 +441,7 @@ export function initializeWindowManager() {
         }
     }
 
+<<<<<<< HEAD
     /*
      * Alt + W percorre as aplicações abertas.
      * Shift + Alt + W percorre na direção contrária.
@@ -430,6 +480,8 @@ export function initializeWindowManager() {
         focusWindow(nextApp);
     }
 
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
     const dragManager = createWindowDragManager({
         windowLayer,
         taskbar,
@@ -488,6 +540,7 @@ export function initializeWindowManager() {
             }
         );
 
+<<<<<<< HEAD
         /*
          * Ao alcançar uma janela de segundo plano usando Tab,
          * ela passa a ser a janela ativa.
@@ -505,11 +558,14 @@ export function initializeWindowManager() {
             }
         );
 
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
         dragManager.connect(app);
     }
 
     apps.forEach(connectAppEvents);
 
+<<<<<<< HEAD
     document.addEventListener(
         "pointerdown",
         function () {
@@ -518,6 +574,8 @@ export function initializeWindowManager() {
         true
     );
 
+=======
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
     document.addEventListener("pointerdown", function (event) {
         if (
             event.target.closest(".system-window") ||
@@ -533,6 +591,7 @@ export function initializeWindowManager() {
     });
 
     document.addEventListener("keydown", function (event) {
+<<<<<<< HEAD
         lastInputWasKeyboard = true;
 
         if (
@@ -547,6 +606,16 @@ export function initializeWindowManager() {
         if (event.key === "Escape" && activeApp) {
             event.preventDefault();
             closeWindow(activeApp);
+=======
+        if (event.key !== "Escape") {
+            return;
+        }
+
+        const targetApp = activeApp || getTopVisibleWindow();
+
+        if (targetApp) {
+            closeWindow(targetApp);
+>>>>>>> 0256313400664563c125250d3fef97c988119cfa
         }
     });
 

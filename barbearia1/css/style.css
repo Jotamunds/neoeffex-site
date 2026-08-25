@@ -421,6 +421,8 @@ h3 {
 }
 
 .hero {
+    --hero-overlay-horizontal: linear-gradient(90deg, rgba(5, 5, 5, 0.98) 0%, rgba(5, 5, 5, 0.91) 29%, rgba(5, 5, 5, 0.42) 58%, rgba(5, 5, 5, 0.13) 100%);
+    --hero-overlay-vertical: linear-gradient(0deg, rgba(5, 5, 5, 0.86) 0%, transparent 32%);
     position: relative;
     display: grid;
     min-height: min(900px, 100svh);
@@ -428,28 +430,17 @@ h3 {
     overflow: hidden;
     padding: calc(var(--header-height) + 78px) 0 74px;
     background-color: #080808;
-    isolation: isolate;
-}
-
-.hero::before {
-    position: absolute;
-    z-index: -3;
-    inset: 0;
-    content: "";
-    background-image: var(--hero-image);
-    background-position: center;
+    background-image:
+        var(--hero-overlay-horizontal),
+        var(--hero-overlay-vertical),
+        var(--hero-image);
+    background-position: center, center, center;
+    background-repeat: no-repeat;
     background-size: cover;
-    transform: scale(1.015);
 }
 
-.hero::after {
-    position: absolute;
-    z-index: -2;
-    inset: 0;
-    content: "";
-    background:
-        linear-gradient(90deg, rgba(5, 5, 5, 0.98) 0%, rgba(5, 5, 5, 0.91) 29%, rgba(5, 5, 5, 0.42) 58%, rgba(5, 5, 5, 0.13) 100%),
-        linear-gradient(0deg, rgba(5, 5, 5, 0.86) 0%, transparent 32%);
+.hero > .container {
+    position: relative;
 }
 
 .hero__content {
@@ -535,6 +526,7 @@ h3 {
 
 .hero__scroll {
     position: absolute;
+    z-index: 2;
     right: max(22px, calc((100vw - var(--content)) / 2));
     bottom: 35px;
     display: flex;
@@ -1630,18 +1622,11 @@ h3 {
     }
 
     .hero {
+        --hero-overlay-horizontal: linear-gradient(90deg, rgba(5, 5, 5, 0.96) 0%, rgba(5, 5, 5, 0.77) 58%, rgba(5, 5, 5, 0.28) 100%);
+        --hero-overlay-vertical: linear-gradient(0deg, rgba(5, 5, 5, 0.96) 0%, transparent 53%);
         min-height: 780px;
         padding-bottom: 58px;
-    }
-
-    .hero::before {
-        background-position: 63% center;
-    }
-
-    .hero::after {
-        background:
-            linear-gradient(90deg, rgba(5, 5, 5, 0.96) 0%, rgba(5, 5, 5, 0.77) 58%, rgba(5, 5, 5, 0.28) 100%),
-            linear-gradient(0deg, rgba(5, 5, 5, 0.96) 0%, transparent 53%);
+        background-position: center, center, 63% center;
     }
 
     .hero__scroll {
@@ -1692,20 +1677,13 @@ h3 {
     }
 
     .hero {
+        --hero-overlay-horizontal: linear-gradient(90deg, rgba(5, 5, 5, 0.74), rgba(5, 5, 5, 0.18));
+        --hero-overlay-vertical: linear-gradient(0deg, rgba(5, 5, 5, 0.99) 0%, rgba(5, 5, 5, 0.75) 50%, rgba(5, 5, 5, 0.08) 95%);
         min-height: 760px;
         align-items: end;
         padding-top: 112px;
         padding-bottom: 62px;
-    }
-
-    .hero::before {
-        background-position: 68% center;
-    }
-
-    .hero::after {
-        background:
-            linear-gradient(90deg, rgba(5, 5, 5, 0.74), rgba(5, 5, 5, 0.18)),
-            linear-gradient(0deg, rgba(5, 5, 5, 0.99) 0%, rgba(5, 5, 5, 0.75) 50%, rgba(5, 5, 5, 0.08) 95%);
+        background-position: center, center, 68% center;
     }
 
     .hero h1 {

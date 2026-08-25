@@ -390,13 +390,13 @@ const lightboxTitle = document.getElementById("lightboxTitle");
 const galleryItems = Array.from(document.querySelectorAll("[data-gallery-index]"));
 let currentGalleryIndex = 0;
 
-const galleryPositions = ["0%", "20%", "40%", "60%", "80%", "100%"];
-
 const updateLightbox = (index) => {
     currentGalleryIndex = (index + galleryItems.length) % galleryItems.length;
     const title = BARBERSHOP_CONFIG.gallery[currentGalleryIndex];
-    lightboxImage.style.setProperty("--photo-position", galleryPositions[currentGalleryIndex]);
-    lightboxImage.setAttribute("aria-label", title);
+    const imageSource = galleryItems[currentGalleryIndex].dataset.image;
+
+    lightboxImage.src = imageSource;
+    lightboxImage.alt = title;
     lightboxTitle.textContent = title;
 };
 

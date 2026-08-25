@@ -17,8 +17,17 @@ barbearia1/
     └── images/
         ├── barbearia-hero.jpg
         ├── barbearia-galeria.jpg
-        └── barbearia-interior.jpg
+        ├── barbearia-interior.jpg
+        ├── corte-fade-classico.jpg
+        ├── corte-social-moderno.jpg
+        ├── corte-texturizado.jpg
+        ├── corte-degrade.jpg
+        ├── corte-barba.jpg
+        └── corte-cacheado.jpg
 ```
+
+As seis fotos com o prefixo `corte-` são usadas individualmente pela galeria.
+Isso preserva a proporção das imagens nas miniaturas e no modo ampliado.
 
 ## Personalização rápida
 

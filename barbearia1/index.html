@@ -223,12 +223,30 @@
             </div>
 
             <div class="gallery-grid" aria-label="Galeria de cortes">
-                <button class="gallery-item" type="button" style="--photo-position: 0%;" data-gallery-index="0" aria-label="Ampliar foto: Fade clássico"><span data-bind="gallery.0">Fade clássico</span></button>
-                <button class="gallery-item" type="button" style="--photo-position: 20%;" data-gallery-index="1" aria-label="Ampliar foto: Social moderno"><span data-bind="gallery.1">Social moderno</span></button>
-                <button class="gallery-item" type="button" style="--photo-position: 40%;" data-gallery-index="2" aria-label="Ampliar foto: Texturizado"><span data-bind="gallery.2">Texturizado</span></button>
-                <button class="gallery-item" type="button" style="--photo-position: 60%;" data-gallery-index="3" aria-label="Ampliar foto: Degradê"><span data-bind="gallery.3">Degradê</span></button>
-                <button class="gallery-item" type="button" style="--photo-position: 80%;" data-gallery-index="4" aria-label="Ampliar foto: Corte e barba"><span data-bind="gallery.4">Corte e barba</span></button>
-                <button class="gallery-item" type="button" style="--photo-position: 100%;" data-gallery-index="5" aria-label="Ampliar foto: Cacheado"><span data-bind="gallery.5">Cacheado</span></button>
+                <button class="gallery-item" type="button" data-gallery-index="0" data-image="assets/images/corte-fade-classico.jpg" aria-label="Ampliar foto: Fade clássico">
+                    <img src="assets/images/corte-fade-classico.jpg" alt="" loading="lazy" decoding="async">
+                    <span data-bind="gallery.0">Fade clássico</span>
+                </button>
+                <button class="gallery-item" type="button" data-gallery-index="1" data-image="assets/images/corte-social-moderno.jpg" aria-label="Ampliar foto: Social moderno">
+                    <img src="assets/images/corte-social-moderno.jpg" alt="" loading="lazy" decoding="async">
+                    <span data-bind="gallery.1">Social moderno</span>
+                </button>
+                <button class="gallery-item" type="button" data-gallery-index="2" data-image="assets/images/corte-texturizado.jpg" aria-label="Ampliar foto: Texturizado">
+                    <img src="assets/images/corte-texturizado.jpg" alt="" loading="lazy" decoding="async">
+                    <span data-bind="gallery.2">Texturizado</span>
+                </button>
+                <button class="gallery-item" type="button" data-gallery-index="3" data-image="assets/images/corte-degrade.jpg" aria-label="Ampliar foto: Degradê">
+                    <img src="assets/images/corte-degrade.jpg" alt="" loading="lazy" decoding="async">
+                    <span data-bind="gallery.3">Degradê</span>
+                </button>
+                <button class="gallery-item" type="button" data-gallery-index="4" data-image="assets/images/corte-barba.jpg" aria-label="Ampliar foto: Corte e barba">
+                    <img src="assets/images/corte-barba.jpg" alt="" loading="lazy" decoding="async">
+                    <span data-bind="gallery.4">Corte e barba</span>
+                </button>
+                <button class="gallery-item" type="button" data-gallery-index="5" data-image="assets/images/corte-cacheado.jpg" aria-label="Ampliar foto: Cacheado">
+                    <img src="assets/images/corte-cacheado.jpg" alt="" loading="lazy" decoding="async">
+                    <span data-bind="gallery.5">Cacheado</span>
+                </button>
             </div>
         </section>
 
@@ -459,7 +477,7 @@
                 <path d="m6 6 12 12M18 6 6 18"/>
             </svg>
         </button>
-        <div class="lightbox__image" id="lightboxImage" role="img"></div>
+        <img class="lightbox__image" id="lightboxImage" src="assets/images/corte-fade-classico.jpg" alt="Fade clássico">
         <div class="lightbox__bar">
             <p class="lightbox__title" id="lightboxTitle">Fade clássico</p>
             <div class="lightbox__controls">

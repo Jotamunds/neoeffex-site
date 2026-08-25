@@ -8,6 +8,9 @@
     max-height: calc(100svh - var(--taskbar-height) - 2.5rem);
     overflow-x: hidden;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
 
     scrollbar-width: thin;
     scrollbar-color:

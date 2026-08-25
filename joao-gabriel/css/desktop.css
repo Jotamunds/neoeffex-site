@@ -6,6 +6,19 @@
     min-height: 100svh;
     overflow: hidden;
     background: var(--system-background);
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.desktop input,
+.desktop textarea,
+.desktop pre,
+.desktop code,
+.desktop [contenteditable="true"],
+.desktop .terminal__output,
+.desktop [data-selectable] {
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 .desktop__wallpaper {
@@ -370,7 +383,13 @@
     }
 
     .workspace {
+        overflow-x: hidden;
+        overflow-y: auto;
         padding-top: 5.5rem;
+        padding-bottom: calc(var(--taskbar-height) + 2rem);
+        overscroll-behavior-y: contain;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
     }
 
     .app-grid {
@@ -398,6 +417,8 @@
     .taskbar__running-apps {
         overflow-x: auto;
         scrollbar-width: none;
+        touch-action: pan-x;
+        -webkit-overflow-scrolling: touch;
     }
 
     .taskbar__running-apps::-webkit-scrollbar {

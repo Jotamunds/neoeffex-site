@@ -71,6 +71,8 @@
     overflow-x: auto;
     padding-bottom: 0.2rem;
     scrollbar-width: none;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
 }
 
 .laboratory__filters::-webkit-scrollbar {

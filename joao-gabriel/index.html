@@ -9,7 +9,7 @@
     <meta name="description" content="JOÃO/OS — ambiente pessoal experimental de João Gabriel.">
 
     <meta name="theme-color" content="#0d0f12">
-    <meta name="application-version" content="0.1.0">
+    <meta name="application-version" content="0.1.23">
 
     <title>JOÃO/OS</title>
 
@@ -20,6 +20,39 @@
          */
         (function () {
             const bootSessionKey = "joaoos:boot-seen";
+
+            /*
+             * Aplica preferências antes da primeira pintura para evitar
+             * que transparência ou movimento apareçam por um instante.
+             */
+            try {
+                const savedPreferences = JSON.parse(
+                    localStorage.getItem("joaoos.preferences") || "null"
+                );
+
+                if (savedPreferences?.motion === false) {
+                    document.documentElement.classList.add(
+                        "is-motion-reduced"
+                    );
+                }
+
+                if (savedPreferences?.transparency === false) {
+                    document.documentElement.classList.add(
+                        "is-transparency-reduced"
+                    );
+                }
+
+                if (
+                    ["low", "standard", "high"].includes(
+                        savedPreferences?.wallpaper
+                    )
+                ) {
+                    document.documentElement.dataset.wallpaperIntensity =
+                        savedPreferences.wallpaper;
+                }
+            } catch (error) {
+                /* Mantém as preferências padrão se o storage estiver indisponível. */
+            }
 
             try {
                 const searchParameters = new URLSearchParams(
@@ -54,23 +87,24 @@
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Josefin+Sans:wght@500;600&family=Michroma&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="css/tokens.css?v=0.1.0">
-    <link rel="stylesheet" href="css/reset.css?v=0.1.0">
-    <link rel="stylesheet" href="css/boot.css?v=0.1.0">
-    <link rel="stylesheet" href="css/desktop.css?v=0.1.0">
-    <link rel="stylesheet" href="css/windows.css?v=0.1.0">
-    <link rel="stylesheet" href="css/system-menu.css?v=0.1.0">
-    <link rel="stylesheet" href="css/notifications.css?v=0.1.0">
-    <link rel="stylesheet" href="css/terminal.css?v=0.1.0">
-    <link rel="stylesheet" href="css/files.css?v=0.1.0">
-    <link rel="stylesheet" href="css/projects.css?v=0.1.0">
-    <link rel="stylesheet" href="css/contact.css?v=0.1.0">
-    <link rel="stylesheet" href="css/laboratory.css?v=0.1.0">
-    <link rel="stylesheet" href="css/neo.css?v=0.1.0">
-    <link rel="stylesheet" href="css/desktop-context-menu.css?v=0.1.0">
-    <link rel="stylesheet" href="css/system-search.css?v=0.1.0">
+    <link rel="stylesheet" href="css/tokens.css?v=0.1.23">
+    <link rel="stylesheet" href="css/reset.css?v=0.1.23">
+    <link rel="stylesheet" href="css/boot.css?v=0.1.23">
+    <link rel="stylesheet" href="css/desktop.css?v=0.1.23">
+    <link rel="stylesheet" href="css/windows.css?v=0.1.23">
+    <link rel="stylesheet" href="css/system-menu.css?v=0.1.23">
+    <link rel="stylesheet" href="css/notifications.css?v=0.1.23">
+    <link rel="stylesheet" href="css/terminal.css?v=0.1.23">
+    <link rel="stylesheet" href="css/files.css?v=0.1.23">
+    <link rel="stylesheet" href="css/projects.css?v=0.1.23">
+    <link rel="stylesheet" href="css/contact.css?v=0.1.23">
+    <link rel="stylesheet" href="css/laboratory.css?v=0.1.23">
+    <link rel="stylesheet" href="css/neo.css?v=0.1.23">
+    <link rel="stylesheet" href="css/desktop-context-menu.css?v=0.1.23">
+    <link rel="stylesheet" href="css/system-search.css?v=0.1.23">
+    <link rel="stylesheet" href="css/settings.css?v=0.1.23">
 
-    <script type="module" src="js/main.js?v=0.1.0"></script>
+    <script type="module" src="js/main.js?v=0.1.23"></script>
 </head>
 
 <body>
@@ -115,7 +149,7 @@
                 <span>JOÃO/OS</span>
             </div>
 
-            <p class="system-status__version">VERSION 0.1.0</p>
+            <p class="system-status__version">VERSION 0.1.23</p>
         </header>
 
         <section class="workspace" aria-label="Aplicativos">
@@ -186,6 +220,17 @@
                     <span class="app-icon__symbol" aria-hidden="true">@</span>
                     <span class="app-icon__name">Contato</span>
                 </button>
+
+                <button
+                    class="app-icon"
+                    type="button"
+                    data-app="settings"
+                    aria-controls="settings-window"
+                    aria-expanded="false"
+                >
+                    <span class="app-icon__symbol" aria-hidden="true">◌</span>
+                    <span class="app-icon__name">Configurações</span>
+                </button>
             </div>
         </section>
 
@@ -236,7 +281,7 @@
                     <dl class="system-information">
                         <div class="system-information__item">
                             <dt>Versão</dt>
-                            <dd>0.1.0</dd>
+                            <dd>0.1.23</dd>
                         </div>
 
                         <div class="system-information__item">
@@ -826,7 +871,7 @@
                         aria-relevant="additions"
                     >
                         <div class="terminal__entry terminal__entry--system">
-                            <span>JOÃO/OS TERMINAL 0.1.0</span>
+                            <span>JOÃO/OS TERMINAL 0.1.23</span>
                             <span>Digite “help” para ver os comandos disponíveis.</span>
                         </div>
                     </div>
@@ -1169,6 +1214,172 @@
                 </footer>
             </article>
 
+            <article
+                class="system-window system-window--settings"
+                id="settings-window"
+                data-window="settings"
+                role="dialog"
+                aria-labelledby="settings-window-title"
+                hidden
+            >
+                <header class="system-window__titlebar" data-window-drag-handle>
+                    <div class="system-window__identity">
+                        <span class="system-window__app-symbol" aria-hidden="true">
+                            ◌
+                        </span>
+
+                        <h2 class="system-window__title" id="settings-window-title">
+                            Configurações do sistema
+                        </h2>
+                    </div>
+
+                    <div class="system-window__controls" aria-label="Controles da janela">
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Minimizar janela"
+                            data-window-action="minimize"
+                        >
+                            <span aria-hidden="true">−</span>
+                        </button>
+
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Maximizar janela"
+                            data-window-action="maximize"
+                        >
+                            <span data-maximize-symbol aria-hidden="true">□</span>
+                        </button>
+
+                        <button
+                            class="system-window__control system-window__control--close"
+                            type="button"
+                            aria-label="Fechar janela"
+                            data-window-action="close"
+                        >
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="system-window__content settings-app" data-settings-app>
+                    <header class="settings-app__header">
+                        <p class="settings-app__eyebrow">Personalização local</p>
+                        <h3>Aparência e movimento</h3>
+                        <p>
+                            Ajuste a experiência do JOÃO/OS. As preferências ficam
+                            salvas somente neste navegador.
+                        </p>
+                    </header>
+
+                    <section class="settings-section" aria-labelledby="wallpaper-settings-title">
+                        <div class="settings-section__heading">
+                            <div>
+                                <h4 id="wallpaper-settings-title">Intensidade do ambiente</h4>
+                                <p>Controla a iluminação e a grade do plano de fundo.</p>
+                            </div>
+
+                            <span aria-hidden="true">01</span>
+                        </div>
+
+                        <div
+                            class="settings-options"
+                            role="radiogroup"
+                            aria-label="Intensidade do plano de fundo"
+                        >
+                            <button
+                                type="button"
+                                role="radio"
+                                aria-checked="false"
+                                data-settings-wallpaper="low"
+                            >
+                                <span class="settings-options__preview settings-options__preview--low"></span>
+                                Suave
+                            </button>
+
+                            <button
+                                type="button"
+                                role="radio"
+                                aria-checked="true"
+                                data-settings-wallpaper="standard"
+                            >
+                                <span class="settings-options__preview settings-options__preview--standard"></span>
+                                Padrão
+                            </button>
+
+                            <button
+                                type="button"
+                                role="radio"
+                                aria-checked="false"
+                                data-settings-wallpaper="high"
+                            >
+                                <span class="settings-options__preview settings-options__preview--high"></span>
+                                Intenso
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="settings-section" aria-labelledby="interface-settings-title">
+                        <div class="settings-section__heading">
+                            <div>
+                                <h4 id="interface-settings-title">Interface</h4>
+                                <p>Preferências de conforto visual e desempenho.</p>
+                            </div>
+
+                            <span aria-hidden="true">02</span>
+                        </div>
+
+                        <div class="settings-toggles">
+                            <label class="settings-toggle">
+                                <span>
+                                    <strong>Movimento da interface</strong>
+                                    <small>Anima janelas, menus e transições.</small>
+                                </span>
+
+                                <input
+                                    type="checkbox"
+                                    data-settings-motion
+                                    checked
+                                >
+
+                                <span class="settings-toggle__control" aria-hidden="true"></span>
+                            </label>
+
+                            <label class="settings-toggle">
+                                <span>
+                                    <strong>Transparência</strong>
+                                    <small>Aplica desfoque aos painéis do sistema.</small>
+                                </span>
+
+                                <input
+                                    type="checkbox"
+                                    data-settings-transparency
+                                    checked
+                                >
+
+                                <span class="settings-toggle__control" aria-hidden="true"></span>
+                            </label>
+                        </div>
+                    </section>
+
+                    <footer class="settings-app__actions">
+                        <p data-settings-status aria-live="polite">
+                            Preferências carregadas.
+                        </p>
+
+                        <button type="button" data-settings-reset>
+                            Restaurar padrões
+                        </button>
+                    </footer>
+                </div>
+
+                <footer class="system-window__footer">
+                    <span>LOCAL PREFERENCES</span>
+                    <span>SYNC OFF</span>
+                </footer>
+            </article>
+
         </div>
 
         <section
@@ -1338,6 +1549,25 @@
                         Fechado
                     </span>
                 </button>
+
+                <button
+                    class="system-menu__app"
+                    type="button"
+                    data-system-menu-app="settings"
+                >
+                    <span class="system-menu__app-symbol" aria-hidden="true">◌</span>
+
+                    <span class="system-menu__app-content">
+                        <span class="system-menu__app-name">Configurações</span>
+                        <span class="system-menu__app-description">
+                            Aparência e movimento
+                        </span>
+                    </span>
+
+                    <span class="system-menu__app-status" data-system-menu-status>
+                        Fechado
+                    </span>
+                </button>
             </div>
 
             <footer class="system-menu__footer">
@@ -1427,7 +1657,6 @@
             >
                 <span aria-hidden="true">◌</span>
                 <span>Configurações</span>
-                <small>Em breve</small>
             </button>
         </div>
 
@@ -1558,6 +1787,10 @@
 
                 <button class="taskbar__app-button" type="button" data-running-app="contact" hidden>
                     Contato
+                </button>
+
+                <button class="taskbar__app-button" type="button" data-running-app="settings" hidden>
+                    Configurações
                 </button>
             </div>
 

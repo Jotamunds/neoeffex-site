@@ -157,6 +157,7 @@
 }
 
 .system-window__content {
+    min-height: 0;
     overflow-y: auto;
     padding: clamp(1.5rem, 4vw, 3rem);
     scrollbar-width: thin;
@@ -164,6 +165,9 @@
         rgba(39, 149, 245, 0.28)
         transparent;
     scrollbar-gutter: stable;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
 }
 
 .system-window__content::-webkit-scrollbar {
@@ -405,6 +409,7 @@
 
     .system-window__content {
         padding: 1.5rem;
+        scrollbar-gutter: auto;
     }
 
     .system-window__description {

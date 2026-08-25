@@ -1,0 +1,323 @@
+.system-window--settings {
+    width: min(39rem, calc(100% - 2rem));
+}
+
+.settings-app {
+    display: grid;
+    gap: 1rem;
+}
+
+.settings-app__header {
+    padding-bottom: 0.5rem;
+}
+
+.settings-app__header p,
+.settings-app__header h3,
+.settings-section__heading h4,
+.settings-section__heading p,
+.settings-app__actions p {
+    margin: 0;
+}
+
+.settings-app__eyebrow {
+    color: var(--neo-blue-light);
+    font-family: var(--font-interface);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.settings-app__header h3 {
+    margin-top: 0.65rem;
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 500;
+}
+
+.settings-app__header > p:last-child {
+    max-width: 31rem;
+    margin-top: 0.65rem;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    line-height: 1.65;
+}
+
+.settings-section {
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-medium);
+    background: rgba(255, 255, 255, 0.018);
+}
+
+.settings-section__heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+}
+
+.settings-section__heading h4 {
+    font-family: var(--font-interface);
+    font-size: 0.68rem;
+    font-weight: 500;
+}
+
+.settings-section__heading p {
+    margin-top: 0.3rem;
+    color: var(--text-tertiary);
+    font-size: 0.7rem;
+}
+
+.settings-section__heading > span {
+    color: rgba(39, 149, 245, 0.45);
+    font-family: var(--font-interface);
+    font-size: 0.58rem;
+}
+
+.settings-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.settings-options button {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-small);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-secondary);
+    font-family: var(--font-interface);
+    font-size: 0.57rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.settings-options button:hover,
+.settings-options button:focus-visible,
+.settings-options button[aria-checked="true"] {
+    outline: none;
+    border-color: rgba(39, 149, 245, 0.3);
+    background: rgba(11, 135, 244, 0.055);
+    color: var(--text-primary);
+}
+
+.settings-options__preview {
+    position: relative;
+    height: 3rem;
+    overflow: hidden;
+    border-radius: 0.4rem;
+    background-color: #0d0f12;
+    background-image:
+        radial-gradient(circle at 20% 10%, rgba(11, 135, 244, var(--preview-light)), transparent 55%),
+        linear-gradient(rgba(255, 255, 255, var(--preview-grid)) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, var(--preview-grid)) 1px, transparent 1px);
+    background-size: auto, 0.7rem 0.7rem, 0.7rem 0.7rem;
+}
+
+.settings-options__preview--low {
+    --preview-light: 0.08;
+    --preview-grid: 0.018;
+}
+
+.settings-options__preview--standard {
+    --preview-light: 0.18;
+    --preview-grid: 0.035;
+}
+
+.settings-options__preview--high {
+    --preview-light: 0.32;
+    --preview-grid: 0.06;
+}
+
+.settings-toggles {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.settings-toggle {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 0.75rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-small);
+    cursor: pointer;
+}
+
+.settings-toggle:hover {
+    border-color: rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.018);
+}
+
+.settings-toggle > span:first-child {
+    display: grid;
+    gap: 0.22rem;
+}
+
+.settings-toggle strong {
+    font-family: var(--font-interface);
+    font-size: 0.63rem;
+    font-weight: 500;
+}
+
+.settings-toggle small {
+    color: var(--text-tertiary);
+    font-size: 0.68rem;
+}
+
+.settings-toggle input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.settings-toggle__control {
+    position: relative;
+    width: 2.2rem;
+    height: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.055);
+    transition:
+        border-color var(--motion-fast) ease,
+        background var(--motion-fast) ease;
+}
+
+.settings-toggle__control::after {
+    content: "";
+    position: absolute;
+    top: 0.18rem;
+    left: 0.2rem;
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 50%;
+    background: var(--text-tertiary);
+    transition:
+        transform var(--motion-fast) var(--motion-ease),
+        background var(--motion-fast) ease;
+}
+
+.settings-toggle input:checked + .settings-toggle__control {
+    border-color: rgba(39, 149, 245, 0.32);
+    background: rgba(11, 135, 244, 0.14);
+}
+
+.settings-toggle input:checked + .settings-toggle__control::after {
+    background: var(--neo-blue-light);
+    transform: translateX(0.98rem);
+}
+
+.settings-toggle input:focus-visible + .settings-toggle__control {
+    outline: 1px solid rgba(39, 149, 245, 0.48);
+    outline-offset: 2px;
+}
+
+.settings-app__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.25rem;
+}
+
+.settings-app__actions p {
+    color: var(--text-tertiary);
+    font-family: var(--font-interface);
+    font-size: 0.54rem;
+}
+
+.settings-app__actions button {
+    padding: 0.55rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-small);
+    background: rgba(255, 255, 255, 0.025);
+    color: var(--text-secondary);
+    font-family: var(--font-interface);
+    font-size: 0.55rem;
+    cursor: pointer;
+}
+
+.settings-app__actions button:hover,
+.settings-app__actions button:focus-visible {
+    outline: none;
+    border-color: rgba(39, 149, 245, 0.28);
+    background: rgba(11, 135, 244, 0.055);
+    color: var(--text-primary);
+}
+
+html[data-wallpaper-intensity="low"] .desktop__light {
+    opacity: 0.08;
+}
+
+html[data-wallpaper-intensity="low"] .desktop__light--right {
+    opacity: 0.04;
+}
+
+html[data-wallpaper-intensity="low"] .desktop__grid {
+    opacity: 0.08;
+}
+
+html[data-wallpaper-intensity="high"] .desktop__light {
+    opacity: 0.28;
+}
+
+html[data-wallpaper-intensity="high"] .desktop__light--right {
+    opacity: 0.18;
+}
+
+html[data-wallpaper-intensity="high"] .desktop__grid {
+    opacity: 0.25;
+}
+
+html.is-transparency-reduced .system-window,
+html.is-transparency-reduced .taskbar,
+html.is-transparency-reduced .system-menu,
+html.is-transparency-reduced .system-search__panel,
+html.is-transparency-reduced .desktop-context-menu,
+html.is-transparency-reduced .system-notification {
+    background: #15181d;
+    backdrop-filter: none;
+}
+
+html.is-transparency-reduced .system-search__backdrop {
+    backdrop-filter: none;
+}
+
+html.is-motion-reduced *,
+html.is-motion-reduced *::before,
+html.is-motion-reduced *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+}
+
+@media (max-width: 600px) {
+    .system-window--settings {
+        width: calc(100% - 1rem);
+    }
+
+    .settings-options {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-options button {
+        grid-template-columns: 4rem 1fr;
+        align-items: center;
+    }
+
+    .settings-options__preview {
+        height: 2.35rem;
+    }
+
+    .settings-app__actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}

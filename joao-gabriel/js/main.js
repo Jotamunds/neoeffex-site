@@ -1,5 +1,5 @@
 /*
- * JOÃO/OS — versão 0.1.0
+ * JOÃO/OS — versão 0.1.23
  *
  * Ponto de entrada do sistema.
  */
@@ -14,6 +14,7 @@ import { initializeLaboratoryApp } from "./laboratory.js";
 import { initializeNeoApp } from "./neo.js";
 import { createNotificationCenter } from "./notification-center.js";
 import { initializeProjectsApp } from "./projects.js";
+import { initializeSettingsApp } from "./settings.js";
 import { initializeSystemMenu } from "./system-menu.js";
 import { initializeSystemPower } from "./system-power.js";
 import { initializeSystemSearch } from "./system-search.js";
@@ -39,6 +40,7 @@ initializeFilesApp();
 initializeLaboratoryApp();
 initializeNeoApp();
 initializeProjectsApp();
+initializeSettingsApp();
 
 const systemPower = initializeSystemPower();
 const systemSearch = initializeSystemSearch({
@@ -64,4 +66,4 @@ initializeSystemMenu({
     getWindowState: windowManager.getWindowState,
 });
 
-console.info("JOÃO/OS 0.1.0 iniciado.");
+console.info("JOÃO/OS 0.1.23 iniciado.");

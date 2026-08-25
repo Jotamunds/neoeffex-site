@@ -14,6 +14,8 @@ const APP_ALIASES = new Map([
     ["terminal", "terminal"],
     ["arquivos", "files"],
     ["files", "files"],
+    ["contato", "contact"],
+    ["contact", "contact"],
 ]);
 
 const APP_NAMES = new Map([
@@ -21,6 +23,7 @@ const APP_NAMES = new Map([
     ["projects", "Projetos"],
     ["terminal", "Terminal"],
     ["files", "Arquivos"],
+    ["contact", "Contato"],
 ]);
 
 const STATE_NAMES = {
@@ -121,6 +124,7 @@ export function initializeTerminal({
                 "about             abre o aplicativo Sistema",
                 "projects          abre o diretório de Projetos",
                 "files             abre o explorador de Arquivos",
+                "contact           abre os canais de Contato",
                 "open <app>        abre um aplicativo",
                 "apps              lista o estado das janelas",
                 "whoami            exibe a identidade do portfólio",
@@ -143,6 +147,11 @@ export function initializeTerminal({
 
         if (command === "files" || command === "arquivos") {
             openApp("files");
+            return;
+        }
+
+        if (command === "contact" || command === "contato") {
+            openApp("contact");
             return;
         }
 

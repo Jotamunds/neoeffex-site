@@ -64,6 +64,7 @@
     <link rel="stylesheet" href="css/terminal.css?v=0.1.0">
     <link rel="stylesheet" href="css/files.css?v=0.1.0">
     <link rel="stylesheet" href="css/projects.css?v=0.1.0">
+    <link rel="stylesheet" href="css/contact.css?v=0.1.0">
 
     <script type="module" src="js/main.js?v=0.1.0"></script>
 </head>
@@ -167,6 +168,17 @@
                 >
                     <span class="app-icon__symbol" aria-hidden="true">A</span>
                     <span class="app-icon__name">Arquivos</span>
+                </button>
+
+                <button
+                    class="app-icon"
+                    type="button"
+                    data-app="contact"
+                    aria-controls="contact-window"
+                    aria-expanded="false"
+                >
+                    <span class="app-icon__symbol" aria-hidden="true">@</span>
+                    <span class="app-icon__name">Contato</span>
                 </button>
             </div>
         </section>
@@ -649,6 +661,160 @@
                 </footer>
             </article>
 
+            <article
+                class="system-window system-window--contact"
+                id="contact-window"
+                data-window="contact"
+                role="dialog"
+                aria-labelledby="contact-window-title"
+                hidden
+            >
+                <header class="system-window__titlebar" data-window-drag-handle>
+                    <div class="system-window__identity">
+                        <span class="system-window__app-symbol" aria-hidden="true">
+                            @
+                        </span>
+
+                        <h2 class="system-window__title" id="contact-window-title">
+                            Contato profissional
+                        </h2>
+                    </div>
+
+                    <div class="system-window__controls" aria-label="Controles da janela">
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Minimizar janela"
+                            data-window-action="minimize"
+                        >
+                            <span aria-hidden="true">−</span>
+                        </button>
+
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Maximizar janela"
+                            data-window-action="maximize"
+                        >
+                            <span data-maximize-symbol aria-hidden="true">□</span>
+                        </button>
+
+                        <button
+                            class="system-window__control system-window__control--close"
+                            type="button"
+                            aria-label="Fechar janela"
+                            data-window-action="close"
+                        >
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="system-window__content contact-app">
+                    <header class="contact-app__profile">
+                        <span class="contact-app__avatar" aria-hidden="true">JG</span>
+
+                        <div class="contact-app__identity">
+                            <p class="contact-app__eyebrow">Professional channel</p>
+                            <h3 class="contact-app__name">João Gabriel</h3>
+                            <p class="contact-app__role">
+                                Sistemas de Informação · Automação · Desenvolvimento
+                            </p>
+                        </div>
+
+                        <span class="contact-app__availability">
+                            Disponível para conexões
+                        </span>
+                    </header>
+
+                    <p class="contact-app__introduction">
+                        Entre em contato para conversar sobre tecnologia, projetos,
+                        automações, dados e oportunidades profissionais.
+                    </p>
+
+                    <section class="contact-app__channels" aria-label="Canais de contato">
+                        <article class="contact-channel">
+                            <span class="contact-channel__symbol" aria-hidden="true">@</span>
+
+                            <div class="contact-channel__content">
+                                <h4>E-mail profissional</h4>
+                                <p>atendimento@neoeffex.com.br</p>
+                            </div>
+
+                            <div class="contact-channel__actions">
+                                <a
+                                    href="mailto:atendimento@neoeffex.com.br"
+                                    aria-label="Enviar e-mail para João Gabriel"
+                                >
+                                    Escrever
+                                </a>
+
+                                <button
+                                    type="button"
+                                    data-contact-copy="email"
+                                    data-window-autofocus
+                                >
+                                    Copiar
+                                </button>
+                            </div>
+                        </article>
+
+                        <article class="contact-channel">
+                            <span class="contact-channel__symbol" aria-hidden="true">GH</span>
+
+                            <div class="contact-channel__content">
+                                <h4>GitHub</h4>
+                                <p>@jotamunds</p>
+                            </div>
+
+                            <div class="contact-channel__actions">
+                                <a
+                                    href="https://github.com/jotamunds"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Abrir GitHub de João Gabriel"
+                                >
+                                    Abrir ↗
+                                </a>
+
+                                <button type="button" data-contact-copy="github">
+                                    Copiar
+                                </button>
+                            </div>
+                        </article>
+
+                        <article class="contact-channel">
+                            <span class="contact-channel__symbol" aria-hidden="true">in</span>
+
+                            <div class="contact-channel__content">
+                                <h4>LinkedIn</h4>
+                                <p>João Gabriel Vieira da Silva</p>
+                            </div>
+
+                            <div class="contact-channel__actions">
+                                <a
+                                    href="https://www.linkedin.com/in/joao-gabriel-vieira-da-silva"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Abrir LinkedIn de João Gabriel"
+                                >
+                                    Abrir ↗
+                                </a>
+
+                                <button type="button" data-contact-copy="linkedin">
+                                    Copiar
+                                </button>
+                            </div>
+                        </article>
+                    </section>
+                </div>
+
+                <footer class="system-window__footer">
+                    <span>PROFESSIONAL CONTACT</span>
+                    <span>AVAILABLE</span>
+                </footer>
+            </article>
+
         </div>
 
         <section
@@ -749,6 +915,25 @@
                         Fechado
                     </span>
                 </button>
+
+                <button
+                    class="system-menu__app"
+                    type="button"
+                    data-system-menu-app="contact"
+                >
+                    <span class="system-menu__app-symbol" aria-hidden="true">@</span>
+
+                    <span class="system-menu__app-content">
+                        <span class="system-menu__app-name">Contato</span>
+                        <span class="system-menu__app-description">
+                            Canais profissionais
+                        </span>
+                    </span>
+
+                    <span class="system-menu__app-status" data-system-menu-status>
+                        Fechado
+                    </span>
+                </button>
             </div>
 
             <footer class="system-menu__footer">
@@ -800,6 +985,10 @@
 
                 <button class="taskbar__app-button" type="button" data-running-app="files" hidden>
                     Arquivos
+                </button>
+
+                <button class="taskbar__app-button" type="button" data-running-app="contact" hidden>
+                    Contato
                 </button>
             </div>
 

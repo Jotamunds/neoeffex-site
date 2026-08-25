@@ -6,6 +6,7 @@
 
 import { initializeBootSequence } from "./boot-sequence.js";
 import { startClock } from "./clock.js";
+import { initializeContactApp } from "./contact.js";
 import { initializeUnavailableApps } from "./desktop-apps.js";
 import { initializeFilesApp } from "./files.js";
 import { createNotificationCenter } from "./notification-center.js";
@@ -19,6 +20,10 @@ startClock();
 
 const notificationCenter = createNotificationCenter();
 const windowManager = initializeWindowManager();
+
+initializeContactApp({
+    notify: notificationCenter.show,
+});
 
 initializeFilesApp();
 initializeProjectsApp();

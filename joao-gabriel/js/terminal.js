@@ -11,6 +11,9 @@ const APP_ALIASES = new Map([
     ["about", "about"],
     ["projetos", "projects"],
     ["projects", "projects"],
+    ["laboratorio", "laboratory"],
+    ["laboratório", "laboratory"],
+    ["laboratory", "laboratory"],
     ["terminal", "terminal"],
     ["arquivos", "files"],
     ["files", "files"],
@@ -21,6 +24,7 @@ const APP_ALIASES = new Map([
 const APP_NAMES = new Map([
     ["about", "Sistema"],
     ["projects", "Projetos"],
+    ["laboratory", "Laboratório"],
     ["terminal", "Terminal"],
     ["files", "Arquivos"],
     ["contact", "Contato"],
@@ -123,6 +127,7 @@ export function initializeTerminal({
                 "help              mostra esta lista",
                 "about             abre o aplicativo Sistema",
                 "projects          abre o diretório de Projetos",
+                "laboratory        abre o Laboratório",
                 "files             abre o explorador de Arquivos",
                 "contact           abre os canais de Contato",
                 "open <app>        abre um aplicativo",
@@ -142,6 +147,15 @@ export function initializeTerminal({
 
         if (command === "projects" || command === "projetos") {
             openApp("projects");
+            return;
+        }
+
+        if (
+            command === "laboratory" ||
+            command === "laboratorio" ||
+            command === "laboratório"
+        ) {
+            openApp("laboratory");
             return;
         }
 

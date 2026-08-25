@@ -65,6 +65,7 @@
     <link rel="stylesheet" href="css/files.css?v=0.1.0">
     <link rel="stylesheet" href="css/projects.css?v=0.1.0">
     <link rel="stylesheet" href="css/contact.css?v=0.1.0">
+    <link rel="stylesheet" href="css/laboratory.css?v=0.1.0">
 
     <script type="module" src="js/main.js?v=0.1.0"></script>
 </head>
@@ -132,7 +133,8 @@
                     class="app-icon"
                     type="button"
                     data-app="laboratory"
-                    data-app-status="unavailable"
+                    aria-controls="laboratory-window"
+                    aria-expanded="false"
                 >
                     <span class="app-icon__symbol" aria-hidden="true">L</span>
                     <span class="app-icon__name">Laboratório</span>
@@ -411,6 +413,168 @@
                 <footer class="system-window__footer">
                     <span>PROJECT DIRECTORY</span>
                     <span data-projects-status>4 PROJETOS</span>
+                </footer>
+            </article>
+
+            <article
+                class="system-window system-window--laboratory"
+                id="laboratory-window"
+                data-window="laboratory"
+                role="dialog"
+                aria-labelledby="laboratory-window-title"
+                hidden
+            >
+                <header class="system-window__titlebar" data-window-drag-handle>
+                    <div class="system-window__identity">
+                        <span class="system-window__app-symbol" aria-hidden="true">
+                            L
+                        </span>
+
+                        <h2 class="system-window__title" id="laboratory-window-title">
+                            Laboratório de experimentos
+                        </h2>
+                    </div>
+
+                    <div class="system-window__controls" aria-label="Controles da janela">
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Minimizar janela"
+                            data-window-action="minimize"
+                        >
+                            <span aria-hidden="true">−</span>
+                        </button>
+
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Maximizar janela"
+                            data-window-action="maximize"
+                        >
+                            <span data-maximize-symbol aria-hidden="true">□</span>
+                        </button>
+
+                        <button
+                            class="system-window__control system-window__control--close"
+                            type="button"
+                            aria-label="Fechar janela"
+                            data-window-action="close"
+                        >
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="system-window__content laboratory" data-laboratory>
+                    <section class="laboratory__catalog" data-laboratory-catalog>
+                        <header class="laboratory__header">
+                            <div>
+                                <p class="laboratory__eyebrow">Research workspace</p>
+                                <h3 class="laboratory__heading">Experimentos em andamento</h3>
+                            </div>
+
+                            <span class="laboratory__counter" aria-hidden="true">04</span>
+                        </header>
+
+                        <p class="laboratory__introduction">
+                            Estudos práticos usados para aprender, validar ideias e
+                            transformar conceitos em projetos maiores.
+                        </p>
+
+                        <div class="laboratory__filters" aria-label="Filtrar experimentos">
+                            <button
+                                type="button"
+                                data-laboratory-filter="all"
+                                aria-pressed="true"
+                            >
+                                Todos
+                            </button>
+
+                            <button
+                                type="button"
+                                data-laboratory-filter="ai"
+                                aria-pressed="false"
+                            >
+                                IA
+                            </button>
+
+                            <button
+                                type="button"
+                                data-laboratory-filter="data"
+                                aria-pressed="false"
+                            >
+                                Dados
+                            </button>
+
+                            <button
+                                type="button"
+                                data-laboratory-filter="automation"
+                                aria-pressed="false"
+                            >
+                                Automação
+                            </button>
+
+                            <button
+                                type="button"
+                                data-laboratory-filter="web"
+                                aria-pressed="false"
+                            >
+                                Web
+                            </button>
+                        </div>
+
+                        <div
+                            class="laboratory__list"
+                            data-laboratory-list
+                            data-window-autofocus
+                            tabindex="-1"
+                        ></div>
+                    </section>
+
+                    <article class="experiment-detail" data-experiment-detail hidden>
+                        <button
+                            class="experiment-detail__back"
+                            type="button"
+                            data-experiment-back
+                        >
+                            <span aria-hidden="true">←</span>
+                            Voltar ao laboratório
+                        </button>
+
+                        <header class="experiment-detail__header">
+                            <span
+                                class="experiment-detail__symbol"
+                                data-experiment-symbol
+                                aria-hidden="true"
+                            ></span>
+
+                            <div>
+                                <p class="experiment-detail__status" data-experiment-status></p>
+                                <h3 class="experiment-detail__title" data-experiment-title></h3>
+                                <p class="experiment-detail__summary" data-experiment-summary></p>
+                            </div>
+                        </header>
+
+                        <section class="experiment-detail__section">
+                            <h4>Objetivo do experimento</h4>
+                            <p data-experiment-objective></p>
+                        </section>
+
+                        <section class="experiment-detail__section">
+                            <h4>Aprendizados e próximos passos</h4>
+                            <ul data-experiment-notes></ul>
+                        </section>
+
+                        <section class="experiment-detail__section">
+                            <h4>Ferramentas e conceitos</h4>
+                            <ul class="experiment-detail__stack" data-experiment-stack></ul>
+                        </section>
+                    </article>
+                </div>
+
+                <footer class="system-window__footer">
+                    <span>EXPERIMENTAL WORKSPACE</span>
+                    <span data-laboratory-status>4 EXPERIMENTOS</span>
                 </footer>
             </article>
 
@@ -881,6 +1045,25 @@
                 <button
                     class="system-menu__app"
                     type="button"
+                    data-system-menu-app="laboratory"
+                >
+                    <span class="system-menu__app-symbol" aria-hidden="true">L</span>
+
+                    <span class="system-menu__app-content">
+                        <span class="system-menu__app-name">Laboratório</span>
+                        <span class="system-menu__app-description">
+                            Estudos e experimentos
+                        </span>
+                    </span>
+
+                    <span class="system-menu__app-status" data-system-menu-status>
+                        Fechado
+                    </span>
+                </button>
+
+                <button
+                    class="system-menu__app"
+                    type="button"
                     data-system-menu-app="terminal"
                 >
                     <span class="system-menu__app-symbol" aria-hidden="true">&gt;_</span>
@@ -977,6 +1160,10 @@
 
                 <button class="taskbar__app-button" type="button" data-running-app="projects" hidden>
                     Projetos
+                </button>
+
+                <button class="taskbar__app-button" type="button" data-running-app="laboratory" hidden>
+                    Laboratório
                 </button>
 
                 <button class="taskbar__app-button" type="button" data-running-app="terminal" hidden>

@@ -9,6 +9,7 @@ import { startClock } from "./clock.js";
 import { initializeContactApp } from "./contact.js";
 import { initializeUnavailableApps } from "./desktop-apps.js";
 import { initializeFilesApp } from "./files.js";
+import { initializeLaboratoryApp } from "./laboratory.js";
 import { createNotificationCenter } from "./notification-center.js";
 import { initializeProjectsApp } from "./projects.js";
 import { initializeSystemMenu } from "./system-menu.js";
@@ -26,6 +27,7 @@ initializeContactApp({
 });
 
 initializeFilesApp();
+initializeLaboratoryApp();
 initializeProjectsApp();
 
 initializeTerminal({

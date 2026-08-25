@@ -72,6 +72,18 @@ button {
     font: inherit;
 }
 
+.svg-definitions {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.whatsapp-icon {
+    fill: currentColor;
+    stroke: none;
+}
+
 a {
     color: inherit;
     text-decoration: none;
@@ -1116,26 +1128,31 @@ h3 {
     right: 22px;
     bottom: 22px;
     display: flex;
-    width: 54px;
-    height: 54px;
+    width: 60px;
+    height: 60px;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 0;
     border-radius: 50%;
     background: #25d366;
-    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.38);
-    color: #071d0f;
+    box-shadow:
+        0 16px 35px rgba(0, 0, 0, 0.38),
+        0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+    color: #ffffff;
     transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
-.floating-whatsapp:hover {
-    box-shadow: 0 20px 42px rgba(37, 211, 102, 0.25);
-    transform: translateY(-3px) scale(1.03);
+.floating-whatsapp:hover,
+.floating-whatsapp:focus-visible {
+    box-shadow:
+        0 20px 44px rgba(37, 211, 102, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.24) inset;
+    transform: translateY(-3px) scale(1.04);
 }
 
-.floating-whatsapp svg {
-    width: 25px;
-    height: 25px;
+.floating-whatsapp .whatsapp-icon {
+    width: 31px;
+    height: 31px;
 }
 
 .theme-fab {

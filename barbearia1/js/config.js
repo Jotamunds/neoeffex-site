@@ -13,10 +13,10 @@ const BARBERSHOP_CONFIG = {
         initial: "N"
     },
     hero: {
-        eyebrow: "Seu estilo, nossa assinatura",
-        line1: "Seu estilo",
-        line2: "começa aqui.",
-        description: "Cortes, barba e acabamento feitos para você sair renovado, confiante e pronto para qualquer ocasião."
+        eyebrow: "Corte, barba e atitude",
+        line1: "Mais que um corte.",
+        line2: "Sua melhor versão.",
+        description: "Atendimento personalizado, técnica e atenção aos detalhes para você sair renovado, confiante e pronto para qualquer ocasião."
     },
     services: [
         {

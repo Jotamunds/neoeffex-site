@@ -421,6 +421,7 @@ h3 {
 }
 
 .hero {
+    position: relative;
     display: grid;
     min-height: min(900px, 100svh);
     align-items: center;
@@ -452,11 +453,13 @@ h3 {
 }
 
 .hero__content {
-    max-width: 630px;
+    max-width: 690px;
+    padding-left: 26px;
+    border-left: 2px solid var(--accent);
 }
 
 .hero__eyebrow {
-    margin-bottom: 27px;
+    margin-bottom: 23px;
 }
 
 .hero h1 {
@@ -475,8 +478,12 @@ h3 {
     color: var(--accent-light);
 }
 
+.hero h1 span:first-child {
+    color: var(--text);
+}
+
 .hero__copy {
-    max-width: 510px;
+    max-width: 555px;
     margin-bottom: 32px;
     color: rgba(242, 239, 232, 0.78);
     font-size: clamp(1rem, 1.3vw, 1.16rem);
@@ -491,13 +498,20 @@ h3 {
 .hero__meta {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 25px;
-    margin-top: 42px;
+    margin-top: 31px;
+    padding-top: 19px;
+    border-top: 1px solid rgba(242, 239, 232, 0.15);
     color: var(--muted);
     font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+}
+
+.hero__rating strong {
+    color: var(--accent-light);
 }
 
 .hero__status {
@@ -1696,6 +1710,10 @@ h3 {
 
     .hero h1 {
         font-size: clamp(3.25rem, 16vw, 5rem);
+    }
+
+    .hero__content {
+        padding-left: 18px;
     }
 
     .hero__copy {

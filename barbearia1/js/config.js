@@ -8,9 +8,9 @@
  */
 const BARBERSHOP_CONFIG = {
     brand: {
-        name: "Barbearia DOM",
-        shortName: "DOM",
-        initial: "D"
+        name: "Nome da Barbearia",
+        shortName: "Nome da Barbearia",
+        initial: "N"
     },
     hero: {
         eyebrow: "Seu estilo, nossa assinatura",
@@ -86,7 +86,7 @@ const BARBERSHOP_CONFIG = {
     ],
     contact: {
         whatsapp: "5511999999999",
-        whatsappMessage: "Olá! Vi o site da Barbearia DOM e gostaria de agendar um horário.",
+        whatsappMessage: "Olá! Vi o site da barbearia e gostaria de agendar um horário.",
         address: "Rua das Palmeiras, 123",
         city: "Centro — São Paulo/SP",
         neighborhood: "Centro • São Paulo",
@@ -105,8 +105,8 @@ const BARBERSHOP_CONFIG = {
             6: [9, 18]
         },
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Rua+das+Palmeiras+123+Sao+Paulo",
-        instagram: "@barbeariadom",
-        instagramUrl: "https://instagram.com/barbeariadom"
+        instagram: "@nomedabarbearia",
+        instagramUrl: "https://instagram.com/nomedabarbearia"
     },
     footer: {
         description: "Estilo, cuidado e atendimento de verdade. Sua melhor versão começa na cadeira."

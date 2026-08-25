@@ -2,8 +2,6 @@
 
 Landing page reutilizável para demonstração e venda de sites para barbearias.
 O projeto usa apenas HTML, CSS e JavaScript puro, sem bibliotecas externas.
-O nome demonstrativo exibido no layout é **Nome da Barbearia**, deixando claro
-onde a marca do cliente deverá ser inserida.
 
 ## Estrutura
 

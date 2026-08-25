@@ -10,8 +10,9 @@
     overflow-y: auto;
 
     scrollbar-width: thin;
-    scrollbar-color: rgba(39, 149, 245, 0.28) transparent;
-    scrollbar-gutter: stable;
+    scrollbar-color:
+        rgba(39, 149, 245, 0.28)
+        rgba(16, 19, 24, 0.96);
 
     border: 1px solid rgba(255, 255, 255, 0.11);
     border-radius: var(--radius-large);
@@ -30,7 +31,7 @@
 }
 
 .system-menu::-webkit-scrollbar-track {
-    background: transparent;
+    background: rgba(16, 19, 24, 0.96);
 }
 
 .system-menu::-webkit-scrollbar-thumb {

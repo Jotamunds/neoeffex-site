@@ -10,6 +10,7 @@ import { initializeContactApp } from "./contact.js";
 import { initializeUnavailableApps } from "./desktop-apps.js";
 import { initializeFilesApp } from "./files.js";
 import { initializeLaboratoryApp } from "./laboratory.js";
+import { initializeNeoApp } from "./neo.js";
 import { createNotificationCenter } from "./notification-center.js";
 import { initializeProjectsApp } from "./projects.js";
 import { initializeSystemMenu } from "./system-menu.js";
@@ -28,6 +29,7 @@ initializeContactApp({
 
 initializeFilesApp();
 initializeLaboratoryApp();
+initializeNeoApp();
 initializeProjectsApp();
 
 initializeTerminal({

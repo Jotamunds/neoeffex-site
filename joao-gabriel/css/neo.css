@@ -1,0 +1,450 @@
+.system-window--neo {
+    width: min(56rem, calc(100% - 2rem));
+    height: min(36rem, calc(100% - 3rem));
+    min-height: 26rem;
+}
+
+.neo-app {
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.neo-app__hero {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(1rem, 3vw, 1.6rem);
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.neo-app__mark {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: clamp(4.5rem, 10vw, 6.5rem);
+    aspect-ratio: 1;
+
+    border: 1px solid rgba(39, 149, 245, 0.27);
+    border-radius: 50%;
+    background:
+        radial-gradient(
+            circle at 38% 32%,
+            rgba(39, 149, 245, 0.2),
+            rgba(11, 135, 244, 0.035) 58%,
+            transparent 72%
+        );
+    box-shadow:
+        inset 0 0 2rem rgba(11, 135, 244, 0.08),
+        0 0 2.5rem rgba(11, 135, 244, 0.08);
+}
+
+.neo-app__mark::before,
+.neo-app__mark::after {
+    position: absolute;
+    inset: 0.45rem;
+    border: 1px solid rgba(39, 149, 245, 0.11);
+    border-radius: 50%;
+    content: "";
+}
+
+.neo-app__mark::after {
+    inset: 1rem;
+    border-style: dashed;
+    animation: neo-orbit 18s linear infinite;
+}
+
+.neo-app__mark span {
+    color: var(--neo-blue-light);
+    font-family: var(--font-display);
+    font-size: clamp(0.85rem, 2vw, 1.15rem);
+}
+
+.neo-app__eyebrow,
+.neo-app__title,
+.neo-app__description,
+.neo-demo__eyebrow,
+.neo-demo__header h4,
+.neo-demo__output,
+.neo-app__capabilities h4,
+.neo-app__capabilities p,
+.neo-app__project-footer p {
+    margin: 0;
+}
+
+.neo-app__eyebrow,
+.neo-demo__eyebrow {
+    color: var(--neo-blue-light);
+    font-family: var(--font-interface);
+    font-size: 0.52rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.neo-app__title {
+    margin-top: 0.35rem;
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+}
+
+.neo-app__description {
+    max-width: 38rem;
+    margin-top: 0.6rem;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    line-height: 1.65;
+}
+
+.neo-app__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+}
+
+.neo-app__badges span {
+    padding: 0.38rem 0.5rem;
+    border: 1px solid rgba(39, 149, 245, 0.14);
+    border-radius: var(--radius-small);
+    background: rgba(11, 135, 244, 0.035);
+    color: var(--text-secondary);
+    font-family: var(--font-interface);
+    font-size: 0.5rem;
+}
+
+.neo-demo {
+    margin-top: 1.25rem;
+    padding: 1rem;
+    border: 1px solid rgba(39, 149, 245, 0.13);
+    border-radius: var(--radius-large);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(11, 135, 244, 0.035),
+            rgba(255, 255, 255, 0.008)
+        );
+}
+
+.neo-demo__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.neo-demo__header h4 {
+    margin-top: 0.32rem;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.neo-demo__header > span {
+    color: var(--text-tertiary);
+    font-family: var(--font-interface);
+    font-size: 0.45rem;
+    letter-spacing: 0.08em;
+}
+
+.neo-demo__command {
+    margin-top: 0.9rem;
+}
+
+.neo-demo__command label {
+    display: block;
+    color: var(--text-tertiary);
+    font-family: var(--font-interface);
+    font-size: 0.5rem;
+    text-transform: uppercase;
+}
+
+.neo-demo__command-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+}
+
+.neo-demo__command input,
+.neo-demo__command button {
+    min-height: 2.6rem;
+    border-radius: var(--radius-small);
+    font-family: var(--font-interface);
+    font-size: 0.58rem;
+}
+
+.neo-demo__command input {
+    min-width: 0;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.18);
+    color: var(--text-primary);
+}
+
+.neo-demo__command input:focus {
+    outline: none;
+    border-color: rgba(39, 149, 245, 0.25);
+    box-shadow: 0 0 0.8rem rgba(11, 135, 244, 0.06);
+}
+
+.neo-demo__command button {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid rgba(39, 149, 245, 0.22);
+    background: rgba(11, 135, 244, 0.09);
+    color: var(--neo-blue-light);
+    cursor: pointer;
+}
+
+.neo-demo__command button:hover:not(:disabled),
+.neo-demo__command button:focus-visible {
+    outline: none;
+    border-color: rgba(39, 149, 245, 0.34);
+    background: rgba(11, 135, 244, 0.15);
+    color: var(--text-primary);
+}
+
+.neo-demo__command button:disabled {
+    cursor: progress;
+    opacity: 0.68;
+}
+
+.neo-demo__steps {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.neo-demo__steps li {
+    position: relative;
+    display: grid;
+    gap: 0.28rem;
+    min-width: 0;
+    padding: 0.65rem;
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-small);
+    background: rgba(255, 255, 255, 0.012);
+    transition:
+        border-color var(--motion-fast) ease,
+        background var(--motion-fast) ease,
+        opacity var(--motion-fast) ease;
+}
+
+.neo-demo__steps li::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: var(--neo-blue-light);
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    content: "";
+}
+
+.neo-demo__steps li.is-active {
+    border-color: rgba(39, 149, 245, 0.26);
+    background: rgba(11, 135, 244, 0.065);
+}
+
+.neo-demo__steps li.is-active::after {
+    opacity: 1;
+    transform: scaleX(1);
+    transition: transform 0.55s linear;
+}
+
+.neo-demo__steps li.is-complete {
+    border-color: rgba(85, 214, 139, 0.14);
+    background: rgba(85, 214, 139, 0.025);
+}
+
+.neo-demo__steps span {
+    color: var(--text-tertiary);
+    font-family: var(--font-interface);
+    font-size: 0.44rem;
+}
+
+.neo-demo__steps strong {
+    overflow: hidden;
+    color: var(--text-secondary);
+    font-family: var(--font-interface);
+    font-size: 0.53rem;
+    font-weight: 500;
+    text-overflow: ellipsis;
+}
+
+.neo-demo__steps small {
+    color: var(--text-tertiary);
+    font-size: 0.58rem;
+    line-height: 1.35;
+}
+
+.neo-demo__steps li.is-active strong {
+    color: var(--neo-blue-light);
+}
+
+.neo-demo__steps li.is-complete strong {
+    color: var(--status-online);
+}
+
+.neo-demo__output {
+    min-height: 2.4rem;
+    margin-top: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    border-left: 2px solid rgba(39, 149, 245, 0.3);
+    background: rgba(0, 0, 0, 0.13);
+    color: var(--text-secondary);
+    font-family: var(--font-interface);
+    font-size: 0.55rem;
+    line-height: 1.55;
+}
+
+.neo-app__capabilities {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-top: 1.2rem;
+}
+
+.neo-app__capabilities article {
+    padding: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.065);
+    border-radius: var(--radius-medium);
+    background: rgba(255, 255, 255, 0.012);
+}
+
+.neo-app__capabilities span {
+    color: rgba(39, 149, 245, 0.58);
+    font-family: var(--font-interface);
+    font-size: 0.48rem;
+}
+
+.neo-app__capabilities h4 {
+    margin-top: 0.5rem;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.neo-app__capabilities p {
+    margin-top: 0.4rem;
+    color: var(--text-tertiary);
+    font-size: 0.68rem;
+    line-height: 1.5;
+}
+
+.neo-app__project-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.neo-app__project-footer p {
+    max-width: 34rem;
+    color: var(--text-tertiary);
+    font-size: 0.65rem;
+    line-height: 1.55;
+}
+
+.neo-app__project-footer a {
+    flex-shrink: 0;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid rgba(39, 149, 245, 0.18);
+    border-radius: var(--radius-small);
+    background: rgba(11, 135, 244, 0.045);
+    color: var(--neo-blue-light);
+    font-family: var(--font-interface);
+    font-size: 0.52rem;
+    text-decoration: none;
+}
+
+.neo-app__project-footer a:hover,
+.neo-app__project-footer a:focus-visible {
+    outline: none;
+    border-color: rgba(39, 149, 245, 0.3);
+    background: rgba(11, 135, 244, 0.1);
+    color: var(--text-primary);
+}
+
+@keyframes neo-orbit {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 600px) {
+    .system-window--neo {
+        width: auto;
+        height: auto;
+        min-height: 0;
+    }
+
+    .neo-app {
+        padding: 1rem;
+    }
+
+    .neo-app__hero {
+        grid-template-columns: 3.8rem minmax(0, 1fr);
+        align-items: start;
+    }
+
+    .neo-app__mark {
+        width: 3.8rem;
+    }
+
+    .neo-app__mark::after {
+        inset: 0.8rem;
+    }
+
+    .neo-demo__header > span {
+        display: none;
+    }
+
+    .neo-demo__command-row {
+        grid-template-columns: 1fr;
+    }
+
+    .neo-demo__steps {
+        grid-template-columns: 1fr;
+    }
+
+    .neo-demo__steps li {
+        grid-template-columns: 1.5rem 5rem minmax(0, 1fr);
+        align-items: center;
+    }
+
+    .neo-app__capabilities {
+        grid-template-columns: 1fr;
+    }
+
+    .neo-app__project-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .neo-app__project-footer a {
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .neo-app__mark::after,
+    .neo-demo__steps li,
+    .neo-demo__steps li::after {
+        animation: none;
+        transition: none;
+    }
+}

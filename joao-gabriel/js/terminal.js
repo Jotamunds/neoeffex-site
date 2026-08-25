@@ -14,6 +14,7 @@ const APP_ALIASES = new Map([
     ["laboratorio", "laboratory"],
     ["laboratório", "laboratory"],
     ["laboratory", "laboratory"],
+    ["neo", "neo"],
     ["terminal", "terminal"],
     ["arquivos", "files"],
     ["files", "files"],
@@ -25,6 +26,7 @@ const APP_NAMES = new Map([
     ["about", "Sistema"],
     ["projects", "Projetos"],
     ["laboratory", "Laboratório"],
+    ["neo", "Neo"],
     ["terminal", "Terminal"],
     ["files", "Arquivos"],
     ["contact", "Contato"],
@@ -128,6 +130,7 @@ export function initializeTerminal({
                 "about             abre o aplicativo Sistema",
                 "projects          abre o diretório de Projetos",
                 "laboratory        abre o Laboratório",
+                "neo               abre a apresentação do Neo",
                 "files             abre o explorador de Arquivos",
                 "contact           abre os canais de Contato",
                 "open <app>        abre um aplicativo",
@@ -156,6 +159,11 @@ export function initializeTerminal({
             command === "laboratório"
         ) {
             openApp("laboratory");
+            return;
+        }
+
+        if (command === "neo") {
+            openApp("neo");
             return;
         }
 

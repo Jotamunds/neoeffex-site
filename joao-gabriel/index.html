@@ -66,6 +66,7 @@
     <link rel="stylesheet" href="css/projects.css?v=0.1.0">
     <link rel="stylesheet" href="css/contact.css?v=0.1.0">
     <link rel="stylesheet" href="css/laboratory.css?v=0.1.0">
+    <link rel="stylesheet" href="css/neo.css?v=0.1.0">
 
     <script type="module" src="js/main.js?v=0.1.0"></script>
 </head>
@@ -155,7 +156,8 @@
                     class="app-icon"
                     type="button"
                     data-app="neo"
-                    data-app-status="unavailable"
+                    aria-controls="neo-window"
+                    aria-expanded="false"
                 >
                     <span class="app-icon__symbol" aria-hidden="true">N</span>
                     <span class="app-icon__name">Neo</span>
@@ -575,6 +577,192 @@
                 <footer class="system-window__footer">
                     <span>EXPERIMENTAL WORKSPACE</span>
                     <span data-laboratory-status>4 EXPERIMENTOS</span>
+                </footer>
+            </article>
+
+            <article
+                class="system-window system-window--neo"
+                id="neo-window"
+                data-window="neo"
+                role="dialog"
+                aria-labelledby="neo-window-title"
+                hidden
+            >
+                <header class="system-window__titlebar" data-window-drag-handle>
+                    <div class="system-window__identity">
+                        <span class="system-window__app-symbol" aria-hidden="true">
+                            N
+                        </span>
+
+                        <h2 class="system-window__title" id="neo-window-title">
+                            Neo by Neoeffex
+                        </h2>
+                    </div>
+
+                    <div class="system-window__controls" aria-label="Controles da janela">
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Minimizar janela"
+                            data-window-action="minimize"
+                        >
+                            <span aria-hidden="true">−</span>
+                        </button>
+
+                        <button
+                            class="system-window__control"
+                            type="button"
+                            aria-label="Maximizar janela"
+                            data-window-action="maximize"
+                        >
+                            <span data-maximize-symbol aria-hidden="true">□</span>
+                        </button>
+
+                        <button
+                            class="system-window__control system-window__control--close"
+                            type="button"
+                            aria-label="Fechar janela"
+                            data-window-action="close"
+                        >
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="system-window__content neo-app" data-neo-app>
+                    <section class="neo-app__hero">
+                        <div class="neo-app__mark" aria-hidden="true">
+                            <span>N</span>
+                        </div>
+
+                        <div class="neo-app__hero-content">
+                            <p class="neo-app__eyebrow">Android intelligence prototype</p>
+                            <h3 class="neo-app__title">Neo</h3>
+                            <p class="neo-app__description">
+                                Um assistente que interpreta objetivos, observa interfaces
+                                e controla aplicativos usando acessibilidade do Android.
+                            </p>
+
+                            <div class="neo-app__badges" aria-label="Estado do projeto">
+                                <span>Protótipo ativo</span>
+                                <span>Em desenvolvimento</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="neo-demo" aria-labelledby="neo-demo-title">
+                        <header class="neo-demo__header">
+                            <div>
+                                <p class="neo-demo__eyebrow">Demonstração local</p>
+                                <h4 id="neo-demo-title">Simular o ciclo de decisão</h4>
+                            </div>
+
+                            <span>SEM ACESSO AO DISPOSITIVO</span>
+                        </header>
+
+                        <div class="neo-demo__command">
+                            <label for="neo-demo-command">Comando de exemplo</label>
+
+                            <div class="neo-demo__command-row">
+                                <input
+                                    id="neo-demo-command"
+                                    data-neo-demo-command
+                                    type="text"
+                                    value="Abra o YouTube e procure vídeos do Flamengo."
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                >
+
+                                <button
+                                    type="button"
+                                    data-neo-demo-start
+                                    data-window-autofocus
+                                >
+                                    Simular fluxo
+                                </button>
+                            </div>
+                        </div>
+
+                        <ol class="neo-demo__steps" data-neo-demo-steps>
+                            <li data-neo-demo-step>
+                                <span>01</span>
+                                <strong>Interpretar</strong>
+                                <small>Compreender o objetivo</small>
+                            </li>
+
+                            <li data-neo-demo-step>
+                                <span>02</span>
+                                <strong>Observar</strong>
+                                <small>Analisar a tela atual</small>
+                            </li>
+
+                            <li data-neo-demo-step>
+                                <span>03</span>
+                                <strong>Decidir</strong>
+                                <small>Escolher a próxima ação</small>
+                            </li>
+
+                            <li data-neo-demo-step>
+                                <span>04</span>
+                                <strong>Executar</strong>
+                                <small>Usar a acessibilidade</small>
+                            </li>
+
+                            <li data-neo-demo-step>
+                                <span>05</span>
+                                <strong>Validar</strong>
+                                <small>Confirmar o resultado</small>
+                            </li>
+                        </ol>
+
+                        <p
+                            class="neo-demo__output"
+                            data-neo-demo-output
+                            aria-live="polite"
+                        >
+                            Pronto para iniciar uma simulação.
+                        </p>
+                    </section>
+
+                    <section class="neo-app__capabilities" aria-label="Capacidades planejadas">
+                        <article>
+                            <span aria-hidden="true">01</span>
+                            <h4>Voz e texto</h4>
+                            <p>Receber objetivos de forma natural, sem comandos rígidos.</p>
+                        </article>
+
+                        <article>
+                            <span aria-hidden="true">02</span>
+                            <h4>Percepção de tela</h4>
+                            <p>Interpretar elementos, contexto e mudanças da interface.</p>
+                        </article>
+
+                        <article>
+                            <span aria-hidden="true">03</span>
+                            <h4>Validação contínua</h4>
+                            <p>Observar novamente antes de considerar a tarefa concluída.</p>
+                        </article>
+                    </section>
+
+                    <footer class="neo-app__project-footer">
+                        <p>
+                            Esta demonstração apresenta o fluxo conceitual e não controla
+                            o dispositivo ou outros aplicativos pelo navegador.
+                        </p>
+
+                        <a
+                            href="https://github.com/Jotamunds/jarvis-android"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Acompanhar desenvolvimento ↗
+                        </a>
+                    </footer>
+                </div>
+
+                <footer class="system-window__footer">
+                    <span>NEO ANDROID PROTOTYPE</span>
+                    <span data-neo-status>IDLE</span>
                 </footer>
             </article>
 
@@ -1064,6 +1252,25 @@
                 <button
                     class="system-menu__app"
                     type="button"
+                    data-system-menu-app="neo"
+                >
+                    <span class="system-menu__app-symbol" aria-hidden="true">N</span>
+
+                    <span class="system-menu__app-content">
+                        <span class="system-menu__app-name">Neo</span>
+                        <span class="system-menu__app-description">
+                            Assistente para Android
+                        </span>
+                    </span>
+
+                    <span class="system-menu__app-status" data-system-menu-status>
+                        Fechado
+                    </span>
+                </button>
+
+                <button
+                    class="system-menu__app"
+                    type="button"
                     data-system-menu-app="terminal"
                 >
                     <span class="system-menu__app-symbol" aria-hidden="true">&gt;_</span>
@@ -1164,6 +1371,10 @@
 
                 <button class="taskbar__app-button" type="button" data-running-app="laboratory" hidden>
                     Laboratório
+                </button>
+
+                <button class="taskbar__app-button" type="button" data-running-app="neo" hidden>
+                    Neo
                 </button>
 
                 <button class="taskbar__app-button" type="button" data-running-app="terminal" hidden>

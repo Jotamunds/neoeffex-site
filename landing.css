@@ -1,4 +1,4 @@
-/* Neoeffex Landing v0.1.9 — layout + reveal */
+/* Neoeffex Landing v0.1.10 — layout + reveal */
 
 *,
 *::before,
@@ -41,6 +41,7 @@ body {
 }
 
 .hero__background,
+.hero__grain,
 .hero__values,
 .hero__content {
   position: absolute;
@@ -83,6 +84,18 @@ body {
     radial-gradient(circle at 50% 50%, transparent 36%, rgba(0, 0, 0, 0.20) 72%, rgba(0, 0, 0, 0.62) 100%);
 }
 
+
+.hero__grain {
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: soft-light;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.72'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
 .hero__values {
   z-index: -1;
   max-width: var(--hero-max-width);
@@ -101,7 +114,12 @@ body {
   text-transform: uppercase;
   white-space: nowrap;
   opacity: var(--value-opacity, 0);
-  transition: opacity var(--reveal-duration) var(--reveal-ease);
+  filter: blur(var(--value-blur, 3px));
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity var(--value-duration, var(--reveal-duration)) var(--reveal-ease),
+    filter var(--value-duration, var(--reveal-duration)) var(--reveal-ease);
+  will-change: opacity, filter;
 }
 
 .hero__value::before {
@@ -113,6 +131,37 @@ body {
   vertical-align: middle;
   background: var(--neo-blue);
   opacity: 0.55;
+}
+
+
+.hero__value--intelligence {
+  --value-duration: 190ms;
+  --value-blur-max: 2.8px;
+}
+
+.hero__value--accessibility {
+  --value-duration: 230ms;
+  --value-blur-max: 3.8px;
+}
+
+.hero__value--future {
+  --value-duration: 205ms;
+  --value-blur-max: 3.2px;
+}
+
+.hero__value--autonomy {
+  --value-duration: 245ms;
+  --value-blur-max: 4.2px;
+}
+
+.hero__value--simplicity {
+  --value-duration: 215ms;
+  --value-blur-max: 3.5px;
+}
+
+.hero__value--context {
+  --value-duration: 235ms;
+  --value-blur-max: 4px;
 }
 
 .hero__value--intelligence {
@@ -175,11 +224,33 @@ body {
   font-weight: 500;
   line-height: 0.88;
   letter-spacing: -0.025em;
-  text-shadow: var(--glow-title);
+  transform: translate3d(
+    var(--title-parallax-x, 0px),
+    var(--title-parallax-y, 0px),
+    0
+  );
+  transition: transform var(--title-parallax-duration) var(--interaction-field-ease);
+  will-change: transform;
 }
 
 .hero__title-main {
   font-size: clamp(4.8rem, 13vw, 11.5rem);
+  text-shadow: var(--glow-title);
+  animation: neo-title-breathe var(--title-breathe-duration) ease-in-out infinite alternate;
+}
+
+@keyframes neo-title-breathe {
+  0% {
+    text-shadow:
+      0 0 24px rgba(39, 149, 245, 0.035),
+      0 0 64px rgba(11, 135, 244, 0.018);
+  }
+
+  100% {
+    text-shadow:
+      0 0 38px rgba(39, 149, 245, 0.085),
+      0 0 92px rgba(11, 135, 244, 0.045);
+  }
 }
 
 .hero__title-signature {
@@ -233,6 +304,8 @@ body {
 
 @media (max-width: 760px) {
   .hero {
+    --title-parallax-max: 2.5px;
+    --grain-opacity: 0.021;
     padding: 1.25rem;
   }
 
@@ -330,5 +403,21 @@ body {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+
+  .hero__title {
+    transform: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
+
+  .hero__title-main {
+    animation: none !important;
+    text-shadow: var(--glow-title);
+  }
+
+  .hero__value {
+    filter: none !important;
+    will-change: auto;
   }
 }

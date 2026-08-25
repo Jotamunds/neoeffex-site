@@ -1,10 +1,10 @@
 /*
- * Neoeffex Landing v0.1.9
- * Interação local da atmosfera.
+ * Neoeffex Landing v0.1.10
+ * Perturbação atmosférica local e irregular.
  *
- * Esta camada NÃO move as nuvens.
- * Ela cria uma abertura visual discreta ao redor do ponteiro,
- * preservando o motion passivo aprovado.
+ * Não existe círculo/spotlight.
+ * Dois blobs assimétricos, muito desfocados, reduzem localmente
+ * a presença luminosa da atmosfera sem mover as nuvens.
  */
 
 .hero__interaction-field {
@@ -19,37 +19,51 @@
   user-select: none;
   opacity: var(--field-opacity);
   transition: opacity var(--interaction-field-duration) var(--interaction-field-ease);
-  background:
-    radial-gradient(
-      circle var(--interaction-core-radius) at var(--pointer-x) var(--pointer-y),
-      rgba(20, 20, 20, 0.56) 0%,
-      rgba(20, 20, 20, 0.42) 38%,
-      rgba(20, 20, 20, 0.18) 66%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle var(--interaction-field-radius) at var(--pointer-x) var(--pointer-y),
-      transparent 34%,
-      rgba(11, 135, 244, 0.035) 58%,
-      transparent 78%
-    );
+}
+
+.hero__interaction-field::before,
+.hero__interaction-field::after {
+  content: "";
+  position: absolute;
+  left: var(--pointer-x);
+  top: var(--pointer-y);
+  pointer-events: none;
+  transform-origin: center;
+}
+
+.hero__interaction-field::before {
+  width: clamp(18rem, 31vw, 31rem);
+  height: clamp(10rem, 18vw, 18rem);
+  transform: translate(-53%, -47%) rotate(-8deg);
+  border-radius: 41% 59% 66% 34% / 57% 39% 61% 43%;
+  background: rgba(20, 20, 20, var(--interaction-dark-opacity));
+  filter: blur(52px);
+  mix-blend-mode: multiply;
+}
+
+.hero__interaction-field::after {
+  width: clamp(20rem, 37vw, 37rem);
+  height: clamp(8rem, 15vw, 15rem);
+  transform: translate(-43%, -62%) rotate(13deg);
+  border-radius: 63% 37% 46% 54% / 38% 61% 39% 62%;
+  background: rgba(11, 135, 244, var(--interaction-blue-opacity));
+  filter: blur(76px);
+  mix-blend-mode: screen;
 }
 
 @media (max-width: 760px) {
-  .hero__interaction-field {
-    background:
-      radial-gradient(
-        circle 120px at var(--pointer-x) var(--pointer-y),
-        rgba(20, 20, 20, 0.48) 0%,
-        rgba(20, 20, 20, 0.28) 48%,
-        transparent 100%
-      ),
-      radial-gradient(
-        circle 210px at var(--pointer-x) var(--pointer-y),
-        transparent 38%,
-        rgba(11, 135, 244, 0.028) 61%,
-        transparent 80%
-      );
+  .hero__interaction-field::before {
+    width: 17rem;
+    height: 10rem;
+    filter: blur(44px);
+    background: rgba(20, 20, 20, 0.30);
+  }
+
+  .hero__interaction-field::after {
+    width: 19rem;
+    height: 8rem;
+    filter: blur(60px);
+    background: rgba(11, 135, 244, 0.040);
   }
 }
 

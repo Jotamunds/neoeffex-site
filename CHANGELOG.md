@@ -2,6 +2,35 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.10] - 2026-08-19
+
+### Adicionado
+- Blur progressivo no reveal: os valores passam de desfocados para nítidos conforme o ponteiro se aproxima.
+- Profundidade sutil diferente entre os seis valores por pequenas variações de raio, blur e duração.
+- Micro-parallax do título `Neo by Neoeffex`, limitado a 4.5 px no desktop e 2.5 px em telas menores.
+- Respiração luminosa lenta do título `Neo`, com ciclo de 11 segundos.
+- Grain/textura muito discreta sobre a cena para reduzir a aparência excessivamente digital dos gradients.
+
+### Alterado
+- Removido o efeito circular/spotlight ao redor do mouse.
+- A interação atmosférica agora usa dois blobs assimétricos, desfocados e de baixa intensidade.
+- O campo escuro reduz localmente a luminosidade da fumaça sem alterar o `transform` das nuvens.
+- Halo azul passa a ser difuso e irregular, sem contorno circular perceptível.
+- Assets locais do hero atualizados para `?v=0.1.10`.
+
+### Mantido
+- Raio reduzido do reveal da v0.1.9: 220 px desktop, 165 px telas médias e 125 px mobile.
+- Opacidade máxima dos valores em `0.40`.
+- Movimento `alternate` da fumaça sem alterações.
+- Cálculos agrupados em um único `requestAnimationFrame`.
+- Sem leituras de layout durante `pointermove`.
+- Sem Canvas, WebGL, Rive ou bibliotecas adicionais.
+
+### Acessibilidade
+- `prefers-reduced-motion` desativa micro-parallax, respiração luminosa e perturbação atmosférica.
+- Touch não mantém parallax persistente.
+- Conteúdo principal continua no DOM e legível independentemente dos efeitos.
+
 ## [0.1.9] - 2026-08-19
 
 ### Refinado

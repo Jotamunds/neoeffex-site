@@ -112,6 +112,7 @@ export function initializeWindowManager() {
     let activeApp = null;
     let lastInputWasKeyboard = false;
     let isRestoringSession = true;
+    let shouldPersistSession = true;
 
     function getSavedPosition(app) {
         if (
@@ -163,7 +164,7 @@ export function initializeWindowManager() {
     }
 
     function persistSession() {
-        if (isRestoringSession) {
+        if (isRestoringSession || !shouldPersistSession) {
             return;
         }
 
@@ -753,6 +754,10 @@ export function initializeWindowManager() {
     });
 
     window.addEventListener("pagehide", persistSession);
+
+    document.addEventListener("joaoos:restarting", function () {
+        shouldPersistSession = false;
+    });
 
     updateEmptyRunningState();
 

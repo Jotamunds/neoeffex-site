@@ -331,5 +331,21 @@ export function initializeFilesApp() {
         }
     });
 
+    document.addEventListener("joaoos:openfile", function (event) {
+        const folderId = event.detail?.folderId;
+        const fileId = event.detail?.fileId;
+        const folder = FOLDERS[folderId];
+        const file = folder?.files.find(function (item) {
+            return item.id === fileId;
+        });
+
+        if (!folder || !file) {
+            return;
+        }
+
+        renderFolder(folderId);
+        openFile(file);
+    });
+
     renderFolder("home");
 }

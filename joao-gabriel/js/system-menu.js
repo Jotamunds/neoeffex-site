@@ -200,5 +200,9 @@ export function initializeSystemMenu({
         }
     );
 
+    document.addEventListener("joaoos:closesystemmenu", function () {
+        closeMenu();
+    });
+
     refreshAppStates();
 }

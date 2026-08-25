@@ -41,6 +41,9 @@ const STATE_NAMES = {
 export function initializeTerminal({
     showWindow,
     getWindowState,
+    openSearch,
+    restartSystem,
+    shutdownSystem,
 }) {
     const form = document.querySelector("[data-terminal-form]");
     const input = document.querySelector("[data-terminal-input]");
@@ -135,6 +138,9 @@ export function initializeTerminal({
                 "contact           abre os canais de Contato",
                 "open <app>        abre um aplicativo",
                 "apps              lista o estado das janelas",
+                "search            abre a pesquisa rápida",
+                "restart           reinicia o JOÃO/OS",
+                "shutdown          abre o LinkedIn",
                 "whoami            exibe a identidade do portfólio",
                 "date              exibe data e hora locais",
                 "echo <texto>      repete um texto",
@@ -184,6 +190,21 @@ export function initializeTerminal({
 
         if (command === "apps") {
             listApps();
+            return;
+        }
+
+        if (command === "search" || command === "pesquisar") {
+            openSearch();
+            return;
+        }
+
+        if (command === "restart" || command === "reiniciar") {
+            restartSystem();
+            return;
+        }
+
+        if (command === "shutdown" || command === "desligar") {
+            shutdownSystem();
             return;
         }
 

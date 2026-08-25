@@ -67,6 +67,8 @@
     <link rel="stylesheet" href="css/contact.css?v=0.1.0">
     <link rel="stylesheet" href="css/laboratory.css?v=0.1.0">
     <link rel="stylesheet" href="css/neo.css?v=0.1.0">
+    <link rel="stylesheet" href="css/desktop-context-menu.css?v=0.1.0">
+    <link rel="stylesheet" href="css/system-search.css?v=0.1.0">
 
     <script type="module" src="js/main.js?v=0.1.0"></script>
 </head>
@@ -98,7 +100,7 @@
     <main
         class="desktop"
         aria-label="Área de trabalho do JOÃO OS"
-        aria-keyshortcuts="Alt+W Shift+Alt+W"
+        aria-keyshortcuts="Alt+W Shift+Alt+W Shift+F10 Control+K Meta+K"
     >
         <div class="desktop__wallpaper" aria-hidden="true">
             <div class="desktop__light desktop__light--left"></div>
@@ -1191,6 +1193,18 @@
                 </div>
             </header>
 
+            <button
+                class="system-menu__search"
+                type="button"
+                aria-label="Pesquisar aplicativos, projetos, arquivos e comandos"
+                aria-keyshortcuts="Control+K Meta+K"
+                data-system-search-launcher
+            >
+                <span class="system-menu__search-symbol" aria-hidden="true">⌕</span>
+                <span>Pesquisar no sistema</span>
+                <kbd>CTRL K</kbd>
+            </button>
+
             <div class="system-menu__apps" aria-label="Aplicativos disponíveis">
                 <button
                     class="system-menu__app"
@@ -1327,12 +1341,169 @@
             </div>
 
             <footer class="system-menu__footer">
-                <span class="system-menu__session-status">
-                    Sessão automática
-                </span>
+                <div class="system-menu__footer-meta">
+                    <span class="system-menu__session-status">
+                        Sessão automática
+                    </span>
 
-                <span>ALT + W · alternar</span>
+                    <span>ALT + W · alternar</span>
+                </div>
+
+                <div class="system-menu__power" aria-label="Controles de energia">
+                    <button
+                        type="button"
+                        title="Reiniciar o JOÃO/OS"
+                        data-system-restart
+                    >
+                        <span aria-hidden="true">↻</span>
+                        Reiniciar
+                    </button>
+
+                    <button
+                        class="system-menu__shutdown"
+                        type="button"
+                        title="Desligar e abrir o LinkedIn"
+                        data-system-shutdown
+                    >
+                        <span aria-hidden="true">⏻</span>
+                        Desligar
+                    </button>
+                </div>
             </footer>
+        </section>
+
+        <div
+            class="desktop-context-menu"
+            data-desktop-context-menu
+            role="menu"
+            aria-label="Ações da área de trabalho"
+            hidden
+        >
+            <button
+                type="button"
+                role="menuitem"
+                data-desktop-context-action="refresh"
+            >
+                <span aria-hidden="true">↻</span>
+                <span>Atualizar área de trabalho</span>
+            </button>
+
+            <button
+                type="button"
+                role="menuitem"
+                data-desktop-context-action="arrange"
+            >
+                <span aria-hidden="true">⇅</span>
+                <span data-desktop-arrange-label>Organizar alfabeticamente</span>
+                <small data-desktop-arrange-status>Original</small>
+            </button>
+
+            <div class="desktop-context-menu__separator" role="separator"></div>
+
+            <button
+                type="button"
+                role="menuitem"
+                data-desktop-context-action="terminal"
+            >
+                <span aria-hidden="true">&gt;_</span>
+                <span>Abrir Terminal</span>
+            </button>
+
+            <button
+                type="button"
+                role="menuitem"
+                data-desktop-context-action="about"
+            >
+                <span aria-hidden="true">J</span>
+                <span>Sobre o sistema</span>
+            </button>
+
+            <div class="desktop-context-menu__separator" role="separator"></div>
+
+            <button
+                type="button"
+                role="menuitem"
+                data-desktop-context-action="settings"
+            >
+                <span aria-hidden="true">◌</span>
+                <span>Configurações</span>
+                <small>Em breve</small>
+            </button>
+        </div>
+
+        <section
+            class="system-search"
+            data-system-search
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="system-search-title"
+            hidden
+        >
+            <button
+                class="system-search__backdrop"
+                type="button"
+                tabindex="-1"
+                aria-label="Fechar pesquisa"
+                data-system-search-close
+            ></button>
+
+            <div class="system-search__panel">
+                <header class="system-search__header">
+                    <span class="system-search__symbol" aria-hidden="true">⌕</span>
+
+                    <div class="system-search__field">
+                        <label class="visually-hidden" for="system-search-input">
+                            Pesquisar no JOÃO/OS
+                        </label>
+
+                        <input
+                            id="system-search-input"
+                            type="search"
+                            placeholder="Pesquisar apps, projetos, arquivos e comandos…"
+                            autocomplete="off"
+                            spellcheck="false"
+                            role="combobox"
+                            aria-autocomplete="list"
+                            aria-controls="system-search-results"
+                            aria-expanded="true"
+                            data-system-search-input
+                        >
+                    </div>
+
+                    <button
+                        class="system-search__close"
+                        type="button"
+                        aria-label="Fechar pesquisa"
+                        data-system-search-close
+                    >
+                        ESC
+                    </button>
+                </header>
+
+                <div class="system-search__body">
+                    <h2 class="system-search__title" id="system-search-title">
+                        Resultados rápidos
+                    </h2>
+
+                    <div
+                        class="system-search__results"
+                        id="system-search-results"
+                        role="listbox"
+                        aria-label="Resultados da pesquisa"
+                        data-system-search-results
+                    ></div>
+
+                    <p class="system-search__empty" data-system-search-empty hidden>
+                        Nenhum resultado encontrado.
+                    </p>
+                </div>
+
+                <footer class="system-search__footer" aria-hidden="true">
+                    <span>↑ ↓ navegar</span>
+                    <span>ENTER abrir</span>
+                    <span>ESC fechar</span>
+                </footer>
+            </div>
         </section>
 
         <section

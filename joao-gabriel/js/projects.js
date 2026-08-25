@@ -347,5 +347,15 @@ export function initializeProjectsApp() {
         });
     });
 
+    document.addEventListener("joaoos:openproject", function (event) {
+        const project = PROJECTS.find(function (item) {
+            return item.id === event.detail?.id;
+        });
+
+        if (project) {
+            openProject(project);
+        }
+    });
+
     showCatalog();
 }

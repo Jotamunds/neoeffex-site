@@ -1,0 +1,115 @@
+.desktop-context-menu {
+    position: absolute;
+    z-index: 45;
+
+    display: grid;
+    gap: 0.2rem;
+    width: min(16rem, calc(100% - 1rem));
+    padding: 0.4rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: var(--radius-medium);
+    background: rgba(16, 19, 24, 0.97);
+    box-shadow:
+        0 1.2rem 3rem rgba(0, 0, 0, 0.45),
+        inset 0 1px rgba(255, 255, 255, 0.035);
+
+    backdrop-filter: blur(1.25rem);
+    animation: desktop-context-enter var(--motion-fast) var(--motion-ease);
+}
+
+.desktop-context-menu[hidden] {
+    display: none;
+}
+
+.desktop-context-menu button {
+    display: grid;
+    grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.45rem;
+    width: 100%;
+    min-height: 2.2rem;
+    padding: 0.45rem 0.55rem;
+
+    border: 1px solid transparent;
+    border-radius: var(--radius-small);
+    background: transparent;
+    color: var(--text-secondary);
+
+    font-family: var(--font-interface);
+    font-size: 0.58rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.desktop-context-menu button > span:first-child {
+    color: var(--neo-blue-light);
+    font-size: 0.58rem;
+    text-align: center;
+}
+
+.desktop-context-menu button small {
+    color: var(--text-tertiary);
+    font-size: 0.45rem;
+    text-transform: uppercase;
+}
+
+.desktop-context-menu button:hover,
+.desktop-context-menu button:focus-visible {
+    outline: none;
+    border-color: rgba(39, 149, 245, 0.14);
+    background: rgba(11, 135, 244, 0.05);
+    color: var(--text-primary);
+}
+
+.desktop-context-menu__separator {
+    height: 1px;
+    margin: 0.2rem 0.35rem;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.desktop.is-refreshing .app-icon {
+    animation: desktop-icon-refresh 0.38s var(--motion-ease);
+}
+
+@keyframes desktop-context-enter {
+    from {
+        opacity: 0;
+        transform: translateY(0.25rem) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes desktop-icon-refresh {
+    0% {
+        opacity: 1;
+        filter: blur(0);
+    }
+
+    45% {
+        opacity: 0.35;
+        filter: blur(0.12rem);
+    }
+
+    100% {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+@media (max-width: 600px) {
+    .desktop-context-menu {
+        width: min(15rem, calc(100% - 1rem));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .desktop-context-menu,
+    .desktop.is-refreshing .app-icon {
+        animation: none;
+    }
+}

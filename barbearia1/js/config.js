@@ -33,30 +33,9 @@ const BARBERSHOP_CONFIG = {
             name: "Corte + Barba",
             description: "Experiência completa para renovar o visual.",
             price: "R$ 60"
-        },
-        {
-            name: "Acabamento",
-            description: "Pezinho e detalhes para manter tudo alinhado.",
-            price: "R$ 15"
-        }
-    ],
-    differentials: [
-        {
-            title: "Atendimento personalizado",
-            description: "Cada cliente é único. Aqui, o atendimento é feito no seu ritmo."
-        },
-        {
-            title: "Profissionais experientes",
-            description: "Técnica atualizada e atenção aos detalhes em cada serviço."
-        },
-        {
-            title: "Ambiente confortável",
-            description: "Um espaço moderno para relaxar enquanto cuidamos do visual."
         }
     ],
     stats: [
-        { value: "+1.500", label: "Clientes atendidos" },
-        { value: "+4 anos", label: "De história" },
         { value: "5,0 ★", label: "Avaliação no Google" }
     ],
     gallery: [
@@ -76,11 +55,6 @@ const BARBERSHOP_CONFIG = {
         {
             name: "Rafael Souza",
             text: "Melhor barbearia da região. Profissionais atenciosos e resultado perfeito.",
-            source: "Avaliação no Google"
-        },
-        {
-            name: "Thiago Almeida",
-            text: "Ambiente top demais. Me sinto em casa sempre que vou lá.",
             source: "Avaliação no Google"
         }
     ],

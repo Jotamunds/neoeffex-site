@@ -98,22 +98,22 @@ h3 {
 }
 
 .container {
-    width: min(calc(100% - 40px), var(--content));
+    width: min(calc(100% - 64px), var(--content));
     margin-inline: auto;
 }
 
 .section {
     position: relative;
-    padding: 108px 0;
+    padding: var(--section-space) 0;
 }
 
 .section--compact {
-    padding: 76px 0;
+    padding: clamp(88px, 7vw, 120px) 0;
 }
 
 .section__head {
-    max-width: 650px;
-    margin: 0 auto 48px;
+    max-width: 720px;
+    margin: 0 auto var(--section-head-space);
     text-align: center;
 }
 
@@ -121,7 +121,7 @@ h3 {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     color: var(--accent);
     font-size: 0.76rem;
     font-weight: 800;
@@ -149,6 +149,10 @@ h3 {
 
 .section__head .section__title {
     margin-inline: auto;
+}
+
+.section__head .section__title:last-child {
+    margin-bottom: 0;
 }
 
 .section__copy {

@@ -63,9 +63,9 @@ Abra `js/config.js` para alterar:
 
 - nome e iniciais da barbearia;
 - chamada principal e descrição;
-- serviços e preços;
-- diferenciais e números;
-- nomes e textos das avaliações;
+- três serviços principais e preços;
+- avaliação usada no Hero;
+- nomes e textos das duas avaliações exibidas;
 - WhatsApp e mensagem automática;
 - endereço, horários, mapa e Instagram.
 

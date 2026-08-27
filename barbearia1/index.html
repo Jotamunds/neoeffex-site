@@ -15,17 +15,17 @@
     -->
 
     <!-- Estilos separados por responsabilidade. -->
-    <link rel="stylesheet" href="css/tokens.css?v=0.1.4b">
-    <link rel="stylesheet" href="css/base.css?v=0.1.4b">
-    <link rel="stylesheet" href="css/header.css?v=0.1.4b">
-    <link rel="stylesheet" href="css/hero.css?v=0.1.4b">
-    <link rel="stylesheet" href="css/sections.css?v=0.1.4b">
-    <link rel="stylesheet" href="css/whatsapp.css?v=0.1.4b">
-    <link rel="stylesheet" href="css/theme.css?v=0.1.4b">
-    <link rel="stylesheet" href="css/lightbox.css?v=0.1.4b">
-    <link rel="stylesheet" href="css/animations.css?v=0.1.4b">
-    <link rel="stylesheet" href="css/responsive.css?v=0.1.4b">
-    <link rel="stylesheet" href="css/accessibility.css?v=0.1.4b">
+    <link rel="stylesheet" href="css/tokens.css?v=0.1.4c">
+    <link rel="stylesheet" href="css/base.css?v=0.1.4c">
+    <link rel="stylesheet" href="css/header.css?v=0.1.4c">
+    <link rel="stylesheet" href="css/hero.css?v=0.1.4c">
+    <link rel="stylesheet" href="css/sections.css?v=0.1.4c">
+    <link rel="stylesheet" href="css/whatsapp.css?v=0.1.4c">
+    <link rel="stylesheet" href="css/theme.css?v=0.1.4c">
+    <link rel="stylesheet" href="css/lightbox.css?v=0.1.4c">
+    <link rel="stylesheet" href="css/animations.css?v=0.1.4c">
+    <link rel="stylesheet" href="css/responsive.css?v=0.1.4c">
+    <link rel="stylesheet" href="css/accessibility.css?v=0.1.4c">
 </head>
 
 <body>
@@ -101,7 +101,7 @@
                             <span class="status-dot" id="statusDot" aria-hidden="true"></span>
                             <span id="openStatus">Consulte os horários</span>
                         </span>
-                        <span class="hero__rating"><strong data-bind="stats.2.value">5,0 ★</strong> no Google</span>
+                        <span class="hero__rating"><strong data-bind="stats.0.value">5,0 ★</strong> no Google</span>
                         <span data-bind="contact.neighborhood">Centro • São Paulo</span>
                     </div>
                 </div>
@@ -114,7 +114,6 @@
                 <div class="section__head reveal">
                     <span class="eyebrow">Nossos serviços</span>
                     <h2 class="section__title" id="services-title">Escolha o seu e agende agora</h2>
-                    <p class="section__copy">Cuidado, técnica e atenção em cada detalhe do seu visual.</p>
                 </div>
 
                 <div class="services-grid">
@@ -160,74 +159,6 @@
                         <a class="btn btn--outline" data-whatsapp data-service="2" href="#" target="_blank" rel="noopener noreferrer">Agendar</a>
                     </article>
 
-                    <article class="service-card reveal reveal-delay-3">
-                        <div class="service-card__icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path d="M8 19V8.5C8 5.5 10.4 3 13.5 3H16v5h-2.5c-.8 0-1.5.7-1.5 1.5V19c0 1.1-.9 2-2 2s-2-.9-2-2Z"/>
-                                <path d="M16 3v5M12 12h4"/>
-                            </svg>
-                        </div>
-                        <h3 data-bind="services.3.name">Acabamento</h3>
-                        <p class="service-card__desc" data-bind="services.3.description">Pezinho e detalhes para manter tudo alinhado.</p>
-                        <strong class="service-card__price" data-bind="services.3.price">R$ 15</strong>
-                        <a class="btn btn--outline" data-whatsapp data-service="3" href="#" target="_blank" rel="noopener noreferrer">Agendar</a>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="section differentials" id="sobre" aria-labelledby="differentials-title">
-            <div class="container">
-                <div class="section__head reveal">
-                    <span class="eyebrow">Por que escolher nossa barbearia?</span>
-                    <h2 class="section__title" id="differentials-title">Mais que um corte. Uma experiência.</h2>
-                    <p class="section__copy">Do atendimento à finalização, tudo foi pensado para você se sentir bem.</p>
-                </div>
-
-                <div class="differentials-grid reveal">
-                    <article class="differential">
-                        <svg class="differential__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                            <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/>
-                            <path d="M8.5 13.5S10 16 12 16s3.5-2.5 3.5-2.5M9 9.5h.01M15 9.5h.01"/>
-                        </svg>
-                        <div>
-                            <h3 data-bind="differentials.0.title">Atendimento personalizado</h3>
-                            <p data-bind="differentials.0.description">Cada cliente é único. Aqui, o atendimento é feito no seu ritmo.</p>
-                        </div>
-                    </article>
-                    <article class="differential">
-                        <svg class="differential__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                            <path d="m12 3 2.6 5.4 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.9L12 3Z"/>
-                        </svg>
-                        <div>
-                            <h3 data-bind="differentials.1.title">Profissionais experientes</h3>
-                            <p data-bind="differentials.1.description">Técnica atualizada e atenção aos detalhes em cada serviço.</p>
-                        </div>
-                    </article>
-                    <article class="differential">
-                        <svg class="differential__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                            <path d="M6 4h12v10H6zM8 14v5M16 14v5M5 19h14M9 7h6"/>
-                        </svg>
-                        <div>
-                            <h3 data-bind="differentials.2.title">Ambiente confortável</h3>
-                            <p data-bind="differentials.2.description">Um espaço moderno para relaxar enquanto cuidamos do visual.</p>
-                        </div>
-                    </article>
-                </div>
-
-                <div class="stats reveal">
-                    <div class="stat">
-                        <strong class="stat__value" data-bind="stats.0.value">+1.500</strong>
-                        <span class="stat__label" data-bind="stats.0.label">Clientes atendidos</span>
-                    </div>
-                    <div class="stat">
-                        <strong class="stat__value" data-bind="stats.1.value">+4 anos</strong>
-                        <span class="stat__label" data-bind="stats.1.label">De história</span>
-                    </div>
-                    <div class="stat">
-                        <strong class="stat__value" data-bind="stats.2.value">5,0 ★</strong>
-                        <span class="stat__label" data-bind="stats.2.label">Avaliação no Google</span>
-                    </div>
                 </div>
             </div>
         </section>
@@ -236,7 +167,6 @@
             <div class="section__head reveal">
                 <span class="eyebrow">Nosso trabalho</span>
                 <h2 class="section__title" id="gallery-title">Cortes que falam por si.</h2>
-                <p class="section__copy">Clique em uma foto para ver de perto.</p>
             </div>
 
             <div class="gallery-grid" aria-label="Galeria de cortes">
@@ -272,7 +202,6 @@
                 <div class="section__head reveal">
                     <span class="eyebrow">O que nossos clientes dizem</span>
                     <h2 class="section__title" id="reviews-title">Quem vem, recomenda.</h2>
-                    <p class="section__copy">Atendimento que transforma uma visita em parte da rotina.</p>
                 </div>
 
                 <div class="reviews-grid">
@@ -300,17 +229,6 @@
                         </div>
                     </article>
 
-                    <article class="review reveal reveal-delay-2">
-                        <div class="review__stars" aria-label="5 de 5 estrelas">★★★★★</div>
-                        <blockquote>“<span data-bind="reviews.2.text">Ambiente top demais. Me sinto em casa sempre que vou lá.</span>”</blockquote>
-                        <div class="review__author">
-                            <span class="review__avatar" data-initial="reviews.2.name">T</span>
-                            <span>
-                                <strong class="review__name" data-bind="reviews.2.name">Thiago Almeida</strong>
-                                <small class="review__source" data-bind="reviews.2.source">Avaliação no Google</small>
-                            </span>
-                        </div>
-                    </article>
                 </div>
             </div>
         </section>
@@ -359,14 +277,6 @@
                             <a class="btn btn--outline" data-whatsapp href="#" target="_blank" rel="noopener noreferrer">Agendar horário</a>
                         </div>
 
-                        <a class="map-card" data-maps href="#" target="_blank" rel="noopener noreferrer" aria-label="Abrir localização no mapa">
-                            <span class="map-card__pin" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <circle cx="12" cy="12" r="3"/>
-                                </svg>
-                            </span>
-                            <span class="map-card__label">Toque para abrir a rota</span>
-                        </a>
                     </div>
                 </div>
             </div>
@@ -507,14 +417,14 @@
     </dialog>
 
     <!-- Scripts independentes para que um recurso não interrompa os demais. -->
-    <script src="js/config.js?v=0.1.4b" defer></script>
-    <script src="js/content.js?v=0.1.4b" defer></script>
-    <script src="js/whatsapp.js?v=0.1.4b" defer></script>
-    <script src="js/navigation.js?v=0.1.4b" defer></script>
-    <script src="js/hours.js?v=0.1.4b" defer></script>
-    <script src="js/gallery.js?v=0.1.4b" defer></script>
-    <script src="js/animations.js?v=0.1.4b" defer></script>
-    <script src="js/theme.js?v=0.1.4b" defer></script>
-    <script src="js/structured-data.js?v=0.1.4b" defer></script>
+    <script src="js/config.js?v=0.1.4c" defer></script>
+    <script src="js/content.js?v=0.1.4c" defer></script>
+    <script src="js/whatsapp.js?v=0.1.4c" defer></script>
+    <script src="js/navigation.js?v=0.1.4c" defer></script>
+    <script src="js/hours.js?v=0.1.4c" defer></script>
+    <script src="js/gallery.js?v=0.1.4c" defer></script>
+    <script src="js/animations.js?v=0.1.4c" defer></script>
+    <script src="js/theme.js?v=0.1.4c" defer></script>
+    <script src="js/structured-data.js?v=0.1.4c" defer></script>
 </body>
 </html>

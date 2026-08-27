@@ -166,3 +166,8 @@ const THEME_PRESETS = [
         background: "#eee8dd"
     }
 ];
+
+/* Compartilhado com os módulos independentes da página. */
+window.BARBERSHOP_CONFIG = BARBERSHOP_CONFIG;
+window.DEMO_CONFIG = DEMO_CONFIG;
+window.THEME_PRESETS = THEME_PRESETS;

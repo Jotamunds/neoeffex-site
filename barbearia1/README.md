@@ -9,10 +9,27 @@ O projeto usa apenas HTML, CSS e JavaScript puro, sem bibliotecas externas.
 barbearia1/
 ├── index.html
 ├── css/
-│   └── style.css
+│   ├── tokens.css
+│   ├── base.css
+│   ├── header.css
+│   ├── hero.css
+│   ├── sections.css
+│   ├── whatsapp.css
+│   ├── theme.css
+│   ├── lightbox.css
+│   ├── animations.css
+│   ├── responsive.css
+│   └── accessibility.css
 ├── js/
 │   ├── config.js
-│   └── script.js
+│   ├── content.js
+│   ├── whatsapp.js
+│   ├── navigation.js
+│   ├── hours.js
+│   ├── gallery.js
+│   ├── animations.js
+│   ├── theme.js
+│   └── structured-data.js
 └── assets/
     └── images/
         ├── barbearia-hero.jpg
@@ -25,6 +42,17 @@ barbearia1/
         ├── corte-barba.jpg
         └── corte-cacheado.jpg
 ```
+
+## Organização do código
+
+- `css/hero.css` contém somente o Hero e mantém `z-index: 1` no `.hero`.
+- `css/whatsapp.css` e `js/whatsapp.js` controlam o WhatsApp.
+- `css/theme.css` e `js/theme.js` controlam o modo demonstração.
+- Galeria, navegação, horários e animações também possuem módulos próprios.
+- `index.html` é a única página principal do projeto.
+
+Os antigos `style.css` e `script.js` não são usados nesta versão. A separação
+reduz o risco de uma alteração em um componente afetar recursos independentes.
 
 As seis fotos com o prefixo `corte-` são usadas individualmente pela galeria.
 Isso preserva a proporção das imagens nas miniaturas e no modo ampliado.

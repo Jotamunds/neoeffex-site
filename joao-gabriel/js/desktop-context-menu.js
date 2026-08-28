@@ -150,17 +150,6 @@ export function initializeDesktopContextMenu({
         });
     }
 
-    function showSettingsNotice(sourceElement) {
-        notify({
-            id: "desktop-settings-upcoming",
-            symbol: "◌",
-            title: "Configurações em desenvolvimento",
-            message:
-                "As opções de aparência e movimento serão adicionadas na Task 23.",
-            sourceElement,
-        });
-    }
-
     function executeAction(button) {
         const action = button.dataset.desktopContextAction;
         const sourceElement = previousFocus?.isConnected
@@ -190,7 +179,7 @@ export function initializeDesktopContextMenu({
         }
 
         if (action === "settings") {
-            showSettingsNotice(sourceElement);
+            showWindow("settings");
         }
     }
 

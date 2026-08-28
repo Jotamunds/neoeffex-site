@@ -89,7 +89,7 @@ export function initializeBootSequence() {
 
     const prefersReducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
-    ).matches;
+    ).matches || root.classList.contains("is-motion-reduced");
 
     if (prefersReducedMotion) {
         root.classList.add("is-desktop-ready");

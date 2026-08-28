@@ -20,6 +20,9 @@ const APP_ALIASES = new Map([
     ["files", "files"],
     ["contato", "contact"],
     ["contact", "contact"],
+    ["configuracoes", "settings"],
+    ["configurações", "settings"],
+    ["settings", "settings"],
 ]);
 
 const APP_NAMES = new Map([
@@ -30,6 +33,7 @@ const APP_NAMES = new Map([
     ["terminal", "Terminal"],
     ["files", "Arquivos"],
     ["contact", "Contato"],
+    ["settings", "Configurações"],
 ]);
 
 const STATE_NAMES = {
@@ -136,6 +140,7 @@ export function initializeTerminal({
                 "neo               abre a apresentação do Neo",
                 "files             abre o explorador de Arquivos",
                 "contact           abre os canais de Contato",
+                "settings          abre as Configurações",
                 "open <app>        abre um aplicativo",
                 "apps              lista o estado das janelas",
                 "search            abre a pesquisa rápida",
@@ -180,6 +185,15 @@ export function initializeTerminal({
 
         if (command === "contact" || command === "contato") {
             openApp("contact");
+            return;
+        }
+
+        if (
+            command === "settings" ||
+            command === "configuracoes" ||
+            command === "configurações"
+        ) {
+            openApp("settings");
             return;
         }
 

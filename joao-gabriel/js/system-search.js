@@ -77,6 +77,16 @@ const SEARCH_ITEMS = [
         appId: "contact",
     },
     {
+        id: "app-settings",
+        type: "app",
+        typeLabel: "Aplicativo",
+        symbol: "◌",
+        name: "Configurações",
+        description: "Aparência e movimento do JOÃO/OS",
+        terms: "preferencias personalizar wallpaper transparencia animacao",
+        appId: "settings",
+    },
+    {
         id: "project-neo-android",
         type: "project",
         typeLabel: "Projeto",

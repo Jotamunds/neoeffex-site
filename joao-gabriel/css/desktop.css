@@ -7,6 +7,29 @@
     overflow: hidden;
     background: var(--system-background);
     -webkit-user-select: none;
+<<<<<<< HEAD
+    user-select: none;
+}
+
+.desktop input,
+.desktop textarea,
+.desktop pre,
+.desktop code,
+.desktop [contenteditable="true"],
+.desktop .terminal__output,
+.desktop [data-selectable] {
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+.desktop__wallpaper {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+=======
+>>>>>>> 1c4d9a58d4fd40338f47886470cc35fb587d0f25
     user-select: none;
 }
 

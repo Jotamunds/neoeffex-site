@@ -1,0 +1,66 @@
+/* Botões reutilizáveis: herdam a paleta da seção, sem regras especiais no hero. */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--control-size);
+    max-width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: var(--border-width) solid transparent;
+    border-radius: var(--radius-pill);
+    background: var(--button-background);
+    color: var(--button-text);
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-compact);
+    letter-spacing: 0.06em;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        background-color var(--duration-fast) var(--ease-standard),
+        color var(--duration-fast) var(--ease-standard),
+        border-color var(--duration-fast) var(--ease-standard),
+        box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.button--outline {
+    border-color: var(--button-outline-border);
+    background: transparent;
+    color: var(--text-color);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .button:hover {
+        background: var(--button-background-hover);
+        box-shadow: var(--shadow-small);
+    }
+
+    .button--outline:hover {
+        background: var(--button-outline-hover);
+        border-color: currentColor;
+    }
+}
+
+.button:active {
+    background: var(--button-background-hover);
+    box-shadow: none;
+}
+
+.button--outline:active {
+    background: var(--button-outline-hover);
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Mantém a fronteira dos controles nos modos de alto contraste do sistema. */
+@media (forced-colors: active) {
+    .button {
+        border-color: ButtonText;
+    }
+}

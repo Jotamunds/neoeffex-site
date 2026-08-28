@@ -1,0 +1,42 @@
+/* Faixa no fluxo da página, sem pop-up. [hidden] é respeitado pelo reset global. */
+.promotion {
+    padding-block: var(--space-3);
+    border-block: var(--border-width) solid var(--color-accent);
+    background: var(--section-background);
+    color: var(--color-primary);
+}
+
+.promotion__inner {
+    display: grid;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.promotion__content {
+    display: grid;
+    min-width: 0;
+    gap: var(--space-1);
+}
+
+.promotion__title {
+    font-size: var(--font-size-subtitle);
+    line-height: var(--line-height-compact);
+}
+
+.promotion__description {
+    max-width: 72ch;
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-compact);
+    overflow-wrap: anywhere;
+}
+
+.promotion__action {
+    justify-self: start;
+}
+
+@media (min-width: 48rem) {
+    .promotion__inner {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: var(--space-4);
+    }
+}

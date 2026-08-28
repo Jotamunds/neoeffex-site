@@ -1,0 +1,31 @@
+/* Fechamento curto; nenhum conteúdo importante fica sobre uma fotografia. */
+.final-cta {
+    border-start-start-radius: var(--radius-hero-section);
+}
+
+.final-cta__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-5);
+}
+
+.final-cta__actions {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-2);
+    min-width: 0;
+}
+
+.final-cta__contact {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-size);
+    font-size: var(--font-size-small);
+}
+
+@media (min-width: 60rem) {
+    .final-cta__layout {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+}

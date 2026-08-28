@@ -1,0 +1,108 @@
+/* Sem menu oculto: as três categorias permanecem acessíveis sem JavaScript. */
+.site-header {
+    padding-block-start: var(--space-2);
+    background: var(--section-background);
+    color: var(--text-color);
+}
+
+.site-header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+}
+
+/* Assinatura tipográfica provisória, não uma reprodução do logo oficial. */
+.site-header__brand {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    flex-wrap: wrap;
+    min-width: 0;
+    max-width: 100%;
+    gap: var(--space-1);
+    min-height: var(--control-size);
+    color: var(--color-primary);
+    font-family: var(--font-display);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none;
+}
+
+.site-header__brand-name {
+    font-size: 2rem;
+    letter-spacing: -0.06em;
+    line-height: 1;
+}
+
+.site-header__brand-description {
+    font-size: var(--font-size-label);
+    line-height: var(--line-height-compact);
+}
+
+.site-header__contact {
+    margin-inline-start: auto;
+}
+
+.site-nav {
+    order: 1;
+    flex-basis: 100%;
+    min-width: 0;
+    border-block-start: var(--border-width) solid var(--border-color);
+}
+
+.site-nav__list {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0 var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.site-nav__list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-size);
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.site-nav__list a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.4em;
+}
+
+/* Uma linha no desktop; as media queries pertencem ao próprio componente. */
+@media (min-width: 60rem) {
+    .site-header {
+        padding-block: var(--space-3);
+    }
+
+    .site-header__inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        gap: var(--space-4);
+    }
+
+    .site-nav {
+        order: 0;
+        grid-column: 2;
+        grid-row: 1;
+        border: 0;
+    }
+
+    .site-nav__list {
+        gap: var(--space-4);
+    }
+
+    .site-header__contact {
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: end;
+        margin-inline-start: 0;
+    }
+}

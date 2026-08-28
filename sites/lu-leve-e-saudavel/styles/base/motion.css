@@ -1,0 +1,51 @@
+/* Etapa 1: só o controlador ativa movimentos; o estado-base permanece visível.
+ * Não transforme html, body, main, seções, ondas ou molduras decorativas.
+ * Novos efeitos devem usar suas próprias camadas, sem disputar este transform.
+ */
+@media screen and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+    html[data-motion-scroll="on"] {
+        scroll-behavior: smooth;
+    }
+
+    html[data-motion-reveal="on"] [data-reveal].is-revealed {
+        /* Sem forwards/both: o transform é liberado mesmo sem animationend. */
+        animation: reveal-soft var(--duration-reveal) var(--ease-reveal);
+    }
+}
+
+@keyframes reveal-soft {
+    from {
+        opacity: var(--reveal-start-opacity);
+        transform: translateY(var(--reveal-distance));
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Interagir nunca exige esperar que um efeito termine. */
+html[data-motion-reveal="on"] [data-reveal].is-revealed:focus-within {
+    animation: none;
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    [data-reveal].is-revealed {
+        animation: none;
+    }
+}
+
+@media print {
+    html {
+        scroll-behavior: auto;
+    }
+
+    [data-reveal].is-revealed {
+        animation: none;
+    }
+}

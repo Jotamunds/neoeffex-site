@@ -1,0 +1,35 @@
+/* Temas de seção, não um seletor de modo escuro.
+ * As cores concretas continuam em variables.css.
+ */
+.theme--cream {
+    --section-background: var(--color-background);
+}
+
+.theme--paper {
+    --section-background: var(--color-surface);
+}
+
+.theme--sage {
+    --section-background: var(--color-sage);
+}
+
+.theme--warm {
+    --section-background: var(--color-accent-soft);
+}
+
+.theme--forest {
+    --section-background: var(--color-primary);
+    --text-color: var(--color-text-light);
+    --text-muted: var(--color-sage);
+    --border-color: var(--color-border-dark);
+    --surface-background: var(--color-primary-light);
+    --surface-text: var(--color-text-light);
+    --surface-muted: var(--color-sage);
+    --surface-border: var(--color-border-dark);
+    --button-background: var(--color-accent-soft);
+    --button-background-hover: var(--color-accent);
+    --button-text: var(--color-primary);
+    --button-outline-hover: var(--color-primary-light);
+    --button-outline-border: var(--color-border-dark);
+    --focus-color: var(--color-accent-soft);
+}

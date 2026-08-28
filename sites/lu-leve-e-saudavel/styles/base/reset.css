@@ -1,0 +1,64 @@
+/* Apenas normalizações globais; aparência específica pertence às seções. */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+figure,
+dl,
+dd {
+    margin: 0;
+}
+
+img,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+img {
+    height: auto;
+}
+
+body {
+    padding-block-start: env(safe-area-inset-top, 0px);
+}
+
+html {
+    scroll-padding-block-start: var(--space-2);
+    scroll-padding-block-end: calc(var(--mobile-order-height) + var(--space-2));
+}
+
+/* O foco e as âncoras devem permanecer afastados da barra inferior. */
+:where(a, button, input, select, textarea, [tabindex]) {
+    scroll-margin-block: var(--space-2);
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+/* Evita que regras de layout exibam conteúdo marcado como oculto. */
+[hidden] {
+    display: none !important;
+}
+
+:focus-visible {
+    outline: var(--focus-width) solid var(--focus-color);
+    outline-offset: var(--focus-offset);
+}
+
+/* Contorno para dentro: evita corte nas seções que ocupam a largura da tela. */
+.section:focus-visible,
+#conteudo:focus-visible {
+    outline-offset: calc(-1 * var(--focus-width));
+}

@@ -1,0 +1,70 @@
+/* Layout das categorias. Aparência interna dos cards: components/price-card.css. */
+.products__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+    width: 100%;
+    max-width: 36rem;
+    justify-self: center;
+}
+
+.products__surcharges {
+    width: 100%;
+    margin-block: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    border-inline-start: 3px solid var(--color-primary-light);
+    border-radius: 0 var(--radius-medium) var(--radius-medium) 0;
+    background: var(--color-accent-soft);
+    color: var(--color-primary);
+    font-size: var(--font-size-body);
+}
+
+.products__surcharges ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.products__surcharges p {
+    margin-block-start: var(--space-1);
+    line-height: var(--line-height-compact);
+}
+
+.products__surcharges .numeric {
+    white-space: nowrap;
+}
+
+.products__contact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    width: 100%;
+    margin-block-start: var(--space-2);
+    padding-block-start: var(--space-3);
+    border-block-start: var(--border-width) solid var(--border-color);
+}
+
+.products__contact p {
+    max-width: 45ch;
+    color: var(--text-muted);
+}
+
+/* No celular os cards são sempre empilhados, com todos os combos no fluxo. */
+@media (min-width: 48rem) {
+    .products--fitness .products__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: none;
+    }
+}
+
+@media (min-width: 64rem) {
+    .products--traditional .products__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: none;
+    }
+}

@@ -1,0 +1,64 @@
+body {
+    background: var(--section-background);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-body);
+    line-height: var(--line-height-body);
+    overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-display);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-title);
+    text-wrap: balance;
+}
+
+h2 {
+    font-size: var(--font-size-section);
+    letter-spacing: var(--tracking-title);
+    text-transform: uppercase;
+}
+
+h3 {
+    font-size: var(--font-size-subtitle);
+}
+
+strong,
+b {
+    font-weight: var(--font-weight-bold);
+}
+
+.display-title {
+    font-size: var(--font-size-title);
+    letter-spacing: var(--tracking-title);
+    text-transform: uppercase;
+}
+
+a {
+    color: inherit;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: var(--border-width);
+}
+
+.eyebrow {
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-compact);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+}
+
+.section__description {
+    max-width: var(--text-width);
+    color: var(--text-muted);
+    text-wrap: pretty;
+}
+
+/* Valores tabulares mantêm os algarismos alinhados nos cards de preços. */
+.numeric {
+    font-variant-numeric: tabular-nums;
+}

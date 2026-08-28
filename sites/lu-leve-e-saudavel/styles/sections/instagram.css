@@ -1,0 +1,62 @@
+/* Uma imagem principal e duas menores; sem feed, carrossel ou rolagem lateral. */
+.instagram__header {
+    display: grid;
+    justify-items: start;
+    align-items: end;
+    gap: var(--space-4);
+    width: 100%;
+}
+
+.instagram__gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    width: 100%;
+    margin-block-start: var(--space-3);
+}
+
+.instagram__photo {
+    position: relative;
+    min-width: 0;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: var(--radius-large);
+    background: var(--color-sage);
+}
+
+.instagram__photo--main {
+    grid-column: 1 / -1;
+    aspect-ratio: 4 / 3;
+    border-start-start-radius: var(--space-6);
+}
+
+.instagram__photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.instagram__caption {
+    grid-column: 1 / -1;
+    color: var(--text-muted);
+    font-size: var(--font-size-small);
+}
+
+@media (min-width: 48rem) {
+    .instagram__header {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .instagram__gallery {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        gap: var(--space-3);
+    }
+
+    .instagram__photo--main {
+        grid-column: 1;
+        grid-row: 1 / 3;
+        aspect-ratio: auto;
+    }
+}

@@ -1,0 +1,58 @@
+.container {
+    width: min(calc(100% - 2 * var(--page-gutter-safe)), var(--container-width));
+    margin-inline: auto;
+}
+
+.section {
+    background: var(--section-background);
+    color: var(--text-color);
+    padding-block: var(--space-section);
+    scroll-margin-top: var(--space-3);
+}
+
+.stack {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-stack);
+}
+
+/* Permite que filhos de grid e flex encolham sem forçar rolagem horizontal. */
+.stack > *,
+.actions > * {
+    min-width: 0;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+/* Aviso de pré-publicação; remover do HTML após conferir docs/PUBLICACAO.md. */
+.project-status {
+    padding: var(--space-1) var(--space-2);
+    background: var(--color-accent-soft);
+    color: var(--color-primary);
+    font-size: var(--font-size-small);
+    text-align: center;
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-compact);
+}
+
+.skip-link {
+    position: fixed;
+    top: max(var(--space-2), env(safe-area-inset-top, 0px));
+    left: var(--page-gutter-safe);
+    max-width: calc(100% - 2 * var(--page-gutter-safe));
+    z-index: var(--z-skip-link);
+    padding: var(--space-2);
+    transform: translateY(-200%);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-radius: var(--radius-small);
+    box-shadow: var(--shadow-card);
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}

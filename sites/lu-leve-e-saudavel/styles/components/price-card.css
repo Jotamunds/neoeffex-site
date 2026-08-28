@@ -1,0 +1,130 @@
+/* Componente compartilhado. Dados e cálculos ficam fora do CSS. */
+.price-card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+    padding: clamp(var(--space-2), 2vw, var(--space-3));
+}
+
+.price-card__header {
+    display: grid;
+    gap: var(--space-1);
+}
+
+.price-card__title {
+    color: var(--color-primary);
+    font-size: var(--font-size-card-title);
+    letter-spacing: var(--tracking-title);
+    text-transform: uppercase;
+}
+
+.price-card__description {
+    color: var(--surface-muted);
+    font-size: var(--font-size-body);
+}
+
+.price-card__single {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding-block-end: var(--space-3);
+    border-block-end: var(--border-width) solid var(--surface-border);
+}
+
+.price-card__single strong {
+    font-size: var(--font-size-price);
+    white-space: nowrap;
+}
+
+.price-card__combos-label {
+    margin-block-end: var(--space-1);
+    color: var(--surface-muted);
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+}
+
+.price-card__list {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.price-card__combo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: var(--space-0) var(--space-1);
+    padding: var(--space-2);
+    border-radius: var(--radius-medium);
+}
+
+.price-card__quantity {
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-compact);
+}
+
+.price-card__total {
+    font-size: var(--font-size-price);
+    line-height: var(--line-height-compact);
+    white-space: nowrap;
+}
+
+/* 1rem para o valor por marmita: secundário na hierarquia, nunca letras miúdas. */
+.price-card__per-meal {
+    grid-column: 1 / -1;
+    color: var(--surface-muted);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-compact);
+    text-align: end;
+}
+
+.price-card__per-meal .numeric {
+    white-space: nowrap;
+}
+
+.price-card__combo--featured {
+    background: var(--color-sage);
+    color: var(--color-primary);
+}
+
+.price-card__combo--featured .price-card__total {
+    font-size: var(--font-size-price-featured);
+}
+
+.price-card__badge {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-block-end: var(--space-1);
+    padding: var(--space-0) var(--space-1);
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    color: var(--color-text-light);
+    font-size: var(--font-size-label);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-compact);
+}
+
+/* Telas muito estreitas: quantidade e total ganham linhas próprias. */
+@media (max-width: 23rem) {
+    .price-card__combo {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .price-card__per-meal {
+        text-align: start;
+    }
+}
+
+@media (forced-colors: active) {
+    .price-card__combo--featured,
+    .price-card__badge {
+        outline: var(--border-width) solid CanvasText;
+    }
+}

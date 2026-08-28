@@ -1,0 +1,179 @@
+/* A curva termina sobre o creme da página, conectando a abertura ao cardápio. */
+.hero {
+    padding-block: clamp(var(--space-4), 5vw, var(--space-6));
+    border-end-end-radius: var(--radius-hero-section);
+}
+
+.hero__layout {
+    display: grid;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.hero__layout > * {
+    min-width: 0;
+}
+
+.hero__copy {
+    gap: var(--space-stack);
+}
+
+.hero__eyebrow {
+    max-width: 32ch;
+    padding-inline-start: var(--space-2);
+    border-inline-start: 3px solid var(--color-accent-soft);
+    color: var(--text-muted);
+}
+
+.hero__title {
+    max-width: 19ch;
+}
+
+.hero__title-accent {
+    color: var(--color-sage);
+}
+
+.hero__description {
+    max-width: 39ch;
+}
+
+.hero__actions {
+    width: 100%;
+    row-gap: var(--space-2);
+    column-gap: max(var(--space-2), 4%);
+}
+
+/* v0.1.14.1: o link reserva o tamanho normal, mesmo durante o bubble interno. */
+.hero__action {
+    display: inline-flex;
+    position: relative;
+    isolation: isolate;
+    max-width: 100%;
+    border-radius: var(--radius-pill);
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Área transparente fixa cobre até o pico permitido de 1,08.
+ * Não desaparece no cancelamento; a borda ampliada também continua clicável.
+ * O intervalo horizontal acima reserva 4% para cada par de bordas.
+ */
+.hero__action::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    transform: scale(1.08);
+}
+
+.hero__action-visual {
+    flex: 1 1 auto;
+    min-width: 0;
+    pointer-events: none;
+}
+
+/* Os estados pertencem ao link, não ao span visual sem eventos próprios. */
+@media (hover: hover) and (pointer: fine) {
+    .hero__action:hover .hero__action-visual {
+        background: var(--button-background-hover);
+        box-shadow: var(--shadow-small);
+    }
+
+    .hero__action:hover .button--outline {
+        background: var(--button-outline-hover);
+        border-color: currentColor;
+    }
+}
+
+.hero__action:active .hero__action-visual {
+    background: var(--button-background-hover);
+    box-shadow: none;
+}
+
+.hero__action:active .button--outline {
+    background: var(--button-outline-hover);
+}
+
+/* O texto vem primeiro no HTML e no celular. Sem altura de tela forçada. */
+.hero__visual {
+    position: relative;
+    isolation: isolate;
+    justify-self: center;
+    width: min(100%, 26rem);
+    padding: var(--space-1);
+}
+
+/* Uma única camada para foto, borda e contorno; legenda fora da animação. */
+.hero__artwork {
+    position: relative;
+    isolation: isolate;
+}
+
+/* Apenas um contorno abstrato. A fotografia é um arquivo de imagem real. */
+.hero__artwork::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0 0 calc(-1 * var(--space-0));
+    border: var(--border-width) solid var(--color-border-dark);
+    border-radius: var(--radius-hero-image);
+    transform: rotate(-5deg);
+    pointer-events: none;
+}
+
+.hero__image-frame {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: var(--space-1) solid var(--color-sage);
+    border-radius: var(--radius-hero-image);
+    background: var(--color-surface);
+}
+
+.hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.hero__caption {
+    margin-block-start: var(--space-1);
+    color: var(--text-muted);
+    font-size: var(--font-size-small);
+    line-height: var(--line-height-compact);
+    text-align: center;
+}
+
+@media (min-width: 60rem) {
+    .hero {
+        padding-block: var(--space-6);
+    }
+
+    .hero__layout {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        gap: clamp(var(--space-4), 4vw, var(--space-6));
+    }
+
+    .hero__copy {
+        padding-block: var(--space-3);
+    }
+
+    .hero__visual {
+        justify-self: end;
+        width: 100%;
+        max-width: 29rem;
+    }
+
+    .hero__image-frame {
+        aspect-ratio: 1 / 1;
+    }
+}
+
+/* A decoração é dispensável em alto contraste; o conteúdo continua visível. */
+@media (forced-colors: active) {
+    .hero__artwork::before {
+        display: none;
+    }
+}

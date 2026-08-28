@@ -1,0 +1,29 @@
+/* Etapa 3: destaque dos cinco cards de preço, sem deslocar o conteúdo.
+ * Sem JS/controle, mouse compatível ou movimento permitido, vale a superfície-base.
+ * Não usar transform, escala ou transition: all: preços e área de hover ficam fixos.
+ */
+@media screen and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+    html[data-motion-cards="on"] .products__grid > .price-card {
+        transition-property: border-color, box-shadow;
+        transition-duration: clamp(0ms, var(--card-hover-duration), 300ms);
+        transition-timing-function: var(--card-hover-ease);
+    }
+
+    html[data-motion-cards="on"] .products__grid > .price-card:hover {
+        border-color: var(--card-hover-border);
+        box-shadow: var(--card-hover-shadow);
+    }
+}
+
+/* A retirada da permissão também retira a transição, sem retorno animado. */
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+    html[data-motion-cards="on"] .products__grid > .price-card {
+        transition: none;
+    }
+}
+
+@media print {
+    html[data-motion-cards="on"] .products__grid > .price-card {
+        transition: none;
+    }
+}

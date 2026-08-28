@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Consulte tamanhos, preços e combos de marmitas tradicionais e fitness da Lu Leve e Saudável. Atendimento em Cotia, Vargem Grande Paulista, Itapevi e região.">
+    <!-- Pré-publicação: mantenha até concluir docs/PUBLICACAO.md, inclusive os testes visuais. -->
+    <meta name="robots" content="noindex, nofollow">
+    <title>Lu Leve e Saudável</title>
+
+    <!-- Fontes locais: antecipamos apenas as duas famílias usadas na primeira tela. -->
+    <link rel="preload" href="./assets/fonts/sora-variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/manrope-variable.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Este é o único ponto de entrada dos estilos. -->
+    <link rel="stylesheet" href="./styles/main.css">
+
+    <!-- Scripts clássicos com defer: também funcionam ao abrir o HTML diretamente. -->
+    <script src="./scripts/config.js" defer></script>
+    <script src="./scripts/whatsapp.js" defer></script>
+    <script src="./scripts/promotion.js" defer></script>
+    <script src="./scripts/mobile-order.js" defer></script>
+    <script src="./scripts/hero-intro.js" defer></script>
+    <script src="./scripts/contact-jump.js" defer></script>
+    <script src="./scripts/animations.js" defer></script>
+    <script src="./scripts/main.js" defer></script>
+</head>
+<!-- Testes independentes: organic-backgrounds controla ondas; decorative-elements, ícones. -->
+<body class="organic-backgrounds decorative-elements">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <!-- Remover este aviso somente após resolver as pendências de publicação. -->
+    <aside class="project-status" aria-label="Status do desenvolvimento">
+        Teste de fundos orgânicos · Pré-publicação · v0.1.16
+    </aside>
+
+    <header class="site-header theme--paper">
+        <div class="container site-header__inner">
+            <!-- O nome em texto será substituído pelo logo quando ele estiver disponível. -->
+            <a class="site-header__brand" href="#inicio" aria-label="Lu Leve e Saudável — início">
+                <span class="site-header__brand-name">Lu</span>
+                <span class="site-header__brand-description">leve e<br>saudável</span>
+            </a>
+
+            <nav class="site-nav" aria-label="Navegação principal">
+                <ul class="site-nav__list">
+                    <li><a href="#tradicionais">Tradicionais</a></li>
+                    <li><a href="#fitness">Fitness</a></li>
+                    <li><a href="#como-funciona">Como funciona</a></li>
+                </ul>
+            </nav>
+
+            <a class="button site-header__contact" href="#contato">Contato</a>
+        </div>
+    </header>
+
+    <main id="conteudo" tabindex="-1">
+        <!-- ETAPA 3: foto ilustrativa local; os textos nunca ficam sobre a imagem. -->
+        <section class="section hero theme--forest" id="inicio" aria-labelledby="inicio-title" tabindex="-1">
+            <!-- DECORATION:hero:START -->
+            <div class="section-decoration section-decoration--hero" aria-hidden="true">
+                <svg class="section-decoration__art" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"></path>
+                    <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"></path>
+                </svg>
+            </div>
+            <!-- DECORATION:hero:END -->
+            <div class="container hero__layout">
+                <!-- Entrada por grupos: não animar também o ancestral hero__copy. -->
+                <div class="hero__copy stack">
+                    <p class="eyebrow hero__eyebrow" data-intro="title">Marmitas tradicionais e fitness</p>
+                    <h1 class="hero__title display-title" id="inicio-title" data-intro="title">Alimentação leve.<br><span class="hero__title-accent">Rotina prática.</span></h1>
+                    <p class="section__description hero__description" data-intro="copy">Comida caseira feita sob encomenda para facilitar a sua semana.</p>
+
+                    <!-- Links imóveis; somente a superfície interna recebe o bubble. -->
+                    <div class="actions hero__actions">
+                        <a class="hero__action" href="#tradicionais">
+                            <span class="button hero__action-visual" data-intro="action">Ver preços</span>
+                        </a>
+                        <a class="hero__action" href="#contato" data-whatsapp data-contact-jump data-whatsapp-label="Fale conosco" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">
+                            <span class="button button--outline hero__action-visual" data-intro="action" data-whatsapp-text>Fale conosco</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mesma fotografia em duas resoluções; substituir ambas pelas fotos reais. -->
+                <figure class="hero__visual">
+                    <div class="hero__artwork" data-intro="photo">
+                        <div class="hero__image-frame">
+                            <img
+                                class="hero__image"
+                                src="./assets/images/hero/marmita-960.webp"
+                                srcset="./assets/images/hero/marmita-640.webp 640w, ./assets/images/hero/marmita-960.webp 960w"
+                                sizes="(min-width: 80rem) 29rem, (min-width: 60rem) 40vw, (min-width: 42rem) 26rem, 92vw"
+                                width="960"
+                                height="960"
+                                alt="Marmita ilustrativa com frango grelhado, arroz, brócolis e cenoura, vista em perspectiva."
+                                loading="eager"
+                                fetchpriority="high"
+                                decoding="async"
+                            >
+                        </div>
+                    </div>
+                    <figcaption class="hero__caption">Imagem ilustrativa</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- ETAPA 5: conteúdo em config.promotion. Oculto até existir uma oferta válida. -->
+        <aside class="promotion theme--warm" id="promocao" data-promotion aria-labelledby="promocao-title" hidden>
+            <svg class="organic-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M 0 45 C 160 45 320 9 480 15 C 640 21 800 69 960 75 C 1120 81 1280 45 1440 45 L 1440 100 L 0 100 Z"></path>
+            </svg>
+            <div class="container promotion__inner">
+                <div class="promotion__content">
+                    <p class="eyebrow">Promoção da semana</p>
+                    <h2 class="promotion__title" id="promocao-title" data-promotion-title></h2>
+                    <p class="promotion__description" data-promotion-description></p>
+                </div>
+                <a class="button button--outline promotion__action" href="#contato" data-whatsapp data-whatsapp-label="Consultar promoção" data-whatsapp-fallback="Consultar condições" aria-describedby="whatsapp-status">Consultar condições</a>
+            </div>
+        </aside>
+
+        <!-- ETAPA 4: preços em data/menu.json; gerar com node tools/build-menu.mjs. -->
+        <section class="section products products--traditional theme--cream" id="tradicionais" aria-labelledby="tradicionais-title" tabindex="-1">
+            <!-- DECORATION:traditional:START -->
+            <div class="section-decoration section-decoration--traditional" aria-hidden="true">
+                <svg class="section-decoration__art" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 22 16 8"></path>
+                    <path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"></path>
+                    <path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"></path>
+                    <path d="M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"></path>
+                    <path d="M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z"></path>
+                    <path d="M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"></path>
+                    <path d="M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"></path>
+                    <path d="M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"></path>
+                </svg>
+            </div>
+            <!-- DECORATION:traditional:END -->
+            <svg class="organic-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M 0 45 C 160 45 320 9 480 15 C 640 21 800 69 960 75 C 1120 81 1280 45 1440 45 L 1440 100 L 0 100 Z"></path>
+            </svg>
+            <div class="container stack">
+                <p class="eyebrow">Comida caseira, do seu jeito</p>
+                <h2 id="tradicionais-title" data-reveal>Marmitas tradicionais</h2>
+                <p class="section__description">Escolha o tamanho e a quantidade ideal para a sua rotina.</p>
+
+                <!-- MENU:tradicionais:START -->
+                <aside class="products__surcharges" aria-label="Acréscimos de proteína">
+                    <ul id="acrescimos-tradicionais">
+                        <li><strong>Carne especial</strong>: + <span class="numeric">R$ 6,00</span> por marmita.</li>
+                        <li><strong>Salmão</strong>: + <span class="numeric">R$ 9,00</span> por marmita.</li>
+                    </ul>
+                    <p>Válidos para tradicionais e fitness. Valores dos combos não incluem acréscimos nem entrega.</p>
+                </aside>
+                <div class="products__grid">
+                    <article class="price-card surface" aria-labelledby="tradicional-300-title" aria-describedby="acrescimos-tradicionais">
+                        <header class="price-card__header">
+                            <h3 class="price-card__title" id="tradicional-300-title">300 g</h3>
+                            <p class="price-card__description">1 tipo de carne</p>
+                        </header>
+                        <p class="price-card__single"><span>Unidade</span><strong class="numeric">R$ 16,00</strong></p>
+                        <div class="price-card__combos">
+                            <p class="price-card__combos-label">Combos</p>
+                            <ul class="price-card__list">
+                                <li class="price-card__combo">
+                                    <span class="price-card__quantity">5 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 75,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 15,00</span> por marmita</p>
+                                </li>
+                                <li class="price-card__combo price-card__combo--featured">
+                                    <span class="price-card__badge">Mais pedido</span>
+                                    <span class="price-card__quantity">10 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 150,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 15,00</span> por marmita</p>
+                                </li>
+                                <li class="price-card__combo">
+                                    <span class="price-card__quantity">20 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 290,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 14,50</span> por marmita</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+                    <article class="price-card surface" aria-labelledby="tradicional-400-title" aria-describedby="acrescimos-tradicionais">
+                        <header class="price-card__header">
+                            <h3 class="price-card__title" id="tradicional-400-title">400 g</h3>
+                            <p class="price-card__description">2 tipos de carne</p>
+                        </header>
+                        <p class="price-card__single"><span>Unidade</span><strong class="numeric">R$ 20,00</strong></p>
+                        <div class="price-card__combos">
+                            <p class="price-card__combos-label">Combos</p>
+                            <ul class="price-card__list">
+                                <li class="price-card__combo">
+                                    <span class="price-card__quantity">5 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 95,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 19,00</span> por marmita</p>
+                                </li>
+                                <li class="price-card__combo price-card__combo--featured">
+                                    <span class="price-card__badge">Mais pedido</span>
+                                    <span class="price-card__quantity">10 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 190,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 19,00</span> por marmita</p>
+                                </li>
+                                <li class="price-card__combo">
+                                    <span class="price-card__quantity">20 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 370,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 18,50</span> por marmita</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+                    <article class="price-card surface" aria-labelledby="tradicional-500-title" aria-describedby="acrescimos-tradicionais">
+                        <header class="price-card__header">
+                            <h3 class="price-card__title" id="tradicional-500-title">500 g</h3>
+                            <p class="price-card__description">2 tipos de carne</p>
+                        </header>
+                        <p class="price-card__single"><span>Unidade</span><strong class="numeric">R$ 22,00</strong></p>
+                        <div class="price-card__combos">
+                            <p class="price-card__combos-label">Combos</p>
+                            <ul class="price-card__list">
+                                <li class="price-card__combo">
+                                    <span class="price-card__quantity">5 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 105,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 21,00</span> por marmita</p>
+                                </li>
+                                <li class="price-card__combo price-card__combo--featured">
+                                    <span class="price-card__badge">Mais pedido</span>
+                                    <span class="price-card__quantity">10 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 210,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 21,00</span> por marmita</p>
+                                </li>
+                                <li class="price-card__combo">
+                                    <span class="price-card__quantity">20 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 410,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 20,50</span> por marmita</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+                <!-- MENU:tradicionais:END -->
+
+                <div class="products__contact">
+                    <p>Já encontrou a melhor opção para a sua rotina?</p>
+                    <a class="button" href="#contato" data-whatsapp data-whatsapp-label="Pedir pelo WhatsApp" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">Fale conosco</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section products products--fitness theme--sage" id="fitness" aria-labelledby="fitness-title" tabindex="-1">
+            <!-- DECORATION:fitness:START -->
+            <div class="section-decoration section-decoration--fitness" aria-hidden="true">
+                <svg class="section-decoration__art" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.596 12.768a2 2 0 1 0 2.829-2.829l-1.768-1.767a2 2 0 0 0 2.828-2.829l-2.828-2.828a2 2 0 0 0-2.829 2.828l-1.767-1.768a2 2 0 1 0-2.829 2.829z"></path>
+                    <path d="m2.5 21.5 1.4-1.4"></path>
+                    <path d="m20.1 3.9 1.4-1.4"></path>
+                    <path d="M5.343 21.485a2 2 0 1 0 2.829-2.828l1.767 1.768a2 2 0 1 0 2.829-2.829l-6.364-6.364a2 2 0 1 0-2.829 2.829l1.768 1.767a2 2 0 0 0-2.828 2.829z"></path>
+                    <path d="m9.6 14.4 4.8-4.8"></path>
+                </svg>
+            </div>
+            <!-- DECORATION:fitness:END -->
+            <svg class="organic-wave organic-wave--ribbon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M 0 62 C 480 62 960 18 1440 18 L 1440 100 L 0 100 Z"></path>
+            </svg>
+            <svg class="organic-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M 0 62 C 480 62 960 18 1440 18 L 1440 100 L 0 100 Z"></path>
+            </svg>
+            <div class="container stack">
+                <p class="eyebrow">Mais leveza na rotina</p>
+                <h2 id="fitness-title" data-reveal>Marmitas fitness</h2>
+                <p class="section__description">Proteína, legumes e praticidade para uma alimentação equilibrada.</p>
+
+                <!-- MENU:fitness:START -->
+                <aside class="products__surcharges" aria-label="Acréscimos de proteína">
+                    <ul id="acrescimos-fitness">
+                        <li><strong>Carne especial</strong>: + <span class="numeric">R$ 6,00</span> por marmita.</li>
+                        <li><strong>Salmão</strong>: + <span class="numeric">R$ 9,00</span> por marmita.</li>
+                    </ul>
+                    <p>Válidos para tradicionais e fitness. Valores dos combos não incluem acréscimos nem entrega.</p>
+                </aside>
+                <div class="products__grid">
+                    <article class="price-card surface" aria-labelledby="fitness-m-title" aria-describedby="acrescimos-fitness">
+                        <header class="price-card__header">
+                            <h3 class="price-card__title" id="fitness-m-title">Fitness M</h3>
+                            <p class="price-card__description">Peso total: 400 g</p>
+                        </header>
+                        <p class="price-card__single"><span>Unidade</span><strong class="numeric">R$ 22,00</strong></p>
+                        <div class="price-card__combos">
+                            <p class="price-card__combos-label">Combos</p>
+                            <ul class="price-card__list">
+                                <li class="price-card__combo">
+                                    <span class="price-card__quantity">5 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 105,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 21,00</span> por marmita</p>
+                                </li>
+                                <li class="price-card__combo price-card__combo--featured">
+                                    <span class="price-card__badge">Mais pedido</span>
+                                    <span class="price-card__quantity">10 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 210,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 21,00</span> por marmita</p>
+                                </li>
+                                <li class="price-card__combo">
+                                    <span class="price-card__quantity">15 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 315,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 21,00</span> por marmita</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+                    <article class="price-card surface" aria-labelledby="fitness-g-title" aria-describedby="acrescimos-fitness">
+                        <header class="price-card__header">
+                            <h3 class="price-card__title" id="fitness-g-title">Fitness G</h3>
+                            <p class="price-card__description">Peso total: 500 g</p>
+                        </header>
+                        <p class="price-card__single"><span>Unidade</span><strong class="numeric">R$ 25,00</strong></p>
+                        <div class="price-card__combos">
+                            <p class="price-card__combos-label">Combos</p>
+                            <ul class="price-card__list">
+                                <li class="price-card__combo">
+                                    <span class="price-card__quantity">5 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 125,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 25,00</span> por marmita</p>
+                                </li>
+                                <li class="price-card__combo price-card__combo--featured">
+                                    <span class="price-card__badge">Mais pedido</span>
+                                    <span class="price-card__quantity">10 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 245,00</strong>
+                                    <p class="price-card__per-meal"><span class="numeric">R$ 24,50</span> por marmita</p>
+                                </li>
+                                <li class="price-card__combo">
+                                    <span class="price-card__quantity">15 marmitas</span>
+                                    <strong class="price-card__total numeric">R$ 370,00</strong>
+                                    <p class="price-card__per-meal">aprox. <span class="numeric">R$ 24,67</span> por marmita</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+                <!-- MENU:fitness:END -->
+
+                <div class="products__contact">
+                    <p>Escolha sua opção. As proteínas disponíveis são confirmadas no atendimento.</p>
+                    <a class="button" href="#contato" data-whatsapp data-whatsapp-label="Pedir pelo WhatsApp" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">Fale conosco</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ETAPA 5: orientação de pedido, sem formulário ou seleção dentro do site. -->
+        <section class="section how-it-works theme--warm" id="como-funciona" aria-labelledby="como-funciona-title" tabindex="-1">
+            <!-- DECORATION:steps:START -->
+            <div class="section-decoration section-decoration--steps" aria-hidden="true">
+                <svg class="section-decoration__art" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 21h10"></path>
+                    <path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"></path>
+                    <path d="M11.38 12a2.4 2.4 0 0 1-.4-4.77 2.4 2.4 0 0 1 3.2-2.77 2.4 2.4 0 0 1 3.47-.63 2.4 2.4 0 0 1 3.37 3.37 2.4 2.4 0 0 1-1.1 3.7 2.51 2.51 0 0 1 .03 1.1"></path>
+                    <path d="m13 12 4-4"></path>
+                    <path d="M10.9 7.25A3.99 3.99 0 0 0 4 10c0 .73.2 1.41.54 2"></path>
+                </svg>
+            </div>
+            <!-- DECORATION:steps:END -->
+            <svg class="organic-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M 0 40 C 160 40 320 78 480 75 C 640 72 800 28 960 20 C 1120 12 1280 40 1440 40 L 1440 100 L 0 100 Z"></path>
+            </svg>
+            <div class="container stack">
+                <p class="eyebrow">Do cardápio para a sua rotina</p>
+                <h2 id="como-funciona-title" data-reveal>Como funciona</h2>
+
+                <ol class="how-it-works__steps" role="list">
+                    <li class="how-it-works__step">
+                        <span class="how-it-works__number" aria-hidden="true">01</span>
+                        <div class="how-it-works__content">
+                            <h3 class="how-it-works__title">Escolha a categoria</h3>
+                            <p class="how-it-works__description">Tradicional ou fitness: encontre a opção para a sua rotina.</p>
+                        </div>
+                    </li>
+                    <li class="how-it-works__step">
+                        <span class="how-it-works__number" aria-hidden="true">02</span>
+                        <div class="how-it-works__content">
+                            <h3 class="how-it-works__title">Escolha os detalhes</h3>
+                            <p class="how-it-works__description">Defina o tamanho, a quantidade e as proteínas que deseja.</p>
+                        </div>
+                    </li>
+                    <li class="how-it-works__step">
+                        <span class="how-it-works__number" aria-hidden="true">03</span>
+                        <div class="how-it-works__content">
+                            <h3 class="how-it-works__title">Fale com a Lu</h3>
+                            <p class="how-it-works__description">Envie suas escolhas pelo WhatsApp para confirmar as opções e finalizar o pedido.</p>
+                        </div>
+                    </li>
+                </ol>
+                <div class="how-it-works__contact">
+                    <a class="button" href="#contato" data-whatsapp data-whatsapp-label="Montar meu pedido" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">Fale conosco</a>
+                    <p>A montagem e a confirmação acontecem no atendimento.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ETAPA 6: dados por extenso. Telefone e horários dependem do config.js. -->
+        <section class="section contact theme--forest" id="contato" aria-labelledby="contato-title" tabindex="-1">
+            <!-- DECORATION:contact:START -->
+            <div class="section-decoration section-decoration--contact" aria-hidden="true">
+                <svg class="section-decoration__art" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2"></path>
+                    <path d="M12 20v2"></path>
+                    <path d="m4.93 4.93 1.41 1.41"></path>
+                    <path d="m17.66 17.66 1.41 1.41"></path>
+                    <path d="M2 12h2"></path>
+                    <path d="M20 12h2"></path>
+                    <path d="m6.34 17.66-1.41 1.41"></path>
+                    <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+            </div>
+            <!-- DECORATION:contact:END -->
+            <div class="container contact__layout">
+                <div class="contact__channels stack">
+                    <p class="eyebrow">Contato e atendimento</p>
+                    <h2 id="contato-title" data-reveal>Fale com a Lu</h2>
+                    <p class="section__description">Para fazer seu pedido, tirar dúvidas e combinar o recebimento.</p>
+
+                    <div class="contact-card contact-card--channel">
+                        <h3 class="contact-card__title">Telefone e WhatsApp</h3>
+                        <p class="contact-card__phone">
+                            <a class="numeric" data-contact-phone-link hidden></a>
+                            <span data-contact-phone data-contact-phone-fallback>Ative o JavaScript ou consulte a alternativa de contato abaixo.</span>
+                        </p>
+                    </div>
+                    <div class="contact-card contact-card--channel">
+                        <h3 class="contact-card__title">Instagram</h3>
+                        <a class="contact-card__link" href="https://www.instagram.com/lu.leveesaudavel/" target="_blank" rel="noopener noreferrer" data-instagram-link data-instagram-handle>@lu.leveesaudavel</a>
+                    </div>
+
+                    <p class="contact__status" id="whatsapp-status" data-whatsapp-status>O atalho do WhatsApp não está disponível. Consulte os outros canais de contato.</p>
+                    <!-- Evita um botão sem ação dentro da própria seção de contato. -->
+                    <div data-whatsapp-only hidden>
+                        <a class="button" href="#contato" data-whatsapp data-whatsapp-label="Pedir pelo WhatsApp" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">Fale conosco</a>
+                    </div>
+
+                    <noscript>
+                        <p class="contact__status">Sem JavaScript: <a href="https://wa.me/5511978766842" target="_blank" rel="noopener noreferrer">converse com a Lu pelo WhatsApp</a> ou ligue para <a href="tel:+5511978766842">+55 (11) 97876-6842</a>. As regiões e o Instagram continuam disponíveis.</p>
+                    </noscript>
+                </div>
+
+                <div class="contact-card contact-card--service surface">
+                    <p class="eyebrow">Entrega e retirada</p>
+                    <h3 class="contact-card__heading">Perto da sua rotina</h3>
+                    <dl class="contact-card__details">
+                        <div>
+                            <dt>Regiões atendidas</dt>
+                            <dd data-contact-regions>Cotia, Vargem Grande Paulista, Itapevi e região.</dd>
+                        </div>
+                        <div>
+                            <dt>Retirada no local</dt>
+                            <dd data-contact-pickup>Retirada no local. Consulte o endereço antes de se deslocar.</dd>
+                        </div>
+                        <div>
+                            <dt>Entrega por aplicativo</dt>
+                            <dd data-contact-delivery>Entrega por aplicativo, com taxa adicional.</dd>
+                        </div>
+                        <!-- Dados pendentes só aparecem quando preenchidos no config.js. -->
+                        <div data-contact-address-row hidden>
+                            <dt>Endereço para retirada</dt>
+                            <dd data-contact-address></dd>
+                        </div>
+                        <div data-contact-hours-row hidden>
+                            <dt>Dias e horários de atendimento</dt>
+                            <dd data-contact-hours></dd>
+                        </div>
+                    </dl>
+                    <p class="contact-card__note">Confirme a disponibilidade e o valor da entrega no atendimento.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Galeria local: não representa publicações reais nem carrega um feed externo. -->
+        <section class="section instagram theme--paper" id="instagram" aria-labelledby="instagram-title" tabindex="-1">
+            <div class="container stack">
+                <div class="instagram__header">
+                    <div class="stack">
+                        <p class="eyebrow">Da cozinha para a sua rotina</p>
+                        <h2 id="instagram-title" data-reveal>Acompanhe a Lu<br>Leve e Saudável</h2>
+                        <p class="section__description">Novidades e mais sobre a nossa cozinha em <span data-instagram-handle>@lu.leveesaudavel</span>.</p>
+                    </div>
+                    <a class="button button--outline" href="https://www.instagram.com/lu.leveesaudavel/" target="_blank" rel="noopener noreferrer" data-instagram-link>Ver no Instagram</a>
+                </div>
+
+                <figure class="instagram__gallery">
+                    <div class="instagram__photo instagram__photo--main">
+                        <img
+                            src="./assets/images/instagram/marmitas-960.webp"
+                            srcset="./assets/images/instagram/marmitas-640.webp 640w, ./assets/images/instagram/marmitas-960.webp 960w"
+                            sizes="(min-width: 80rem) 46rem, (min-width: 48rem) 62vw, 92vw"
+                            width="960"
+                            height="960"
+                            alt="Imagem ilustrativa de duas marmitas com arroz, frango, legumes e carne moída."
+                            loading="lazy"
+                            decoding="async"
+                        >
+                    </div>
+                    <div class="instagram__photo">
+                        <img
+                            src="./assets/images/instagram/legumes-640.webp"
+                            srcset="./assets/images/instagram/legumes-400.webp 400w, ./assets/images/instagram/legumes-640.webp 640w"
+                            sizes="(min-width: 80rem) 23rem, (min-width: 48rem) 31vw, 44vw"
+                            width="640"
+                            height="640"
+                            alt="Imagem ilustrativa de legumes e frango em uma marmita, vistos de perto."
+                            loading="lazy"
+                            decoding="async"
+                        >
+                    </div>
+                    <div class="instagram__photo">
+                        <img
+                            src="./assets/images/instagram/rotina-640.webp"
+                            srcset="./assets/images/instagram/rotina-400.webp 400w, ./assets/images/instagram/rotina-640.webp 640w"
+                            sizes="(min-width: 80rem) 23rem, (min-width: 48rem) 31vw, 44vw"
+                            width="640"
+                            height="640"
+                            alt="Imagem ilustrativa de três marmitas organizadas sobre uma mesa."
+                            loading="lazy"
+                            decoding="async"
+                        >
+                    </div>
+                    <figcaption class="instagram__caption">Imagens ilustrativas. As fotografias reais serão adicionadas em breve.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section final-cta theme--forest" id="fazer-pedido" aria-labelledby="fazer-pedido-title" tabindex="-1">
+            <!-- DECORATION:final:START -->
+            <div class="section-decoration section-decoration--final" aria-hidden="true">
+                <svg class="section-decoration__art" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+                </svg>
+            </div>
+            <!-- DECORATION:final:END -->
+            <div class="container final-cta__layout">
+                <div class="stack">
+                    <p class="eyebrow">Sua semana mais leve</p>
+                    <h2 id="fazer-pedido-title" data-reveal>Mais praticidade e sabor<br>para a sua semana.</h2>
+                    <p class="section__description">Confira as opções e faça seu pedido diretamente pelo WhatsApp.</p>
+                </div>
+                <div class="final-cta__actions">
+                    <a class="button" href="#contato" data-whatsapp data-whatsapp-label="Pedir pelo WhatsApp" data-whatsapp-fallback="Fale com a Lu" aria-describedby="whatsapp-status">Fale com a Lu</a>
+                    <a class="final-cta__contact" href="#contato">Ver contato e atendimento</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer theme--forest">
+        <div class="container">
+            <div class="site-footer__grid">
+                <div class="site-footer__group">
+                    <p class="site-footer__brand">Lu<br><span>Leve e Saudável</span></p>
+                    <p>Marmitas tradicionais e fitness.</p>
+                </div>
+                <div class="site-footer__group">
+                    <h2 class="site-footer__heading">Contato</h2>
+                    <p>Telefone e WhatsApp</p>
+                    <a class="site-footer__phone numeric" data-contact-phone-link hidden></a>
+                    <span data-contact-phone data-contact-phone-fallback>Ative o JavaScript ou consulte a alternativa de contato abaixo.</span>
+                    <a href="https://www.instagram.com/lu.leveesaudavel/" target="_blank" rel="noopener noreferrer" data-instagram-link data-instagram-handle>@lu.leveesaudavel</a>
+                    <a href="#contato">Contato e atendimento</a>
+                </div>
+                <div class="site-footer__group">
+                    <h2 class="site-footer__heading">Regiões atendidas</h2>
+                    <p data-contact-regions>Cotia, Vargem Grande Paulista, Itapevi e região.</p>
+                </div>
+            </div>
+            <div class="site-footer__bottom">
+                <p>© <span data-current-year>2026</span> Lu Leve e Saudável</p>
+                <!-- Preencha developer.url no config.js para tornar o crédito um link. -->
+                <span data-developer-credit>Desenvolvido por Neoeffex</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ETAPA 7: sem JavaScript, permanece no fluxo; nunca cobre o rodapé. -->
+    <aside class="mobile-order theme--paper" data-mobile-order aria-label="Atalho para contato e pedido">
+        <div class="container">
+            <a class="button mobile-order__button" href="#contato" data-whatsapp data-whatsapp-label="Pedir pelo WhatsApp" data-whatsapp-fallback="Fale com a Lu" aria-describedby="whatsapp-status">Fale com a Lu</a>
+        </div>
+    </aside>
+</body>
+</html>

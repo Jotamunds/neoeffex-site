@@ -1,0 +1,183 @@
+/* Sistema visual v0.1.12. Altere valores aqui para atualizar o site inteiro. */
+:root {
+    /* Paleta: cores literais ficam somente neste arquivo. */
+    --color-primary: #153b2b;
+    --color-primary-light: #2b5b43;
+    --color-sage: #dce7d8;
+    --color-sage-dark: #aebfa8;
+    --color-background: #f7f2e8;
+    --color-surface: #fffcf7;
+    --color-accent-soft: #f4e8b9;
+    --color-accent: #e3c56b;
+    --color-whatsapp: #1f7a45;
+    --color-text: #17211b;
+    --color-text-muted: #59665d;
+    --color-text-light: #f9f6ed;
+    --color-border: #d6ded5;
+    --color-border-dark: #62856c;
+    --color-shadow-soft: rgb(21 59 43 / 5%);
+    --color-shadow: rgb(21 59 43 / 12%);
+
+    /* Papéis de cor. As classes de tema remapeiam estes valores por seção. */
+    --section-background: var(--color-background);
+    --text-color: var(--color-text);
+    --text-muted: var(--color-text-muted);
+    --border-color: var(--color-border);
+    --surface-background: var(--color-surface);
+    --surface-text: var(--color-text);
+    --surface-muted: var(--color-text-muted);
+    --surface-border: var(--color-border);
+    --button-background: var(--color-primary);
+    --button-background-hover: var(--color-primary-light);
+    --button-text: var(--color-text-light);
+    --button-outline-hover: var(--color-sage);
+    --button-outline-border: var(--color-primary);
+    --focus-color: var(--color-primary);
+
+    /* Fontes variáveis locais: nenhuma solicitação ao Google durante o uso. */
+    --font-display: "Sora", system-ui, sans-serif;
+    --font-body: "Manrope", system-ui, sans-serif;
+    --font-size-body: 1rem;
+    --font-size-small: 0.875rem;
+    --font-size-label: 0.8125rem;
+    --font-size-title: clamp(2rem, 1.3rem + 2.8vw, 3.75rem);
+    --font-size-section: clamp(1.35rem, 1rem + 1.2vw, 2.1rem);
+    --font-size-subtitle: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+    --font-size-card-title: 1.5rem;
+    --font-size-price: 1.25rem;
+    --font-size-price-featured: 1.625rem;
+    --font-weight-body: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --line-height-body: 1.75;
+    --line-height-title: 1.13;
+    --line-height-compact: 1.4;
+    --tracking-title: 0.025em;
+    --tracking-label: 0.1em;
+
+    /* Espaçamento independente do tamanho das fontes. */
+    --space-0: 0.25rem;
+    --space-1: 0.5rem;
+    --space-2: 1rem;
+    --space-3: 1.5rem;
+    --space-4: 2rem;
+    --space-5: 3rem;
+    --space-6: 4rem;
+    --space-7: 6rem;
+    --space-section: clamp(3.5rem, 2rem + 4vw, 6rem);
+    --space-stack: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    --page-gutter: clamp(1rem, 4vw, 3rem);
+    --page-gutter-safe: max(var(--page-gutter), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+    --container-width: 70rem;
+    --text-width: 60ch;
+
+    /* Formas, superfícies e estados de interação. */
+    --radius-small: 0.625rem;
+    --radius-medium: 1rem;
+    --radius-large: 1.5rem;
+    --radius-pill: 999px;
+    --radius-hero-image: 44% 44% 18% 18%;
+    --radius-hero-section: clamp(2rem, 8vw, 8rem);
+    --border-width: 1px;
+    --focus-width: 2px;
+    --focus-offset: 4px;
+    --control-size: 3rem;
+    --shadow-small: 0 2px 8px var(--color-shadow-soft);
+    --shadow-card: 0 12px 32px var(--color-shadow);
+    --duration-fast: 180ms;
+    --duration-normal: 260ms;
+    --duration-reveal: 480ms;
+    --reveal-distance: 0.5rem;
+    --reveal-start-opacity: 0.9;
+    --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --ease-reveal: var(--ease-standard);
+    /* Cards: destaque sem escala ou deslocamento; duração limitada no componente. */
+    --card-hover-duration: 220ms;
+    --card-hover-ease: var(--ease-standard);
+    --card-hover-border: var(--color-sage-dark);
+    --card-hover-shadow: 0 8px 20px var(--color-shadow);
+    /* Pulinho do contato: ms e px; o módulo limita a 400ms e 6px. */
+    --contact-jump-duration: 280ms;
+    --contact-jump-height: 4px;
+    /* Abertura: tempos e escalas limitados novamente no CSS do efeito. */
+    --intro-duration: 640ms;
+    --intro-stagger: 100ms;
+    --intro-distance: 0.5rem;
+    --intro-start-opacity: 0.97;
+    --intro-photo-start: 0.96;
+    --intro-photo-peak: 1.035;
+    --intro-button-start: 0.85;
+    --intro-button-peak: 1.06;
+    --intro-bubble-peak: 1.20;
+    --intro-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --z-skip-link: 100;
+    --z-mobile-order: 50;
+    --mobile-order-height: 0px;
+    --mobile-order-min-height: calc(var(--control-size) + 2 * var(--space-2) + var(--border-width) + env(safe-area-inset-bottom, 0px));
+
+    /* Fundos orgânicos: consumidos somente quando a classe experimental está ativa. */
+    --organic-curve-height: clamp(1.25rem, 4vw, 3rem);
+    --organic-ribbon-width: 0.25rem;
+    --organic-shape-offset: clamp(0.5rem, 2vw, 1.5rem);
+    --organic-shape-opacity: 0.62;
+    --organic-hero-shape-radius: 29% 71% 62% 38% / 63% 34% 66% 37%;
+    --organic-photo-outline-radius: 45% 55% 17% 83% / 65% 33% 67% 35%;
+    --organic-hero-shape-color: var(--color-primary-light);
+    --organic-ribbon-color: var(--color-sage-dark);
+    --organic-hero-accent-radius: 72% 28% 68% 32% / 34% 60% 40% 66%;
+    --organic-hero-accent-opacity: 0.3;
+
+    /* Ícones decorativos: independentes das ondas, com posições em unidades CSS. */
+    --decoration-stroke-width: 0.3;
+    --decoration-hero-color: var(--color-sage);
+    --decoration-hero-opacity: 0.12;
+    --decoration-hero-size: clamp(9rem, 18vw, 18rem);
+    --decoration-hero-right: -3rem;
+    --decoration-hero-bottom: var(--space-3);
+    --decoration-hero-top-desktop: -2rem;
+    --decoration-hero-rotation: -18deg;
+    --decoration-fitness-color: var(--color-background);
+    --decoration-fitness-opacity: 0.6;
+    --decoration-fitness-size: clamp(10rem, 16vw, 13rem);
+    --decoration-fitness-right: -2.5rem;
+    --decoration-fitness-top: var(--space-2);
+    --decoration-fitness-rotation: 12deg;
+    --decoration-final-color: var(--color-sage);
+    --decoration-final-opacity: 0.12;
+    --decoration-final-size: clamp(9rem, 18vw, 17rem);
+    --decoration-final-right: -3.5rem;
+    --decoration-final-bottom: -3.5rem;
+    --decoration-final-rotation: -22deg;
+
+    /* Novos acentos, alternando as laterais para espalhar os desenhos. */
+    --decoration-traditional-color: var(--color-primary);
+    --decoration-traditional-opacity: 0.05;
+    --decoration-traditional-size: clamp(8rem, 16vw, 14rem);
+    --decoration-traditional-left: -3rem;
+    --decoration-traditional-top: var(--space-2);
+    --decoration-traditional-rotation: 22deg;
+    --decoration-steps-color: var(--color-primary);
+    --decoration-steps-opacity: 0.05;
+    --decoration-steps-size: clamp(7.5rem, 15vw, 12.5rem);
+    --decoration-steps-right: -2.5rem;
+    --decoration-steps-bottom: -1.5rem;
+    --decoration-steps-rotation: -8deg;
+    --decoration-contact-color: var(--color-sage);
+    --decoration-contact-opacity: 0.1;
+    --decoration-contact-size: clamp(8rem, 16vw, 13rem);
+    --decoration-contact-left: -3.5rem;
+    --decoration-contact-bottom: -3rem;
+    --decoration-contact-rotation: 12deg;
+}
+
+/* Os componentes compartilham as durações; reduzir movimento não esconde nada. */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --duration-fast: 0ms;
+        --duration-normal: 0ms;
+        --duration-reveal: 0ms;
+        --intro-duration: 0ms;
+        --intro-stagger: 0ms;
+    }
+}

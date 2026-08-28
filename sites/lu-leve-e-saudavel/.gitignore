@@ -1,0 +1,16 @@
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dependências e saídas, caso sejam adicionadas futuramente
+node_modules/
+dist/
+coverage/
+*.log
+
+# Não versionar dados privados nem arquivos compactados de entrega
+.env
+.env.*
+!.env.example
+*.zip

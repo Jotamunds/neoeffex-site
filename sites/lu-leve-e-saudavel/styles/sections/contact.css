@@ -1,0 +1,24 @@
+/* Contato explícito; os detalhes ficam em contact-card.css. */
+.contact__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-5);
+}
+
+.contact__channels {
+    min-width: 0;
+}
+
+.contact__status {
+    max-width: var(--text-width);
+    color: var(--text-muted);
+    font-size: var(--font-size-small);
+}
+
+@media (min-width: 60rem) {
+    .contact__layout {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: var(--space-7);
+    }
+}

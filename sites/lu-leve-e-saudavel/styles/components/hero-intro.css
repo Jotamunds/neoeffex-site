@@ -1,0 +1,113 @@
+/* Etapa 2: somente a abertura. A base é visível, mesmo sem JS ou este arquivo.
+ * backwards aplica o primeiro frame durante o atraso, nunca retém o último.
+ * Não transforme o hero, a figura com legenda, as ondas ou ancestrais da barra.
+ */
+@media screen and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+    html[data-motion-intro="on"] #inicio.is-intro-running [data-intro],
+    html[data-motion-intro="on"] #inicio.is-intro-running .section-decoration--hero .section-decoration__art {
+        animation-duration: clamp(0ms, var(--intro-duration), 900ms);
+        animation-timing-function: var(--intro-ease);
+        animation-iteration-count: 1;
+        animation-fill-mode: backwards;
+    }
+
+    html[data-motion-intro="on"] #inicio.is-intro-running [data-intro="title"],
+    html[data-motion-intro="on"] #inicio.is-intro-running [data-intro="copy"] {
+        animation-name: hero-intro-copy;
+    }
+
+    html[data-motion-intro="on"] #inicio.is-intro-running [data-intro="title"] {
+        animation-delay: 0ms;
+    }
+
+    html[data-motion-intro="on"] #inicio.is-intro-running [data-intro="copy"] {
+        animation-delay: clamp(0ms, var(--intro-stagger), 120ms);
+    }
+
+    html[data-motion-intro="on"] #inicio.is-intro-running [data-intro="action"] {
+        animation-name: hero-intro-action;
+        animation-delay: calc(clamp(0ms, var(--intro-stagger), 120ms) * 2);
+        transform-origin: center;
+    }
+
+    html[data-motion-intro="on"] #inicio.is-intro-running [data-intro="photo"] {
+        animation-name: hero-intro-photo;
+        animation-delay: calc(clamp(0ms, var(--intro-stagger), 120ms) * 3);
+        transform-origin: center calc(100% + var(--space-0));
+    }
+
+    html[data-motion-intro="on"] #inicio.is-intro-running .section-decoration--hero .section-decoration__art {
+        animation-name: hero-intro-sprout;
+        animation-delay: calc(clamp(0ms, var(--intro-stagger), 120ms) * 3);
+        transform-origin: center;
+    }
+
+    html[data-motion-intro="on"] #inicio.is-intro-running [data-intro]:focus-within,
+    html[data-motion-intro="on"] #inicio.is-intro-running .hero__action:focus-within [data-intro="action"] {
+        animation: none;
+    }
+}
+
+@keyframes hero-intro-copy {
+    from {
+        opacity: clamp(0.97, var(--intro-start-opacity), 1);
+        transform: translateY(clamp(0rem, var(--intro-distance), 0.75rem));
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* A superfície cresce; link, área de toque e contorno de foco ficam imóveis. */
+@keyframes hero-intro-action {
+    0% {
+        transform: scale(clamp(0.8, var(--intro-button-start), 1));
+    }
+    65% {
+        transform: scale(clamp(1, var(--intro-button-peak), 1.08));
+    }
+    100% {
+        transform: none;
+    }
+}
+
+/* Foto, borda e contorno crescem juntos; a base do contorno preserva a legenda. */
+@keyframes hero-intro-photo {
+    0% {
+        transform: scale(clamp(0.94, var(--intro-photo-start), 1));
+    }
+    65% {
+        transform: scale(clamp(1, var(--intro-photo-peak), 1.06));
+    }
+    100% {
+        transform: none;
+    }
+}
+
+/* O broto recebe 0 → 1.20 → 1; conserva a rotação e a opacidade decorativas. */
+@keyframes hero-intro-sprout {
+    0% {
+        transform: rotate(var(--decoration-rotation)) scale(0);
+    }
+    65% {
+        transform: rotate(var(--decoration-rotation)) scale(clamp(1, var(--intro-bubble-peak), 1.20));
+    }
+    100% {
+        transform: rotate(var(--decoration-rotation)) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+    html[data-motion-intro="on"] #inicio.is-intro-running [data-intro],
+    html[data-motion-intro="on"] #inicio.is-intro-running .section-decoration--hero .section-decoration__art {
+        animation: none;
+    }
+}
+
+@media print {
+    html[data-motion-intro="on"] #inicio.is-intro-running [data-intro],
+    html[data-motion-intro="on"] #inicio.is-intro-running .section-decoration--hero .section-decoration__art {
+        animation: none;
+    }
+}

@@ -1,0 +1,59 @@
+/* Barra discreta. Sem JS ou em telas baixas, ocupa seu espaço no fluxo normal. */
+.mobile-order {
+    display: none;
+    padding-block: var(--space-2) calc(var(--space-2) + env(safe-area-inset-bottom, 0px));
+    border-block-start: var(--border-width) solid var(--border-color);
+    background: var(--section-background);
+    color: var(--text-color);
+}
+
+.mobile-order__button {
+    width: 100%;
+    min-height: var(--control-size);
+    padding-block: var(--space-1);
+}
+
+@media (max-width: 47.999rem) {
+    .mobile-order {
+        display: block;
+    }
+
+    html.has-mobile-order {
+        --mobile-order-height: var(--mobile-order-min-height);
+    }
+
+    .has-mobile-order body {
+        padding-block-end: var(--mobile-order-height);
+    }
+
+    .has-mobile-order .mobile-order {
+        position: fixed;
+        inset: auto 0 0;
+        z-index: var(--z-mobile-order);
+    }
+}
+
+/* Paisagem curta e zoom: priorize a área disponível para ler o cardápio. */
+@media (max-width: 47.999rem) and (max-height: 24rem) {
+    .has-mobile-order .mobile-order {
+        position: static;
+    }
+
+    .has-mobile-order body {
+        padding-block-end: 0;
+    }
+}
+
+@media print {
+    .mobile-order {
+        display: none;
+    }
+
+    .has-mobile-order body {
+        padding-block-end: 0;
+    }
+
+    html {
+        scroll-padding-block-end: 0;
+    }
+}

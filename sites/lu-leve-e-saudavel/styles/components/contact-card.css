@@ -1,0 +1,74 @@
+/* Canais e informações por extenso, com cores herdadas da seção. */
+.contact-card {
+    min-width: 0;
+    width: 100%;
+}
+
+.contact-card--channel {
+    padding-block-start: var(--space-3);
+    border-block-start: var(--border-width) solid var(--border-color);
+}
+
+.contact-card__title {
+    margin-block-end: var(--space-1);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-compact);
+}
+
+.contact-card__phone,
+.contact-card__link {
+    overflow-wrap: anywhere;
+}
+
+.contact-card__phone a {
+    font-size: var(--font-size-subtitle);
+    font-weight: var(--font-weight-semibold);
+}
+
+.contact-card__phone a,
+.contact-card__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-size);
+    max-width: 100%;
+}
+
+.contact-card__phone span {
+    color: var(--text-muted);
+}
+
+.contact-card__heading {
+    margin-block: var(--space-2) var(--space-4);
+    font-size: var(--font-size-card-title);
+    letter-spacing: var(--tracking-title);
+    text-transform: uppercase;
+}
+
+.contact-card__details {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.contact-card__details > div + div {
+    padding-block-start: var(--space-3);
+    border-block-start: var(--border-width) solid var(--surface-border);
+}
+
+.contact-card__details dt {
+    margin-block-end: var(--space-0);
+    font-weight: var(--font-weight-bold);
+}
+
+.contact-card__details dd {
+    color: var(--surface-muted);
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+}
+
+.contact-card__note {
+    margin-block-start: var(--space-4);
+    color: var(--surface-muted);
+    font-size: var(--font-size-small);
+}

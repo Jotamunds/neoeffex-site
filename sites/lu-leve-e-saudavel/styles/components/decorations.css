@@ -1,0 +1,127 @@
+/* v0.1.12 — ícones independentes das ondas de organic-backgrounds.css.
+ * Somente a moldura decorativa é recortada. Conteúdo e foco ficam livres.
+ */
+.section-decoration {
+    display: none;
+}
+
+@media screen and (forced-colors: none) {
+    .decorative-elements .hero,
+    .decorative-elements .products--fitness,
+    .decorative-elements .final-cta,
+    .decorative-elements .products--traditional,
+    .decorative-elements .how-it-works,
+    .decorative-elements .contact {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .decorative-elements .section-decoration {
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    .decorative-elements .section-decoration__art {
+        position: absolute;
+        width: var(--decoration-size);
+        height: var(--decoration-size);
+        max-width: none;
+        right: var(--decoration-right, auto);
+        left: var(--decoration-left, auto);
+        color: var(--decoration-color);
+        opacity: var(--decoration-opacity);
+        stroke-width: var(--decoration-stroke-width);
+        transform: rotate(var(--decoration-rotation));
+        pointer-events: none;
+    }
+
+    .decorative-elements .section-decoration--hero {
+        --decoration-size: var(--decoration-hero-size);
+        --decoration-right: var(--decoration-hero-right);
+        --decoration-color: var(--decoration-hero-color);
+        --decoration-opacity: var(--decoration-hero-opacity);
+        --decoration-rotation: var(--decoration-hero-rotation);
+    }
+
+    .decorative-elements .section-decoration--hero .section-decoration__art {
+        bottom: var(--decoration-hero-bottom);
+    }
+
+    /* O haltere aparece apenas com espaço de desktop; não ocupa o cardápio mobile. */
+    .decorative-elements .section-decoration--fitness {
+        display: none;
+        --decoration-size: var(--decoration-fitness-size);
+        --decoration-right: var(--decoration-fitness-right);
+        --decoration-color: var(--decoration-fitness-color);
+        --decoration-opacity: var(--decoration-fitness-opacity);
+        --decoration-rotation: var(--decoration-fitness-rotation);
+    }
+
+    .decorative-elements .section-decoration--fitness .section-decoration__art {
+        top: var(--decoration-fitness-top);
+    }
+
+    .decorative-elements .section-decoration--final {
+        --decoration-size: var(--decoration-final-size);
+        --decoration-right: var(--decoration-final-right);
+        --decoration-color: var(--decoration-final-color);
+        --decoration-opacity: var(--decoration-final-opacity);
+        --decoration-rotation: var(--decoration-final-rotation);
+    }
+
+    .decorative-elements .section-decoration--final .section-decoration__art {
+        bottom: var(--decoration-final-bottom);
+    }
+
+    .decorative-elements .section-decoration--traditional {
+        --decoration-size: var(--decoration-traditional-size);
+        --decoration-left: var(--decoration-traditional-left);
+        --decoration-color: var(--decoration-traditional-color);
+        --decoration-opacity: var(--decoration-traditional-opacity);
+        --decoration-rotation: var(--decoration-traditional-rotation);
+    }
+
+    .decorative-elements .section-decoration--traditional .section-decoration__art {
+        top: var(--decoration-traditional-top);
+    }
+
+    .decorative-elements .section-decoration--steps {
+        --decoration-size: var(--decoration-steps-size);
+        --decoration-right: var(--decoration-steps-right);
+        --decoration-color: var(--decoration-steps-color);
+        --decoration-opacity: var(--decoration-steps-opacity);
+        --decoration-rotation: var(--decoration-steps-rotation);
+    }
+
+    .decorative-elements .section-decoration--steps .section-decoration__art {
+        bottom: var(--decoration-steps-bottom);
+    }
+
+    .decorative-elements .section-decoration--contact {
+        --decoration-size: var(--decoration-contact-size);
+        --decoration-left: var(--decoration-contact-left);
+        --decoration-color: var(--decoration-contact-color);
+        --decoration-opacity: var(--decoration-contact-opacity);
+        --decoration-rotation: var(--decoration-contact-rotation);
+    }
+
+    .decorative-elements .section-decoration--contact .section-decoration__art {
+        bottom: var(--decoration-contact-bottom);
+    }
+}
+
+@media screen and (forced-colors: none) and (min-width: 60rem) {
+    .decorative-elements .section-decoration--hero .section-decoration__art {
+        top: var(--decoration-hero-top-desktop);
+        bottom: auto;
+    }
+
+    .decorative-elements .section-decoration--fitness {
+        display: block;
+    }
+}

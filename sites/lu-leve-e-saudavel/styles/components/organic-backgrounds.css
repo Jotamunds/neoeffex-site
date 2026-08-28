@@ -1,0 +1,104 @@
+/* Teste v0.1.10. Remova organic-backgrounds do body para restaurar o visual-base.
+ * Geometria: paths SVG no HTML. Cores, medidas e camadas: somente neste CSS.
+ * Cada borda visível é contínua, sem união de elipses ou segmentos retos no meio.
+ * Nenhuma alteração de padding, altura das seções, conteúdo ou barra fixa.
+ */
+
+/* Evita espaço de SVG no visual-base, na impressão e nas cores forçadas.
+ * Esta é a única regra intencionalmente independente da classe experimental.
+ */
+.organic-wave {
+    display: none;
+}
+
+@media screen and (forced-colors: none) {
+    /* Isolamento local: decoração atrás do conteúdo e acima do fundo da seção.
+     * Não aplicar transform ou recorte a body, main, section ou container.
+     */
+    .organic-backgrounds .hero,
+    .organic-backgrounds .hero + .promotion:not([hidden]),
+    .organic-backgrounds .hero + .promotion[hidden] + .products--traditional,
+    .organic-backgrounds .hero + .products--traditional,
+    .organic-backgrounds .products--fitness,
+    .organic-backgrounds .products--fitness + .how-it-works {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .organic-backgrounds .hero {
+        border-end-end-radius: 0;
+    }
+
+    /* Volumes separados: seus limites não se cruzam, evitando pontas de união. */
+    .organic-backgrounds .hero::before,
+    .organic-backgrounds .hero::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        background: var(--organic-hero-shape-color);
+        pointer-events: none;
+    }
+
+    .organic-backgrounds .hero::before {
+        inset: 33% 12% var(--organic-shape-offset) 4%;
+        border-radius: var(--organic-hero-shape-radius);
+        opacity: var(--organic-shape-opacity);
+    }
+
+    .organic-backgrounds .hero::after {
+        inset: 8% 56% 70% var(--organic-shape-offset);
+        border-radius: var(--organic-hero-accent-radius);
+        opacity: var(--organic-hero-accent-opacity);
+    }
+
+    .organic-backgrounds .hero .hero__artwork::before {
+        inset: calc(-1 * var(--space-0)) calc(-1 * var(--space-1)) calc(-1 * var(--space-0));
+        border-radius: var(--organic-photo-outline-radius);
+        transform: none;
+    }
+
+    /* Uma silhueta preenchida com a cor da seção que chega. O fechamento reto
+     * fica sob o fundo dessa seção, nunca no contorno superior visível.
+     * O recorte é exclusivo do SVG decorativo: não recorta conteúdo ou foco.
+     */
+    .organic-backgrounds .organic-wave {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(-1 * var(--organic-curve-height));
+        width: 100%;
+        height: calc(var(--organic-curve-height) + var(--border-width));
+        z-index: -1;
+        fill: var(--section-background);
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    /* Promoção visível: onda amarela. Oculta/removida: onda creme.
+     * Apenas uma das duas cópias do contorno do hero fica visível por vez.
+     */
+    .organic-backgrounds .hero + .promotion:not([hidden]) > .organic-wave,
+    .organic-backgrounds .hero + .promotion[hidden] + .products--traditional > .organic-wave,
+    .organic-backgrounds .hero + .products--traditional > .organic-wave,
+    .organic-backgrounds .products--fitness > .organic-wave,
+    .organic-backgrounds .products--fitness + .how-it-works > .organic-wave {
+        display: block;
+    }
+
+    /* Cópia idêntica, deslocada em unidades CSS. A onda seguinte cobre sua base.
+     * Sem stroke, sombras ou junções angulosas na faixa sálvia do fitness.
+     */
+    .organic-backgrounds .organic-wave--ribbon {
+        fill: var(--organic-ribbon-color);
+        inset-block-start: calc(-1 * (var(--organic-curve-height) + var(--organic-ribbon-width)));
+    }
+}
+
+@media screen and (forced-colors: none) and (min-width: 60rem) {
+    .organic-backgrounds .hero::before {
+        inset: var(--organic-shape-offset) 3% var(--organic-shape-offset) 42%;
+    }
+
+    .organic-backgrounds .hero::after {
+        inset: 12% 62% 37% var(--page-gutter-safe);
+    }
+}

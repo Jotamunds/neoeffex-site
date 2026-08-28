@@ -1,0 +1,75 @@
+{
+    "featuredQuantity": 10,
+    "featuredLabel": "Mais pedido",
+    "categories": [
+        {
+            "id": "tradicionais",
+            "products": [
+                {
+                    "id": "tradicional-300",
+                    "name": "300 g",
+                    "description": "1 tipo de carne",
+                    "unitPriceCents": 1600,
+                    "combos": [
+                        { "quantity": 5, "totalCents": 7500 },
+                        { "quantity": 10, "totalCents": 15000 },
+                        { "quantity": 20, "totalCents": 29000 }
+                    ]
+                },
+                {
+                    "id": "tradicional-400",
+                    "name": "400 g",
+                    "description": "2 tipos de carne",
+                    "unitPriceCents": 2000,
+                    "combos": [
+                        { "quantity": 5, "totalCents": 9500 },
+                        { "quantity": 10, "totalCents": 19000 },
+                        { "quantity": 20, "totalCents": 37000 }
+                    ]
+                },
+                {
+                    "id": "tradicional-500",
+                    "name": "500 g",
+                    "description": "2 tipos de carne",
+                    "unitPriceCents": 2200,
+                    "combos": [
+                        { "quantity": 5, "totalCents": 10500 },
+                        { "quantity": 10, "totalCents": 21000 },
+                        { "quantity": 20, "totalCents": 41000 }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "fitness",
+            "products": [
+                {
+                    "id": "fitness-m",
+                    "name": "Fitness M",
+                    "description": "Peso total: 400 g",
+                    "unitPriceCents": 2200,
+                    "combos": [
+                        { "quantity": 5, "totalCents": 10500 },
+                        { "quantity": 10, "totalCents": 21000 },
+                        { "quantity": 15, "totalCents": 31500 }
+                    ]
+                },
+                {
+                    "id": "fitness-g",
+                    "name": "Fitness G",
+                    "description": "Peso total: 500 g",
+                    "unitPriceCents": 2500,
+                    "combos": [
+                        { "quantity": 5, "totalCents": 12500 },
+                        { "quantity": 10, "totalCents": 24500 },
+                        { "quantity": 15, "totalCents": 37000 }
+                    ]
+                }
+            ]
+        }
+    ],
+    "surcharges": [
+        { "label": "Carne especial", "priceCents": 600 },
+        { "label": "Salmão", "priceCents": 900 }
+    ]
+}

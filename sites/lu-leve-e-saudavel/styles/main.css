@@ -1,0 +1,32 @@
+/* Ponto único de entrada. Mantenha os imports antes de qualquer regra CSS. */
+@import url("./base/variables.css");
+@import url("./base/fonts.css");
+@import url("./base/reset.css");
+@import url("./base/themes.css");
+@import url("./base/typography.css");
+@import url("./base/motion.css");
+
+@import url("./layout/grid.css");
+@import url("./layout/header.css");
+@import url("./layout/footer.css");
+
+@import url("./components/buttons.css");
+@import url("./components/surfaces.css");
+@import url("./components/price-card.css");
+@import url("./components/card-hover.css");
+@import url("./components/promotion.css");
+@import url("./components/contact-card.css");
+@import url("./components/mobile-order.css");
+
+@import url("./sections/hero.css");
+@import url("./sections/products.css");
+@import url("./sections/how-it-works.css");
+@import url("./sections/instagram.css");
+@import url("./sections/contact.css");
+@import url("./sections/final-cta.css");
+@import url("./components/contact-jump.css");
+@import url("./components/hero-intro.css");
+
+/* Ajuste opt-in: por último, sem espalhar sobrescritas pelos componentes. */
+@import url("./components/decorations.css");
+@import url("./components/organic-backgrounds.css");

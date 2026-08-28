@@ -1,0 +1,14 @@
+/* Superfície reutilizável, compartilhada pelos cards e informações de contato. */
+.surface {
+    min-width: 0;
+    padding: clamp(var(--space-3), 3vw, var(--space-4));
+    border: var(--border-width) solid var(--surface-border);
+    border-radius: var(--radius-large);
+    background: var(--surface-background);
+    color: var(--surface-text);
+    box-shadow: var(--shadow-small);
+}
+
+.surface__muted {
+    color: var(--surface-muted);
+}

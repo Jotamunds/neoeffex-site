@@ -1,0 +1,7 @@
+quando o plano de fundo ficar claro, as mensagens "Pronto para dar um trato no visual?" e "Escolha seu horário e fale diretamente com a nossa equipe. A confirmação é rápida e sem complicação." devem ficar escuras, visto que tem fontes claras
+os textos "Cortes que falam por si.
+Clique em uma foto para ver de perto." e "Quem vem, recomenda.
+Atendimento que transforma uma visita em parte da rotina.", por exemplo, já tem isso
+
+quando clico num botão do cabeçalho, a listra que fica embaixo dele sempre vai da esquerda para a direita
+gostaria que, quando eu clicasse num botão da esquerda estando na direita (ex, clicando em início estando em contato), fizesse a animação da direita para a esquerda

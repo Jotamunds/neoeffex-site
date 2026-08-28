@@ -1,67 +1,148 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Neo by Neoeffex — inteligência, acessibilidade e futuro.">
-  <meta name="theme-color" content="#141414">
-  <meta name="application-version" content="0.1.10">
-  <meta property="og:title" content="Neo by Neoeffex">
-  <meta property="og:description" content="Neo by Neoeffex">
-  <title>Neo by Neoeffex</title>
-
-  <link rel="icon" type="image/png" href="img/LogoNeoeffexsemtexto.png?v=0.1.10">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Landing pages personalizadas, do conceito ao deploy. Estrategia, design, desenvolvimento, integracoes e publicacao pela Neoeffex.">
+  <title>Neoeffex — Landing pages sob medida</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500&family=Josefin+Sans:wght@400;500;600&family=Michroma&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="tokens.css?v=0.1.10">
-  <link rel="stylesheet" href="landing.css?v=0.1.10">
-  <link rel="stylesheet" href="atmosphere.css?v=0.1.10">
-  <link rel="stylesheet" href="interaction.css?v=0.1.10">
-  <script src="landing.js?v=0.1.10" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=Manrope:wght@400;500;600&amp;family=Open+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
-
 <body>
-  <main class="hero" id="inicio">
-    <div class="hero__background" aria-hidden="true">
-      <div class="hero__ambient hero__ambient--left"></div>
-      <div class="hero__ambient hero__ambient--right"></div>
-      <div class="hero__vignette"></div>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-mark"><div class="loader-logo">neoeffex</div><div class="loader-track"><div class="loader-line"></div></div><div class="loader-code">SYSTEM_INITIALIZING</div></div>
+  </div>
+
+  <header class="nav-shell" id="navbar" data-od-id="navegacao-principal">
+    <div class="container navbar">
+      <a class="brand" href="#inicio" aria-label="Neoeffex, início" data-od-id="logo-neoeffex"><span class="brand-mark" aria-hidden="true"></span><span>neoeffex</span></a>
+      <nav class="nav-links" id="navLinks" aria-label="Navegação principal">
+        <a class="nav-link" href="#servicos">Serviços</a><a class="nav-link" href="#processo">Processo</a><a class="nav-link" href="#projetos">Projetos</a><a class="nav-link" href="#sobre">Sobre</a><a class="nav-link" href="#contato">Contato</a>
+        <button class="btn nav-cta open-contact" type="button" data-od-id="cta-navbar"><span>Solicitar projeto</span></button>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks" data-od-id="controle-menu"><span></span></button>
     </div>
+  </header>
 
-    <div class="hero__atmosphere" aria-hidden="true">
-      <div class="smoke-cloud smoke-cloud--one"></div>
-      <div class="smoke-cloud smoke-cloud--two"></div>
-      <div class="smoke-cloud smoke-cloud--three"></div>
-      <div class="smoke-cloud smoke-cloud--four"></div>
-    </div>
-
-    <div class="hero__interaction-field" aria-hidden="true"></div>
-
-    <div class="hero__grain" aria-hidden="true"></div>
-
-    <div class="hero__values" aria-label="Valores da Neo by Neoeffex">
-      <span class="hero__value hero__value--intelligence">Inteligência</span>
-      <span class="hero__value hero__value--accessibility">Acessibilidade</span>
-      <span class="hero__value hero__value--future">Futuro</span>
-      <span class="hero__value hero__value--autonomy">Autonomia</span>
-      <span class="hero__value hero__value--simplicity">Simplicidade</span>
-      <span class="hero__value hero__value--context">Contexto</span>
-    </div>
-
-    <section class="hero__content" aria-labelledby="hero-title">
-      <p class="hero__eyebrow">Inteligência em movimento</p>
-
-      <h1 class="hero__title" id="hero-title">
-        <span class="hero__title-main">Neo</span>
-        <span class="hero__title-signature">by Neoeffex</span>
-      </h1>
-
-      <p class="hero__version" aria-label="Versão da landing page">v0.1.10</p>
+  <main id="conteudo">
+    <section class="hero section" id="inicio" data-od-id="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow" data-od-id="label-hero">Desenvolvimento digital / Neoeffex</div>
+          <h1 class="headline-upper" data-od-id="titulo-hero">Landing pages que transformam <span class="accent-text">presença</span> em resultado.</h1>
+          <p class="lead">Estratégia, design e código, do conceito ao deploy.</p>
+          <div class="hero-actions"><button class="btn btn-primary open-contact" type="button" data-od-id="cta-hero"><span>Solicitar landing page</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button><a class="btn" href="#processo" data-od-id="cta-processo"><span>Ver como funciona</span></a></div>
+          <div class="build-note"><span class="status-dot"></span>Projetado. Desenvolvido. Publicado.</div>
+        </div>
+        <div class="system-visual" data-od-id="visual-fluxo-digital" aria-label="Fluxo visual do desenvolvimento de uma landing page">
+          <div class="float-tag tag-one">DEPLOY_READY</div><div class="float-tag tag-two">BUILD_001</div>
+          <div class="system-frame">
+            <div class="frame-head"><span>NEOEFFEX / PROJECT FLOW</span><span class="window-dots"><i></i><i></i><i></i></span></div>
+            <div class="pipeline"><div class="pipeline-flow"></div>
+              <div class="pipe-node"><span class="node-index"></span><span class="node-main"><strong>Briefing</strong><small>context + goal</small></span><span class="node-state">SYNCED</span></div>
+              <div class="pipe-node"><span class="node-index"></span><span class="node-main"><strong>Estrutura</strong><small>content + hierarchy</small></span><span class="node-state">MAPPED</span></div>
+              <div class="pipe-node"><span class="node-index"></span><span class="node-main"><strong>Design</strong><small>interface + motion</small></span><span class="node-state">CRAFTED</span></div>
+              <div class="pipe-node"><span class="node-index"></span><span class="node-main"><strong>Código</strong><small>responsive + fast</small></span><span class="node-state">BUILT</span></div>
+              <div class="pipe-node"><span class="node-index"></span><span class="node-main"><strong>Publicação</strong><small>test + deploy</small></span><span class="node-state">ONLINE</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <div class="hero__edge hero__edge--top" aria-hidden="true"></div>
-    <div class="hero__edge hero__edge--bottom" aria-hidden="true"></div>
+    <section class="section positioning" id="sobre" data-od-id="posicionamento">
+      <div class="container statement reveal">
+        <div class="eyebrow">Além da estética</div>
+        <h2 class="headline-upper" data-od-id="titulo-posicionamento">Não criamos páginas. Criamos direção.</h2>
+        <p class="lead">Clareza, performance e conversão no mesmo sistema.</p>
+        <div class="principles" aria-label="Princípios de projeto"><span class="principle">Estrutura</span><span class="principle">Clareza</span><span class="principle">Performance</span><span class="principle">Responsividade</span><span class="principle">Interação</span><span class="principle">Conversão</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="servicos" data-od-id="servicos">
+      <div class="container">
+        <div class="section-head reveal"><div class="eyebrow">Escopo completo</div><h2 class="headline-upper" data-od-id="titulo-servicos">Da ideia ao ar.</h2><p class="lead">Estratégia, design, código, movimento e publicação.</p></div>
+        <div class="services-grid">
+          <article class="service-card reveal" data-od-id="servico-estrategia"><div class="service-top"><span class="service-num">01 / STRATEGY</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span></div><h3>Estratégia e estrutura</h3><p>Oferta, público e mensagem antes da interface.</p></article>
+          <article class="service-card reveal" data-od-id="servico-design"><div class="service-top"><span class="service-num">02 / DESIGN</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 9v11"/></svg></span></div><h3>UI personalizada</h3><p>Uma linguagem visual própria para a marca.</p></article>
+          <article class="service-card reveal" data-od-id="servico-desenvolvimento"><div class="service-top"><span class="service-num">03 / DEVELOPMENT</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span></div><h3>Desenvolvimento responsivo</h3><p>Código preciso em qualquer tela.</p></article>
+          <article class="service-card reveal" data-od-id="servico-movimento"><div class="service-top"><span class="service-num">04 / MOTION</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M15 8l4 4-4 4"/><circle cx="5" cy="12" r="2"/></svg></span></div><h3>Animações e interações</h3><p>Movimento que orienta sem distrair.</p></article>
+          <article class="service-card reveal" data-od-id="servico-integracoes"><div class="service-top"><span class="service-num">05 / INTEGRATIONS</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 8h8v8H8zM3 12h5M16 12h5M12 3v5M12 16v5"/></svg></span></div><h3>Integrações</h3><p>Formulários, WhatsApp e analytics conectados.</p></article>
+          <article class="service-card reveal" data-od-id="servico-publicacao"><div class="service-top"><span class="service-num">06 / DEPLOY</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 19V5M7 10l5-5 5 5M5 19h14"/></svg></span></div><h3>Deploy e publicação</h3><p>Testes, performance e página no ar.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section custom-section" data-od-id="personalizacao">
+      <div class="container split">
+        <div class="custom-copy reveal from-left"><div class="eyebrow">Sistema flexível</div><h2 class="headline-upper" data-od-id="titulo-personalizacao">Sem cara de template.</h2><p class="lead">Cada projeto responde à marca, ao público e ao objetivo.</p><ul><li>Marca e linguagem</li><li>Público e contexto</li><li>Produto ou serviço</li><li>Objetivo de conversão</li><li>Identidade visual</li><li>Escala do projeto</li></ul></div>
+        <div class="interface-stack reveal" data-od-id="visual-personalizacao" aria-label="Três composições de interface diferentes">
+          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-copy"><i class="mini-line"></i><i class="mini-line short"></i><i class="mini-cta"></i></div><div class="mini-art"></div></div></div>
+          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-art"></div><div class="mini-copy"><i class="mini-line"></i><i class="mini-line short"></i><i class="mini-cta"></i></div></div></div>
+          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-copy"><i class="mini-line short"></i><i class="mini-line"></i><i class="mini-cta"></i></div><div class="mini-art"></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="processo" data-od-id="processo">
+      <div class="container">
+        <div class="section-head reveal"><div class="eyebrow">Processo transparente</div><h2 class="headline-upper" data-od-id="titulo-processo">Seis etapas. Uma direção.</h2><p class="lead">Do alinhamento inicial à publicação.</p></div>
+        <div class="process-wrap reveal" data-od-id="linha-processo"><div class="process-line"><div class="process-progress"></div></div><div class="process-grid">
+          <article class="step"><span class="step-dot"></span><small>01 / INPUT</small><h3>Briefing</h3><p>Contexto e objetivo.</p></article><article class="step"><span class="step-dot"></span><small>02 / MAP</small><h3>Estrutura</h3><p>Fluxo e conteúdo.</p></article><article class="step"><span class="step-dot"></span><small>03 / UI</small><h3>Design</h3><p>Identidade e interface.</p></article><article class="step"><span class="step-dot"></span><small>04 / BUILD</small><h3>Desenvolvimento</h3><p>Código e movimento.</p></article><article class="step"><span class="step-dot"></span><small>05 / QA</small><h3>Revisão</h3><p>Testes e ajustes.</p></article><article class="step"><span class="step-dot"></span><small>06 / LIVE</small><h3>Publicação</h3><p>Deploy e validação.</p></article>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="section compare" data-od-id="comparacao">
+      <div class="container">
+        <div class="section-head reveal"><div class="eyebrow">Escolha de abordagem</div><h2 class="headline-upper" data-od-id="titulo-comparacao">A diferença está nas decisões.</h2></div>
+        <div class="compare-grid">
+          <article class="compare-panel reveal" data-od-id="painel-landing-generica"><div class="compare-label"><span>Landing convencional</span><span>STANDARD</span></div><ul class="compare-list"><li><span>Base</span><strong>Template pronto</strong></li><li><span>Estrutura</span><strong>Layout generalista</strong></li><li><span>Interação</span><strong>Estados essenciais</strong></li><li><span>Adaptação</span><strong>Conteúdo encaixado</strong></li><li><span>Percepção</span><strong>Experiência comum</strong></li></ul></article>
+          <article class="compare-panel featured reveal" data-od-id="painel-landing-neoeffex"><div class="compare-label"><span>Landing Neoeffex</span><span>CUSTOM_BUILD</span></div><ul class="compare-list"><li><span>Base</span><strong>Design personalizado</strong></li><li><span>Estrutura</span><strong>Estratégia por objetivo</strong></li><li><span>Interação</span><strong>Microinterações precisas</strong></li><li><span>Adaptação</span><strong>Sistema feito para a marca</strong></li><li><span>Percepção</span><strong>Identidade própria</strong></li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projetos" data-od-id="projetos">
+      <div class="container">
+        <div class="section-head reveal"><div class="eyebrow">Projetos</div><h2 class="headline-upper" data-od-id="titulo-projetos">Sistemas visuais para contextos reais.</h2><p class="lead">Estruturas prontas para receber cases verificados.</p></div>
+        <div class="projects-grid">
+          <article class="project-card reveal" data-od-id="projeto-placeholder-fintech"><div class="project-meta"><span>Projeto conceito 01</span><span>Fintech / SaaS</span></div><div class="project-art"><span class="art-sidebar"></span><span class="art-grid"><i></i><i></i><i></i></span></div><div class="project-copy"><h3>Interface orientada à confiança</h3><p>Espaço reservado para um case verificado.</p></div></article>
+          <article class="project-card reveal" data-od-id="projeto-placeholder-servicos"><div class="project-meta"><span>Projeto conceito 02</span><span>Serviços / B2B</span></div><div class="project-art"><span class="art-sidebar"></span><span class="art-grid"><i></i><i></i><i></i></span></div><div class="project-copy"><h3>Clareza para uma oferta complexa</h3><p>Estrutura pronta para um projeto real.</p></div></article>
+          <article class="project-card reveal" data-od-id="projeto-placeholder-produto"><div class="project-meta"><span>Projeto conceito 03</span><span>Produto digital</span></div><div class="project-art"><span class="art-sidebar"></span><span class="art-grid"><i></i><i></i><i></i></span></div><div class="project-copy"><h3>Produto apresentado como experiência</h3><p>Interface, interação e performance.</p><span class="placeholder-note">CASE_SLOT / READY</span></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section quality-band" data-od-id="qualidade">
+      <div class="container"><div class="quality-panel reveal"><div><div class="eyebrow">Padrão de entrega</div><h2 class="headline-upper" data-od-id="titulo-qualidade">Bonita no primeiro olhar. Sólida em cada detalhe.</h2><p class="lead">Conteúdo, interface e comportamento em um único produto.</p></div><div class="checks" aria-label="Itens verificados na entrega"><div class="check"><span class="check-mark">✓</span><span>Responsividade real</span><code>VERIFIED</code></div><div class="check"><span class="check-mark">✓</span><span>Estados de interação</span><code>VERIFIED</code></div><div class="check"><span class="check-mark">✓</span><span>Formulários e integrações</span><code>VERIFIED</code></div><div class="check"><span class="check-mark">✓</span><span>Performance e publicação</span><code>VERIFIED</code></div></div></div></div>
+    </section>
+
+    <section class="section" data-od-id="faq">
+      <div class="container faq-grid"><div class="reveal"><div class="eyebrow">Perguntas frequentes</div><h2 class="headline-upper" data-od-id="titulo-faq">Antes de começar.</h2><p class="muted">Escopo, conteúdo e publicação.</p></div><div class="accordion reveal">
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>O projeto começa sem uma estrutura pronta?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim. Estrutura, hierarquia e fluxo podem fazer parte do projeto.</p></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>A landing page funciona bem no celular?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim. O mobile recebe prioridades, proporções e interações próprias.</p></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>É possível integrar formulário e WhatsApp?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim. As integrações seguem o fluxo comercial do negócio.</p></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>A Neoeffex também cuida da publicação?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim. O escopo pode incluir deploy, validação, domínio e hospedagem.</p></div></div></article>
+      </div></div>
+    </section>
+
+    <section class="section cta-section" id="contato" data-od-id="contato">
+      <div class="container"><div class="cta-panel reveal"><div class="eyebrow">Próximo projeto</div><h2 class="headline-upper" data-od-id="titulo-contato">A página certa para a sua marca.</h2><p>Você traz o objetivo. A Neoeffex constrói a direção e a experiência.</p><button class="btn btn-primary open-contact" type="button" data-od-id="cta-final"><span>Solicitar landing page</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button></div></div>
+    </section>
   </main>
+
+  <footer data-od-id="rodape"><div class="container"><div class="footer-top"><a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"></span><span>neoeffex</span></a><div class="footer-links"><a href="#servicos">Serviços</a><a href="#processo">Processo</a><a href="#projetos">Projetos</a><a href="#contato">Contato</a></div></div><div class="footer-bottom"><span>Desenvolvimento digital sob medida.</span><span>© <span id="year"></span> NEOEFFEX</span></div></div></footer>
+
+  <div class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true" data-od-id="modal-contato">
+    <div class="modal-card"><div class="modal-head"><div><div class="eyebrow">PROJECT_REQUEST</div><h2 id="modalTitle">Vamos entender seu projeto.</h2><p>Preencha os pontos essenciais. Nenhum dado será enviado nesta demonstração.</p></div><button class="close-modal" type="button" aria-label="Fechar formulário">×</button></div>
+      <form id="contactForm" novalidate><div class="form-grid"><div class="field"><label for="name">Seu nome</label><input id="name" name="name" autocomplete="name" placeholder="Como podemos chamar você?" required></div><div class="field"><label for="business">Empresa ou marca</label><input id="business" name="business" autocomplete="organization" placeholder="Nome do negócio"></div><div class="field full"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" placeholder="voce@empresa.com" required></div><div class="field full"><label for="brief">O que a página precisa realizar?</label><textarea id="brief" name="brief" placeholder="Conte sobre a oferta, o público e o objetivo principal." required></textarea></div></div><div class="form-actions"><span class="form-note">FORM_MODE / DEMONSTRAÇÃO LOCAL</span><button class="btn btn-primary" type="submit"><span>Validar solicitação</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button></div><p class="form-status" id="formStatus" role="status"></p></form>
+    </div>
+  </div>
+
+  <script src="assets/js/script.js"></script>
 </body>
 </html>

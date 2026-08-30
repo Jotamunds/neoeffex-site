@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Base do painel administrativo de catálogos da Neoeffex.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#f7f9fc">
+    <title>Admin | Neoeffex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar" aria-label="Navegação do painel">
+            <div class="sidebar__top">
+                <a class="brand" href="../" aria-label="Voltar para o site da Neoeffex">
+                    <span class="brand__mark" aria-hidden="true"></span>
+                    <span>neoeffex</span>
+                </a>
+                <span class="environment">CATALOG_SYSTEM</span>
+            </div>
+
+            <nav class="menu" aria-label="Seções do painel">
+                <a class="menu__item" href="#visao-geral">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+                    Visão geral
+                </a>
+                <a class="menu__item menu__item--active" href="#produtos" aria-current="page">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z"></path><path d="M4 12.5 12 17l8-4.5"></path><path d="M4 17 12 21l8-4"></path></svg>
+                    Produtos
+                    <span class="menu__counter" id="menuProductCount">0</span>
+                </a>
+                <span class="menu__item menu__item--future" aria-disabled="true" title="Disponível na próxima etapa">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>
+                    Categorias
+                    <small>em breve</small>
+                </span>
+                <span class="menu__item menu__item--future" aria-disabled="true" title="Disponível na próxima etapa">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 8h10l2 12H5L7 8Z"></path><path d="M9 8a3 3 0 0 1 6 0"></path></svg>
+                    Pedidos
+                    <small>em breve</small>
+                </span>
+            </nav>
+
+            <div class="sidebar__bottom">
+                <div class="phase-card">
+                    <span class="phase-card__eyebrow">ETAPA 1</span>
+                    <strong>Base do sistema</strong>
+                    <p>Interface, organização e dados locais prontos para evoluir.</p>
+                </div>
+                <span class="version">ADMIN / 0.1.0</span>
+            </div>
+        </aside>
+
+        <div class="app-main">
+            <header class="topbar">
+                <button class="icon-button menu-button" id="menuButton" type="button" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+                </button>
+                <div class="breadcrumb" aria-label="Localização atual">
+                    <a href="../">Neoeffex</a>
+                    <span aria-hidden="true">/</span>
+                    <strong>Admin</strong>
+                </div>
+                <div class="topbar__actions">
+                    <button class="icon-button" id="themeButton" type="button" aria-label="Ativar tema escuro" title="Alternar tema">
+                        <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+                        <svg class="theme-icon theme-icon--moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"></path></svg>
+                    </button>
+                    <span class="avatar" aria-label="Ambiente de demonstração">N</span>
+                </div>
+            </header>
+
+            <main id="conteudo" class="content">
+                <section class="page-heading" id="visao-geral" aria-labelledby="pageTitle">
+                    <div>
+                        <span class="eyebrow">PAINEL ADMINISTRATIVO</span>
+                        <h1 id="pageTitle">Produtos</h1>
+                        <p>Organize o catálogo de cada cliente em um único lugar.</p>
+                    </div>
+                    <button class="primary-button" id="newProductButton" type="button">
+                        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
+                        Novo produto
+                    </button>
+                </section>
+
+                <section class="stage-notice" aria-label="Status da primeira etapa">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 10v5M12 7h.01"></path></svg>
+                    <p><strong>Base em desenvolvimento.</strong> Nesta etapa, os produtos são dados locais de demonstração. Cadastro, login e banco de dados serão conectados nas próximas etapas.</p>
+                </section>
+
+                <section class="summary-grid" aria-label="Resumo do catálogo">
+                    <article class="summary-card">
+                        <span class="summary-card__label">Produtos cadastrados</span>
+                        <strong id="totalProducts">0</strong>
+                        <span class="summary-card__detail"><i class="dot dot--blue"></i> Catálogo de demonstração</span>
+                    </article>
+                    <article class="summary-card">
+                        <span class="summary-card__label">Produtos ativos</span>
+                        <strong id="activeProducts">0</strong>
+                        <span class="summary-card__detail"><i class="dot dot--green"></i> Visíveis no catálogo</span>
+                    </article>
+                    <article class="summary-card">
+                        <span class="summary-card__label">Categorias</span>
+                        <strong id="categoryCount">0</strong>
+                        <span class="summary-card__detail"><i class="dot dot--purple"></i> Organização inicial</span>
+                    </article>
+                </section>
+
+                <section class="catalog-section" id="produtos" aria-labelledby="productsTitle">
+                    <div class="section-heading">
+                        <div>
+                            <h2 id="productsTitle">Catálogo atual</h2>
+                            <p id="tableDescription">Carregando produtos…</p>
+                        </div>
+                        <div class="catalog-actions">
+                            <label class="search-field" for="productSearch">
+                                <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.2 4.2"></path></svg>
+                                <span class="sr-only">Buscar produtos</span>
+                                <input id="productSearch" type="search" placeholder="Buscar produto">
+                            </label>
+                            <label class="filter-field" for="statusFilter">
+                                <span class="sr-only">Filtrar por status</span>
+                                <select id="statusFilter">
+                                    <option value="all">Todos os status</option>
+                                    <option value="active">Ativos</option>
+                                    <option value="paused">Pausados</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="product-table" role="region" aria-labelledby="productsTitle" tabindex="0">
+                        <div class="product-table__head" aria-hidden="true">
+                            <span>Produto</span>
+                            <span>Categoria</span>
+                            <span>Preço</span>
+                            <span>Status</span>
+                            <span></span>
+                        </div>
+                        <div id="productsList" class="product-list" aria-live="polite"></div>
+                    </div>
+                    <p class="empty-state" id="emptyState" hidden>Nenhum produto corresponde aos filtros selecionados.</p>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div class="mobile-overlay" id="mobileOverlay" hidden></div>
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+    <script src="data/products.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

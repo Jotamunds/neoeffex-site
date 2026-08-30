@@ -1,4 +1,4 @@
-# Sistema visual — v0.1.16
+# Sistema visual — v0.1.18
 
 Nesta versão, broto sem linha de solo, haltere, folha, ramo de trigo, tigela com vegetais e sol complementam as curvas da v0.1.10. Os novos elementos alternam lados para não concentrar a decoração na borda direita. Os ícones usam traços finos, cores da mesma paleta e transparência independente; o haltere só aparece a partir de 60rem. Seus estilos estão em `decorations.css`, com controles `--decoration-*`. Veja `DECORACOES.md` para ajustar presença, posição ou desligar os ícones sem mexer nas ondas.
 
@@ -62,13 +62,13 @@ Altere `--space-section` para aproximar ou afastar seções. Altere `--font-size
 
 ## Interação e verificação
 
-Botões têm estados de hover, clique e foco por teclado; as transições de cor continuam com 180 ms. Títulos fora do hero mantêm a entrada de 480 ms, 0,5rem e opacidade de 0,9 a 1. A abertura usa quatro grupos com intervalo de 100 ms, 640 ms por grupo e total de 940 ms. O broto faz bubble 0 → 1,20 → 1; na v0.1.14.2, foto, borda e contorno fazem 0,96 → 1,035 → 1 na mesma camada, com legenda parada. Na v0.1.14.1, a superfície dos dois botões iniciais faz 0,85 → 1,06 → 1, com links e foco imóveis. O espaçamento acomoda a expansão máxima de 1,08. Texto da intro tem opacidade mínima 0,97, verificada por cálculo de contraste; os botões permanecem opacos. As variáveis `--intro-*` ficam em `variables.css`, e a aparência em `hero-intro.css`. `config.motion` controla intro, cards, contact, reveal e rolagem separadamente. Movimento reduzido, cores forçadas e impressão prevalecem. Os preços não se deslocam; a v0.1.15 destaca os cinco cards por borda e sombra em 220 ms, apenas com hover e ponteiro preciso. As variáveis `--card-hover-*` ficam centralizadas e o efeito em `card-hover.css`. A v0.1.16 acrescenta pulinho de 4px/280ms no botão inicial, com limite de 6px/400ms, mantendo foco e âncora imóveis. O garfinho permanece planejado. Veja `ANIMACOES.md`.
+Botões têm estados de hover, clique e foco por teclado; as transições de cor continuam com 180 ms. Títulos fora do hero mantêm a entrada de 480 ms, 0,5rem e opacidade de 0,9 a 1. A abertura usa quatro grupos com intervalo de 100 ms, 640 ms por grupo e total de 940 ms. O broto faz bubble 0 → 1,20 → 1; foto, borda e contorno animam juntos, e a legenda fica parada. `config.motion` controla intro, cards, contact, fork, prices, reveal e rolagem separadamente. A v0.1.17 acrescenta o garfinho em camada própria no card tradicional de 400 g; a v0.1.18 conta apenas valores monetários completos e restaura o texto original. Movimento reduzido, cores forçadas e impressão prevalecem. Veja `ANIMACOES.md`.
 
 O verificador calcula a razão de contraste das 16 combinações textuais previstas e exige pelo menos 4,5:1. Isso verifica a paleta, não certifica a acessibilidade de toda a página: hierarquia visual, zoom, navegação e renderização ainda precisam da revisão em navegador.
 
 ## Cabeçalho e abertura
 
-- Cabeçalho claro: assinatura tipográfica provisória à esquerda, os três atalhos e Contato destacado.
+- Cabeçalho claro: logo oficial otimizado à esquerda, os três atalhos e Contato destacado.
 - Até 60rem, atalhos abaixo da marca e contato; o cabeçalho permite linhas extras com texto ampliado, sem esconder o menu.
 - Hero verde com texto curto, duas ações e imagem em moldura sálvia.
 - Texto antes da foto no celular; duas colunas a partir de 60rem.

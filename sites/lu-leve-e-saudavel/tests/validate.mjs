@@ -13,6 +13,8 @@ import { validateMotion } from "./motion.mjs";
 import { validateHeroIntro } from "./hero-intro.mjs";
 import { validateCardHover } from "./card-hover.mjs";
 import { validateContactJump } from "./contact-jump.mjs";
+import { validateForkHighlight } from "./fork-highlight.mjs";
+import { validatePriceCountup } from "./price-countup.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(join(root, "index.html"), "utf8");
@@ -341,7 +343,7 @@ check("Scripts clássicos, defer e ordem de inicialização", () => {
         return attributes.match(/src="([^"]+)"/)[1];
     });
 
-    assert.deepEqual(paths, ["./scripts/config.js", "./scripts/whatsapp.js", "./scripts/promotion.js", "./scripts/mobile-order.js", "./scripts/hero-intro.js", "./scripts/contact-jump.js", "./scripts/animations.js", "./scripts/main.js"]);
+    assert.deepEqual(paths, ["./scripts/config.js", "./scripts/whatsapp.js", "./scripts/promotion.js", "./scripts/mobile-order.js", "./scripts/hero-intro.js", "./scripts/contact-jump.js", "./scripts/fork-highlight.js", "./scripts/price-countup.js", "./scripts/animations.js", "./scripts/main.js"]);
 
     for (const file of scriptFiles) {
         new vm.Script(readFileSync(file, "utf8"), { filename: relative(root, file) });
@@ -441,7 +443,7 @@ check("Todos os cards e combos estão visíveis no HTML estático", () => {
         assert.equal((region.match(/<article\b/g) || []).length, category.products.length);
         assert.equal((region.match(/class="price-card__combo(?:\s|")/g) || []).length, category.products.reduce((count, product) => count + product.combos.length, 0));
         assert.equal((region.match(/class="price-card__badge"/g) || []).length, category.products.length);
-        assert.doesNotMatch(region, /\bhidden\b|<details\b|<select\b|<input\b|<table\b|<button\b/);
+        assert.doesNotMatch(region, /(?:^|\s)hidden(?:\s|>)|<details\b|<select\b|<input\b|<table\b|<button\b/);
 
         for (const product of category.products) {
             assert.match(region, new RegExp(`id="${product.id}-title"`));
@@ -1024,6 +1026,8 @@ validateMotion({ check, root, html, config: deliveredConfig });
 validateHeroIntro({ check, root, html, config: deliveredConfig });
 validateCardHover({ check, root, html, config: deliveredConfig });
 validateContactJump({ check, root, html, config: deliveredConfig });
+validateForkHighlight({ check, root, html, config: deliveredConfig });
+validatePriceCountup({ check, root, html, config: deliveredConfig });
 
 console.log(`\n${passed} grupos aprovados; ${failures.length} falhas.`);
 

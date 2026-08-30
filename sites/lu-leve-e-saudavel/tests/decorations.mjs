@@ -178,10 +178,10 @@ export function validateDecorations({ check, root, html }) {
         assert.equal(read("index.html"), before);
     });
 
-    check("Seis ícones coexistem com cinco ondas, sem scripts de desenho ou requisições de SVG em runtime", () => {
-        assert.equal((html.match(/<svg\b/g) || []).length, 11);
+    check("Seis ícones e o garfinho coexistem com cinco ondas, sem desenho em runtime", () => {
+        assert.equal((html.match(/<svg\b/g) || []).length, 12);
         assert.equal((html.match(/<svg class="organic-wave/g) || []).length, 5);
-        assert.equal((html.match(/<script\b/g) || []).length, 8);
+        assert.equal((html.match(/<script\b/g) || []).length, 10);
         assert.doesNotMatch(html, /<script[^>]*(?:lucide|decorations)|<use\b|<img[^>]*\.svg/);
         assert.doesNotMatch(css, /url\(|mask/);
         for (const id of ids) {

@@ -1,4 +1,4 @@
-# Preparação para publicação — v0.1.16
+# Preparação para publicação — v0.1.18
 
 Este pacote é de pré-publicação. Não configura hospedagem, não envia alterações ao GitHub e não publica automaticamente. O código funciona sem instalação ou build; ferramentas Node.js são opcionais para manutenção e verificações.
 
@@ -21,7 +21,7 @@ Se alterar regiões, confira também a descrição no `<head>`. A versão não i
 - Troque as imagens da abertura e galeria por fotografias reais autorizadas, nas resoluções indicadas nos respectivos READMEs de assets.
 - Atualize cada texto alternativo para descrever a nova fotografia, sem tratar as imagens geradas como reais.
 - Atualize as legendas somente depois de substituir efetivamente os arquivos. Não basta apagar a palavra “ilustrativa”.
-- Substitua pelo logo oficial ou obtenha aprovação para manter a assinatura tipográfica atual.
+- Confirme com a responsável se a variação de logo aplicada ao cabeçalho é a versão oficial escolhida.
 - Preserve dimensões, `srcset`, `sizes` e proporções; teste o recorte no celular.
 
 Os testes aceitam legendas e descrições reais, sem exigir a palavra “ilustrativa”. Eles verificam arquivos e marcação, mas não conseguem confirmar a origem da fotografia. As imagens entregues nesta versão ainda são genéricas.
@@ -62,6 +62,8 @@ Esta revisão não foi executada nesta entrega. Abra a página pelo navegador ou
 | Tab, Shift+Tab e Enter | Foco visível, atalhos corretos e acesso ao conteúdo |
 | Movimento reduzido | Sem animações de entrada nem rolagem suave |
 | Abertura em grupos | Sem transbordamento, clique imediato e cancelamento ao interagir; estática em carga tardia ou âncora direta |
+| Garfinho | Viaja uma vez até o card tradicional de 400 g; não desloca o card e fica estático com movimento reduzido |
+| Contagem dos preços | Parte de R$ 0,00 e recupera exatamente o valor original; não altera telefone, quantidades ou textos |
 | Sem JavaScript | Preços, fotos, Instagram e recebimento presentes; sem conversa fictícia |
 | Número configurado | Telefone legível e botões apontando para o mesmo WhatsApp oficial |
 | Promoção | Ausente quando desativada; correta e independente dos preços quando ativa |

@@ -1,6 +1,6 @@
-# Animações — etapa 4: contato e pulinho — v0.1.16
+# Animações — etapas 5 e 6 integradas — v0.1.18
 
-A v0.1.16 integra o WhatsApp e o pulinho do botão inicial. A v0.1.15 acrescenta destaque suave aos cinco cards, preservando a abertura. A v0.1.14.2 aplica o bubble à foto, borda e contorno como um único conjunto, com legenda estática. A abertura mantém uma sequência curta. A v0.1.14.1 acrescenta esse efeito também a “Ver preços” e “Fale conosco”, separado do pulinho ao clicar entregue na etapa 4. Não há tela de carregamento: o conteúdo essencial já existe e está visível no HTML/CSS de base. Preços, promoção, imagens e desenhos SVG foram preservados; o contato foi configurado com o número informado.
+A v0.1.17 implementa o garfinho até o card tradicional de 400 g. A v0.1.18 integra a contagem dos preços e conclui a junção dos módulos ao controlador central. As etapas anteriores continuam preservadas: abertura em grupos, bubble, hover dos cards, WhatsApp e pulinho do botão inicial. Não há tela de carregamento; o conteúdo essencial já existe e está visível no HTML/CSS de base.
 
 ## Plano desta atualização
 
@@ -10,10 +10,18 @@ A v0.1.16 integra o WhatsApp e o pulinho do botão inicial. A v0.1.15 acrescenta
 | 2 | Abertura em grupos e bubble controlado | v0.1.14; botões na v0.1.14.1; conjunto da foto na v0.1.14.2 |
 | 3 | Reação discreta dos cards ao mouse | Implementada na v0.1.15 |
 | 4 | Pulinho e integração do número informado ao WhatsApp | Implementada na v0.1.16 |
-| 5 | Garfinho até o card tradicional de 400 g | Planejada |
-| 6 | Verificação integrada e ajustes | Planejada |
+| 5 | Garfinho até o card tradicional de 400 g | Implementada na v0.1.17 |
+| 6 | Contagem dos preços, integração e ajustes | Implementada na v0.1.18 |
 
 O plano é independente das oito etapas originais. Cada implementação começa pela revisão dos riscos e recebe testes próprios; a etapa 6 não substitui as verificações intermediárias.
+
+## Etapas 5 e 6 — garfinho e preços
+
+O garfinho é um SVG decorativo, sem foco, observado somente no card tradicional de 400 g. Quando o card entra na viewport, ele percorre uma camada própria e mostra um halo curto. O card não recebe `transform`, não muda de posição e não vira um botão. O gerador do cardápio preserva essa marcação.
+
+A contagem atua somente em elementos `.numeric` cujo texto inteiro corresponde a um valor em reais. Telefone, pesos e quantidades são ignorados. Cada preço é observado separadamente, começa em `R$ 0,00`, anima uma vez e recupera exatamente o texto original ao concluir ou cancelar.
+
+Os controles são `motion.fork` e `motion.prices`. A chave geral, movimento reduzido, cores forçadas, impressão, aba oculta e ausência de APIs visuais mantêm a página estática e legível.
 
 ## Etapa 4 — contato e pulinho
 
@@ -57,7 +65,7 @@ Em configurações antigas, a chave contact ausente usa true. Use `contact: fals
 5. Confirme o número por extenso, links dos demais botões e alternativa sem JavaScript.
 6. Ao mudar o número, atualize também os links do bloco noscript do contato no index.html e execute os testes. Sem JS, essa cópia é estática.
 
-Revisão visual e abertura real do aplicativo permanecem pendentes. Nenhuma mensagem foi enviada. Garfinho e revisão integrada são as próximas etapas; não foi adicionado carrinho.
+Revisão visual e abertura real do aplicativo permanecem pendentes. Nenhuma mensagem foi enviada e não foi adicionado carrinho.
 
 ## Etapa 3 — destaque dos cards
 
@@ -73,7 +81,7 @@ O card continua informativo: sem cursor de botão, clique, tabindex ou conteúdo
 | --- | --- |
 | Sobrepor cards, deslocar preços ou tremer nas bordas | Apenas cor da borda e sombra variam; tamanho, espessura da borda e posição ficam iguais. |
 | Hover persistir no toque | CSS exige hover e ponteiro preciso primários; não simula toque com JavaScript. |
-| Competir com bubble/reveal ou futuro garfinho | CSS próprio e nenhum transform, keyframe ou pseudo-elemento novo. |
+| Competir com bubble/reveal ou garfinho | CSS próprio e nenhum transform, keyframe ou pseudo-elemento no card. |
 | Movimento reduzido ou chave desligada ainda animarem | Permissão removida pelo coordenador; CSS também bloqueia por preferência, impressão e capacidade. A saída é imediata quando desligado. |
 | Excesso de trabalho de renderização | Só duas propriedades, duração limitada a 300 ms; sem transition: all, loop, listener por card ou will-change permanente. Sombra exige pintura: fluidez real ainda precisa de conferência. |
 | Usuário interpretar o card como botão | Mantém semântica de artigo, seleção de texto e cursor normais; todos os preços já visíveis. |
@@ -259,7 +267,7 @@ Reativar a opção, voltar à aba ou executar destroy/init não repete a abertur
 | tests/hero-intro.mjs | 43 grupos: 31 da etapa 2, 7 dos botões e 5 do conjunto da foto |
 | tests/intro-fixture.mjs | Simulador de DOM/APIs, sem renderização real |
 
-São oito scripts clássicos defer, com hero-intro.js e contact-jump.js antes de animations.js. Sem biblioteca nova, build obrigatório ou dependência de servidor. Os imports finais de decorações e fundos continuam na ordem anterior. Os geradores do cardápio e dos SVGs não foram alterados.
+São dez scripts clássicos `defer`, com `hero-intro.js`, `contact-jump.js`, `fork-highlight.js` e `price-countup.js` antes de `animations.js`. Sem biblioteca nova, build obrigatório ou dependência de servidor. Os imports finais de decorações e fundos continuam na ordem anterior. O gerador do cardápio mantém a marcação do garfinho.
 
 O coordenador mantém init, configure, getState e destroy. Configure aplica só as opções recebidas, sem reescrever config.motion. Destroy limpa os recursos próprios e preserva o histórico. As mudanças pelo console não persistem em arquivos.
 
@@ -279,13 +287,13 @@ node tools/build-decorations.mjs --check
 node tools/check-release.mjs
 ```
 
-206 grupos técnicos: 192 preservados e 14 novos para o contato. Incluem todas as 64 combinações dos controles, contraste, finalização em ordens diferentes, callbacks obsoletos, entrada tardia, âncoras, ausência de CSS/APIs, decorações desligadas, foco, impressão e cancelamento. O complemento verifica estrutura dos links, superfície independente, limites horizontais, estados de interação e finalização dos dois botões separadamente.
+216 grupos técnicos foram aprovados: os 206 anteriores, quatro grupos do garfinho e seis da contagem. Eles cobrem integração, alternativas estáticas, execução única, cancelamento, parser monetário, ordem dos scripts, acessibilidade e preservação do valor final.
 
 As verificações são de código, cálculos e simulações em Node.js. Não executam navegador e não confirmam pixels, fluidez real, duração percebida, encaixe ou comportamento por dispositivo. A revisão visual continua pendente.
 
 O checklist de publicação mantém quatro pendências automáticas: URL da Neoeffex, fotos provisórias, indexação e aviso de pré-publicação. O WhatsApp está configurado; a confirmação do destinatário continua humana. Nada foi publicado e nenhuma mensagem foi enviada.
 
-## Conferência manual antes da próxima etapa
+## Conferência manual antes da publicação
 
 1. Recarregue no topo sem âncora e observe título → apoio → botões → foto/broto. Se estático, confira o status pelo console.
 2. Confira 320, 375, 430, 768, 960 e 1440px: foto, borda e contorno devem crescer juntos, sem rolagem lateral ou recorte; legenda parada. Teste o pico máximo 1,06 e também sem organic-backgrounds; restaure as opções depois.
@@ -293,7 +301,7 @@ O checklist de publicação mantém quatro pendências automáticas: URL da Neoe
 4. Use Tab/Shift+Tab/Enter imediatamente; foco e leitura não devem esperar.
 5. Role antes de terminar; a abertura deve voltar ao normal e não repetir ao subir.
 6. Abra diretamente #tradicionais, #fitness e #contato; volte pelo histórico com posição restaurada.
-7. Desligue intro, cards, reveal e smoothScroll separadamente; depois desligue enabled.
+7. Desligue intro, cards, contact, fork, prices, reveal e smoothScroll separadamente; depois desligue enabled.
 8. Troque de aba, altere movimento reduzido/cores forçadas e abra impressão durante a entrada.
 9. Remova só decorative-elements e recarregue: a sequência deve terminar sem o broto.
 10. Teste sem JavaScript, com CSS da intro ausente, cache desativado e carga lenta: conteúdo visível, sem travamento.
@@ -302,7 +310,7 @@ O checklist de publicação mantém quatro pendências automáticas: URL da Neoe
 
 ## Atualização e commit indicado
 
-Extraia em uma pasta separada e compare. Copie para a raiz do projeto existente, sem criar outra pasta lu-leve-e-saudavel dentro dela. Preserve .git, dados comerciais e alterações locais. Em config.js, atualize a versão para 0.1.16, preservando suas opções atuais. Adicione `contact: true` em motion para explicitar o novo controle, preservando as demais opções. Sem essa chave, o padrão é true; use false para desligar somente o pulinho, mantendo os links.
+Extraia em uma pasta separada e compare. Substitua somente a pasta `sites/lu-leve-e-saudavel`, preservando `.git` e alterações externas ao projeto. A versão, os módulos e seus controles já estão integrados; não execute instaladores adicionais.
 
 Depois de conferir os arquivos e rodar os testes, faça um commit único:
 
@@ -310,7 +318,7 @@ Depois de conferir os arquivos e rodar os testes, faça um commit único:
 git diff --stat
 git diff
 git add .
-git commit -m "v0.1.16 - Integra WhatsApp e pulinho do contato"
+git commit -m "v0.1.18 - Integra animações, logos e contagem dos preços"
 ```
 
 Revise o conteúdo antes de git add ., principalmente se houver outras alterações. Não execute git init novamente, force push ou apague arquivos. Nenhum commit ou push foi executado nesta entrega. O ZIP não contém .git, histórico, remotos, credenciais ou dependências.

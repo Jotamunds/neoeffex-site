@@ -1,7 +1,7 @@
 /* Sem menu oculto: as três categorias permanecem acessíveis sem JavaScript. */
 .site-header {
     padding-block-start: var(--space-2);
-    background: var(--section-background);
+    background: var(--color-brand-background);
     color: var(--text-color);
 }
 
@@ -12,31 +12,22 @@
     gap: var(--space-1) var(--space-2);
 }
 
-/* Assinatura tipográfica provisória, não uma reprodução do logo oficial. */
+/* O link preserva uma área de toque estável ao redor do logo oficial. */
 .site-header__brand {
     display: inline-flex;
     align-items: center;
     justify-self: start;
-    flex-wrap: wrap;
     min-width: 0;
     max-width: 100%;
-    gap: var(--space-1);
     min-height: var(--control-size);
-    color: var(--color-primary);
-    font-family: var(--font-display);
-    font-weight: var(--font-weight-semibold);
     text-decoration: none;
 }
 
-.site-header__brand-name {
-    font-size: 2rem;
-    letter-spacing: -0.06em;
-    line-height: 1;
-}
-
-.site-header__brand-description {
-    font-size: var(--font-size-label);
-    line-height: var(--line-height-compact);
+.site-header__brand-image {
+    display: block;
+    width: clamp(8rem, 35vw, 12rem);
+    max-width: 100%;
+    height: auto;
 }
 
 .site-header__contact {

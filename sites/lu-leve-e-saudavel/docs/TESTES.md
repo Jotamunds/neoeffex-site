@@ -1,6 +1,6 @@
-# Verificação técnica — v0.1.16
+# Verificação técnica — v0.1.18
 
-A etapa 2 trouxe 31 grupos em `tests/hero-intro.mjs`; a v0.1.14.1 acrescenta mais 7 para o bubble nos botões. A v0.1.14.2 acrescenta 5 grupos para estrutura, contorno, escala única e ciclo de vida do conjunto da foto. O simulador fica em `tests/intro-fixture.mjs`. A v0.1.15 implementa hover nos cards, com 12 grupos em `tests/card-hover.mjs`. A v0.1.16 implementa WhatsApp e pulinho, com 14 grupos em `tests/contact-jump.mjs`. O garfinho ainda não foi implementado. Confira o roteiro específico em `ANIMACOES.md`. A validação desta etapa é de código, cálculos e simulações; nenhuma conferência visual em navegador foi executada nesta entrega.
+A v0.1.17 acrescenta quatro grupos para o garfinho e a v0.1.18 acrescenta seis para a contagem dos preços. Eles complementam as verificações anteriores da abertura, bubble, cards, WhatsApp, pulinho, fundos e decorações. Confira o roteiro específico em `ANIMACOES.md`. A validação é de código, cálculos e simulações; a conferência visual em navegador continua separada.
 
 Para conferir os novos ícones, execute também `node tools/build-decorations.mjs --check`. No navegador, compare as quatro combinações das classes `organic-backgrounds` e `decorative-elements`; abaixo de 60rem o haltere deve desaparecer, e os botânicos devem ficar menores. Confira ausência de rolagem lateral, cliques/foco livres e nenhuma interferência com preços, foto ou curvas. O roteiro completo dos elementos está em `DECORACOES.md`. Essa revisão visual ainda não foi executada.
 
@@ -8,7 +8,7 @@ Para conferir os novos ícones, execute também `node tools/build-decorations.mj
 
 Execute `node tests/validate.mjs` na raiz do projeto. Usa somente módulos nativos do Node.js, não acessa a rede e não modifica os arquivos.
 
-Os 206 grupos conferem 82 contratos da base, 20 para os fundos orgânicos, 15 para os ícones decorativos, 20 para os controles de animação, 43 para a abertura, os botões e o conjunto da foto, 12 para o destaque dos cards e 14 para o contato:
+Os 216 grupos incluem os 206 anteriores, quatro do garfinho e seis da contagem dos preços:
 
 - IDs únicos, destinos das âncoras e hierarquia mínima do HTML.
 - Contato escrito por extenso, separado dos três atalhos do cabeçalho.
@@ -54,7 +54,7 @@ Os 206 grupos conferem 82 contratos da base, 20 para os fundos orgânicos, 15 pa
 - Barra mobile com rótulo legível, fallback e posição após o rodapé no HTML.
 - Âncoras focáveis sem bloquear navegação, zoom ou histórico.
 - Contratos CSS de área segura, reserva inferior, paisagem curta e impressão.
-- Ausência de preços animados ou conteúdos escondidos pelo movimento.
+- Preços sempre presentes no HTML, com contagem opcional sem esconder conteúdo.
 - Áreas de toque nos contatos e cabeçalho flexível com texto ampliado.
 - Medição da barra, carregamento de fontes, redimensionamento e inicialização idempotente.
 - Liberação do espaço no desktop/fluxo e rejeição de medidas inválidas.
@@ -127,13 +127,13 @@ Para conferir somente se o cardápio está sincronizado, use `node tools/build-m
 
 ## Checklist de publicação separado
 
-`node tools/check-release.mjs` aponta as pendências detectáveis e lembra as verificações humanas. A versão entregue retorna código 1 por quatro pendências: URL da Neoeffex, fotos provisórias, indexação e aviso. O relatório da Etapa 8 é histórico; o WhatsApp agora está configurado. Não é falha dos 206 grupos técnicos. O comando não publica, não executa o verificador técnico e não escreve arquivos. Veja `PUBLICACAO.md` antes de remover qualquer aviso.
+`node tools/check-release.mjs` aponta as pendências detectáveis e lembra as verificações humanas. A versão entregue retorna código 1 por quatro pendências: URL da Neoeffex, fotos provisórias, indexação e aviso. O relatório da Etapa 8 é histórico; o WhatsApp agora está configurado. Não é falha dos 216 grupos técnicos. O comando não publica, não executa o verificador técnico e não escreve arquivos. Veja `PUBLICACAO.md` antes de remover qualquer aviso.
 
 ## Conferência manual sugerida no VS Code
 
 Antes da sequência abaixo, execute também a conferência do pulinho/WhatsApp em ANIMACOES.md. Os testes não abrem aplicativos ou enviam mensagens. Execute a conferência dos cards descrita em `ANIMACOES.md`: cinco cards, mouse/toque, bordas, configurações, acessibilidade e retorno estático. A suite valida contratos CSS e controle, não renderiza hover real.
 
-1. Abra o `index.html` e confirme a faixa “Teste de fundos orgânicos · Pré-publicação · v0.1.16”. Teste também a sequência, o bubble nos botões e o movimento conjunto de foto, borda e contorno conforme `ANIMACOES.md`; se omitida, confira o status pelo console.
+1. Abra o `index.html` e confirme a faixa “Revisão integrada · Pré-publicação · v0.1.18”. Teste também a sequência, o bubble nos botões, o garfinho, a contagem dos preços e o movimento conjunto de foto, borda e contorno conforme `ANIMACOES.md`.
 2. Clique em Tradicionais, Fitness e Como funciona; confira o destino.
 3. Clique em Contato; confirme que a seção mostra regiões e formas de recebimento.
 4. Sem preencher o telefone, confirme que não é aberta uma conversa de WhatsApp.

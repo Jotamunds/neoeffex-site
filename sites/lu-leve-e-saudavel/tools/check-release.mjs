@@ -62,7 +62,7 @@ export function reviewRelease(config, html, normalizePhone) {
 
     for (const [id, label] of [
         ["atendimento", "Confirmar endereço/horários ou aprovar conscientemente sua omissão; não inventar."],
-        ["marca", "Substituir pelo logo oficial ou aprovar a assinatura tipográfica atual."],
+        ["marca", "Confirmar com a responsável se a variação de logo aplicada ao cabeçalho é a oficial."],
         ["conteudo", "Confirmar preços, porções, extras, fotos reais e disponibilidade com a responsável."],
         ["visual", "Testar navegador, celular, teclado, zoom, sem JavaScript e movimento reduzido."],
         ["destino", "Confirmar domínio/pasta, HTTPS, arquivos carregados e destinatários dos links."]

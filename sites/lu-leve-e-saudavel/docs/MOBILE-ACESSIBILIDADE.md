@@ -1,4 +1,4 @@
-# Mobile, acessibilidade e movimento — v0.1.16
+# Mobile, acessibilidade e movimento — v0.1.18
 
 ## Barra de pedido
 
@@ -47,7 +47,7 @@ Os IDs das seções foram preservados. Cada destino usa `tabindex="-1"` para pod
 - O hero entra em grupos, em 940ms no total: título, apoio, botões, foto/broto. Texto mantém opacidade mínima 0,97; somente o broto decorativo parte de escala zero.
 - Foto, borda e contorno crescem juntos na v0.1.14.2; legenda parada, recorte somente da imagem, sem escala dupla. Os botões não mudam a área clicável. Nenhum texto fica escondido aguardando JavaScript ou rolagem.
 - Na v0.1.14.1, somente a superfície interna dos dois botões iniciais recebe bubble 0,85 → 1,06 → 1. Os links, o foco e a área de toque ficam fixos. Há respiro para o pico de escala, sem recortar conteúdo ou alterar o componente global de botões.
-- Preços, combos, acréscimos e a promoção não são animados.
+- Valores em reais fazem uma contagem curta uma vez; quantidades, pesos, telefone e textos permanecem estáticos.
 - Interagir por foco interrompe o efeito do elemento.
 - A intro também para em clique, toque, teclado, rolagem, resize, impressão e saída. Não inicia após pintura/carga tardia, em outra âncora ou posição restaurada.
 - Sem as APIs necessárias, os efeitos são omitidos e tudo continua visível.
@@ -60,11 +60,11 @@ Na etapa 4, o pulinho anima só a superfície do botão inicial, sem mover foco 
 
 Na etapa 3, os cards mudam somente sombra e cor de borda. A interação exige hover e ponteiro preciso primários; não adiciona foco, clique, escala ou conteúdo oculto. Movimento reduzido, cores forçadas e impressão mantêm a superfície-base. O destaque usa `--card-hover-*`; valide também dispositivos híbridos com mouse e toque.
 
-Ajuste `--duration-reveal`, `--reveal-distance`, `--reveal-start-opacity`, `--ease-reveal` e os valores `--intro-*` em `styles/base/variables.css`. Para retirar a entrada de um elemento fora do hero, remova seu `data-reveal`. Para desligar tudo, use `motion.enabled: false` em `scripts/config.js` e recarregue; para controlar separadamente, use `intro`, `cards`, `contact`, `reveal` e `smoothScroll`. Não remova arquivos ou imports. Sem JavaScript, os cinco aprimoramentos ficam desativados e tudo permanece visível. Veja `ANIMACOES.md`.
+Ajuste `--duration-reveal`, `--reveal-distance`, `--reveal-start-opacity`, `--ease-reveal`, os valores `--intro-*` e `--fork-highlight-*` em `styles/base/variables.css`. Para retirar a entrada de um elemento fora do hero, remova seu `data-reveal`. Para desligar tudo, use `motion.enabled: false` em `scripts/config.js`; para controlar separadamente, use `intro`, `cards`, `contact`, `fork`, `prices`, `reveal` e `smoothScroll`. Sem JavaScript, todos os aprimoramentos ficam desativados e tudo permanece visível. Veja `ANIMACOES.md`.
 
 ## Verificação
 
-Execute `node tests/validate.mjs`. São 206 grupos: 14 da etapa do contato, 12 da etapa dos cards, os 137 anteriores e 43 em `tests/hero-intro.mjs`, dedicados à abertura, aos botões e ao conjunto da foto. Os testes de mobile, publicação, fundos, ícones e controles de movimento permanecem ativos.
+Execute `node tests/validate.mjs`. São 216 grupos, incluindo quatro do garfinho e seis da contagem, além de toda a base anterior. Os testes de mobile, publicação, fundos, ícones e controles de movimento permanecem ativos.
 
 Os testes simulam dimensões, redimensionamento, ausência de APIs e mudanças de preferência. Também conferem regras CSS e estrutura HTML. Eles não executam um navegador nem confirmam o resultado em telas reais.
 

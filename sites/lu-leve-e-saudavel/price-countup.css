@@ -1,0 +1,10 @@
+/* Lu Leve e Saudável — v0.1.18 | contagem animada de preços */
+.price-countup-active {
+    font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .price-countup-active {
+        font-variant-numeric: inherit;
+    }
+}

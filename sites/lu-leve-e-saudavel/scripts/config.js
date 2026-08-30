@@ -7,14 +7,16 @@
     window.LuLeve = window.LuLeve || {};
 
     window.LuLeve.config = {
-        version: "0.1.16",
-        // Etapa 4: contact controla somente o pulinho, nunca o link do WhatsApp.
-        // Garfinho permanece para a próxima etapa. Use true/false, sem aspas.
+        version: "0.1.18",
+        // Cada efeito pode ser desligado sem alterar conteúdo ou links.
+        // Use true/false, sem aspas.
         motion: {
             enabled: true,
             intro: true,
             cards: true,
             contact: true,
+            fork: true,
+            prices: true,
             reveal: true,
             smoothScroll: true
         },

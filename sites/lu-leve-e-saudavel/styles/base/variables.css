@@ -1,4 +1,4 @@
-/* Sistema visual v0.1.12. Altere valores aqui para atualizar o site inteiro. */
+/* Sistema visual v0.1.18. Altere valores aqui para atualizar o site inteiro. */
 :root {
     /* Paleta: cores literais ficam somente neste arquivo. */
     --color-primary: #153b2b;
@@ -7,6 +7,7 @@
     --color-sage-dark: #aebfa8;
     --color-background: #f7f2e8;
     --color-surface: #fffcf7;
+    --color-brand-background: #f8f2ed;
     --color-accent-soft: #f4e8b9;
     --color-accent: #e3c56b;
     --color-whatsapp: #1f7a45;
@@ -100,6 +101,12 @@
     /* Pulinho do contato: ms e px; o módulo limita a 400ms e 6px. */
     --contact-jump-duration: 280ms;
     --contact-jump-height: 4px;
+    /* Garfinho: percorre uma camada própria e não transforma o card. */
+    --fork-highlight-duration: 980ms;
+    --fork-highlight-size: 3rem;
+    --fork-highlight-distance-x: clamp(4rem, 12vw, 10rem);
+    --fork-highlight-distance-y: -4rem;
+    --fork-highlight-ease: var(--ease-standard);
     /* Abertura: tempos e escalas limitados novamente no CSS do efeito. */
     --intro-duration: 640ms;
     --intro-stagger: 100ms;
@@ -177,6 +184,7 @@
         --duration-fast: 0ms;
         --duration-normal: 0ms;
         --duration-reveal: 0ms;
+        --fork-highlight-duration: 0ms;
         --intro-duration: 0ms;
         --intro-stagger: 0ms;
     }

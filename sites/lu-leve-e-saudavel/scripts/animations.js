@@ -1,12 +1,12 @@
 /* Base de movimento opcional. Sem este módulo, o conteúdo já está visível.
- * Coordena abertura, cards, contato, entrada suave e rolagem; não altera preços ou ondas.
+ * Coordena abertura, cards, contato, garfinho, preços, entrada suave e rolagem.
  */
 (() => {
     "use strict";
 
     window.LuLeve = window.LuLeve || {};
     const root = document.documentElement;
-    const settings = { enabled: true, intro: true, cards: true, contact: true, reveal: true, smoothScroll: true };
+    const settings = { enabled: true, intro: true, cards: true, contact: true, fork: true, prices: true, reveal: true, smoothScroll: true };
     const seen = new WeakSet();
     let initialized = false;
     let preference = null;
@@ -24,6 +24,8 @@
             // Permissão geral; hover/ponteiro são avaliados pelo CSS, sem listeners novos.
             cards: enabled && settings.cards,
             contact: enabled && settings.contact && Boolean(window.LuLeve.contactJump),
+            fork: enabled && settings.fork && Boolean(window.LuLeve.forkHighlight),
+            prices: enabled && settings.prices && Boolean(window.LuLeve.priceCountup),
             reveal: enabled && settings.reveal && !revealFailed && typeof window.IntersectionObserver === "function",
             smoothScroll: enabled && settings.smoothScroll
         };
@@ -64,6 +66,28 @@
         }
     }
 
+    function forkAction(method, argument) {
+        const effect = window.LuLeve.forkHighlight;
+        if (effect && typeof effect[method] === "function") {
+            try {
+                effect[method](argument);
+            } catch {
+                mark("data-motion-fork", false);
+            }
+        }
+    }
+
+    function priceAction(method, argument) {
+        const effect = window.LuLeve.priceCountup;
+        if (effect && typeof effect[method] === "function") {
+            try {
+                effect[method](argument);
+            } catch {
+                mark("data-motion-prices", false);
+            }
+        }
+    }
+
     function stopReveal() {
         const previousObserver = observer;
         observer = null;
@@ -81,7 +105,11 @@
         mark("data-motion-reveal", state.reveal);
         mark("data-motion-intro", state.intro);
         mark("data-motion-cards", state.cards);
+        mark("data-motion-fork", state.fork);
+        mark("data-motion-prices", state.prices);
         contactAction("configure", state.contact);
+        forkAction("configure", state.fork);
+        priceAction("configure", state.prices);
         if (!state.intro) {
             introAction("stop", "disabled");
         }
@@ -182,11 +210,15 @@
     function destroy() {
         initialized = false;
         contactAction("destroy");
+        forkAction("destroy");
+        priceAction("destroy");
         mark("data-motion-scroll", false);
         mark("data-motion-reveal", false);
         stopReveal();
         mark("data-motion-intro", false);
         mark("data-motion-cards", false);
+        mark("data-motion-fork", false);
+        mark("data-motion-prices", false);
         introAction("destroy");
 
         if (removePreferenceListener) {

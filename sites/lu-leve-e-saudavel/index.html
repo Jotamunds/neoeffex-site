@@ -22,6 +22,8 @@
     <script src="./scripts/mobile-order.js" defer></script>
     <script src="./scripts/hero-intro.js" defer></script>
     <script src="./scripts/contact-jump.js" defer></script>
+    <script src="./scripts/fork-highlight.js" defer></script>
+    <script src="./scripts/price-countup.js" defer></script>
     <script src="./scripts/animations.js" defer></script>
     <script src="./scripts/main.js" defer></script>
 </head>
@@ -31,15 +33,13 @@
 
     <!-- Remover este aviso somente após resolver as pendências de publicação. -->
     <aside class="project-status" aria-label="Status do desenvolvimento">
-        Teste de fundos orgânicos · Pré-publicação · v0.1.16
+        Revisão integrada · Pré-publicação · v0.1.18
     </aside>
 
     <header class="site-header theme--paper">
         <div class="container site-header__inner">
-            <!-- O nome em texto será substituído pelo logo quando ele estiver disponível. -->
             <a class="site-header__brand" href="#inicio" aria-label="Lu Leve e Saudável — início">
-                <span class="site-header__brand-name">Lu</span>
-                <span class="site-header__brand-description">leve e<br>saudável</span>
+                <img class="site-header__brand-image" src="./assets/images/brand/logo-header.webp" width="640" height="213" alt="" decoding="async">
             </a>
 
             <nav class="site-nav" aria-label="Navegação principal">
@@ -182,7 +182,16 @@
                             </ul>
                         </div>
                     </article>
-                    <article class="price-card surface" aria-labelledby="tradicional-400-title" aria-describedby="acrescimos-tradicionais">
+                    <article class="price-card surface" data-fork-highlight-target aria-labelledby="tradicional-400-title" aria-describedby="acrescimos-tradicionais">
+                        <span class="fork-highlight" data-fork-highlight aria-hidden="true">
+                            <svg class="fork-highlight__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                                <path d="M4 2v5"></path>
+                                <path d="M8 2v5"></path>
+                                <path d="M12 2v5"></path>
+                                <path d="M4 7a4 4 0 0 0 8 0"></path>
+                                <path d="M8 11v11"></path>
+                            </svg>
+                        </span>
                         <header class="price-card__header">
                             <h3 class="price-card__title" id="tradicional-400-title">400 g</h3>
                             <p class="price-card__description">2 tipos de carne</p>

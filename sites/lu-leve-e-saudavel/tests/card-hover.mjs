@@ -17,7 +17,7 @@ export function validateCardHover({ check, root, html, config }) {
         const cards = [...html.matchAll(/<article\b[^>]*class="[^"]*price-card[^"]*"[^>]*>[\s\S]*?<\/article>/g)];
         assert.equal(cards.length, 5);
         for (const [card] of cards) {
-            assert.doesNotMatch(card, /tabindex|role="button"|onclick|data-reveal|data-intro|\bhidden\b/);
+            assert.doesNotMatch(card, /tabindex|role="button"|onclick|data-reveal|data-intro|(?:^|\s)hidden(?:\s|>)/);
             assert.match(card, /price-card__combo--featured/);
         }
         assert.doesNotMatch(css, /cursor|pointer-events|user-select|touch-action/);
@@ -164,7 +164,7 @@ export function validateCardHover({ check, root, html, config }) {
 
     check("Nenhum listener por card, timer, dependência ou navegação artificial", () => {
         assert.doesNotMatch(script, /mouseenter|mouseleave|mousemove|pointermove|touchstart|setTimeout|setInterval|requestAnimationFrame|preventDefault|fetch\(|\.style\./);
-        assert.equal((html.match(/<script\b/g) || []).length, 8);
+        assert.equal((html.match(/<script\b/g) || []).length, 10);
         const fixture = make();
         fixture.app.animations.init();
         assert.deepEqual([...fixture.documentListeners.keys()].sort(), ["animationcancel", "animationend", "focusin", "visibilitychange"]);

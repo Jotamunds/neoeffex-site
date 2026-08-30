@@ -174,6 +174,14 @@ Acrescenta a abertura em grupos e bubble controlado: título, apoio, botões e f
 
 WhatsApp informado integrado e pulinho do Fale conosco inicial implementado. Rótulo preserva a estrutura bubble; área clicável/foco estáveis. Motion.contact controla somente o efeito. Quatorze novos grupos, 206 no total e 64 combinações dos controles. Sem envio de mensagem, publicação, commit ou push. Revisão visual/app pendente. Próxima etapa: garfinho até o card tradicional de 400g. ZIP completo sem .git; sem carrinho.
 
+## Animações — etapa 5 — v0.1.17
+
+Garfinho decorativo integrado ao card tradicional de 400 g, com execução única ao entrar na viewport. A camada do efeito não transforma nem desloca o card. `motion.fork`, movimento reduzido, cores forçadas, impressão e ausência de APIs mantêm alternativa estática. O gerador do cardápio preserva a marcação.
+
+## Animações — etapa 6 — v0.1.18
+
+Contagem de preços integrada ao controlador central, um alvo por elemento monetário, com restauração exata em término ou cancelamento. Arquivos avulsos foram movidos para a arquitetura do projeto, versões e documentação sincronizadas, logos renomeados e cabeçalho atualizado. A suíte agregada aprova 216 grupos técnicos.
+
 ## Animações — etapa 3 — v0.1.15
 
 Destaque dos cinco cards por borda e sombra em 220 ms, sem deslocamento ou escala. CSS isolado, valores em variables.css e controle motion.cards no coordenador existente. Exige hover/ponteiro preciso e respeita acessibilidade. Sem listeners adicionais. Doze grupos novos, totalizando 192; 32 combinações dos controles verificadas. Revisão visual pendente. Próxima etapa: pulinho do contato e integração do WhatsApp informado (etapa 4). Sem garfinho ou carrinho nesta entrega. ZIP completo sem `.git`, sem commit, push ou publicação.

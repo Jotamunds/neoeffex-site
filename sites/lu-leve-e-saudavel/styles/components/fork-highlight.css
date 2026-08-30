@@ -1,0 +1,111 @@
+/* v0.1.17 — efeito isolado; não transforma nem desloca o card. */
+.price-card[data-fork-highlight-target] {
+    position: relative;
+    isolation: isolate;
+}
+
+.fork-highlight {
+    position: absolute;
+    z-index: 2;
+    inset-block-start: var(--space-2);
+    inset-inline-end: var(--space-2);
+    display: grid;
+    width: var(--fork-highlight-size);
+    aspect-ratio: 1;
+    place-items: center;
+    border-radius: var(--radius-pill);
+    color: var(--color-primary);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.fork-highlight::before {
+    position: absolute;
+    z-index: -1;
+    inset: -0.35rem;
+    border: var(--border-width) solid var(--color-sage-dark);
+    border-radius: inherit;
+    background: var(--color-accent-soft);
+    box-shadow: 0 0 0 0 var(--color-shadow);
+    content: "";
+}
+
+.fork-highlight__icon {
+    display: block;
+    width: 62%;
+    height: auto;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+    html[data-motion-fork="on"] .price-card.is-fork-highlighted .fork-highlight {
+        animation: fork-travel var(--fork-highlight-duration) var(--fork-highlight-ease);
+    }
+
+    html[data-motion-fork="on"] .price-card.is-fork-highlighted .fork-highlight::before {
+        animation: fork-halo var(--fork-highlight-duration) var(--fork-highlight-ease);
+    }
+}
+
+@keyframes fork-travel {
+    0% {
+        opacity: 0;
+        transform: translate3d(var(--fork-highlight-distance-x), var(--fork-highlight-distance-y), 0) rotate(24deg) scale(0.82);
+    }
+
+    55% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate(-8deg) scale(1.08);
+    }
+
+    76% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    }
+}
+
+@keyframes fork-halo {
+    0%,
+    42% {
+        box-shadow: 0 0 0 0 var(--color-shadow);
+        opacity: 0;
+        transform: scale(0.75);
+    }
+
+    65% {
+        box-shadow: 0 0 0 var(--space-2) var(--color-shadow-soft);
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        box-shadow: 0 0 0 var(--space-3) var(--color-shadow-soft);
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}
+
+@media (min-width: 64rem) {
+    .fork-highlight {
+        inset-block-start: calc(-1 * var(--space-2));
+        inset-inline-end: calc(-1 * var(--space-1));
+    }
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+    .fork-highlight,
+    .fork-highlight::before {
+        animation: none;
+        opacity: 0;
+    }
+}
+
+@media print {
+    .fork-highlight {
+        display: none;
+    }
+}

@@ -1,0 +1,16 @@
+/* v0.1.18 — mantém a largura dos algarismos estável durante a contagem. */
+.price-countup-active {
+    font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+    .price-countup-active {
+        font-variant-numeric: inherit;
+    }
+}
+
+@media print {
+    .price-countup-active {
+        font-variant-numeric: inherit;
+    }
+}

@@ -29,7 +29,7 @@ export function validateOrganicBackgrounds({ check, root, html }) {
         assert.equal(imports.at(-1), "./components/organic-backgrounds.css");
         assert.equal(imports.filter((path) => path.includes("organic-backgrounds")).length, 1);
         assert.doesNotMatch(html, /<script[^>]*organic|data-organic|<canvas\b/);
-        assert.equal((html.match(/<script\b/g) || []).length, 8);
+        assert.equal((html.match(/<script\b/g) || []).length, 10);
     });
 
     check("Efeito depende da classe; apenas ocultar SVGs no visual-base é incondicional", () => {

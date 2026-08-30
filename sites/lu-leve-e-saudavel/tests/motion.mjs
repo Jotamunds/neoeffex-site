@@ -16,11 +16,13 @@ export function validateMotion({ check, root, html, config }) {
         assert.equal(fixture.documentRoot.getAttribute("data-motion-reveal"), null);
         assert.equal(fixture.documentRoot.getAttribute("data-motion-scroll"), null);
         assert.equal(fixture.documentRoot.getAttribute("data-motion-cards"), null);
+        assert.equal(fixture.documentRoot.getAttribute("data-motion-fork"), null);
+        assert.equal(fixture.documentRoot.getAttribute("data-motion-prices"), null);
         fixture.elements.forEach((element) => assert.equal(element.classes.size, 0));
     };
 
     check("Movimento tem configuração central própria, sem habilitar efeitos futuros", () => {
-        assert.deepEqual(Object.keys(config.motion).sort(), ["cards", "contact", "enabled", "intro", "reveal", "smoothScroll"]);
+        assert.deepEqual(Object.keys(config.motion).sort(), ["cards", "contact", "enabled", "fork", "intro", "prices", "reveal", "smoothScroll"]);
         Object.values(config.motion).forEach((value) => assert.equal(typeof value, "boolean"));
         const fixture = make();
         assert.equal(fixture.app.animations.getState().initialized, false);

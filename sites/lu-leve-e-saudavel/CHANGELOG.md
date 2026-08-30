@@ -1,5 +1,24 @@
 # Histórico
 
+## v0.1.18 — Integração final e contagem dos preços
+
+- Arquivos avulsos da contagem movidos para `scripts/` e `styles/components/`, respeitando a arquitetura existente.
+- Contagem de `R$ 0,00` até o preço real integrada ao controlador central, sem alterar telefones ou textos não monetários.
+- Cada preço é observado separadamente, anima uma vez e recupera imediatamente o valor original em cancelamentos.
+- Movimento reduzido, cores forçadas, impressão, aba oculta e ausência de `IntersectionObserver` mantêm os valores estáticos.
+- Versão sincronizada em `VERSION`, `config.js`, `README.md`, faixa de revisão e histórico.
+- Instaladores temporários da v0.1.18 removidos depois da integração; não há CSS ou JavaScript solto na raiz.
+- Seis logos originais preservados com nomes descritivos; cópia WebP leve aplicada ao cabeçalho.
+- Testes de integração ampliados para o garfinho, contagem, ordem dos scripts e referências locais.
+
+## v0.1.17 — Garfinho no card tradicional de 400 g
+
+- Garfinho decorativo viaja até o card central das marmitas tradicionais quando ele entra na viewport.
+- O efeito utiliza uma camada própria e um halo, sem transformar ou deslocar o card e sem competir com hover, reveal ou preços.
+- Execução única, controlada por `motion.fork`, com cancelamento seguro e alternativa estática.
+- Movimento reduzido, cores forçadas, impressão, aba oculta e ausência de APIs visuais são respeitados.
+- Gerador do cardápio preserva a marcação do efeito ao regenerar preços e combos.
+
 ## v0.1.16 — Etapa 4: WhatsApp e pulinho do contato
 
 - Número informado 5511978766842 integrado a todos os botões de pedido e ao telefone por extenso.

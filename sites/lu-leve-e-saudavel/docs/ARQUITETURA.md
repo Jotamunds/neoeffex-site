@@ -12,7 +12,8 @@
 | `assets/images/hero/` | Fotografia principal ilustrativa em WebP, em 640 e 960 pixels |
 | `assets/images/products/` | Fotografias dos produtos |
 | `assets/images/instagram/` | Três fotografias ilustrativas em seis WebP e instruções de substituição |
-| `assets/icons/` | Ícones e futuro logo |
+| `assets/images/brand/` | Seis logos-fonte renomeados e WebP leve usado no cabeçalho |
+| `assets/icons/` | Reserva para ícones funcionais futuros |
 | `assets/fonts/` | Sora e Manrope em WOFF2, com licenças e fontes de origem |
 | `styles/base/` | Variáveis, fontes, reset, temas, tipografia e movimento global |
 | `styles/layout/` | Contêineres, cabeçalho e rodapé |
@@ -26,7 +27,11 @@
 | `scripts/navigation.js` | Reservado para navegação adicional |
 | `scripts/animations.js` | Controle de entrada/rolagem, cancelamento e ciclo de vida dos movimentos |
 | `scripts/hero-intro.js` | Tentativa única da abertura, elegibilidade, interrupção e limpeza |
+| `scripts/fork-highlight.js` | Execução única do garfinho no card tradicional de 400 g |
+| `scripts/price-countup.js` | Observação e contagem isolada de valores monetários |
 | `styles/components/hero-intro.css` | Aparência da sequência e bubble, sem alterar estilos-base das decorações |
+| `styles/components/fork-highlight.css` | Trajeto e halo do garfinho em camada própria |
+| `styles/components/price-countup.css` | Algarismos tabulares durante a contagem |
 | `tests/hero-intro.mjs` | Contratos e simulações específicos da abertura |
 | `tests/intro-fixture.mjs` | Simulador de APIs da abertura; não renderiza CSS |
 | `scripts/mobile-order.js` | Medição da altura da barra, sem regras visuais |
@@ -74,7 +79,7 @@ As fontes ficam em `assets/decorations/`; `tools/build-decorations.mjs` sincroni
 
 ## JavaScript
 
-Os scripts carregados usam `defer` na ordem `config.js`, `whatsapp.js`, `promotion.js`, `mobile-order.js`, `hero-intro.js`, `animations.js`, `main.js`. Cada arquivo isola seu escopo em uma função e expõe somente o necessário em `window.LuLeve`.
+Os scripts carregados usam `defer` na ordem `config.js`, `whatsapp.js`, `promotion.js`, `mobile-order.js`, `hero-intro.js`, `contact-jump.js`, `fork-highlight.js`, `price-countup.js`, `animations.js`, `main.js`. Cada arquivo isola seu escopo em uma função e expõe somente o necessário em `window.LuLeve`.
 
 Essa escolha mantém a abertura direta do HTML, sem depender de um servidor para módulos ES. `navigation.js` continua reservado e não é carregado: as âncoras e o histórico são nativos, com a rolagem suave definida em CSS.
 
@@ -141,7 +146,7 @@ Não foram adicionados carrinho, pagamento, montagem de pedido dentro do site, f
 
 ## Contato — etapa 4
 
-contact-jump.js usa Web Animations API somente na superfície interna do Fale conosco inicial. O coordenador chama configure/destroy; nenhuma animação controla a navegação. O módulo cancela a intro antes do salto e substitui o salto anterior em cliques rápidos. Sem WAAPI, só o efeito é omitido. Altura/duração ficam em variables.css; contact-jump.css reserva a área clicável. Não há timers, windows abertas pelo JS ou dependências. Oito scripts clássicos defer; links de pedido continuam independentes do coordenador.
+contact-jump.js usa Web Animations API somente na superfície interna do Fale conosco inicial. O coordenador chama configure/destroy; nenhuma animação controla a navegação. O módulo cancela a intro antes do salto e substitui o salto anterior em cliques rápidos. Sem WAAPI, só o efeito é omitido. Altura/duração ficam em variables.css; contact-jump.css reserva a área clicável. Não há timers, janelas abertas pelo JS ou dependências. Dez scripts clássicos `defer`; links de pedido continuam independentes do coordenador.
 
 ## Cards — etapa 3
 
@@ -151,9 +156,9 @@ contact-jump.js usa Web Animations API somente na superfície interna do Fale co
 
 `mobile-order.js` adiciona `has-mobile-order` à raiz somente quando pode medir a barra. `ResizeObserver`, redimensionamento da janela e carregamento das fontes atualizam a reserva de altura. Sem o observador, continuam os eventos de janela e fontes. Em posição estática ou oculto no desktop, o componente informa altura reservada zero. Inicializações repetidas não duplicam observadores.
 
-`animations.js` observa apenas elementos com `data-reveal`, agora fora do hero, e coordena a abertura pelo módulo `hero-intro.js`. É configurado por `main.js` a partir de `config.motion`. Os controles `enabled`, `intro`, `cards`, `contact`, `reveal` e `smoothScroll` são independentes dos dados comerciais. Somente valores booleanos verdadeiros ativam opções explicitamente fornecidas. A configuração não é reescrita em execução.
+`animations.js` observa apenas elementos com `data-reveal`, agora fora do hero, e coordena os módulos opcionais. É configurado por `main.js` a partir de `config.motion`. Os controles `enabled`, `intro`, `cards`, `contact`, `fork`, `prices`, `reveal` e `smoothScroll` são independentes dos dados comerciais. Somente valores booleanos verdadeiros ativam opções explicitamente fornecidas. A configuração não é reescrita em execução.
 
-Os atributos próprios `data-motion-intro`, `data-motion-cards`, `data-motion-reveal` e `data-motion-scroll` são adicionados à raiz somente em execução; não transformam a raiz nem mudam classes de outros módulos. A base fica em `styles/base/motion.css`; a abertura em `styles/components/hero-intro.css`, com valores em `variables.css`. Não há estado-base invisível, atraso de navegação ou transformação de seções/ondas. Sem o módulo, o conteúdo é estático e a rolagem instantânea.
+Os atributos próprios `data-motion-intro`, `data-motion-cards`, `data-motion-fork`, `data-motion-prices`, `data-motion-reveal` e `data-motion-scroll` são adicionados à raiz somente em execução; não transformam a raiz nem mudam classes de outros módulos. A base fica em `styles/base/motion.css`; cada efeito visual tem seu componente. Não há estado-base invisível, atraso de navegação ou transformação de seções/ondas. Sem os módulos, o conteúdo é estático e a rolagem instantânea.
 
 `hero-intro.js` tenta iniciar uma única vez, antes da pintura, sem aguardar imagens ou fontes. Verifica carga tardia, APIs, âncora, histórico, rolagem, foco e alvos efetivamente animáveis. A classe `is-intro-running` é somente um seletor dos filhos: não aplica transform ao hero. Somente o broto decorativo parte de escala zero, conservando sua rotação; na v0.1.14.2, foto, borda e contorno animam juntos em `hero__artwork`, com legenda fora da camada; os botões não deslocam a área clicável. A intro tem listeners próprios apenas enquanto ativa, canceláveis por interação, resize, impressão, saída e pelo coordenador. `stop` e `destroy` não apagam o histórico da tentativa. Não há timers ou nova dependência.
 

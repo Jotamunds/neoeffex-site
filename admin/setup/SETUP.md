@@ -1,28 +1,27 @@
-# Configuração da Etapa 2
+# Configuração da Etapa 4
 
-## 1. Criar o projeto
+## Para uma instalação já feita nas etapas anteriores
 
-Crie um projeto no Supabase dedicado ao catálogo. Não reutilize um projeto de outro sistema.
+1. No SQL Editor do projeto Supabase, execute `003_categories_and_multi_catalogs.sql` inteiro, uma única vez.
+2. Publique os arquivos desta entrega dentro de `neoeffex.com.br/admin`.
+3. Entre no painel. Os textos de categorias que já existiam nos produtos serão transformados automaticamente em categorias próprias.
 
-## 2. Criar a estrutura do banco
+O arquivo `003` executa em transação: se houver um erro, o banco volta ao estado anterior. Não execute esse mesmo arquivo duas vezes.
 
-No SQL Editor, execute `001_initial_schema.sql` inteiro. Ele cria as tabelas, índices, atualização automática de data, permissões e regras RLS.
+## Para uma instalação nova
 
-As permissões são explícitas porque tabelas novas podem não ser expostas automaticamente pela Data API. Ainda assim, visitantes anônimos não recebem nenhuma permissão nos dados do painel.
+1. Crie um projeto Supabase dedicado ao catálogo.
+2. No SQL Editor, execute nesta ordem:
 
-## 3. Fechar o cadastro público
+   1. `001_initial_schema.sql`
+   2. `002_seed_example.sql` depois de criar a primeira conta, se quiser iniciar com um catálogo de exemplo
+   3. `003_categories_and_multi_catalogs.sql`
 
-Em **Authentication > General Configuration**, desative **Allow new users to sign up** e **Allow anonymous sign-ins**. Este painel não terá cadastro aberto: novas contas devem ser criadas por você no painel do Supabase.
+As permissões são explícitas porque tabelas novas podem não ser expostas automaticamente pela Data API. Visitantes anônimos não recebem permissão para os dados do painel.
 
-Mantenha a confirmação de e-mail ativada para contas criadas por convite ou fluxo de e-mail.
+## Configurar autenticação
 
-## 4. Criar a primeira conta
-
-No painel do Supabase, abra **Authentication > Users** e crie o usuário administrador com e-mail e senha forte. Confirme o e-mail da conta quando necessário.
-
-Copie o UUID desse usuário e execute `002_seed_example.sql`, substituindo o marcador pelo UUID real. O retorno exibirá o UUID do catálogo. Use-o, se desejar, para inserir os primeiros produtos do exemplo comentado.
-
-## 5. Configurar URLs de autenticação
+Em **Authentication > General Configuration**, desative **Allow new users to sign up** e **Allow anonymous sign-ins**. Novas contas devem ser criadas por você no Supabase.
 
 Em **Authentication > URL Configuration**, adicione:
 
@@ -31,11 +30,11 @@ Site URL: https://neoeffex.com.br
 Redirect URL: https://neoeffex.com.br/admin/reset-password.html
 ```
 
-Para testes locais, também adicione a URL usada pelo Live Server, por exemplo `http://127.0.0.1:5500/admin/reset-password.html`.
+Para testes locais, adicione também a URL usada pelo seu servidor local, por exemplo `http://127.0.0.1:5500/admin/reset-password.html`.
 
-## 6. Conectar o painel
+## Configurar o painel
 
-No Supabase, copie a **Project URL** e a **publishable key**. Preencha os dois valores em `admin/config.js`:
+Em `admin/config.js`, deixe somente a **Project URL** e a **publishable key**:
 
 ```js
 window.NEOEFFEX_SUPABASE_CONFIG = Object.freeze({
@@ -44,16 +43,17 @@ window.NEOEFFEX_SUPABASE_CONFIG = Object.freeze({
 });
 ```
 
-A chave publicável pode ficar no navegador porque as regras RLS protegem as tabelas. Nunca cole uma `service_role`, chave secreta ou senha do banco em qualquer arquivo de `admin/`.
+Nunca use `service_role`, chave secreta ou senha de banco em arquivos do navegador.
 
-## 7. Testar antes de publicar
+## Testar antes de publicar
 
-1. Abra `admin/index.html`.
-2. Entre com a conta criada.
-3. Confirme que apenas o catálogo vinculado àquela conta é exibido.
-4. Cadastre, edite, pause, reative e exclua um produto de teste.
-5. Entre com uma segunda conta e confirme que ela não consegue visualizar ou alterar o produto da primeira.
-6. Clique em **Sair** e confirme que o painel volta para o login.
-7. Teste **Esqueci minha senha** e confirme que o link abre `reset-password.html`.
+1. Entre com a conta criada e confirme que o catálogo existente aparece.
+2. Abra **Categorias**, confira as categorias migradas e crie uma nova categoria.
+3. Edite um produto e troque sua categoria; crie outro produto usando a nova categoria.
+4. Confirme que uma categoria com produtos vinculados não pode ser excluída.
+5. Crie um segundo catálogo, adicione uma categoria e um produto nele, e alterne entre os catálogos pelo seletor.
+6. Edite o identificador de um catálogo e confirme que o painel alerta se ele já estiver em uso.
+7. Entre com uma segunda conta e confirme que ela não consegue visualizar ou alterar nenhum catálogo, categoria ou produto da primeira.
+8. Clique em **Sair** e teste a recuperação de senha.
 
 Para produção, configure SMTP próprio antes de depender de e-mails de recuperação em volume.

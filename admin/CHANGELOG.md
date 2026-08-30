@@ -1,5 +1,22 @@
 # Changelog — Painel administrativo
 
+## [0.1.3] - 2026-08-30
+
+### Adicionado
+
+- Seletor de vários catálogos por conta, com lembrança da última escolha no navegador.
+- Criação e edição de catálogo com nome, identificador único e status ativo.
+- Cadastro, edição e exclusão protegida de categorias por catálogo.
+- Migração SQL que converte as categorias de texto existentes em registros próprios.
+- Produtos vinculados a uma categoria real, com validação no navegador e no banco.
+
+### Segurança
+
+- Nova tabela `categories` com RLS, permissões explícitas e políticas de proprietário do catálogo.
+- Chave estrangeira composta que impede vincular um produto a uma categoria de outro catálogo.
+- Exclusão de categoria bloqueada quando ainda há produtos vinculados.
+- Nenhuma regra pública foi adicionada: visitantes anônimos continuam sem acesso aos dados.
+
 ## [0.1.2] - 2026-08-30
 
 ### Adicionado

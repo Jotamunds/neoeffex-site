@@ -1,31 +1,38 @@
-# Painel administrativo — Etapa 1
+# Painel administrativo — Etapa 2
 
-Base estática do painel de catálogo em `neoeffex.com.br/admin`.
+Painel de catálogo em `neoeffex.com.br/admin`, com autenticação e leitura de dados pelo Supabase.
 
 ## O que existe nesta etapa
 
-- Layout responsivo de painel administrativo.
-- Tema claro e escuro com preferência salva no navegador.
-- Produtos de demonstração em um arquivo local.
-- Busca e filtro por status.
-- Indicadores automáticos de produtos, ativos e categorias.
-- Estrutura isolada do restante do site para evitar impacto nas landing pages existentes.
+- Login por e-mail e senha.
+- Recuperação e troca de senha.
+- Sessão persistente e botão de sair.
+- Catálogo e produtos carregados do banco de dados.
+- Regras de acesso por proprietário do catálogo (RLS).
+- Tema claro e escuro, busca e filtro de produtos.
 
 ## Estrutura
 
 ```text
 admin/
 ├── index.html
+├── reset-password.html
+├── config.js
 ├── assets/
 │   ├── css/admin.css
-│   └── js/admin.js
-└── data/products.js
+│   └── js/
+│       ├── admin.js
+│       └── reset-password.js
+└── setup/
+    ├── 001_initial_schema.sql
+    ├── 002_seed_example.sql
+    └── SETUP.md
 ```
 
-## Limites intencionais
+## Configuração
 
-Esta versão ainda não possui login, banco de dados, cadastro, edição ou exclusão real de produtos. Nenhuma segurança deve depender desta página estática; autenticação e permissões serão implementadas junto com o backend.
+Siga `setup/SETUP.md` antes de publicar. Em `config.js`, use somente a URL do projeto e a chave publicável. Nunca adicione uma `service_role`, chave secreta ou senha de banco ao repositório.
 
 ## Próxima etapa
 
-Conectar os dados a um banco de dados e criar o fluxo de autenticação do administrador, mantendo regras de acesso no servidor/banco.
+Cadastro, edição, pausa e exclusão de produtos conectados ao banco.

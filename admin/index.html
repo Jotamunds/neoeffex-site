@@ -12,8 +12,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
-<body>
+<body class="is-loading">
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+    <section class="auth-screen" id="authScreen" aria-labelledby="authTitle">
+        <div class="auth-panel">
+            <a class="brand" href="../" aria-label="Voltar para o site da Neoeffex">
+                <span class="brand__mark" aria-hidden="true"></span>
+                <span>neoeffex</span>
+            </a>
+            <div class="auth-copy">
+                <span class="eyebrow">CATALOG_SYSTEM / ADMIN</span>
+                <h1 id="authTitle">Acesse seu painel.</h1>
+                <p>Entre com o e-mail e a senha criados para a sua conta.</p>
+            </div>
+
+            <form class="auth-form" id="loginForm" novalidate>
+                <label for="email">E-mail</label>
+                <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required>
+                <label for="password">Senha</label>
+                <div class="password-field">
+                    <input id="password" name="password" type="password" autocomplete="current-password" required>
+                    <button id="passwordToggle" type="button" aria-label="Mostrar senha">Mostrar</button>
+                </div>
+                <button class="primary-button" id="loginButton" type="submit">Entrar no painel</button>
+                <button class="text-button" id="recoveryButton" type="button">Esqueci minha senha</button>
+                <p class="auth-feedback" id="authFeedback" role="status" aria-live="polite"></p>
+            </form>
+
+            <form class="auth-form" id="recoveryForm" novalidate hidden>
+                <p class="form-intro">Informe seu e-mail. Se houver uma conta vinculada, enviaremos um link seguro para redefinir a senha.</p>
+                <label for="recoveryEmail">E-mail</label>
+                <input id="recoveryEmail" name="recoveryEmail" type="email" autocomplete="email" inputmode="email" required>
+                <button class="primary-button" id="recoverySubmit" type="submit">Enviar link de redefinição</button>
+                <button class="text-button" id="backToLogin" type="button">Voltar para o login</button>
+                <p class="auth-feedback" id="recoveryFeedback" role="status" aria-live="polite"></p>
+            </form>
+
+            <div class="auth-setup" id="authSetup" hidden>
+                <strong>Conexão ainda não configurada</strong>
+                <p>Preencha a URL e a chave publicável do projeto em <code>admin/config.js</code> e siga o arquivo <code>admin/setup/SETUP.md</code>.</p>
+            </div>
+        </div>
+    </section>
 
     <div class="app-shell">
         <aside class="sidebar" id="sidebar" aria-label="Navegação do painel">
@@ -49,11 +90,11 @@
 
             <div class="sidebar__bottom">
                 <div class="phase-card">
-                    <span class="phase-card__eyebrow">ETAPA 1</span>
-                    <strong>Base do sistema</strong>
-                    <p>Interface, organização e dados locais prontos para evoluir.</p>
+                    <span class="phase-card__eyebrow">ETAPA 2</span>
+                    <strong>Acesso protegido</strong>
+                    <p>Autenticação e dados conectados com regras de acesso por usuário.</p>
                 </div>
-                <span class="version">ADMIN / 0.1.0</span>
+                <span class="version">ADMIN / 0.1.1</span>
             </div>
         </aside>
 
@@ -72,7 +113,11 @@
                         <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
                         <svg class="theme-icon theme-icon--moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"></path></svg>
                     </button>
-                    <span class="avatar" aria-label="Ambiente de demonstração">N</span>
+                    <span class="account-email" id="accountEmail" title="Conta conectada"></span>
+                    <button class="icon-button" id="signOutButton" type="button" aria-label="Sair do painel" title="Sair">
+                        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10 5H5v14h5"></path><path d="m14 8 4 4-4 4M18 12H9"></path></svg>
+                    </button>
+                    <span class="avatar" aria-hidden="true">N</span>
                 </div>
             </header>
 
@@ -91,14 +136,14 @@
 
                 <section class="stage-notice" aria-label="Status da primeira etapa">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 10v5M12 7h.01"></path></svg>
-                    <p><strong>Base em desenvolvimento.</strong> Nesta etapa, os produtos são dados locais de demonstração. Cadastro, login e banco de dados serão conectados nas próximas etapas.</p>
+                    <p><strong>Acesso protegido.</strong> Cada conta visualiza apenas os catálogos vinculados a ela. O cadastro e a edição de produtos serão ativados na próxima etapa.</p>
                 </section>
 
                 <section class="summary-grid" aria-label="Resumo do catálogo">
                     <article class="summary-card">
                         <span class="summary-card__label">Produtos cadastrados</span>
                         <strong id="totalProducts">0</strong>
-                        <span class="summary-card__detail"><i class="dot dot--blue"></i> Catálogo de demonstração</span>
+                        <span class="summary-card__detail"><i class="dot dot--blue"></i> Catálogo conectado</span>
                     </article>
                     <article class="summary-card">
                         <span class="summary-card__label">Produtos ativos</span>
@@ -154,7 +199,8 @@
     <div class="mobile-overlay" id="mobileOverlay" hidden></div>
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
-    <script src="data/products.js"></script>
-    <script src="assets/js/admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
+    <script src="config.js" defer></script>
+    <script src="assets/js/admin.js" defer></script>
 </body>
 </html>

@@ -51,7 +51,9 @@ A chave publicável pode ficar no navegador porque as regras RLS protegem as tab
 1. Abra `admin/index.html`.
 2. Entre com a conta criada.
 3. Confirme que apenas o catálogo vinculado àquela conta é exibido.
-4. Clique em **Sair** e confirme que o painel volta para o login.
-5. Teste **Esqueci minha senha** e confirme que o link abre `reset-password.html`.
+4. Cadastre, edite, pause, reative e exclua um produto de teste.
+5. Entre com uma segunda conta e confirme que ela não consegue visualizar ou alterar o produto da primeira.
+6. Clique em **Sair** e confirme que o painel volta para o login.
+7. Teste **Esqueci minha senha** e confirme que o link abre `reset-password.html`.
 
 Para produção, configure SMTP próprio antes de depender de e-mails de recuperação em volume.

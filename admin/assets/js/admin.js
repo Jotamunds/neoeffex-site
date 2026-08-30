@@ -25,10 +25,23 @@
     const mobileOverlay = document.getElementById("mobileOverlay");
     const themeButton = document.getElementById("themeButton");
     const accountEmail = document.getElementById("accountEmail");
+    const newProductButton = document.getElementById("newProductButton");
+    const productModal = document.getElementById("productModal");
+    const deleteModal = document.getElementById("deleteModal");
+    const productForm = document.getElementById("productForm");
+    const productFeedback = document.getElementById("productFeedback");
+    const productDescription = document.getElementById("productDescription");
+    const descriptionCounter = document.getElementById("descriptionCounter");
+    const productDangerActions = document.getElementById("productDangerActions");
+    const saveProductButton = document.getElementById("saveProductButton");
+    const toggleStatusButton = document.getElementById("toggleStatusButton");
+    const deleteProductButton = document.getElementById("deleteProductButton");
+    const confirmDeleteButton = document.getElementById("confirmDeleteButton");
     let client = null;
     let products = [];
     let activeCatalog = null;
     let toastTimeout;
+    let lastFocusedElement = null;
 
     function setFeedback(element, message, type) {
         element.textContent = message;
@@ -116,10 +129,10 @@
             + "<span class=\"product-row__category\">" + escapeHtml(product.category) + "</span>"
             + "<strong class=\"product-row__price\">" + formatCurrency(product.price) + "</strong>"
             + "<span class=\"status status--" + product.status + "\"><i></i>" + statusLabel + "</span>"
-            + "<button class=\"row-action\" type=\"button\" aria-label=\"Ver " + escapeHtml(product.name) + "\" title=\"Edição disponível na próxima etapa\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M12 5v14M5 12h14\"></path></svg></button>";
+            + "<button class=\"row-action\" type=\"button\" aria-label=\"Editar " + escapeHtml(product.name) + "\" title=\"Editar produto\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M5 19h4l9-9a2.8 2.8 0 0 0-4-4l-9 9v4Z\"></path><path d=\"m12.5 7.5 4 4\"></path></svg></button>";
 
         article.querySelector(".row-action").addEventListener("click", function () {
-            showToast("A edição de produtos será adicionada na próxima etapa.");
+            openProductModal(product);
         });
 
         return article;
@@ -156,6 +169,7 @@
         document.getElementById("activeProducts").textContent = activeProducts.length;
         document.getElementById("categoryCount").textContent = categories.size;
         document.getElementById("menuProductCount").textContent = products.length;
+        newProductButton.disabled = !activeCatalog;
     }
 
     async function loadCatalog() {
@@ -203,6 +217,218 @@
         products = loadedProducts || [];
         renderProducts();
         updateSummary();
+    }
+
+    function updateDescriptionCounter() {
+        descriptionCounter.textContent = productDescription.value.length + " / 500";
+    }
+
+    function setProductFormLoading(isLoading) {
+        saveProductButton.disabled = isLoading;
+        toggleStatusButton.disabled = isLoading;
+        deleteProductButton.disabled = isLoading;
+        saveProductButton.textContent = isLoading ? "Salvando…" : "Salvar produto";
+    }
+
+    function openProductModal(product) {
+        if (!activeCatalog) {
+            showToast("Crie ou vincule um catálogo antes de cadastrar produtos.");
+            return;
+        }
+
+        lastFocusedElement = document.activeElement;
+        productForm.reset();
+        setFeedback(productFeedback, "", "");
+        productModal.hidden = false;
+        productModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("has-modal");
+
+        const editing = Boolean(product);
+        document.getElementById("productModalTitle").textContent = editing ? "Editar produto" : "Novo produto";
+        document.getElementById("productModalDescription").textContent = editing
+            ? "Altere os dados e salve para atualizar o catálogo."
+            : "Preencha os dados que serão exibidos no catálogo.";
+        document.getElementById("productId").value = editing ? product.id : "";
+        document.getElementById("productName").value = editing ? product.name : "";
+        document.getElementById("productCategory").value = editing ? product.category : "";
+        document.getElementById("productPrice").value = editing ? Number(product.price).toFixed(2) : "";
+        productDescription.value = editing ? product.description || "" : "";
+        document.getElementById("productStatus").value = editing ? product.status : "active";
+        productDangerActions.hidden = !editing;
+        toggleStatusButton.textContent = editing && product.status === "active" ? "Pausar produto" : "Ativar produto";
+        setProductFormLoading(false);
+        updateDescriptionCounter();
+        window.setTimeout(function () {
+            document.getElementById("productName").focus();
+        }, 0);
+    }
+
+    function closeProductModal() {
+        productModal.hidden = true;
+        productModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("has-modal");
+        productForm.reset();
+        setFeedback(productFeedback, "", "");
+        updateDescriptionCounter();
+        if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
+    }
+
+    function openDeleteModal() {
+        if (!document.getElementById("productId").value) return;
+        productModal.setAttribute("aria-hidden", "true");
+        deleteModal.hidden = false;
+        deleteModal.setAttribute("aria-hidden", "false");
+        window.setTimeout(function () {
+            document.getElementById("cancelDeleteButton").focus();
+        }, 0);
+    }
+
+    function closeDeleteModal() {
+        deleteModal.hidden = true;
+        deleteModal.setAttribute("aria-hidden", "true");
+        if (!productModal.hidden) productModal.setAttribute("aria-hidden", "false");
+    }
+
+    function getProductPayload() {
+        const name = document.getElementById("productName").value.trim();
+        const category = document.getElementById("productCategory").value.trim();
+        const description = productDescription.value.trim();
+        const priceInput = document.getElementById("productPrice").value.trim();
+        const price = Number(priceInput);
+        const status = document.getElementById("productStatus").value;
+
+        if (name.length < 2 || category.length < 2) {
+            setFeedback(productFeedback, "Nome e categoria precisam ter ao menos 2 caracteres.", "error");
+            return null;
+        }
+
+        if (!priceInput || !Number.isFinite(price) || price < 0 || price > 99999999.99) {
+            setFeedback(productFeedback, "Informe um preço válido e maior ou igual a zero.", "error");
+            return null;
+        }
+
+        if (description.length > 500 || !["active", "paused"].includes(status)) {
+            setFeedback(productFeedback, "Revise a descrição e o status do produto.", "error");
+            return null;
+        }
+
+        return {
+            name: name,
+            category: category,
+            description: description,
+            price: price.toFixed(2),
+            status: status
+        };
+    }
+
+    function getNextSortOrder() {
+        return products.reduce(function (highest, product) {
+            return Math.max(highest, Number(product.sort_order) || 0);
+        }, -1) + 1;
+    }
+
+    async function saveProduct(event) {
+        event.preventDefault();
+        if (!activeCatalog) {
+            setFeedback(productFeedback, "Não há catálogo vinculado a esta conta.", "error");
+            return;
+        }
+
+        const payload = getProductPayload();
+        if (!payload) return;
+
+        const productId = document.getElementById("productId").value;
+        setProductFormLoading(true);
+        setFeedback(productFeedback, "", "");
+
+        let error;
+        if (productId) {
+            ({ error } = await client
+                .from("products")
+                .update(payload)
+                .eq("id", productId)
+                .select("id")
+                .single());
+        } else {
+            ({ error } = await client
+                .from("products")
+                .insert(Object.assign({}, payload, {
+                    catalog_id: activeCatalog.id,
+                    sort_order: getNextSortOrder()
+                }))
+                .select("id")
+                .single());
+        }
+
+        if (error) {
+            console.error("Erro ao salvar produto", error);
+            setFeedback(productFeedback, "Não foi possível salvar o produto. Tente novamente.", "error");
+            setProductFormLoading(false);
+            return;
+        }
+
+        closeProductModal();
+        await loadCatalog();
+        showToast(productId ? "Produto atualizado com sucesso." : "Produto cadastrado com sucesso.");
+    }
+
+    async function toggleProductStatus() {
+        const productId = document.getElementById("productId").value;
+        const currentProduct = products.find(function (product) {
+            return product.id === productId;
+        });
+        if (!currentProduct) return;
+
+        const nextStatus = currentProduct.status === "active" ? "paused" : "active";
+        setProductFormLoading(true);
+
+        const { error } = await client
+            .from("products")
+            .update({ status: nextStatus })
+            .eq("id", productId)
+            .select("id")
+            .single();
+
+        if (error) {
+            console.error("Erro ao alterar status do produto", error);
+            setFeedback(productFeedback, "Não foi possível alterar o status do produto.", "error");
+            setProductFormLoading(false);
+            return;
+        }
+
+        closeProductModal();
+        await loadCatalog();
+        showToast(nextStatus === "paused" ? "Produto pausado." : "Produto ativado.");
+    }
+
+    async function deleteProduct() {
+        const productId = document.getElementById("productId").value;
+        if (!productId) return;
+
+        confirmDeleteButton.disabled = true;
+        confirmDeleteButton.textContent = "Excluindo…";
+
+        const { data, error } = await client
+            .from("products")
+            .delete()
+            .eq("id", productId)
+            .select("id")
+            .maybeSingle();
+
+        confirmDeleteButton.disabled = false;
+        confirmDeleteButton.textContent = "Excluir produto";
+
+        if (error || !data) {
+            console.error("Erro ao excluir produto", error);
+            closeDeleteModal();
+            setFeedback(productFeedback, "Não foi possível excluir o produto. Atualize a página e tente novamente.", "error");
+            return;
+        }
+
+        closeDeleteModal();
+        closeProductModal();
+        await loadCatalog();
+        showToast("Produto excluído com sucesso.");
     }
 
     function showToast(message) {
@@ -350,7 +576,21 @@
     searchField.addEventListener("input", renderProducts);
     statusFilter.addEventListener("change", renderProducts);
     document.getElementById("newProductButton").addEventListener("click", function () {
-        showToast("O cadastro de produtos será ativado na próxima etapa.");
+        openProductModal();
+    });
+    productForm.addEventListener("submit", saveProduct);
+    productDescription.addEventListener("input", updateDescriptionCounter);
+    document.getElementById("closeProductModal").addEventListener("click", closeProductModal);
+    toggleStatusButton.addEventListener("click", toggleProductStatus);
+    deleteProductButton.addEventListener("click", openDeleteModal);
+    document.getElementById("closeDeleteModal").addEventListener("click", closeDeleteModal);
+    document.getElementById("cancelDeleteButton").addEventListener("click", closeDeleteModal);
+    confirmDeleteButton.addEventListener("click", deleteProduct);
+    productModal.addEventListener("click", function (event) {
+        if (event.target === productModal) closeProductModal();
+    });
+    deleteModal.addEventListener("click", function (event) {
+        if (event.target === deleteModal) closeDeleteModal();
     });
     loginForm.addEventListener("submit", handleLogin);
     recoveryForm.addEventListener("submit", handleRecovery);
@@ -373,7 +613,19 @@
         toggleMenu(false);
     });
     window.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") toggleMenu(false);
+        if (event.key !== "Escape") return;
+
+        if (!deleteModal.hidden) {
+            closeDeleteModal();
+            return;
+        }
+
+        if (!productModal.hidden) {
+            closeProductModal();
+            return;
+        }
+
+        toggleMenu(false);
     });
 
     try {

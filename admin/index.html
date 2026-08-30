@@ -90,11 +90,11 @@
 
             <div class="sidebar__bottom">
                 <div class="phase-card">
-                    <span class="phase-card__eyebrow">ETAPA 2</span>
-                    <strong>Acesso protegido</strong>
-                    <p>Autenticação e dados conectados com regras de acesso por usuário.</p>
+                    <span class="phase-card__eyebrow">ETAPA 3</span>
+                    <strong>Gestão de produtos</strong>
+                    <p>Cadastro, edição, pausa e exclusão com dados protegidos por usuário.</p>
                 </div>
-                <span class="version">ADMIN / 0.1.1</span>
+                <span class="version">ADMIN / 0.1.2</span>
             </div>
         </aside>
 
@@ -134,9 +134,9 @@
                     </button>
                 </section>
 
-                <section class="stage-notice" aria-label="Status da primeira etapa">
+                <section class="stage-notice" aria-label="Status da terceira etapa">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 10v5M12 7h.01"></path></svg>
-                    <p><strong>Acesso protegido.</strong> Cada conta visualiza apenas os catálogos vinculados a ela. O cadastro e a edição de produtos serão ativados na próxima etapa.</p>
+                    <p><strong>Gestão ativa.</strong> Cadastre, edite, pause ou exclua produtos. As alterações ficam limitadas ao catálogo vinculado à sua conta.</p>
                 </section>
 
                 <section class="summary-grid" aria-label="Resumo do catálogo">
@@ -193,6 +193,76 @@
                     <p class="empty-state" id="emptyState" hidden>Nenhum produto corresponde aos filtros selecionados.</p>
                 </section>
             </main>
+        </div>
+    </div>
+
+    <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle" aria-hidden="true" hidden>
+        <div class="modal__card">
+            <div class="modal__head">
+                <div>
+                    <span class="eyebrow">CATÁLOGO</span>
+                    <h2 id="productModalTitle">Novo produto</h2>
+                    <p id="productModalDescription">Preencha os dados que serão exibidos no catálogo.</p>
+                </div>
+                <button class="icon-button" id="closeProductModal" type="button" aria-label="Fechar formulário">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+                </button>
+            </div>
+
+            <form class="product-form" id="productForm" novalidate>
+                <input id="productId" name="productId" type="hidden">
+                <div class="form-field form-field--full">
+                    <label for="productName">Nome do produto</label>
+                    <input id="productName" name="productName" type="text" maxlength="140" autocomplete="off" required>
+                </div>
+                <div class="form-field">
+                    <label for="productCategory">Categoria</label>
+                    <input id="productCategory" name="productCategory" type="text" maxlength="80" autocomplete="off" required>
+                </div>
+                <div class="form-field">
+                    <label for="productPrice">Preço</label>
+                    <div class="price-field"><span aria-hidden="true">R$</span><input id="productPrice" name="productPrice" type="number" min="0" max="99999999.99" step="0.01" inputmode="decimal" required></div>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="productDescription">Descrição</label>
+                    <textarea id="productDescription" name="productDescription" maxlength="500" rows="4"></textarea>
+                    <span class="field-hint" id="descriptionCounter">0 / 500</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="productStatus">Status</label>
+                    <select id="productStatus" name="productStatus">
+                        <option value="active">Ativo — visível no catálogo</option>
+                        <option value="paused">Pausado — oculto do catálogo</option>
+                    </select>
+                </div>
+                <p class="form-feedback" id="productFeedback" role="status" aria-live="polite"></p>
+                <div class="modal__actions">
+                    <div class="modal__danger-actions" id="productDangerActions" hidden>
+                        <button class="secondary-button" id="toggleStatusButton" type="button">Pausar produto</button>
+                        <button class="danger-button" id="deleteProductButton" type="button">Excluir</button>
+                    </div>
+                    <button class="primary-button" id="saveProductButton" type="submit">Salvar produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal modal--confirm" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" aria-describedby="deleteModalDescription" aria-hidden="true" hidden>
+        <div class="modal__card modal__card--small">
+            <div class="modal__head">
+                <div>
+                    <span class="eyebrow">AÇÃO IRREVERSÍVEL</span>
+                    <h2 id="deleteModalTitle">Excluir produto?</h2>
+                </div>
+                <button class="icon-button" id="closeDeleteModal" type="button" aria-label="Cancelar exclusão">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+                </button>
+            </div>
+            <p id="deleteModalDescription">Esta ação removerá o produto do banco de dados e não poderá ser desfeita.</p>
+            <div class="modal__actions modal__actions--confirm">
+                <button class="secondary-button" id="cancelDeleteButton" type="button">Cancelar</button>
+                <button class="danger-button" id="confirmDeleteButton" type="button">Excluir produto</button>
+            </div>
         </div>
     </div>
 

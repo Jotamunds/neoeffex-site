@@ -1,5 +1,22 @@
 # Changelog — Painel administrativo
 
+## [0.1.2] - 2026-08-30
+
+### Adicionado
+
+- Cadastro de produtos vinculado ao catálogo da conta autenticada.
+- Edição de nome, descrição, categoria, preço e status.
+- Pausa e reativação rápidas pelo formulário de edição.
+- Exclusão com confirmação explícita.
+- Validação de dados no navegador antes de cada gravação.
+- Atualização automática dos indicadores e da lista após alterações.
+
+### Segurança
+
+- Todas as operações usam o cliente autenticado e as regras RLS já criadas na Etapa 2.
+- A interface não cria ou altera dados quando não há catálogo vinculado à conta.
+- A exclusão não é acionada por clique único.
+
 ## [0.1.1] - 2026-08-30
 
 ### Adicionado

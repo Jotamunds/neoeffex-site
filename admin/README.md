@@ -1,6 +1,6 @@
-# Painel administrativo — Etapa 4
+# Painel administrativo — Etapa 5
 
-Painel de catálogo em `neoeffex.com.br/admin`, com autenticação, vários catálogos e categorias pelo Supabase.
+Painel em `neoeffex.com.br/admin` e catálogo público em `neoeffex.com.br/catalogo/?catalogo=identificador`, usando Supabase.
 
 ## O que existe nesta etapa
 
@@ -11,8 +11,11 @@ Painel de catálogo em `neoeffex.com.br/admin`, com autenticação, vários cat�
 - Produtos vinculados a uma categoria real, sem campo de texto livre.
 - Cadastro, edição, pausa/ativação e exclusão confirmada de produtos.
 - RLS por proprietário do catálogo, com permissão explícita apenas para usuários autenticados.
+- Botão para abrir o catálogo público selecionado em uma nova aba.
+- Página pública com busca, filtros por categoria e somente produtos ativos.
+- Permissão anônima somente de leitura, limitada às colunas públicas.
 
-O identificador do catálogo e o status ativo ficam prontos para a futura página pública. Esta entrega mantém apenas `/admin`, sem abrir nenhum dado para visitantes anônimos.
+Catálogos pausados e produtos pausados não aparecem para visitantes. O painel administrativo continua protegido por autenticação e pelas políticas de proprietário.
 
 ## Estrutura
 
@@ -30,8 +33,11 @@ admin/
     ├── 001_initial_schema.sql
     ├── 002_seed_example.sql
     ├── 003_categories_and_multi_catalogs.sql
+    ├── 004_public_catalog_access.sql
     └── SETUP.md
 ```
+
+A pasta pública `/catalogo/` é entregue separadamente para ser publicada na raiz do repositório.
 
 ## Configuração
 
@@ -39,4 +45,4 @@ Siga `setup/SETUP.md` antes de publicar. Em `config.js`, use somente a URL do pr
 
 ## Próxima etapa
 
-Página pública do catálogo usando o identificador de cada catálogo, sem expor a área administrativa.
+Pedidos e integração com WhatsApp usando os produtos publicados.

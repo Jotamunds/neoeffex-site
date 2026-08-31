@@ -29,6 +29,7 @@
     const newProductButton = document.getElementById("newProductButton");
     const newCatalogButton = document.getElementById("newCatalogButton");
     const editCatalogButton = document.getElementById("editCatalogButton");
+    const viewCatalogLink = document.getElementById("viewCatalogLink");
     const catalogSelect = document.getElementById("catalogSelect");
     const activeCatalogName = document.getElementById("activeCatalogName");
     const manageCategoriesButton = document.getElementById("manageCategoriesButton");
@@ -233,6 +234,11 @@
             catalogSelect.disabled = true;
             editCatalogButton.disabled = true;
             activeCatalogName.textContent = "Nenhum catálogo selecionado";
+            viewCatalogLink.removeAttribute("href");
+            viewCatalogLink.classList.add("is-disabled");
+            viewCatalogLink.setAttribute("aria-disabled", "true");
+            viewCatalogLink.setAttribute("tabindex", "-1");
+            viewCatalogLink.title = "Crie e ative um catálogo para visualizar a página pública";
             return;
         }
 
@@ -247,6 +253,19 @@
         activeCatalogName.textContent = activeCatalog
             ? activeCatalog.name + (activeCatalog.is_active ? "" : " (pausado)")
             : "Nenhum catálogo selecionado";
+
+        const publicCatalogAvailable = Boolean(activeCatalog && activeCatalog.is_active);
+        viewCatalogLink.classList.toggle("is-disabled", !publicCatalogAvailable);
+        viewCatalogLink.setAttribute("aria-disabled", String(!publicCatalogAvailable));
+        viewCatalogLink.setAttribute("tabindex", publicCatalogAvailable ? "0" : "-1");
+        viewCatalogLink.title = publicCatalogAvailable
+            ? "Abrir catálogo público em uma nova aba"
+            : "Ative este catálogo para disponibilizar a página pública";
+        if (publicCatalogAvailable) {
+            viewCatalogLink.href = "../catalogo/?catalogo=" + encodeURIComponent(activeCatalog.slug);
+        } else {
+            viewCatalogLink.removeAttribute("href");
+        }
     }
 
     async function loadCatalogs(preferredCatalogId) {

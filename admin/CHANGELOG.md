@@ -1,5 +1,23 @@
 # Changelog — Painel administrativo
 
+## [0.1.4] - 2026-08-31
+
+### Adicionado
+
+- Página pública em `/catalogo/?catalogo=identificador`, com busca e filtros por categoria.
+- Botão **Ver catálogo** no painel para abrir o catálogo ativo em uma nova aba.
+- Estado seguro para catálogo inexistente, pausado, vazio ou temporariamente indisponível.
+- Compartilhamento do endereço público usando os recursos disponíveis no navegador.
+- Migração `004_public_catalog_access.sql` para liberar somente a leitura pública necessária.
+- Índices de ordenação para categorias e produtos públicos ativos.
+
+### Segurança
+
+- Visitantes visualizam somente catálogos ativos e produtos ativos.
+- O papel `anon` recebe acesso apenas às colunas usadas pela página pública e nenhuma permissão de escrita.
+- `owner_id` e dados administrativos não são disponibilizados ao visitante.
+- A página pública usa um cliente sem persistência de sessão.
+
 ## [0.1.3.1] - 2026-08-31
 
 ### Corrigido

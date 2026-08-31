@@ -1204,6 +1204,19 @@ body.has-modal {
     color: var(--blue-800);
 }
 
+.secondary-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.secondary-link.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.52;
+    pointer-events: none;
+}
+
 .danger-button {
     border-color: #e7b3b5;
     background: #fff7f7;

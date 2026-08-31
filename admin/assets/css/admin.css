@@ -76,6 +76,17 @@ select {
     cursor: pointer;
 }
 
+select option,
+select optgroup {
+    background-color: var(--surface);
+    color: var(--text);
+}
+
+select option:checked {
+    background-color: var(--blue-100);
+    color: var(--blue-800);
+}
+
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,

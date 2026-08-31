@@ -1,5 +1,12 @@
 # Changelog — Painel administrativo
 
+## [0.1.4.1] - 2026-08-31
+
+### Corrigido
+
+- Corrigido o contraste das opções dos campos de seleção no tema escuro.
+- As opções agora recebem cores explícitas de fundo e texto, inclusive antes de passar o mouse.
+
 ## [0.1.4] - 2026-08-31
 
 ### Adicionado

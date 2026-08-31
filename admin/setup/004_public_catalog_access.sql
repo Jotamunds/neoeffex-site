@@ -42,14 +42,14 @@ drop policy if exists "catalogs_public_select_active" on public.catalogs;
 create policy "catalogs_public_select_active"
 on public.catalogs
 for select
-to anon, authenticated
+to anon
 using (is_active = true);
 
 drop policy if exists "categories_public_select_active_catalog" on public.categories;
 create policy "categories_public_select_active_catalog"
 on public.categories
 for select
-to anon, authenticated
+to anon
 using (
     exists (
         select 1
@@ -63,7 +63,7 @@ drop policy if exists "products_public_select_active" on public.products;
 create policy "products_public_select_active"
 on public.products
 for select
-to anon, authenticated
+to anon
 using (
     status = 'active'
     and exists (

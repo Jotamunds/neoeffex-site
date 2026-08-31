@@ -33,6 +33,7 @@
     const catalogSelect = document.getElementById("catalogSelect");
     const activeCatalogName = document.getElementById("activeCatalogName");
     const manageCategoriesButton = document.getElementById("manageCategoriesButton");
+    const configureOrdersButton = document.getElementById("configureOrdersButton");
     const productModal = document.getElementById("productModal");
     const catalogModal = document.getElementById("catalogModal");
     const categoryModal = document.getElementById("categoryModal");
@@ -149,6 +150,23 @@
             .slice(0, 80);
     }
 
+    function normalizeWhatsapp(value) {
+        let digits = String(value || "").replace(/\D/g, "").replace(/^0+/, "");
+        if (digits.length === 10 || digits.length === 11) digits = "55" + digits;
+        return digits;
+    }
+
+    function formatWhatsapp(value) {
+        const digits = normalizeWhatsapp(value);
+        if (!digits) return "Não configurado";
+        if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) {
+            const local = digits.slice(4);
+            const split = local.length === 9 ? 5 : 4;
+            return "+55 (" + digits.slice(2, 4) + ") " + local.slice(0, split) + "-" + local.slice(split);
+        }
+        return "+" + digits;
+    }
+
     function getCategoryName(categoryId) {
         const category = categories.find(function (item) {
             return item.id === categoryId;
@@ -239,6 +257,7 @@
             viewCatalogLink.setAttribute("aria-disabled", "true");
             viewCatalogLink.setAttribute("tabindex", "-1");
             viewCatalogLink.title = "Crie e ative um catálogo para visualizar a página pública";
+            renderOrdersSummary();
             return;
         }
 
@@ -266,6 +285,29 @@
         } else {
             viewCatalogLink.removeAttribute("href");
         }
+        renderOrdersSummary();
+    }
+
+    function renderOrdersSummary() {
+        const status = document.getElementById("ordersStatus");
+        const whatsapp = document.getElementById("ordersWhatsapp");
+        const message = document.getElementById("ordersMessage");
+        configureOrdersButton.disabled = !activeCatalog;
+
+        if (!activeCatalog) {
+            status.textContent = "Nenhum catálogo selecionado";
+            status.dataset.state = "";
+            whatsapp.textContent = "Não configurado";
+            message.textContent = "Selecione ou crie um catálogo para configurar.";
+            return;
+        }
+
+        const enabled = Boolean(activeCatalog.orders_enabled && activeCatalog.whatsapp_number);
+        status.textContent = enabled ? "Pedidos ativados" : "Pedidos desativados";
+        status.dataset.state = enabled ? "active" : "inactive";
+        whatsapp.textContent = formatWhatsapp(activeCatalog.whatsapp_number);
+        message.textContent = activeCatalog.order_message
+            || "Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.";
     }
 
     async function loadCatalogs(preferredCatalogId) {
@@ -278,7 +320,7 @@
 
         const { data, error } = await client
             .from("catalogs")
-            .select("id, name, slug, is_active, created_at")
+            .select("id, name, slug, is_active, whatsapp_number, orders_enabled, order_message, created_at")
             .order("created_at", { ascending: true });
 
         if (sequence !== loadSequence) return;
@@ -448,6 +490,11 @@
         document.getElementById("catalogSlug").value = editing ? catalog.slug : "";
         document.getElementById("catalogSlug").dataset.touched = editing ? "true" : "";
         document.getElementById("catalogActive").checked = editing ? catalog.is_active : true;
+        document.getElementById("catalogWhatsapp").value = editing ? (catalog.whatsapp_number || "") : "";
+        document.getElementById("catalogOrderMessage").value = editing
+            ? (catalog.order_message || "Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.")
+            : "Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.";
+        document.getElementById("catalogOrdersEnabled").checked = editing ? Boolean(catalog.orders_enabled) : false;
         setCatalogFormLoading(false);
         window.setTimeout(function () {
             document.getElementById("catalogName").focus();
@@ -675,12 +722,34 @@
         const name = document.getElementById("catalogName").value.trim();
         const slug = slugify(document.getElementById("catalogSlug").value);
         const isActive = document.getElementById("catalogActive").checked;
+        const whatsapp = normalizeWhatsapp(document.getElementById("catalogWhatsapp").value);
+        const ordersEnabled = document.getElementById("catalogOrdersEnabled").checked;
+        const orderMessage = document.getElementById("catalogOrderMessage").value.trim();
 
         if (name.length < 2 || name.length > 100 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
             setFeedback(catalogFeedback, "Informe um nome e um identificador válido com letras minúsculas, números e hífens.", "error");
             return null;
         }
-        return { name: name, slug: slug, is_active: isActive };
+        if (whatsapp && !/^[1-9][0-9]{9,14}$/.test(whatsapp)) {
+            setFeedback(catalogFeedback, "Informe um WhatsApp válido com DDI, DDD e número.", "error");
+            return null;
+        }
+        if (ordersEnabled && !whatsapp) {
+            setFeedback(catalogFeedback, "Informe o número do WhatsApp antes de ativar os pedidos.", "error");
+            return null;
+        }
+        if (orderMessage.length < 10 || orderMessage.length > 300) {
+            setFeedback(catalogFeedback, "A instrução ao cliente precisa ter entre 10 e 300 caracteres.", "error");
+            return null;
+        }
+        return {
+            name: name,
+            slug: slug,
+            is_active: isActive,
+            whatsapp_number: whatsapp || null,
+            orders_enabled: ordersEnabled,
+            order_message: orderMessage
+        };
     }
 
     async function saveCatalog(event) {
@@ -930,6 +999,7 @@
     newProductButton.addEventListener("click", function () { openProductModal(); });
     newCatalogButton.addEventListener("click", function () { openCatalogModal(); });
     editCatalogButton.addEventListener("click", function () { if (activeCatalog) openCatalogModal(activeCatalog); });
+    configureOrdersButton.addEventListener("click", function () { if (activeCatalog) openCatalogModal(activeCatalog); });
     catalogSelect.addEventListener("change", function () {
         activeCatalog = catalogs.find(function (catalog) { return catalog.id === catalogSelect.value; }) || null;
         if (!activeCatalog) return;
@@ -943,6 +1013,7 @@
         toggleMenu(false);
         openCategoryModal();
     });
+    document.getElementById("ordersMenuLink").addEventListener("click", function () { toggleMenu(false); });
     productForm.addEventListener("submit", saveProduct);
     catalogForm.addEventListener("submit", saveCatalog);
     categoryForm.addEventListener("submit", saveCategory);

@@ -796,6 +796,62 @@ h2 {
     box-shadow: var(--shadow);
 }
 
+.orders-section {
+    margin-top: 24px;
+    padding: 25px;
+    scroll-margin-top: 92px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+}
+
+.orders-summary {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.7fr) minmax(180px, 0.9fr) minmax(260px, 1.4fr);
+    gap: 16px;
+    margin-top: 22px;
+}
+
+.orders-summary > div {
+    min-width: 0;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface-muted);
+}
+
+.orders-summary__label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-subtle);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.orders-summary strong,
+.orders-summary p {
+    overflow-wrap: anywhere;
+}
+
+.orders-summary strong {
+    color: var(--text);
+    font-size: 12px;
+}
+
+.orders-summary strong[data-state="active"] {
+    color: var(--green);
+}
+
+.orders-summary p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 11px;
+    line-height: 1.55;
+}
+
 .catalog-actions {
     display: flex;
     gap: 10px;
@@ -1269,6 +1325,19 @@ body.has-modal {
     font-weight: 600;
 }
 
+.form-divider {
+    margin-top: 3px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+}
+
+.form-section-title {
+    color: var(--blue-600);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+}
+
 .checkbox-field {
     display: flex;
     align-items: flex-start;
@@ -1493,6 +1562,15 @@ body.has-modal {
 
     .catalog-section {
         padding: 19px 14px 14px;
+    }
+
+    .orders-section {
+        padding: 19px 14px;
+    }
+
+    .orders-summary {
+        grid-template-columns: 1fr;
+        gap: 9px;
     }
 
     .catalog-actions {

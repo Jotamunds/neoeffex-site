@@ -1,5 +1,22 @@
 # Changelog — Painel administrativo
 
+## [0.1.5] - 2026-08-31
+
+### Adicionado
+
+- Configuração de WhatsApp, ativação de pedidos e instrução própria para cada catálogo.
+- Resumo da configuração de pedidos no painel administrativo.
+- Carrinho público com quantidades, remoção, total e persistência local por catálogo.
+- Mensagem estruturada com itens, subtotais e total para envio por `wa.me`.
+- Migração `005_whatsapp_orders.sql` com validações e privilégios públicos mínimos.
+
+### Segurança
+
+- Nenhum pedido ou dado do visitante é gravado no banco nesta etapa.
+- O papel `anon` continua sem escrita e recebe leitura somente dos novos campos públicos necessários.
+- Número, ativação e instrução são validados no navegador e por restrições do banco.
+- Políticas públicas agora se aplicam somente a `anon`, preservando o isolamento entre contas autenticadas.
+
 ## [0.1.4.1] - 2026-08-31
 
 ### Corrigido

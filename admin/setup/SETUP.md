@@ -1,14 +1,15 @@
-# Configuração da Etapa 5
+# Configuração da Etapa 6
 
 ## Para uma instalação já feita nas etapas anteriores
 
-1. Confirme que a Etapa 4 e o arquivo `003_categories_and_multi_catalogs.sql` já foram aplicados.
-2. No SQL Editor do projeto Supabase, execute `004_public_catalog_access.sql` inteiro.
+1. Confirme que a Etapa 5 e o arquivo `004_public_catalog_access.sql` já foram aplicados.
+2. No SQL Editor do projeto Supabase, execute `005_whatsapp_orders.sql` inteiro.
 3. Publique a pasta `/admin/` em `neoeffex.com.br/admin/`.
 4. Publique a pasta `/catalogo/` em `neoeffex.com.br/catalogo/`.
-5. Entre no painel, selecione um catálogo ativo e clique em **Ver catálogo**.
+5. Entre no painel, edite um catálogo, configure o WhatsApp e ative **Receber pedidos**.
+6. Clique em **Ver catálogo**, monte um carrinho e teste a mensagem gerada.
 
-O arquivo `004` executa em transação e pode ser reaplicado: as políticas públicas são recriadas com as mesmas restrições.
+O arquivo `005` executa em transação e pode ser reaplicado. Ele não cria permissão de escrita pública, libera para visitantes somente os três campos usados pelo fluxo de pedidos e restringe as políticas públicas ao papel `anon`.
 
 ## Para uma instalação nova
 
@@ -19,6 +20,7 @@ O arquivo `004` executa em transação e pode ser reaplicado: as políticas púb
    2. `002_seed_example.sql` depois de criar a primeira conta, se quiser iniciar com um catálogo de exemplo
    3. `003_categories_and_multi_catalogs.sql`
    4. `004_public_catalog_access.sql`
+   5. `005_whatsapp_orders.sql`
 
 As permissões são explícitas porque tabelas novas podem não ser expostas automaticamente pela Data API. Visitantes recebem somente leitura das colunas públicas, limitada por RLS a catálogos e produtos ativos.
 
@@ -63,6 +65,10 @@ Use os mesmos valores públicos em `catalogo/config.js`. Não adicione nenhum se
 9. Pause um produto e confirme que ele desaparece da página pública após atualizar.
 10. Pause o catálogo e confirme que o endereço público informa que ele está indisponível.
 11. Reative o catálogo, teste a busca e os filtros por categoria.
-12. Clique em **Sair** e teste a recuperação de senha.
+12. Edite o catálogo, informe um número com DDI e DDD, personalize a instrução e ative **Receber pedidos**.
+13. No catálogo público, adicione dois produtos, altere quantidades e confira o total.
+14. Clique em **Enviar pedido pelo WhatsApp** e confirme número, itens, quantidades, subtotais, total e instrução.
+15. Desative os pedidos e confirme que os botões de adicionar e o carrinho desaparecem da página pública.
+16. Clique em **Sair** e teste a recuperação de senha.
 
 Para produção, configure SMTP próprio antes de depender de e-mails de recuperação em volume.

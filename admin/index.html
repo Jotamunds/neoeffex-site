@@ -81,20 +81,19 @@
                     Categorias
                     <span class="menu__counter" id="menuCategoryCount">0</span>
                 </a>
-                <span class="menu__item menu__item--future" aria-disabled="true" title="Disponível na próxima etapa">
+                <a class="menu__item" href="#pedidos" id="ordersMenuLink">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 8h10l2 12H5L7 8Z"></path><path d="M9 8a3 3 0 0 1 6 0"></path></svg>
                     Pedidos
-                    <small>em breve</small>
-                </span>
+                </a>
             </nav>
 
             <div class="sidebar__bottom">
                 <div class="phase-card">
-                    <span class="phase-card__eyebrow">ETAPA 5</span>
-                    <strong>Catálogo público</strong>
-                    <p>Publique produtos ativos em um endereço próprio e seguro para visitantes.</p>
+                    <span class="phase-card__eyebrow">ETAPA 6</span>
+                    <strong>Pedidos pelo WhatsApp</strong>
+                    <p>Receba o carrinho do cliente em uma mensagem pronta para atendimento.</p>
                 </div>
-                <span class="version">ADMIN / 0.1.4.1</span>
+                <span class="version">ADMIN / 0.1.5</span>
             </div>
         </aside>
 
@@ -138,9 +137,9 @@
                     </div>
                 </section>
 
-                <section class="stage-notice" aria-label="Status da quinta etapa">
+                <section class="stage-notice" aria-label="Status da sexta etapa">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 10v5M12 7h.01"></path></svg>
-                    <p><strong>Publicação disponível.</strong> Catálogos ativos podem ser abertos pelo botão “Ver catálogo”; produtos pausados permanecem ocultos dos visitantes.</p>
+                    <p><strong>Pedidos disponíveis.</strong> Ative o WhatsApp no catálogo para permitir que o visitante monte o carrinho e envie uma mensagem pronta.</p>
                 </section>
 
                 <section class="catalog-switcher" aria-label="Catálogo selecionado">
@@ -212,6 +211,31 @@
                         <div id="productsList" class="product-list" aria-live="polite"></div>
                     </div>
                     <p class="empty-state" id="emptyState" hidden>Nenhum produto corresponde aos filtros selecionados.</p>
+                </section>
+
+                <section class="orders-section" id="pedidos" aria-labelledby="ordersTitle">
+                    <div class="section-heading">
+                        <div>
+                            <span class="eyebrow">ATENDIMENTO</span>
+                            <h2 id="ordersTitle">Pedidos pelo WhatsApp</h2>
+                            <p>O carrinho é enviado diretamente ao número configurado para este catálogo.</p>
+                        </div>
+                        <button class="secondary-button" id="configureOrdersButton" type="button" disabled>Configurar pedidos</button>
+                    </div>
+                    <div class="orders-summary">
+                        <div>
+                            <span class="orders-summary__label">Status</span>
+                            <strong id="ordersStatus">Nenhum catálogo selecionado</strong>
+                        </div>
+                        <div>
+                            <span class="orders-summary__label">WhatsApp</span>
+                            <strong id="ordersWhatsapp">Não configurado</strong>
+                        </div>
+                        <div>
+                            <span class="orders-summary__label">Instrução ao cliente</span>
+                            <p id="ordersMessage">Selecione ou crie um catálogo para configurar.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section class="category-anchor" id="categorias" aria-hidden="true"></section>
@@ -298,6 +322,25 @@
                     <label class="checkbox-field" for="catalogActive">
                         <input id="catalogActive" name="catalogActive" type="checkbox" checked>
                         <span><strong>Catálogo ativo</strong><small>Deixe marcado para prepará-lo para publicação quando a página pública estiver disponível.</small></span>
+                    </label>
+                </div>
+                <div class="form-field form-field--full form-divider">
+                    <span class="form-section-title">PEDIDOS PELO WHATSAPP</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="catalogWhatsapp">Número do WhatsApp</label>
+                    <input id="catalogWhatsapp" name="catalogWhatsapp" type="tel" maxlength="20" autocomplete="tel" inputmode="tel" placeholder="5511978766842">
+                    <span class="field-help">Informe DDI + DDD + número. Pontuação e espaços serão removidos automaticamente.</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="catalogOrderMessage">Instrução ao cliente</label>
+                    <textarea id="catalogOrderMessage" name="catalogOrderMessage" maxlength="300" rows="3">Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.</textarea>
+                    <span class="field-help">Este texto será incluído no final da mensagem do pedido.</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label class="checkbox-field" for="catalogOrdersEnabled">
+                        <input id="catalogOrdersEnabled" name="catalogOrdersEnabled" type="checkbox">
+                        <span><strong>Receber pedidos</strong><small>Exibe os botões de adicionar, o carrinho e o envio pelo WhatsApp no catálogo público.</small></span>
                     </label>
                 </div>
                 <p class="form-feedback" id="catalogFeedback" role="status" aria-live="polite"></p>

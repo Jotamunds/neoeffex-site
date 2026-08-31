@@ -91,6 +91,39 @@
         </div>
     </footer>
 
+    <button class="cart-button" id="cartButton" type="button" aria-controls="cartDrawer" aria-expanded="false" hidden>
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5h2l1.7 9.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.7L20.5 8H7"></path><circle cx="10" cy="19" r="1.4"></circle><circle cx="18" cy="19" r="1.4"></circle></svg>
+        <span>Ver pedido</span>
+        <strong id="cartCount">0</strong>
+    </button>
+
+    <div class="cart-overlay" id="cartOverlay" hidden></div>
+    <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true" tabindex="-1">
+        <div class="cart-drawer__head">
+            <div>
+                <span class="eyebrow">SEU PEDIDO</span>
+                <h2 id="cartTitle">Carrinho</h2>
+            </div>
+            <button class="cart-close" id="closeCartButton" type="button" aria-label="Fechar carrinho">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems" aria-live="polite"></div>
+        <div class="cart-empty" id="cartEmpty">
+            <strong>Seu carrinho está vazio</strong>
+            <p>Adicione os produtos que deseja pedir.</p>
+        </div>
+        <div class="cart-drawer__footer" id="cartFooter" hidden>
+            <div class="cart-total"><span>Total estimado</span><strong id="cartTotal">R$ 0,00</strong></div>
+            <p class="cart-instruction" id="cartInstruction"></p>
+            <a class="whatsapp-button" id="whatsappButton" href="#" target="_blank" rel="noopener">
+                Enviar pedido pelo WhatsApp
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.4 2.7 1.8 4.1 4.5 5"></path></svg>
+            </a>
+            <button class="clear-cart-button" id="clearCartButton" type="button">Limpar carrinho</button>
+        </div>
+    </aside>
+
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>

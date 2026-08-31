@@ -474,6 +474,7 @@
         categoryForm.reset();
         document.getElementById("categoryId").value = "";
         saveCategoryButton.textContent = "Adicionar";
+        setCategoryFormLoading(false);
         setFeedback(categoryFeedback, "", "");
     }
 

@@ -1,5 +1,11 @@
 # Changelog — Painel administrativo
 
+## [0.1.3.1] - 2026-08-31
+
+### Corrigido
+
+- Corrigido o botão de salvar categoria que ficava desabilitado após criar a primeira categoria com sucesso.
+
 ## [0.1.3] - 2026-08-30
 
 ### Adicionado

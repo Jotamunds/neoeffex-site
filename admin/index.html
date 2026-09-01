@@ -1,7 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://jnixmatzvyxvgnexhilg.supabase.co; connect-src 'self' https://jnixmatzvyxvgnexhilg.supabase.co wss://jnixmatzvyxvgnexhilg.supabase.co; frame-src 'none'; form-action 'self'; manifest-src 'self'; worker-src 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Base do painel administrativo de catálogos da Neoeffex.">
     <meta name="robots" content="noindex, nofollow">
@@ -89,11 +91,11 @@
 
             <div class="sidebar__bottom">
                 <div class="phase-card">
-                    <span class="phase-card__eyebrow">ETAPA 7</span>
-                    <strong>Imagens dos produtos</strong>
-                    <p>Adicione fotos opcionais com armazenamento seguro e fallback automático.</p>
+                    <span class="phase-card__eyebrow">ETAPA 9</span>
+                    <strong>Pronto para validação</strong>
+                    <p>Permissões mínimas, sessão validada e auditoria para a publicação.</p>
                 </div>
-                <span class="version">ADMIN / 0.1.6</span>
+                <span class="version">ADMIN / 0.1.7</span>
             </div>
         </aside>
 
@@ -102,11 +104,11 @@
                 <button class="icon-button menu-button" id="menuButton" type="button" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
                 </button>
-                <div class="breadcrumb" aria-label="Localização atual">
+                <nav class="breadcrumb" aria-label="Localização atual">
                     <a href="../">Neoeffex</a>
                     <span aria-hidden="true">/</span>
                     <strong>Admin</strong>
-                </div>
+                </nav>
                 <div class="topbar__actions">
                     <button class="icon-button" id="themeButton" type="button" aria-label="Ativar tema escuro" title="Alternar tema">
                         <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
@@ -128,7 +130,7 @@
                         <p>Organize produtos, categorias e catálogos em um único lugar.</p>
                     </div>
                     <div class="page-heading__actions">
-                        <a class="secondary-button secondary-link is-disabled" id="viewCatalogLink" aria-disabled="true" tabindex="-1" target="_blank" rel="noopener">Ver catálogo</a>
+                        <a class="secondary-button secondary-link is-disabled" id="viewCatalogLink" href="#" aria-disabled="true" tabindex="-1" target="_blank" rel="noopener noreferrer">Ver catálogo</a>
                         <button class="secondary-button" id="newCatalogButton" type="button">Novo catálogo</button>
                         <button class="primary-button" id="newProductButton" type="button">
                             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
@@ -137,9 +139,9 @@
                     </div>
                 </section>
 
-                <section class="stage-notice" aria-label="Status da sétima etapa">
+                <section class="stage-notice" aria-label="Status da nona etapa">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 10v5M12 7h.01"></path></svg>
-                    <p><strong>Imagens disponíveis.</strong> Cada produto pode receber uma foto opcional; se ela estiver ausente ou falhar, o catálogo usa o fallback padrão.</p>
+                    <p><strong>Validação de produção disponível.</strong> Aplique a migração 007 e confirme todos os itens da auditoria antes de atender o primeiro cliente.</p>
                 </section>
 
                 <section class="catalog-switcher" aria-label="Catálogo selecionado">
@@ -147,7 +149,7 @@
                         <span class="catalog-switcher__label">CATÁLOGO ATUAL</span>
                         <strong id="activeCatalogName">Carregando catálogo…</strong>
                     </div>
-                    <label class="catalog-select-field" for="catalogSelect">
+                    <label class="catalog-select-field">
                         <span class="sr-only">Selecionar catálogo</span>
                         <select id="catalogSelect" disabled>
                             <option>Carregando…</option>
@@ -183,12 +185,12 @@
                             <p id="tableDescription">Carregando produtos…</p>
                         </div>
                         <div class="catalog-actions">
-                            <label class="search-field" for="productSearch">
+                            <label class="search-field">
                                 <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.2 4.2"></path></svg>
                                 <span class="sr-only">Buscar produtos</span>
                                 <input id="productSearch" type="search" placeholder="Buscar produto">
                             </label>
-                            <label class="filter-field" for="statusFilter">
+                            <label class="filter-field">
                                 <span class="sr-only">Filtrar por status</span>
                                 <select id="statusFilter">
                                     <option value="all">Todos os status</option>
@@ -200,7 +202,7 @@
                         </div>
                     </div>
 
-                    <div class="product-table" role="region" aria-labelledby="productsTitle" tabindex="0">
+                    <section class="product-table" aria-label="Tabela de produtos do catálogo atual" tabindex="0">
                         <div class="product-table__head" aria-hidden="true">
                             <span>Produto</span>
                             <span>Categoria</span>
@@ -209,7 +211,7 @@
                             <span></span>
                         </div>
                         <div id="productsList" class="product-list" aria-live="polite"></div>
-                    </div>
+                    </section>
                     <p class="empty-state" id="emptyState" hidden>Nenhum produto corresponde aos filtros selecionados.</p>
                 </section>
 
@@ -279,7 +281,7 @@
                     <label for="productImage">Imagem do produto</label>
                     <div class="product-image-field">
                         <div class="product-image-preview" id="productImagePreview">
-                            <img id="productImagePreviewImage" alt="" hidden>
+                            <img id="productImagePreviewImage" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" hidden>
                             <span id="productImagePreviewFallback" aria-hidden="true">N</span>
                         </div>
                         <div class="product-image-input">
@@ -287,7 +289,7 @@
                             <span class="field-help">Opcional. Use JPEG, PNG ou WebP com no máximo 5 MB.</span>
                         </div>
                     </div>
-                    <label class="checkbox-field checkbox-field--compact" id="removeProductImageField" for="removeProductImage" hidden>
+                    <label class="checkbox-field checkbox-field--compact" id="removeProductImageField" hidden>
                         <input id="removeProductImage" name="removeProductImage" type="checkbox">
                         <span><strong>Remover imagem atual</strong><small>O produto voltará a usar a identificação padrão.</small></span>
                     </label>
@@ -336,7 +338,7 @@
                     <span class="field-help">Use letras minúsculas, números e hífens. Ex.: <strong>cafeteria-central</strong>.</span>
                 </div>
                 <div class="form-field form-field--full">
-                    <label class="checkbox-field" for="catalogActive">
+                    <label class="checkbox-field">
                         <input id="catalogActive" name="catalogActive" type="checkbox" checked>
                         <span><strong>Catálogo ativo</strong><small>Deixe marcado para prepará-lo para publicação quando a página pública estiver disponível.</small></span>
                     </label>
@@ -355,7 +357,7 @@
                     <span class="field-help">Este texto será incluído no final da mensagem do pedido.</span>
                 </div>
                 <div class="form-field form-field--full">
-                    <label class="checkbox-field" for="catalogOrdersEnabled">
+                    <label class="checkbox-field">
                         <input id="catalogOrdersEnabled" name="catalogOrdersEnabled" type="checkbox">
                         <span><strong>Receber pedidos</strong><small>Exibe os botões de adicionar, o carrinho e o envio pelo WhatsApp no catálogo público.</small></span>
                     </label>

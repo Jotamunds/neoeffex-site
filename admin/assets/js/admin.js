@@ -3,6 +3,7 @@
 
     const config = window.NEOEFFEX_SUPABASE_CONFIG || {};
     const storageKey = "neoeffex-admin-theme";
+    const authStorageKey = "neoeffex-admin-auth";
     const activeCatalogStorageKey = "neoeffex-admin-active-catalog";
     const root = document.documentElement;
     const body = document.body;
@@ -71,6 +72,7 @@
     let lastFocusedElement = null;
     let loadSequence = 0;
     let productImageObjectUrl = null;
+    let authenticatedUserId = null;
     const productImagesBucket = "catalog-products";
     const maximumProductImageSize = 5 * 1024 * 1024;
 
@@ -116,22 +118,35 @@
         }
     }
 
+    function clearRememberedCatalog() {
+        try {
+            window.localStorage.removeItem(activeCatalogStorageKey);
+        } catch (error) {
+            // O logout continua funcionando mesmo se o navegador bloquear armazenamento local.
+        }
+    }
+
     function showLogin() {
+        authenticatedUserId = null;
         body.classList.remove("is-authenticated");
         authScreen.hidden = false;
         loginForm.reset();
         setFeedback(authFeedback, "", "");
     }
 
-    async function showDashboard(session) {
-        if (!session) {
+    async function showDashboard(user) {
+        if (!user) {
             showLogin();
             return;
         }
 
+        const dashboardAlreadyLoaded = authenticatedUserId === user.id
+            && body.classList.contains("is-authenticated");
+        authenticatedUserId = user.id;
         body.classList.add("is-authenticated");
         authScreen.hidden = true;
-        accountEmail.textContent = session.user.email || "Conta conectada";
+        accountEmail.textContent = user.email || "Conta conectada";
+        if (dashboardAlreadyLoaded) return;
         await loadCatalogs();
     }
 
@@ -140,12 +155,6 @@
             style: "currency",
             currency: "BRL"
         }).format(Number(value));
-    }
-
-    function escapeHtml(value) {
-        const element = document.createElement("div");
-        element.textContent = value || "";
-        return element.innerHTML;
     }
 
     function slugify(value) {
@@ -206,33 +215,82 @@
     function createProductRow(product) {
         const article = document.createElement("article");
         const statusLabel = product.status === "active" ? "Ativo" : "Pausado";
+        const statusClass = product.status === "active" ? "active" : "paused";
         const imageUrl = getProductImageUrl(product.image_path);
-        const fallbackIcon = "<svg viewBox=\"0 0 24 24\"" + (imageUrl ? " hidden" : "") + "><path d=\"M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z\"></path><path d=\"M4 12.5 12 17l8-4.5\"></path><path d=\"M4 17 12 21l8-4\"></path></svg>";
-        const imageMarkup = imageUrl
-            ? "<img src=\"" + escapeHtml(imageUrl) + "\" alt=\"\" loading=\"lazy\">" + fallbackIcon
-            : fallbackIcon;
-
         article.className = "product-row";
-        article.innerHTML = ""
-            + "<div class=\"product-row__name\">"
-            + "<span class=\"product-icon\" aria-hidden=\"true\">" + imageMarkup + "</span>"
-            + "<div><strong>" + escapeHtml(product.name) + "</strong><small>" + escapeHtml(product.description || "Sem descrição.") + "</small></div>"
-            + "</div>"
-            + "<span class=\"product-row__category\">" + escapeHtml(product.categoryName) + "</span>"
-            + "<strong class=\"product-row__price\">" + formatCurrency(product.price) + "</strong>"
-            + "<span class=\"status status--" + product.status + "\"><i></i>" + statusLabel + "</span>"
-            + "<button class=\"row-action\" type=\"button\" aria-label=\"Editar " + escapeHtml(product.name) + "\" title=\"Editar produto\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M5 19h4l9-9a2.8 2.8 0 0 0-4-4l-9 9v4Z\"></path><path d=\"m12.5 7.5 4 4\"></path></svg></button>";
 
-        article.querySelector(".row-action").addEventListener("click", function () {
-            openProductModal(product);
+        const nameBlock = document.createElement("div");
+        nameBlock.className = "product-row__name";
+
+        const productIcon = document.createElement("span");
+        productIcon.className = "product-icon";
+        productIcon.setAttribute("aria-hidden", "true");
+
+        const fallback = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        fallback.setAttribute("viewBox", "0 0 24 24");
+        fallback.hidden = Boolean(imageUrl);
+        [
+            "M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z",
+            "M4 12.5 12 17l8-4.5",
+            "M4 17 12 21l8-4"
+        ].forEach(function (pathData) {
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", pathData);
+            fallback.appendChild(path);
         });
-        const thumbnail = article.querySelector(".product-icon img");
-        if (thumbnail) {
+
+        if (imageUrl) {
+            const thumbnail = document.createElement("img");
+            thumbnail.src = imageUrl;
+            thumbnail.alt = "";
+            thumbnail.loading = "lazy";
             thumbnail.addEventListener("error", function () {
                 thumbnail.hidden = true;
-                article.querySelector(".product-icon svg").hidden = false;
+                fallback.hidden = false;
             });
+            productIcon.appendChild(thumbnail);
         }
+        productIcon.appendChild(fallback);
+
+        const productCopy = document.createElement("div");
+        const productName = document.createElement("strong");
+        const productDescriptionText = document.createElement("small");
+        productName.textContent = product.name;
+        productDescriptionText.textContent = product.description || "Sem descrição.";
+        productCopy.append(productName, productDescriptionText);
+        nameBlock.append(productIcon, productCopy);
+
+        const category = document.createElement("span");
+        category.className = "product-row__category";
+        category.textContent = product.categoryName;
+
+        const price = document.createElement("strong");
+        price.className = "product-row__price";
+        price.textContent = formatCurrency(product.price);
+
+        const status = document.createElement("span");
+        status.className = "status status--" + statusClass;
+        status.append(document.createElement("i"), document.createTextNode(statusLabel));
+
+        const editButton = document.createElement("button");
+        editButton.className = "row-action";
+        editButton.type = "button";
+        editButton.setAttribute("aria-label", "Editar " + product.name);
+        editButton.title = "Editar produto";
+        const editIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        editIcon.setAttribute("aria-hidden", "true");
+        editIcon.setAttribute("viewBox", "0 0 24 24");
+        ["M5 19h4l9-9a2.8 2.8 0 0 0-4-4l-9 9v4Z", "m12.5 7.5 4 4"].forEach(function (pathData) {
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", pathData);
+            editIcon.appendChild(path);
+        });
+        editButton.appendChild(editIcon);
+        editButton.addEventListener("click", function () {
+            openProductModal(product);
+        });
+
+        article.append(nameBlock, category, price, status, editButton);
 
         return article;
     }
@@ -1080,6 +1138,7 @@
         loginButton.textContent = "Entrando…";
         setFeedback(authFeedback, "", "");
         const { data, error } = await client.auth.signInWithPassword({ email: email, password: password });
+        passwordField.value = "";
         if (error || !data.session) {
             setFeedback(authFeedback, "Não foi possível entrar com esses dados.", "error");
             loginButton.disabled = false;
@@ -1087,7 +1146,7 @@
             return;
         }
 
-        await showDashboard(data.session);
+        await showDashboard(data.user);
         loginButton.disabled = false;
         loginButton.textContent = "Entrar no painel";
     }
@@ -1127,6 +1186,8 @@
         categories = [];
         products = [];
         activeCatalog = null;
+        clearRememberedCatalog();
+        passwordField.value = "";
         renderCatalogControls();
         updateSummary();
         renderProducts();
@@ -1142,21 +1203,26 @@
         }
 
         client = window.supabase.createClient(config.url, config.publishableKey, {
-            auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-        });
-
-        client.auth.onAuthStateChange(function (_event, session) {
-            if (session) {
-                showDashboard(session);
-            } else {
-                showLogin();
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true,
+                storageKey: authStorageKey
             }
         });
 
-        client.auth.getSession().then(function (result) {
+        client.auth.onAuthStateChange(function (event, session) {
+            if (event === "SIGNED_OUT") {
+                showLogin();
+            } else if (event === "SIGNED_IN" && session && session.user) {
+                showDashboard(session.user);
+            }
+        });
+
+        client.auth.getUser().then(function (result) {
             body.classList.remove("is-loading");
-            if (result.data.session) {
-                showDashboard(result.data.session);
+            if (!result.error && result.data.user) {
+                showDashboard(result.data.user);
             } else {
                 showLogin();
             }

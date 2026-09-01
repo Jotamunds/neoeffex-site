@@ -366,6 +366,7 @@
         if (!ordersAvailable()) return;
         lastFocusedElement = document.activeElement;
         cartOverlay.hidden = false;
+        cartDrawer.inert = false;
         cartDrawer.classList.add("cart-drawer--open");
         cartDrawer.setAttribute("aria-hidden", "false");
         cartButton.setAttribute("aria-expanded", "true");
@@ -376,6 +377,7 @@
     function closeCart() {
         cartDrawer.classList.remove("cart-drawer--open");
         cartDrawer.setAttribute("aria-hidden", "true");
+        cartDrawer.inert = true;
         cartButton.setAttribute("aria-expanded", "false");
         cartOverlay.hidden = true;
         body.classList.remove("has-cart-open");

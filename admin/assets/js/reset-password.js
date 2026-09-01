@@ -2,6 +2,7 @@
     "use strict";
 
     const config = window.NEOEFFEX_SUPABASE_CONFIG || {};
+    const authStorageKey = "neoeffex-admin-auth";
     const feedback = document.getElementById("resetFeedback");
     const form = document.getElementById("resetForm");
     const button = document.getElementById("resetSubmit");
@@ -22,7 +23,8 @@
             auth: {
                 persistSession: true,
                 autoRefreshToken: true,
-                detectSessionInUrl: true
+                detectSessionInUrl: true,
+                storageKey: authStorageKey
             }
         });
     }

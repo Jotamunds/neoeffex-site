@@ -1,15 +1,16 @@
-# Configuração da Etapa 7
+# Configuração da Etapa 9
 
 ## Para uma instalação já feita nas etapas anteriores
 
-1. Confirme que a Etapa 6 e o arquivo `005_whatsapp_orders.sql` já foram aplicados.
-2. No SQL Editor do projeto Supabase, execute `006_product_images.sql` inteiro.
-3. Publique a pasta `/admin/` em `neoeffex.com.br/admin/`.
-4. Publique a pasta `/catalogo/` em `neoeffex.com.br/catalogo/`.
-5. Entre no painel, edite ou crie um produto e selecione uma imagem válida.
-6. Clique em **Ver catálogo** e confira a imagem na página pública.
+1. Confirme que `006_product_images.sql` já foi aplicado e que imagens continuam funcionando.
+2. Guarde uma cópia do banco e dos arquivos atualmente publicados.
+3. No SQL Editor do projeto Supabase, execute `007_security_hardening.sql` inteiro.
+4. Execute `audits/production_security_audit.sql`.
+5. Continue somente se todas as verificações retornarem `PASS`.
+6. Publique `/admin/` e `/catalogo/` da versão `0.1.7`.
+7. Faça os testes de `PRODUCTION-CHECKLIST.md` no domínio oficial.
 
-O arquivo `006` executa em transação e pode ser reaplicado. Ele cria um bucket público somente para leitura dos arquivos; uploads e exclusões continuam restritos à pasta e aos produtos da conta autenticada.
+O arquivo `007` executa em transação e pode ser reaplicado. Ele remove privilégios anteriores das tabelas do catálogo e concede novamente apenas o necessário: CRUD para `authenticated` e leitura de colunas públicas para `anon`. As políticas de proprietário e do Storage também são recriadas com papéis explícitos.
 
 ## Para uma instalação nova
 
@@ -22,17 +23,21 @@ O arquivo `006` executa em transação e pode ser reaplicado. Ele cria um bucket
    4. `004_public_catalog_access.sql`
    5. `005_whatsapp_orders.sql`
    6. `006_product_images.sql`
+   7. `007_security_hardening.sql`
+
+3. Execute `audits/production_security_audit.sql` e confirme `PASS` em todas as linhas.
+4. Siga `PRODUCTION-CHECKLIST.md` antes de cadastrar o primeiro comércio.
 
 As permissões são explícitas porque tabelas novas podem não ser expostas automaticamente pela Data API. Visitantes recebem somente leitura das colunas públicas, limitada por RLS a catálogos e produtos ativos.
 
 ## Configurar autenticação
 
-Em **Authentication > General Configuration**, desative **Allow new users to sign up** e **Allow anonymous sign-ins**. Novas contas devem ser criadas por você no Supabase.
+Em **Authentication > Sign In / Providers > Email**, desative **Allow new users to sign up**. Em **Authentication**, mantenha **Allow anonymous sign-ins** desativado. Essas duas configurações são obrigatórias: novas contas devem ser criadas por você no Supabase.
 
 Em **Authentication > URL Configuration**, adicione:
 
 ```text
-Site URL: https://neoeffex.com.br
+Site URL: https://neoeffex.com.br/admin/
 Redirect URL: https://neoeffex.com.br/admin/reset-password.html
 ```
 
@@ -54,6 +59,8 @@ Nunca use `service_role`, chave secreta ou senha de banco em arquivos do navegad
 Use os mesmos valores públicos em `catalogo/config.js`. Não adicione nenhum segredo à página pública.
 
 ## Testar antes de publicar
+
+Primeiro, execute `audits/production_security_audit.sql`. Depois, conclua o teste com duas contas e os critérios de liberação descritos em `PRODUCTION-CHECKLIST.md`.
 
 1. Entre com a conta criada e confirme que o catálogo existente aparece.
 2. Abra **Categorias**, confira as categorias migradas e crie uma nova categoria.
@@ -78,4 +85,4 @@ Use os mesmos valores públicos em `catalogo/config.js`. Não adicione nenhum se
 21. Exclua um produto com imagem e confirme que ele desaparece do painel e do catálogo.
 22. Clique em **Sair** e teste a recuperação de senha.
 
-Para produção, configure SMTP próprio antes de depender de e-mails de recuperação em volume.
+Para produção, configure SMTP próprio, teste a recuperação no domínio oficial, ative MFA na conta do Supabase e revise o Security Advisor antes de depender do painel com clientes.

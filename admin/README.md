@@ -1,4 +1,4 @@
-# Painel administrativo — Etapa 7
+# Painel administrativo — Etapa 9
 
 Painel em `neoeffex.com.br/admin` e catálogo público em `neoeffex.com.br/catalogo/?catalogo=identificador`, usando Supabase.
 
@@ -21,6 +21,11 @@ Painel em `neoeffex.com.br/admin` e catálogo público em `neoeffex.com.br/catal
 - Prévia, substituição e remoção de imagens no formulário do produto.
 - Supabase Storage com caminhos isolados por usuário, catálogo e produto.
 - Exibição pública responsiva com fallback automático quando não há imagem.
+- Migração de endurecimento que reaplica privilégios mínimos e políticas RLS com papéis explícitos.
+- Auditoria SQL de leitura que verifica RLS, privilégios, políticas, bucket e função de atualização.
+- Sessão persistida validada no servidor antes de liberar o painel.
+- Política de Segurança de Conteúdo (CSP), referrer policy e criação segura da interface sem HTML de usuário.
+- Checklist de produção, teste com duas contas e procedimento de rollback.
 
 Catálogos pausados e produtos pausados não aparecem para visitantes. O painel administrativo continua protegido por autenticação e pelas políticas de proprietário.
 
@@ -43,6 +48,10 @@ admin/
     ├── 004_public_catalog_access.sql
     ├── 005_whatsapp_orders.sql
     ├── 006_product_images.sql
+    ├── 007_security_hardening.sql
+    ├── audits/
+    │   └── production_security_audit.sql
+    ├── PRODUCTION-CHECKLIST.md
     └── SETUP.md
 ```
 
@@ -50,7 +59,9 @@ A pasta pública `/catalogo/` é entregue separadamente para ser publicada na ra
 
 ## Configuração
 
-Siga `setup/SETUP.md` antes de publicar. Em `config.js`, use somente a URL do projeto e a chave publicável. Nunca adicione uma `service_role`, chave secreta ou senha de banco ao repositório.
+Siga `setup/SETUP.md` e `setup/PRODUCTION-CHECKLIST.md` antes de publicar. Em `config.js`, use somente a URL do projeto e a chave publicável. Nunca adicione uma `service_role`, chave secreta ou senha de banco ao repositório.
+
+Execute `007_security_hardening.sql` e depois `audits/production_security_audit.sql`. A versão só deve ser liberada se todas as verificações retornarem `PASS`.
 
 ## Limites atuais
 

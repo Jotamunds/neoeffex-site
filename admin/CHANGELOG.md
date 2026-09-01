@@ -1,5 +1,27 @@
 # Changelog — Painel administrativo
 
+## [0.1.7] - 2026-09-01
+
+### Adicionado
+
+- Migração `007_security_hardening.sql` para reaplicar privilégios mínimos, RLS e políticas do Storage.
+- Auditoria SQL somente de leitura para validar os controles essenciais antes da publicação.
+- Checklist de produção com teste entre duas contas, teste anônimo, autenticação e rollback.
+- Política de Segurança de Conteúdo e política de referência no painel, na redefinição de senha e no catálogo público.
+
+### Segurança
+
+- A sessão persistida agora é validada no servidor antes de liberar o painel.
+- O catálogo lembrado é removido do navegador no logout.
+- A lista de produtos passou a usar criação segura de elementos e `textContent`, sem montar HTML com dados cadastrados.
+- Privilégios de `anon` são limitados às colunas públicas; escrita continua exclusiva de contas autenticadas e isolada por proprietário.
+- Links externos em nova aba usam `noopener noreferrer`.
+
+### Operação
+
+- Versões de `/admin` e `/catalogo` sincronizadas em `0.1.7`.
+- Configurações obrigatórias de cadastro fechado, redirect exato, SMTP próprio e MFA documentadas.
+
 ## [0.1.6] - 2026-08-31
 
 ### Adicionado

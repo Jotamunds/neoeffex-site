@@ -89,11 +89,11 @@
 
             <div class="sidebar__bottom">
                 <div class="phase-card">
-                    <span class="phase-card__eyebrow">ETAPA 6</span>
-                    <strong>Pedidos pelo WhatsApp</strong>
-                    <p>Receba o carrinho do cliente em uma mensagem pronta para atendimento.</p>
+                    <span class="phase-card__eyebrow">ETAPA 7</span>
+                    <strong>Imagens dos produtos</strong>
+                    <p>Adicione fotos opcionais com armazenamento seguro e fallback automático.</p>
                 </div>
-                <span class="version">ADMIN / 0.1.5</span>
+                <span class="version">ADMIN / 0.1.6</span>
             </div>
         </aside>
 
@@ -137,9 +137,9 @@
                     </div>
                 </section>
 
-                <section class="stage-notice" aria-label="Status da sexta etapa">
+                <section class="stage-notice" aria-label="Status da sétima etapa">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 10v5M12 7h.01"></path></svg>
-                    <p><strong>Pedidos disponíveis.</strong> Ative o WhatsApp no catálogo para permitir que o visitante monte o carrinho e envie uma mensagem pronta.</p>
+                    <p><strong>Imagens disponíveis.</strong> Cada produto pode receber uma foto opcional; se ela estiver ausente ou falhar, o catálogo usa o fallback padrão.</p>
                 </section>
 
                 <section class="catalog-switcher" aria-label="Catálogo selecionado">
@@ -274,6 +274,23 @@
                     <label for="productDescription">Descrição</label>
                     <textarea id="productDescription" name="productDescription" maxlength="500" rows="4"></textarea>
                     <span class="field-hint" id="descriptionCounter">0 / 500</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="productImage">Imagem do produto</label>
+                    <div class="product-image-field">
+                        <div class="product-image-preview" id="productImagePreview">
+                            <img id="productImagePreviewImage" alt="" hidden>
+                            <span id="productImagePreviewFallback" aria-hidden="true">N</span>
+                        </div>
+                        <div class="product-image-input">
+                            <input id="productImage" name="productImage" type="file" accept="image/jpeg,image/png,image/webp">
+                            <span class="field-help">Opcional. Use JPEG, PNG ou WebP com no máximo 5 MB.</span>
+                        </div>
+                    </div>
+                    <label class="checkbox-field checkbox-field--compact" id="removeProductImageField" for="removeProductImage" hidden>
+                        <input id="removeProductImage" name="removeProductImage" type="checkbox">
+                        <span><strong>Remover imagem atual</strong><small>O produto voltará a usar a identificação padrão.</small></span>
+                    </label>
                 </div>
                 <div class="form-field form-field--full">
                     <label for="productStatus">Status</label>

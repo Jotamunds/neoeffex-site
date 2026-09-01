@@ -47,6 +47,11 @@
     const productDescription = document.getElementById("productDescription");
     const descriptionCounter = document.getElementById("descriptionCounter");
     const productCategory = document.getElementById("productCategory");
+    const productImageInput = document.getElementById("productImage");
+    const productImagePreviewImage = document.getElementById("productImagePreviewImage");
+    const productImagePreviewFallback = document.getElementById("productImagePreviewFallback");
+    const removeProductImage = document.getElementById("removeProductImage");
+    const removeProductImageField = document.getElementById("removeProductImageField");
     const productDangerActions = document.getElementById("productDangerActions");
     const saveProductButton = document.getElementById("saveProductButton");
     const saveCatalogButton = document.getElementById("saveCatalogButton");
@@ -65,6 +70,9 @@
     let toastTimeout;
     let lastFocusedElement = null;
     let loadSequence = 0;
+    let productImageObjectUrl = null;
+    const productImagesBucket = "catalog-products";
+    const maximumProductImageSize = 5 * 1024 * 1024;
 
     function setFeedback(element, message, type) {
         element.textContent = message;
@@ -167,6 +175,12 @@
         return "+" + digits;
     }
 
+    function getProductImageUrl(imagePath) {
+        if (!imagePath || !client) return "";
+        const result = client.storage.from(productImagesBucket).getPublicUrl(imagePath);
+        return result.data && result.data.publicUrl ? result.data.publicUrl : "";
+    }
+
     function getCategoryName(categoryId) {
         const category = categories.find(function (item) {
             return item.id === categoryId;
@@ -192,11 +206,16 @@
     function createProductRow(product) {
         const article = document.createElement("article");
         const statusLabel = product.status === "active" ? "Ativo" : "Pausado";
+        const imageUrl = getProductImageUrl(product.image_path);
+        const fallbackIcon = "<svg viewBox=\"0 0 24 24\"" + (imageUrl ? " hidden" : "") + "><path d=\"M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z\"></path><path d=\"M4 12.5 12 17l8-4.5\"></path><path d=\"M4 17 12 21l8-4\"></path></svg>";
+        const imageMarkup = imageUrl
+            ? "<img src=\"" + escapeHtml(imageUrl) + "\" alt=\"\" loading=\"lazy\">" + fallbackIcon
+            : fallbackIcon;
 
         article.className = "product-row";
         article.innerHTML = ""
             + "<div class=\"product-row__name\">"
-            + "<span class=\"product-icon\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\"><path d=\"M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z\"></path><path d=\"M4 12.5 12 17l8-4.5\"></path><path d=\"M4 17 12 21l8-4\"></path></svg></span>"
+            + "<span class=\"product-icon\" aria-hidden=\"true\">" + imageMarkup + "</span>"
             + "<div><strong>" + escapeHtml(product.name) + "</strong><small>" + escapeHtml(product.description || "Sem descrição.") + "</small></div>"
             + "</div>"
             + "<span class=\"product-row__category\">" + escapeHtml(product.categoryName) + "</span>"
@@ -207,6 +226,13 @@
         article.querySelector(".row-action").addEventListener("click", function () {
             openProductModal(product);
         });
+        const thumbnail = article.querySelector(".product-icon img");
+        if (thumbnail) {
+            thumbnail.addEventListener("error", function () {
+                thumbnail.hidden = true;
+                article.querySelector(".product-icon svg").hidden = false;
+            });
+        }
 
         return article;
     }
@@ -368,7 +394,7 @@
                 .order("sort_order", { ascending: true })
                 .order("created_at", { ascending: true }),
             client.from("products")
-                .select("id, name, description, category_id, price, status, sort_order, created_at")
+                .select("id, name, description, category_id, price, status, image_path, sort_order, created_at")
                 .eq("catalog_id", catalogId)
                 .order("sort_order", { ascending: true })
                 .order("created_at", { ascending: true })
@@ -400,7 +426,58 @@
         saveProductButton.disabled = isLoading;
         toggleStatusButton.disabled = isLoading;
         deleteProductButton.disabled = isLoading;
+        productImageInput.disabled = isLoading;
+        removeProductImage.disabled = isLoading;
         saveProductButton.textContent = isLoading ? "Salvando…" : "Salvar produto";
+    }
+
+    function clearProductImageObjectUrl() {
+        if (!productImageObjectUrl) return;
+        URL.revokeObjectURL(productImageObjectUrl);
+        productImageObjectUrl = null;
+    }
+
+    function showProductImagePreview(url, productName) {
+        productImagePreviewFallback.textContent = (productName || "N").trim().charAt(0).toLocaleUpperCase("pt-BR") || "N";
+        productImagePreviewImage.hidden = !url;
+        productImagePreviewFallback.hidden = Boolean(url);
+        productImagePreviewImage.src = url || "";
+        productImagePreviewImage.alt = url ? "Prévia de " + (productName || "produto") : "";
+    }
+
+    function resetProductImageFields(product) {
+        clearProductImageObjectUrl();
+        productImageInput.value = "";
+        removeProductImage.checked = false;
+        removeProductImageField.hidden = !(product && product.image_path);
+        showProductImagePreview(product ? getProductImageUrl(product.image_path) : "", product ? product.name : "N");
+    }
+
+    function validateProductImage(file) {
+        if (!file) return "";
+        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+            return "Use uma imagem JPEG, PNG ou WebP.";
+        }
+        if (file.size <= 0 || file.size > maximumProductImageSize) {
+            return "A imagem precisa ter no máximo 5 MB.";
+        }
+        return "";
+    }
+
+    function previewSelectedProductImage() {
+        const file = productImageInput.files && productImageInput.files[0];
+        const validationMessage = validateProductImage(file);
+        if (validationMessage) {
+            productImageInput.value = "";
+            setFeedback(productFeedback, validationMessage, "error");
+            return;
+        }
+        if (!file) return;
+        clearProductImageObjectUrl();
+        productImageObjectUrl = URL.createObjectURL(file);
+        removeProductImage.checked = false;
+        showProductImagePreview(productImageObjectUrl, document.getElementById("productName").value || "Produto");
+        setFeedback(productFeedback, "", "");
     }
 
     function setCatalogFormLoading(isLoading) {
@@ -453,6 +530,7 @@
         document.getElementById("productPrice").value = editing ? Number(product.price).toFixed(2) : "";
         productDescription.value = editing ? product.description || "" : "";
         document.getElementById("productStatus").value = editing ? product.status : "active";
+        resetProductImageFields(editing ? product : null);
         productDangerActions.hidden = !editing;
         toggleStatusButton.textContent = editing && product.status === "active" ? "Pausar produto" : "Ativar produto";
         setProductFormLoading(false);
@@ -467,6 +545,8 @@
         productModal.setAttribute("aria-hidden", "true");
         body.classList.remove("has-modal");
         productForm.reset();
+        clearProductImageObjectUrl();
+        showProductImagePreview("", "N");
         setFeedback(productFeedback, "", "");
         updateDescriptionCounter();
         if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
@@ -657,6 +737,36 @@
         }, -1) + 1;
     }
 
+    function getProductImageExtension(file) {
+        return {
+            "image/jpeg": "jpg",
+            "image/png": "png",
+            "image/webp": "webp"
+        }[file.type] || "";
+    }
+
+    async function uploadProductImage(file, productId) {
+        const userResult = await client.auth.getUser();
+        const user = userResult.data && userResult.data.user;
+        if (userResult.error || !user) {
+            return { path: "", error: userResult.error || new Error("Sessão não encontrada") };
+        }
+        const extension = getProductImageExtension(file);
+        const path = user.id + "/" + activeCatalog.id + "/" + productId + "/" + Date.now() + "." + extension;
+        const uploadResult = await client.storage.from(productImagesBucket).upload(path, file, {
+            cacheControl: "3600",
+            contentType: file.type,
+            upsert: false
+        });
+        return { path: uploadResult.error ? "" : path, error: uploadResult.error };
+    }
+
+    async function removeStoredProductImage(imagePath) {
+        if (!imagePath) return null;
+        const result = await client.storage.from(productImagesBucket).remove([imagePath]);
+        return result.error || null;
+    }
+
     async function saveProduct(event) {
         event.preventDefault();
         if (!activeCatalog) {
@@ -667,28 +777,84 @@
         if (!payload) return;
 
         const productId = document.getElementById("productId").value;
+        const currentProduct = products.find(function (product) { return product.id === productId; }) || null;
+        const imageFile = productImageInput.files && productImageInput.files[0];
+        const imageValidationMessage = validateProductImage(imageFile);
+        if (imageValidationMessage) {
+            setFeedback(productFeedback, imageValidationMessage, "error");
+            return;
+        }
         setProductFormLoading(true);
         setFeedback(productFeedback, "", "");
         let result;
+        let uploadedImagePath = "";
+        let imageCleanupFailed = false;
         if (productId) {
-            result = await client.from("products").update(payload).eq("id", productId).select("id").single();
+            if (imageFile) {
+                const uploadResult = await uploadProductImage(imageFile, productId);
+                if (uploadResult.error) {
+                    console.error("Erro ao enviar imagem", uploadResult.error);
+                    setFeedback(productFeedback, "Não foi possível enviar a imagem. Confirme se a migração 006 foi executada.", "error");
+                    setProductFormLoading(false);
+                    return;
+                }
+                uploadedImagePath = uploadResult.path;
+                payload.image_path = uploadedImagePath;
+            } else if (removeProductImage.checked && currentProduct && currentProduct.image_path) {
+                payload.image_path = null;
+            }
+            result = await client.from("products").update(payload).eq("id", productId).select("id, image_path").single();
         } else {
             result = await client.from("products").insert(Object.assign({}, payload, {
                 catalog_id: activeCatalog.id,
                 sort_order: getNextSortOrder(products)
-            })).select("id").single();
+            })).select("id, image_path").single();
         }
 
         if (result.error) {
             console.error("Erro ao salvar produto", result.error);
+            if (uploadedImagePath) await removeStoredProductImage(uploadedImagePath);
             setFeedback(productFeedback, "Não foi possível salvar o produto. Tente novamente.", "error");
             setProductFormLoading(false);
             return;
         }
 
+        const savedProductId = productId || result.data.id;
+        if (!productId && imageFile) {
+            const uploadResult = await uploadProductImage(imageFile, savedProductId);
+            if (uploadResult.error) {
+                console.error("Erro ao enviar imagem", uploadResult.error);
+                await client.from("products").delete().eq("id", savedProductId);
+                setFeedback(productFeedback, "Não foi possível enviar a imagem. O produto não foi criado; confirme se a migração 006 foi executada.", "error");
+                setProductFormLoading(false);
+                return;
+            }
+            uploadedImagePath = uploadResult.path;
+            const imageUpdateResult = await client.from("products")
+                .update({ image_path: uploadedImagePath })
+                .eq("id", savedProductId)
+                .select("id")
+                .single();
+            if (imageUpdateResult.error) {
+                console.error("Erro ao vincular imagem", imageUpdateResult.error);
+                await removeStoredProductImage(uploadedImagePath);
+                await client.from("products").delete().eq("id", savedProductId);
+                setFeedback(productFeedback, "Não foi possível vincular a imagem. O produto não foi criado.", "error");
+                setProductFormLoading(false);
+                return;
+            }
+        }
+
+        const previousImagePath = currentProduct && currentProduct.image_path;
+        if (previousImagePath && (uploadedImagePath || removeProductImage.checked)) {
+            imageCleanupFailed = Boolean(await removeStoredProductImage(previousImagePath));
+        }
+
         closeProductModal();
         await loadActiveCatalogData();
-        showToast(productId ? "Produto atualizado com sucesso." : "Produto cadastrado com sucesso.");
+        showToast(imageCleanupFailed
+            ? "Produto salvo, mas a imagem anterior não pôde ser removida do armazenamento."
+            : (productId ? "Produto atualizado com sucesso." : "Produto cadastrado com sucesso."));
     }
 
     async function toggleProductStatus() {
@@ -848,6 +1014,10 @@
             return;
         }
 
+        const imageRemovalError = deletion.type === "product" && deletion.image_path
+            ? await removeStoredProductImage(deletion.image_path)
+            : null;
+
         closeDeleteModal();
         if (deletion.type === "category") {
             resetCategoryForm();
@@ -856,7 +1026,9 @@
         } else {
             closeProductModal();
             await loadActiveCatalogData();
-            showToast("Produto excluído com sucesso.");
+            showToast(imageRemovalError
+                ? "Produto excluído, mas a imagem não pôde ser removida do armazenamento."
+                : "Produto excluído com sucesso.");
         }
     }
 
@@ -1018,6 +1190,22 @@
     catalogForm.addEventListener("submit", saveCatalog);
     categoryForm.addEventListener("submit", saveCategory);
     productDescription.addEventListener("input", updateDescriptionCounter);
+    productImageInput.addEventListener("change", previewSelectedProductImage);
+    productImagePreviewImage.addEventListener("error", function () {
+        productImagePreviewImage.hidden = true;
+        productImagePreviewFallback.hidden = false;
+    });
+    removeProductImage.addEventListener("change", function () {
+        if (!removeProductImage.checked) {
+            const productId = document.getElementById("productId").value;
+            const product = products.find(function (item) { return item.id === productId; });
+            showProductImagePreview(product ? getProductImageUrl(product.image_path) : "", product ? product.name : "N");
+            return;
+        }
+        productImageInput.value = "";
+        clearProductImageObjectUrl();
+        showProductImagePreview("", document.getElementById("productName").value || "N");
+    });
     document.getElementById("catalogName").addEventListener("input", function () {
         const slugInput = document.getElementById("catalogSlug");
         if (!slugInput.dataset.touched) slugInput.value = slugify(this.value);
@@ -1030,7 +1218,13 @@
     deleteProductButton.addEventListener("click", function () {
         const productId = document.getElementById("productId").value;
         const product = products.find(function (item) { return item.id === productId; });
-        if (product) openDeleteModal({ type: "product", id: product.id, name: product.name, baseModal: productModal });
+        if (product) openDeleteModal({
+            type: "product",
+            id: product.id,
+            name: product.name,
+            image_path: product.image_path,
+            baseModal: productModal
+        });
     });
     document.getElementById("closeDeleteModal").addEventListener("click", closeDeleteModal);
     document.getElementById("cancelDeleteButton").addEventListener("click", closeDeleteModal);

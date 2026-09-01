@@ -1,5 +1,24 @@
 # Changelog — Painel administrativo
 
+## [0.1.6] - 2026-08-31
+
+### Adicionado
+
+- Upload opcional de imagens JPEG, PNG e WebP para produtos, limitado a 5 MB.
+- Prévia da imagem, substituição e remoção pelo formulário do produto.
+- Exibição das imagens no painel e no catálogo público, com carregamento tardio e fallback.
+- Migração `006_product_images.sql` para coluna pública, bucket e políticas do Storage.
+
+### Segurança
+
+- Upload exige produto pertencente a um catálogo da conta autenticada.
+- Caminhos usam usuário, catálogo, produto e nome único para impedir colisões e cache antigo.
+- Somente o caminho da imagem é liberado ao papel `anon`; nenhuma escrita pública foi adicionada.
+
+### Corrigido
+
+- Qualificada a coluna `storage.objects.name` nas políticas do Storage para evitar referência ambígua durante a execução da migração.
+
 ## [0.1.5] - 2026-08-31
 
 ### Adicionado

@@ -35,6 +35,7 @@
     let selectedCategory = "all";
     let toastTimeout = null;
     let lastFocusedElement = null;
+    const productImagesBucket = "catalog-products";
 
     function hasValidConfig() {
         return Boolean(config.url && config.publishableKey && /^https:\/\/.+\.supabase\.co\/?$/.test(config.url));
@@ -60,6 +61,12 @@
 
     function ordersAvailable() {
         return Boolean(catalog && catalog.orders_enabled && catalog.whatsapp_number);
+    }
+
+    function getProductImageUrl(imagePath) {
+        if (!imagePath || !client) return "";
+        const result = client.storage.from(productImagesBucket).getPublicUrl(imagePath);
+        return result.data && result.data.publicUrl ? result.data.publicUrl : "";
     }
 
     function showError(title, message, canRetry) {
@@ -135,6 +142,8 @@
         const top = document.createElement("div");
         const categoryLabel = document.createElement("span");
         const price = document.createElement("strong");
+        const media = document.createElement("div");
+        const image = document.createElement("img");
         const mark = document.createElement("span");
         const title = document.createElement("h3");
         const description = document.createElement("p");
@@ -142,16 +151,32 @@
         top.className = "product-card__top";
         categoryLabel.className = "product-card__category";
         price.className = "product-card__price";
+        media.className = "product-card__media";
+        image.className = "product-card__image";
         mark.className = "product-card__mark";
         categoryLabel.textContent = category.name;
         price.textContent = formatCurrency(product.price);
         mark.textContent = product.name.trim().charAt(0).toLocaleUpperCase("pt-BR") || "N";
+        const imageUrl = getProductImageUrl(product.image_path);
+        if (imageUrl) {
+            image.src = imageUrl;
+            image.alt = product.name;
+            image.loading = "lazy";
+            image.decoding = "async";
+            mark.hidden = true;
+            image.addEventListener("error", function () {
+                image.hidden = true;
+                mark.hidden = false;
+            });
+            media.appendChild(image);
+        }
+        media.appendChild(mark);
         title.textContent = product.name;
         description.textContent = product.description || "Consulte as informações deste produto.";
         top.appendChild(categoryLabel);
         top.appendChild(price);
         article.appendChild(top);
-        article.appendChild(mark);
+        article.appendChild(media);
         article.appendChild(title);
         article.appendChild(description);
         if (ordersAvailable()) {
@@ -400,7 +425,7 @@
         const [categoriesResult, productsResult] = await Promise.all([
             client.from("categories").select("id, catalog_id, name, sort_order, created_at")
                 .eq("catalog_id", catalog.id).order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
-            client.from("products").select("id, catalog_id, name, description, category_id, price, status, sort_order, created_at")
+            client.from("products").select("id, catalog_id, name, description, category_id, price, status, image_path, sort_order, created_at")
                 .eq("catalog_id", catalog.id).eq("status", "active")
                 .order("sort_order", { ascending: true }).order("created_at", { ascending: true })
         ]);

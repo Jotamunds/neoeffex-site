@@ -1,4 +1,4 @@
-# Painel administrativo — Etapa 6
+# Painel administrativo — Etapa 7
 
 Painel em `neoeffex.com.br/admin` e catálogo público em `neoeffex.com.br/catalogo/?catalogo=identificador`, usando Supabase.
 
@@ -17,6 +17,10 @@ Painel em `neoeffex.com.br/admin` e catálogo público em `neoeffex.com.br/catal
 - Configuração de número, ativação e instrução de pedidos por catálogo.
 - Carrinho público persistido somente no navegador do visitante.
 - Mensagem de pedido com itens, quantidades, subtotais e total enviada pelo WhatsApp.
+- Upload opcional de imagens JPEG, PNG ou WebP com limite de 5 MB.
+- Prévia, substituição e remoção de imagens no formulário do produto.
+- Supabase Storage com caminhos isolados por usuário, catálogo e produto.
+- Exibição pública responsiva com fallback automático quando não há imagem.
 
 Catálogos pausados e produtos pausados não aparecem para visitantes. O painel administrativo continua protegido por autenticação e pelas políticas de proprietário.
 
@@ -38,6 +42,7 @@ admin/
     ├── 003_categories_and_multi_catalogs.sql
     ├── 004_public_catalog_access.sql
     ├── 005_whatsapp_orders.sql
+    ├── 006_product_images.sql
     └── SETUP.md
 ```
 
@@ -47,6 +52,8 @@ A pasta pública `/catalogo/` é entregue separadamente para ser publicada na ra
 
 Siga `setup/SETUP.md` antes de publicar. Em `config.js`, use somente a URL do projeto e a chave publicável. Nunca adicione uma `service_role`, chave secreta ou senha de banco ao repositório.
 
-## Limite desta etapa
+## Limites atuais
 
 O pedido não é gravado no banco e não inclui pagamento on-line. O WhatsApp abre com a mensagem pronta para o responsável confirmar disponibilidade, prazo e pagamento.
+
+As imagens não são recortadas nem comprimidas no navegador. Para manter o catálogo leve, use arquivos já otimizados e preferencialmente em WebP.

@@ -1,5 +1,27 @@
 # Changelog — Painel administrativo
 
+## [0.1.8] - 2026-09-01
+
+### Adicionado
+
+- Identidade básica por catálogo com logo, descrição curta, região/endereço, horário e forma de atendimento.
+- Upload opcional de logo JPEG, PNG e WebP com limite de 2 MB, prévia, troca e remoção.
+- Exibição da identidade do comércio no topo do catálogo público, com fallback para catálogos antigos.
+- Migração `008_catalog_identity.sql` com novos campos, bucket dedicado e políticas de Storage isoladas por proprietário e catálogo.
+- Módulos de identidade separados do núcleo já validado do painel e do catálogo público.
+
+### Segurança
+
+- As regras RLS e os privilégios definidos na Etapa 9 permanecem intactos.
+- Logos usam caminho `{owner_id}/{catalog_id}/{timestamp}.{ext}` e não usam `upsert`.
+- O catálogo público continua lendo somente catálogos ativos e os novos textos são renderizados com `textContent`.
+- Nenhuma chave secreta, `service_role` ou HTML/CSS arbitrário foi adicionado.
+
+### Compatibilidade
+
+- Catálogos existentes continuam funcionando sem preencher nenhum dos novos campos.
+- A identidade é carregada como módulo adicional, sem alterar os arquivos centrais `admin.js`, `admin.css`, `catalogo.js` e `catalogo.css` da versão 0.1.7.
+
 ## [0.1.7] - 2026-09-01
 
 ### Adicionado

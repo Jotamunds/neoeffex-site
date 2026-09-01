@@ -1,0 +1,72 @@
+/* Etapa 8 — identidade básica do comércio. */
+.catalog-identity-logo {
+    display: grid;
+    grid-template-columns: 128px minmax(0, 1fr);
+    align-items: center;
+    gap: 13px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface-muted);
+}
+
+.catalog-identity-logo__preview {
+    display: grid;
+    width: 128px;
+    height: 92px;
+    overflow: hidden;
+    padding: 10px;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #f7f7f5;
+}
+
+.catalog-identity-logo__preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.catalog-identity-logo__preview span {
+    color: var(--blue-600);
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.catalog-identity-logo__input {
+    display: grid;
+    min-width: 0;
+    gap: 6px;
+}
+
+.catalog-identity-logo__input input[type="file"] {
+    min-height: 0;
+    padding: 7px;
+    background: var(--surface);
+    font-size: 10px;
+}
+
+.catalog-identity-logo__input input[type="file"]::file-selector-button {
+    min-height: 30px;
+    margin-right: 9px;
+    padding: 0 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--surface-muted);
+    color: var(--text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    .catalog-identity-logo {
+        grid-template-columns: 96px minmax(0, 1fr);
+    }
+
+    .catalog-identity-logo__preview {
+        width: 96px;
+        height: 80px;
+    }
+}

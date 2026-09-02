@@ -1,5 +1,28 @@
 # Changelog — Painel administrativo
 
+## [0.1.11] - 2026-09-02
+
+### Regra do MVP
+
+- Admin passa a operar com `1 conta → 1 catálogo`.
+- `Novo catálogo` fica disponível apenas enquanto a conta não possui catálogo.
+- Contas com exatamente um catálogo não exibem seletor desnecessário.
+- Contas legadas com múltiplos catálogos continuam acessíveis, mas não podem criar novos.
+- Nova migration 009 permite reforçar a regra também no banco por `owner_id`.
+
+### Feedback
+
+- Colisão de slug/endereço continua sendo validada pelo banco.
+- A mensagem de endereço/identificador já utilizado agora também é exibida como toast.
+- Tentativa de criar um segundo catálogo mostra toast e mensagem no formulário.
+
+### Segurança e compatibilidade
+
+- A migration 009 não apaga nem mescla dados.
+- Se detectar contas com múltiplos catálogos, a migration é interrompida sem aplicar alterações.
+- RLS, Auth, produtos, categorias, Storage, carrinho e WhatsApp permanecem inalterados.
+- Nenhuma URL pública de catálogo existente é modificada.
+
 ## [0.1.10.1] - 2026-09-02
 
 ### Catálogo da Lu

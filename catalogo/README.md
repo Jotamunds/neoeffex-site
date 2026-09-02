@@ -112,3 +112,17 @@ Escolhas:
 - o marcador genérico do cabeçalho deixa de ser exibido no tema da Lu;
 - demais catálogos continuam com o cabeçalho padrão.
 
+---
+
+## v0.1.11 — um catálogo por cliente
+
+A alteração é administrativa: cada conta do MVP passa a possuir somente um catálogo.
+
+A página pública continua sendo resolvida pelo slug:
+
+```text
+/catalogo/?catalogo=identificador
+```
+
+O slug permanece globalmente único. Nenhuma URL pública existente é alterada.
+

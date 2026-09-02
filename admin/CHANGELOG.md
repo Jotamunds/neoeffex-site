@@ -1,5 +1,22 @@
 # Changelog — Painel administrativo
 
+## [0.1.10.1] - 2026-09-02
+
+### Catálogo da Lu
+
+- Substituído o marcador genérico “Lu Leve e Saudável” do cabeçalho pela logo oficial horizontal do pack atualizado.
+- Cabeçalho usa composição com símbolo à esquerda e nome à direita.
+- Hero passa a usar a versão quadrada oficial sem texto.
+- Mantido arredondamento discreto apenas na própria imagem quadrada, sem moldura externa.
+- Fundo do cabeçalho da Lu ajustado para integrar visualmente o fundo claro da arte.
+- Outros catálogos permanecem inalterados.
+
+### Segurança e compatibilidade
+
+- Nenhuma migration.
+- Nenhuma alteração em RLS, Auth, Storage ou lógica do carrinho.
+- Correção restrita ao tema/ativos do slug `lu-leve-e-saudavel`.
+
 ## [0.1.10] - 2026-09-02
 
 ### Catálogo público

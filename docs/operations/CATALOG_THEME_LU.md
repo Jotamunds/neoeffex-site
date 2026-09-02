@@ -207,3 +207,35 @@ até 420: 96 × 96 px
 
 A imagem do Storage permanece como fallback caso o ativo local não carregue.
 
+---
+
+## v0.1.10.1 — pack de identidade atualizado
+
+Pack recebido:
+
+```text
+logo-com-texto-na-direita.png
+logo-com-texto-na-esquerda.png
+logo-quadrada-com-texto.png
+logo-quadrada-sem-texto.png
+```
+
+Ativos escolhidos para o catálogo:
+
+```text
+Cabeçalho:
+logo-com-texto-na-esquerda.png
+→ logo-header.webp
+
+Hero:
+logo-quadrada-sem-texto.png
+→ logo-catalogo.webp
+```
+
+Motivo:
+
+- o cabeçalho precisa de leitura horizontal rápida;
+- o símbolo à esquerda cria continuidade natural com o conteúdo;
+- no hero, o nome “Lu Leve e Saudável” já é exibido pelo catálogo, então a versão quadrada sem texto evita repetição;
+- a imagem quadrada mantém somente um arredondamento discreto nos cantos, sem moldura externa.
+

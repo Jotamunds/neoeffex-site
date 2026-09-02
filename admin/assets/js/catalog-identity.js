@@ -151,15 +151,15 @@
         if (eyebrow) eyebrow.textContent = "ETAPA 10";
         if (phaseTitle) phaseTitle.textContent = "Operação e entrega";
         if (phaseCopy) phaseCopy.textContent = "Catálogo da Lu atualizado e ajustes de interface concluídos."; 
-        if (version) version.textContent = "ADMIN / 0.1.10";
+        if (version) version.textContent = "ADMIN / 0.1.10.1";
         if (notice) {
             notice.setAttribute("aria-label", "Status da décima etapa");
             const paragraph = notice.querySelector("p");
             if (paragraph) {
                 paragraph.replaceChildren();
                 const strong = document.createElement("strong");
-                strong.textContent = "Catálogo v0.1.10 disponível. ";
-                paragraph.append(strong, document.createTextNode("A Lu usa nova logo quadrada e as notificações não bloqueiam mais o botão do carrinho. A segurança da Etapa 9 permanece inalterada."));
+                strong.textContent = "Catálogo v0.1.10.1 disponível. ";
+                paragraph.append(strong, document.createTextNode("As logos reais da Lu foram aplicadas ao cabeçalho e ao hero do catálogo. A segurança da Etapa 9 permanece inalterada."));
             }
         }
     }

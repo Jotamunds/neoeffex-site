@@ -91,3 +91,24 @@ O botão do site pode apontar para:
 
 Nenhuma migration, RLS ou regra de Storage foi alterada.
 
+---
+
+## v0.1.10.1 — logos oficiais da Lu
+
+O catálogo `lu-leve-e-saudavel` passa a usar dois ativos do pack atualizado:
+
+```text
+Cabeçalho:
+assets/images/brands/lu-leve-e-saudavel/logo-header.webp
+
+Hero:
+assets/images/brands/lu-leve-e-saudavel/logo-catalogo.webp
+```
+
+Escolhas:
+
+- cabeçalho: composição horizontal com símbolo à esquerda e nome à direita;
+- hero: símbolo quadrado sem texto, pois o nome do catálogo já aparece como título;
+- o marcador genérico do cabeçalho deixa de ser exibido no tema da Lu;
+- demais catálogos continuam com o cabeçalho padrão.
+

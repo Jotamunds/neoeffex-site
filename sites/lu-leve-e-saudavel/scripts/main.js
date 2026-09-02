@@ -69,23 +69,19 @@
     const developerUrl = getSafeHttpsUrl(developer.url);
 
     document.querySelectorAll("[data-developer-credit]").forEach((element) => {
-        const prefixText = "Desenvolvido por ";
+        const label = `Desenvolvido por ${developer.name}`;
 
         if (!developerUrl) {
-            element.textContent = prefixText + developer.name;
+            element.textContent = label;
             return;
         }
 
-        const prefix = document.createElement("span");
         const link = document.createElement("a");
-
-        prefix.textContent = prefixText;
-        link.textContent = developer.name;
+        link.textContent = label;
         link.setAttribute("href", developerUrl);
         link.setAttribute("target", "_blank");
         link.setAttribute("rel", "noopener noreferrer");
-
-        element.replaceChildren(prefix, link);
+        element.replaceChildren(link);
     });
 
     if (app.whatsapp) {

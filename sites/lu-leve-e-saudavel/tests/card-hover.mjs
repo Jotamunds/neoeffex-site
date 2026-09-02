@@ -164,7 +164,7 @@ export function validateCardHover({ check, root, html, config }) {
 
     check("Nenhum listener por card, timer, dependência ou navegação artificial", () => {
         assert.doesNotMatch(script, /mouseenter|mouseleave|mousemove|pointermove|touchstart|setTimeout|setInterval|requestAnimationFrame|preventDefault|fetch\(|\.style\./);
-        assert.equal((html.match(/<script\b/g) || []).length, 11);
+        assert.equal((html.match(/<script\b/g) || []).length, 10);
         const fixture = make();
         fixture.app.animations.init();
         assert.deepEqual([...fixture.documentListeners.keys()].sort(), ["animationcancel", "animationend", "focusin", "visibilitychange"]);

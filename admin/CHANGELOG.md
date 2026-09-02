@@ -1,5 +1,35 @@
 # Changelog — Painel administrativo
 
+## [0.1.9.3] - 2026-09-02
+
+### Adicionado
+
+- Guia rápido do cliente em `docs/client/QUICK_START.md`.
+- Política operacional de suporte.
+- Documento de escopo do MVP.
+- Aviso operacional de privacidade alinhado ao comportamento atual.
+- Especificação e checklist do catálogo demo.
+- Simulação final da Etapa 10 antes do cliente piloto.
+
+### Atualizado
+
+- Onboarding passa a entregar o guia rápido e explicar o escopo do MVP.
+- Ficha de cliente registra entrega de guia, escopo e aviso de privacidade.
+- Checklist de release referencia o catálogo demo formal.
+- Painel identifica a versão operacional `0.1.9.3`.
+
+### Privacidade e escopo
+
+- Documentado que o carrinho público usa `localStorage` por catálogo.
+- Documentado que o catálogo monta a mensagem e abre o WhatsApp sem persistir pedido em painel próprio.
+- SLA, retenção e canais não definidos permanecem explicitamente pendentes.
+
+### Segurança e compatibilidade
+
+- Nenhuma migration, tabela, bucket, RLS ou autenticação foi alterada.
+- Nenhum WhatsApp real foi incluído no catálogo demo.
+- Fluxos funcionais do Admin e catálogo permanecem inalterados.
+
 ## [0.1.9.2] - 2026-09-02
 
 ### Adicionado

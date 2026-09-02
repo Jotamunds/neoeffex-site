@@ -579,7 +579,7 @@ service role
 acesso ao banco
 ```
 
-O guia simplificado do cliente será formalizado na `v0.1.9.3`.
+Entregue ao cliente também `docs/client/QUICK_START.md`.
 
 Até lá, faça a entrega acompanhada e demonstre:
 
@@ -623,6 +623,8 @@ Até lá, faça a entrega acompanhada e demonstre:
 [ ] URL do Admin entregue
 [ ] URL pública entregue
 [ ] Canal de suporte informado
+[ ] QUICK_START.md entregue
+[ ] Escopo do MVP explicado
 [ ] Nenhuma senha registrada
 [ ] Nenhum secret registrado
 ```

@@ -150,16 +150,16 @@
         const notice = document.querySelector(".stage-notice");
         if (eyebrow) eyebrow.textContent = "ETAPA 10";
         if (phaseTitle) phaseTitle.textContent = "Operação e entrega";
-        if (phaseCopy) phaseCopy.textContent = "Operação, backup, rollback e releases globais documentados."; 
-        if (version) version.textContent = "ADMIN / 0.1.9.2";
+        if (phaseCopy) phaseCopy.textContent = "Operação, suporte, escopo, privacidade e validação piloto documentados."; 
+        if (version) version.textContent = "ADMIN / 0.1.9.3";
         if (notice) {
             notice.setAttribute("aria-label", "Status da décima etapa");
             const paragraph = notice.querySelector("p");
             if (paragraph) {
                 paragraph.replaceChildren();
                 const strong = document.createElement("strong");
-                strong.textContent = "Operação e recuperação documentadas. ";
-                paragraph.append(strong, document.createTextNode("Use docs/operations/ para onboarding, ciclo do cliente, backup, rollback e checklist de release. A segurança da Etapa 9 permanece inalterada."));
+                strong.textContent = "Etapa 10 documentada. ";
+                paragraph.append(strong, document.createTextNode("Use docs/operations/ e docs/client/ para operar, entregar e validar o catálogo antes do cliente piloto. A segurança da Etapa 9 permanece inalterada."));
             }
         }
     }

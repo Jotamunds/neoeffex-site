@@ -157,6 +157,9 @@ URL pública entregue: sim / não
 E-mail de acesso confirmado: sim / não
 Demonstração do painel realizada: sim / não
 Canal de suporte informado: sim / não
+QUICK_START entregue: sim / não
+Escopo do MVP apresentado: sim / não
+Aviso de privacidade apresentado/revisado: sim / não
 ```
 
 Data da entrega:

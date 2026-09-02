@@ -282,7 +282,15 @@ Isso protege compatibilidade retroativa.
 
 # 11. Teste com catálogo de regressão/demo
 
-Enquanto o catálogo demo oficial ainda não existir, usar uma conta **fictícia de teste**, nunca um cliente real como ambiente primário.
+Usar o catálogo definido em:
+
+```text
+docs/operations/DEMO_CATALOG_CHECKLIST.md
+```
+
+Se ele ainda não tiver sido criado, isso bloqueia a validação final para cliente piloto.
+
+Nunca usar cliente real como ambiente primário.
 
 Testar:
 

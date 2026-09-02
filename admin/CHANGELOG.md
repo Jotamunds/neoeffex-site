@@ -1,5 +1,32 @@
 # Changelog — Painel administrativo
 
+## [0.1.9] - 2026-09-02
+
+### Adicionado
+
+- Estrutura inicial de operação em `docs/operations/`.
+- Procedimento oficial de onboarding dos primeiros clientes.
+- Ficha operacional reutilizável para cadastro e validação.
+- Checklist obrigatório de identidade, produtos, mobile, aba anônima e pedido pelo WhatsApp.
+
+### Atualizado
+
+- `README.md` passou a refletir o estado atual do sistema de catálogo.
+- `admin/setup/SETUP.md` agora inclui a migration `008_catalog_identity.sql` na ordem de instalação.
+- Documentada a ordem crítica `007 → 008` quando o hardening de segurança for reaplicado.
+- Painel passa a identificar o bloco atual como Etapa 10 / versão `0.1.9`.
+
+### Segurança
+
+- Onboarding mantém cadastro público fechado e criação manual de contas.
+- O procedimento proíbe registrar senhas, tokens, secrets ou `service_role`.
+- Nenhuma política RLS, bucket, tabela ou migration foi alterada nesta versão.
+
+### Compatibilidade
+
+- `v0.1.9` é uma atualização operacional e documental.
+- Fluxos de catálogo, identidade, imagens, carrinho e WhatsApp permanecem inalterados.
+
 ## [0.1.8.3] - 2026-09-01
 
 ### Corrigido

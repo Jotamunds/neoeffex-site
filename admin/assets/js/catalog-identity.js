@@ -148,18 +148,18 @@
         const phaseCopy = document.querySelector(".phase-card p");
         const version = document.querySelector(".version");
         const notice = document.querySelector(".stage-notice");
-        if (eyebrow) eyebrow.textContent = "ETAPA 8";
-        if (phaseTitle) phaseTitle.textContent = "Identidade do comércio";
-        if (phaseCopy) phaseCopy.textContent = "Logo e informações básicas reutilizadas pelo catálogo público.";
-        if (version) version.textContent = "ADMIN / 0.1.8.2";
+        if (eyebrow) eyebrow.textContent = "ETAPA 10";
+        if (phaseTitle) phaseTitle.textContent = "Operação e entrega";
+        if (phaseCopy) phaseCopy.textContent = "Onboarding e procedimentos operacionais para os primeiros clientes."; 
+        if (version) version.textContent = "ADMIN / 0.1.9";
         if (notice) {
-            notice.setAttribute("aria-label", "Status da oitava etapa");
+            notice.setAttribute("aria-label", "Status da décima etapa");
             const paragraph = notice.querySelector("p");
             if (paragraph) {
                 paragraph.replaceChildren();
                 const strong = document.createElement("strong");
-                strong.textContent = "Identidade por catálogo disponível. ";
-                paragraph.append(strong, document.createTextNode("Aplique a migração 008 antes de usar os novos campos. As regras de segurança da Etapa 9 permanecem ativas."));
+                strong.textContent = "Onboarding operacional disponível. ";
+                paragraph.append(strong, document.createTextNode("Use docs/operations/CLIENT_ONBOARDING.md para cadastrar e validar os primeiros clientes. A segurança da Etapa 9 permanece inalterada."));
             }
         }
     }

@@ -1,88 +1,176 @@
-# Configuração da Etapa 9
+# Configuração do catálogo Neoeffex
 
-## Para uma instalação já feita nas etapas anteriores
+Este documento descreve a ordem técnica atual para preparar o Supabase usado por `/admin/` e `/catalogo/`.
 
-1. Confirme que `006_product_images.sql` já foi aplicado e que imagens continuam funcionando.
-2. Guarde uma cópia do banco e dos arquivos atualmente publicados.
-3. No SQL Editor do projeto Supabase, execute `007_security_hardening.sql` inteiro.
-4. Execute `audits/production_security_audit.sql`.
-5. Continue somente se todas as verificações retornarem `PASS`.
-6. Publique `/admin/` e `/catalogo/` da versão `0.1.7`.
-7. Faça os testes de `PRODUCTION-CHECKLIST.md` no domínio oficial.
-
-O arquivo `007` executa em transação e pode ser reaplicado. Ele remove privilégios anteriores das tabelas do catálogo e concede novamente apenas o necessário: CRUD para `authenticated` e leitura de colunas públicas para `anon`. As políticas de proprietário e do Storage também são recriadas com papéis explícitos.
-
-## Para uma instalação nova
-
-1. Crie um projeto Supabase dedicado ao catálogo.
-2. No SQL Editor, execute nesta ordem:
-
-   1. `001_initial_schema.sql`
-   2. `002_seed_example.sql` depois de criar a primeira conta, se quiser iniciar com um catálogo de exemplo
-   3. `003_categories_and_multi_catalogs.sql`
-   4. `004_public_catalog_access.sql`
-   5. `005_whatsapp_orders.sql`
-   6. `006_product_images.sql`
-   7. `007_security_hardening.sql`
-
-3. Execute `audits/production_security_audit.sql` e confirme `PASS` em todas as linhas.
-4. Siga `PRODUCTION-CHECKLIST.md` antes de cadastrar o primeiro comércio.
-
-As permissões são explícitas porque tabelas novas podem não ser expostas automaticamente pela Data API. Visitantes recebem somente leitura das colunas públicas, limitada por RLS a catálogos e produtos ativos.
-
-## Configurar autenticação
-
-Em **Authentication > Sign In / Providers > Email**, desative **Allow new users to sign up**. Em **Authentication**, mantenha **Allow anonymous sign-ins** desativado. Essas duas configurações são obrigatórias: novas contas devem ser criadas por você no Supabase.
-
-Em **Authentication > URL Configuration**, adicione:
+## Versão de referência
 
 ```text
-Site URL: https://neoeffex.com.br/admin/
-Redirect URL: https://neoeffex.com.br/admin/reset-password.html
+Catálogo: 0.1.9
+Migration mais recente: 008_catalog_identity.sql
 ```
 
-Para testes locais, adicione também a URL usada pelo seu servidor local, por exemplo `http://127.0.0.1:5500/admin/reset-password.html`.
+A `v0.1.9` é operacional/documental e **não adiciona migration**.
 
-## Configurar o painel
+---
 
-Em `admin/config.js`, deixe somente a **Project URL** e a **publishable key**:
+## 1. Instalação já existente
+
+Se o projeto já chegou corretamente à `v0.1.8.x` e a identidade do comércio funciona:
+
+1. confirme que `008_catalog_identity.sql` já foi aplicada;
+2. confirme que uma logo e as informações de identidade aparecem no catálogo público;
+3. confirme que `admin/VERSION` e `catalogo/VERSION` estão sincronizados;
+4. não execute migration apenas por atualizar para `0.1.9`;
+5. continue com `docs/operations/CLIENT_ONBOARDING.md`.
+
+### Atenção à ordem 007 → 008
+
+`007_security_hardening.sql` revoga e recria os privilégios públicos das tabelas.
+
+`008_catalog_identity.sql` adiciona depois as permissões públicas das novas colunas de identidade.
+
+Portanto:
+
+```text
+007_security_hardening.sql
+        ↓
+008_catalog_identity.sql
+```
+
+Se por qualquer motivo a `007` for reaplicada em um banco que já possui a `008`, **reaplique a `008` em seguida** antes de validar ou publicar o catálogo.
+
+Não use a ordem inversa.
+
+---
+
+## 2. Instalação nova
+
+Crie um projeto Supabase dedicado ao catálogo.
+
+No SQL Editor, aplique as migrations nesta ordem:
+
+```text
+001_initial_schema.sql
+002_seed_example.sql           (opcional, depois de criar a primeira conta)
+003_categories_and_multi_catalogs.sql
+004_public_catalog_access.sql
+005_whatsapp_orders.sql
+006_product_images.sql
+007_security_hardening.sql
+008_catalog_identity.sql
+```
+
+Depois:
+
+1. execute `audits/production_security_audit.sql`;
+2. confirme os resultados esperados da auditoria;
+3. execute os testes de `PRODUCTION-CHECKLIST.md`;
+4. teste identidade e logo adicionadas pela migration 008;
+5. somente então inicie o onboarding de um cliente.
+
+---
+
+## 3. Configurar autenticação
+
+No Supabase, mantenha o cadastro público fechado.
+
+### Authentication → Sign In / Providers → Email
+
+- desative **Allow new users to sign up**;
+- mantenha **Allow anonymous sign-ins** desativado;
+- novas contas de clientes devem ser criadas manualmente pela operação da Neoeffex;
+- prefira convite/confirmação de e-mail para o primeiro acesso;
+- não armazene senhas de clientes em documentos, planilhas ou no repositório.
+
+### Authentication → URL Configuration
+
+Use os endereços oficiais:
+
+```text
+Site URL:
+https://neoeffex.com.br/admin/
+
+Redirect URL:
+https://neoeffex.com.br/admin/reset-password.html
+```
+
+Para desenvolvimento local, adicione somente os redirects exatos usados pelo servidor local.
+
+Exemplo:
+
+```text
+http://127.0.0.1:5500/admin/reset-password.html
+```
+
+Evite curingas em produção.
+
+### E-mails
+
+Antes de tratar recuperação de senha como fluxo de produção:
+
+- configure SMTP próprio;
+- teste o recebimento;
+- teste o link no domínio oficial;
+- confirme que a redefinição realmente invalida a senha anterior.
+
+---
+
+## 4. Configurar os arquivos públicos
+
+`admin/config.js` e `catalogo/config.js` devem usar somente:
 
 ```js
 window.NEOEFFEX_SUPABASE_CONFIG = Object.freeze({
-    url: "https://seu-projeto.supabase.co",
-    publishableKey: "sb_publishable_..."
+    url: "https://SEU-PROJETO.supabase.co",
+    publishableKey: "SUA_CHAVE_PUBLICAVEL"
 });
 ```
 
-Nunca use `service_role`, chave secreta ou senha de banco em arquivos do navegador.
+Nunca coloque nesses arquivos:
 
-Use os mesmos valores públicos em `catalogo/config.js`. Não adicione nenhum segredo à página pública.
+```text
+service_role
+secret key
+senha de banco
+token privado
+senha de cliente
+```
 
-## Testar antes de publicar
+---
 
-Primeiro, execute `audits/production_security_audit.sql`. Depois, conclua o teste com duas contas e os critérios de liberação descritos em `PRODUCTION-CHECKLIST.md`.
+## 5. Teste mínimo da instalação
 
-1. Entre com a conta criada e confirme que o catálogo existente aparece.
-2. Abra **Categorias**, confira as categorias migradas e crie uma nova categoria.
-3. Edite um produto e troque sua categoria; crie outro produto usando a nova categoria.
-4. Confirme que uma categoria com produtos vinculados não pode ser excluída.
-5. Crie um segundo catálogo, adicione uma categoria e um produto nele, e alterne entre os catálogos pelo seletor.
-6. Edite o identificador de um catálogo e confirme que o painel alerta se ele já estiver em uso.
-7. Entre com uma segunda conta e confirme que ela não consegue visualizar ou alterar nenhum catálogo, categoria ou produto da primeira.
-8. Clique em **Ver catálogo** e confirme que o catálogo abre em `/catalogo/?catalogo=identificador`.
-9. Pause um produto e confirme que ele desaparece da página pública após atualizar.
-10. Pause o catálogo e confirme que o endereço público informa que ele está indisponível.
-11. Reative o catálogo, teste a busca e os filtros por categoria.
-12. Edite o catálogo, informe um número com DDI e DDD, personalize a instrução e ative **Receber pedidos**.
-13. No catálogo público, adicione dois produtos, altere quantidades e confira o total.
-14. Clique em **Enviar pedido pelo WhatsApp** e confirme número, itens, quantidades, subtotais, total e instrução.
-15. Desative os pedidos e confirme que os botões de adicionar e o carrinho desaparecem da página pública.
-16. Cadastre um produto sem imagem e confirme que o fallback continua funcionando.
-17. Adicione uma imagem JPEG, PNG ou WebP abaixo de 5 MB e confira a prévia.
-18. Substitua a imagem e confirme que a nova aparece no catálogo após atualizar.
-19. Remova a imagem e confirme o retorno do fallback.
-20. Tente um arquivo incompatível e outro acima de 5 MB; ambos devem ser bloqueados.
-21. Exclua um produto com imagem e confirme que ele desaparece do painel e do catálogo.
-22. Clique em **Sair** e teste a recuperação de senha.
+Antes do onboarding:
 
-Para produção, configure SMTP próprio, teste a recuperação no domínio oficial, ative MFA na conta do Supabase e revise o Security Advisor antes de depender do painel com clientes.
+```text
+[ ] Login funciona
+[ ] Recuperação de senha funciona
+[ ] Conta A não acessa dados da Conta B
+[ ] Criar catálogo funciona
+[ ] Pausar catálogo retira o catálogo do público
+[ ] Reativar catálogo funciona
+[ ] Categorias funcionam
+[ ] Produtos funcionam
+[ ] Produto sem imagem usa fallback
+[ ] Upload de produto funciona
+[ ] Identidade do comércio funciona
+[ ] Logo funciona
+[ ] Busca pública funciona
+[ ] Filtros funcionam
+[ ] Carrinho funciona
+[ ] Total está correto
+[ ] WhatsApp abre com o número correto
+[ ] Aba anônima consegue ler somente o conteúdo público
+```
+
+---
+
+## 6. Onboarding
+
+Depois que a instalação estiver validada, siga:
+
+```text
+docs/operations/CLIENT_ONBOARDING.md
+```
+
+Não crie atalhos que enfraqueçam RLS, Storage ou autenticação apenas para facilitar o cadastro de clientes.

@@ -1,5 +1,20 @@
 # Changelog — Painel administrativo
 
+## [0.1.8.3] - 2026-09-01
+
+### Corrigido
+
+- Removida a moldura branca fixa ao redor da logo no catálogo público.
+- A logo agora respeita melhor o próprio formato e fundo do arquivo.
+- Ajustados limites responsivos de largura e altura para logos horizontais, quadradas e verticais.
+- Mantido `object-fit: contain`, evitando deformação da identidade visual.
+- Adicionado apenas um acabamento discreto diretamente na imagem, sem criar um segundo cartão visual.
+
+### Compatibilidade
+
+- Nenhuma migration, tabela, coluna, bucket, RLS ou fluxo de upload foi alterado.
+- O editor de imagens da v0.1.8.2 permanece intacto.
+
 ## [0.1.8.2] - 2026-09-01
 
 ### Adicionado

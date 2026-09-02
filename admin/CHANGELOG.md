@@ -1,5 +1,24 @@
 # Changelog — Painel administrativo
 
+## [0.1.8.2] - 2026-09-01
+
+### Adicionado
+
+- Editor simples para enquadrar imagens de produtos e logos antes do upload.
+- Produto com saída 4:3, zoom, arraste, grade, preencher, encaixar, centralizar e rotação.
+- Logo com encaixe proporcional, zoom, arraste, rotação e remoção opcional de margens vazias.
+- Otimização da imagem final em WebP mantendo os fluxos de upload e Storage existentes.
+
+### Corrigido
+
+- O carregamento do editor foi removido de `admin/config.js`; o arquivo de configuração voltou exatamente ao fluxo estável da v0.1.8.
+- O editor agora é carregado de forma isolada pelo módulo de identidade, evitando bloquear a inicialização principal do Admin.
+
+### Segurança e compatibilidade
+
+- Nenhuma migration, tabela, coluna, bucket ou política RLS foi alterada.
+- O upload continua usando os validadores e caminhos seguros já existentes.
+
 ## [0.1.8] - 2026-09-01
 
 ### Adicionado

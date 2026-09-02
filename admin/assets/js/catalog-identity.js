@@ -151,7 +151,7 @@
         if (eyebrow) eyebrow.textContent = "ETAPA 8";
         if (phaseTitle) phaseTitle.textContent = "Identidade do comércio";
         if (phaseCopy) phaseCopy.textContent = "Logo e informações básicas reutilizadas pelo catálogo público.";
-        if (version) version.textContent = "ADMIN / 0.1.8";
+        if (version) version.textContent = "ADMIN / 0.1.8.2";
         if (notice) {
             notice.setAttribute("aria-label", "Status da oitava etapa");
             const paragraph = notice.querySelector("p");
@@ -468,5 +468,27 @@
         document.addEventListener("DOMContentLoaded", init, { once: true });
     } else {
         init();
+    }
+}());
+
+
+(function loadImageEditorModule() {
+    "use strict";
+
+    const stylesheetPath = "assets/css/image-editor.css";
+    const scriptPath = "assets/js/image-editor.js";
+
+    if (!document.querySelector('link[href="' + stylesheetPath + '"]')) {
+        const stylesheet = document.createElement("link");
+        stylesheet.rel = "stylesheet";
+        stylesheet.href = stylesheetPath;
+        document.head.appendChild(stylesheet);
+    }
+
+    if (!document.querySelector('script[src="' + scriptPath + '"]')) {
+        const script = document.createElement("script");
+        script.src = scriptPath;
+        script.async = false;
+        document.head.appendChild(script);
     }
 }());

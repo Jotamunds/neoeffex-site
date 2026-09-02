@@ -246,3 +246,24 @@ Outros catálogos da mesma conta:
 
 Observações de encerramento:
 
+---
+
+## 15. Backup / manutenção
+
+```text
+Último backup relacionado ao cliente:
+Tipo: banco / Storage / ambos / não aplicável
+Local da cópia:
+Validado por:
+```
+
+Não registrar senha ou connection string.
+
+Última validação pública:
+
+```text
+Data:
+Versão:
+Resultado:
+```
+

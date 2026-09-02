@@ -1,5 +1,34 @@
 # Changelog — Painel administrativo
 
+## [0.1.9.2] - 2026-09-02
+
+### Adicionado
+
+- Procedimento de backup separado entre código, banco e Storage.
+- Procedimento de rollback de código sem reescrever histórico remoto.
+- Critérios para avaliar rollback de banco sem reversão destrutiva automática.
+- Checklist operacional completo para releases globais.
+- Registro obrigatório de versão e commit estáveis antes de alterações de alto risco.
+
+### Atualizado
+
+- `PRODUCTION-CHECKLIST.md` passa a ser focado em segurança e deixa de orientar a reaplicação da migration 007 em todo release.
+- Offboarding agora exige backup apropriado antes de exclusão definitiva.
+- Ficha do cliente passa a registrar último backup e última validação.
+- Painel identifica a versão operacional `0.1.9.2`.
+
+### Segurança
+
+- Backups de banco não são tratados como backup dos objetos do Storage.
+- Connection strings e senhas não devem ser armazenadas no repositório.
+- Rollback de banco exige análise e autorização; `DROP TABLE`/`DROP COLUMN` não são usados como reversão automática.
+- Nenhuma migration, tabela, bucket ou política RLS foi alterada nesta versão.
+
+### Compatibilidade
+
+- A `v0.1.9.2` é operacional/documental.
+- Fluxos de Admin, catálogo, imagens, carrinho e WhatsApp permanecem inalterados.
+
 ## [0.1.9.1] - 2026-09-02
 
 ### Adicionado

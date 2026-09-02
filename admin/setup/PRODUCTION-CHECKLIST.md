@@ -1,117 +1,233 @@
-# Checklist de produção — Etapa 9
+# Checklist de produção — segurança do catálogo
 
-Use este documento antes de cadastrar o primeiro comércio e antes de toda atualização global.
+Este documento valida os controles de segurança do sistema.
 
-## 1. Ordem obrigatória da atualização
+Para o processo completo de atualização global, use também:
 
-1. Guarde uma cópia do banco e dos ZIPs atualmente publicados.
-2. Execute `007_security_hardening.sql` no SQL Editor.
-3. Execute `audits/production_security_audit.sql`.
-4. Continue somente se todas as verificações retornarem `PASS`.
-5. Publique `/admin` e `/catalogo` da mesma versão.
-6. Faça os testes deste documento no domínio publicado.
-7. Se um fluxo essencial falhar, restaure os ZIPs anteriores e investigue antes de atender clientes.
+```text
+docs/operations/RELEASE_CHECKLIST.md
+docs/operations/BACKUP_AND_ROLLBACK.md
+```
 
-## 2. Configurações obrigatórias no Supabase
+## 1. Importante sobre migrations
 
-### Authentication → Sign In / Providers → Email
+Não execute migrations apenas porque existe um novo release de frontend.
 
-- Desative **Allow new users to sign up**. Os clientes devem ser criados manualmente por você.
-- Mantenha **Allow anonymous sign-ins** desativado.
-- Use confirmação de e-mail ou convites para novas contas.
-- Use senhas únicas com pelo menos 12 caracteres.
+A migration mais recente da base atual é:
 
-### Authentication → URL Configuration
+```text
+008_catalog_identity.sql
+```
 
-- Site URL: `https://neoeffex.com.br/admin/`
-- Redirect URL: `https://neoeffex.com.br/admin/reset-password.html`
-- Evite curingas no endereço de produção.
+Para uma instalação nova:
 
-### Authentication → Emails
+```text
+001_initial_schema.sql
+002_seed_example.sql (opcional)
+003_categories_and_multi_catalogs.sql
+004_public_catalog_access.sql
+005_whatsapp_orders.sql
+006_product_images.sql
+007_security_hardening.sql
+008_catalog_identity.sql
+```
 
-- Configure um SMTP próprio antes de tratar a recuperação de senha como serviço de produção.
-- Teste o recebimento e o link de redefinição com um e-mail que não pertença à equipe do Supabase.
-- Mantenha a validade dos links de recuperação em uma hora ou menos.
+### Regra 007 → 008
 
-### Segurança da conta e do projeto
+`007_security_hardening.sql` revoga e recria grants públicos com a estrutura existente naquela etapa.
 
-- Ative MFA na sua conta Supabase.
-- Ative 2FA no GitHub que publica o site.
-- Execute **Security Advisor** e corrija alertas relacionados às tabelas deste projeto.
-- Execute **Performance Advisor** e revise índices sugeridos.
-- Verifique SSL Enforcement e as opções de restrição de rede disponíveis para o plano.
+`008_catalog_identity.sql` adiciona depois os grants públicos das colunas de identidade.
 
-## 3. Teste com duas contas
+Se a 007 for reaplicada:
 
-Crie duas contas exclusivas de teste: Comércio A e Comércio B.
+```text
+007
+ ↓
+008
+```
 
-### Preparação
+Não publicar depois de reaplicar somente a 007.
 
-1. Entre como Comércio A e crie um catálogo, uma categoria, um produto e uma imagem.
-2. Copie o link público e saia do painel.
-3. Entre como Comércio B e crie dados diferentes.
+---
 
-### Resultado obrigatório
+## 2. Auditoria SQL
 
-- Comércio B não encontra o catálogo, as categorias ou os produtos do Comércio A no painel.
-- O seletor do Comércio B não preserva o catálogo da conta anterior.
-- Comércio B não consegue editar ou excluir os registros do Comércio A.
-- Imagens enviadas pelo Comércio B usam a pasta do usuário B.
-- Sair da conta remove a sessão e volta ao login.
+Depois de mudança em:
 
-Se qualquer item falhar, não publique para clientes.
+- schema;
+- grants;
+- RLS;
+- Storage policy;
 
-## 4. Teste público em aba anônima
+execute:
 
-1. Abra o catálogo do Comércio A em uma aba anônima.
-2. Confirme que o catálogo ativo aparece.
-3. Pause um produto e atualize a aba anônima: ele deve desaparecer.
-4. Pause o catálogo: o endereço deve informar que ele está pausado ou não foi encontrado.
-5. Reative o catálogo e o produto.
-6. Monte um carrinho, altere quantidades e confira o total.
-7. Abra o WhatsApp e confirme o número, os itens, as quantidades e os valores.
+```text
+admin/setup/audits/production_security_audit.sql
+```
 
-Visitantes nunca devem receber acesso ao painel ou a operações de escrita.
+Revise os resultados esperados antes da publicação.
 
-## 5. Teste de imagens
+Uma atualização exclusivamente documental não exige reaplicar migrations.
 
-- JPEG, PNG e WebP com até 5 MB são aceitos.
-- GIF, SVG, PDF e arquivos acima de 5 MB são bloqueados.
-- Substituir uma imagem remove a referência anterior.
-- Remover a imagem mantém o produto e exibe o fallback.
-- Excluir um produto remove sua imagem do Storage.
+---
 
-## 6. Teste de autenticação
+## 3. Authentication
 
-- Login correto abre somente os dados da conta.
-- Login incorreto usa uma mensagem genérica e não informa se o e-mail existe.
-- Recuperação de senha sempre retorna uma mensagem genérica.
-- O link recebido abre `/admin/reset-password.html`.
-- Senhas com menos de 12 caracteres são recusadas pelo formulário.
-- Depois da redefinição, a nova senha entra e a antiga deixa de funcionar.
+### Email
 
-## 7. Verificação dos arquivos publicados
+```text
+[ ] Allow new users to sign up desativado
+[ ] Allow anonymous sign-ins desativado
+[ ] Contas novas são criadas manualmente
+```
 
-- `admin/VERSION` e `catalogo/VERSION` mostram a mesma versão.
-- `config.js` contém somente URL e chave publicável.
-- Não existem `service_role`, secret key, senha de banco ou credenciais de cliente no repositório.
-- A biblioteca do Supabase está fixada em uma versão específica, sem usar apenas `@2`.
-- `/admin` não aparece em mecanismos de busca.
-- O catálogo funciona em celular e computador.
+### Redirect
 
-## 8. Critério de liberação
+Confirmar:
 
-O primeiro cliente pode ser cadastrado somente quando:
+```text
+Site URL:
+https://neoeffex.com.br/admin/
 
-- A auditoria SQL retornar apenas `PASS`.
-- Os testes com duas contas forem aprovados.
-- A recuperação de senha estiver funcionando no domínio oficial.
-- Um pedido completo chegar ao WhatsApp correto.
-- Houver uma cópia da versão anterior para rollback.
+Redirect:
+https://neoeffex.com.br/admin/reset-password.html
+```
 
-Referências:
+Evitar curingas desnecessários em produção.
 
-- [Production Checklist do Supabase](https://supabase.com/docs/guides/deployment/going-into-prod)
-- [Configuração geral do Auth](https://supabase.com/docs/guides/auth/general-configuration)
-- [Redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls)
-- [SMTP próprio](https://supabase.com/docs/guides/auth/auth-smtp)
+### Recuperação
+
+```text
+[ ] SMTP de produção configurado
+[ ] E-mail chega
+[ ] Link abre domínio correto
+[ ] Nova senha funciona
+[ ] Senha anterior deixa de funcionar
+```
+
+---
+
+## 4. Conta do projeto
+
+```text
+[ ] MFA na conta Supabase
+[ ] 2FA no GitHub
+[ ] Security Advisor revisado
+[ ] Alertas relevantes avaliados
+```
+
+---
+
+## 5. Teste com duas contas
+
+Obrigatório depois de mudanças em segurança, RLS, owner, Auth ou Storage.
+
+Criar/usar:
+
+```text
+Comércio A
+Comércio B
+```
+
+Confirmar:
+
+```text
+[ ] B não encontra catálogos administrativos de A
+[ ] B não altera categorias de A
+[ ] B não altera produtos de A
+[ ] B não exclui dados de A
+[ ] Imagens de B usam owner B
+[ ] Logout remove a sessão
+```
+
+Se qualquer item falhar:
+
+```text
+NÃO PUBLICAR
+```
+
+---
+
+## 6. Teste público em aba anônima
+
+```text
+[ ] Catálogo ativo aparece
+[ ] Produto ativo aparece
+[ ] Produto pausado não aparece
+[ ] Catálogo pausado não expõe conteúdo
+[ ] Visitante não possui escrita
+[ ] Carrinho funciona
+[ ] WhatsApp funciona
+```
+
+---
+
+## 7. Imagens
+
+Produtos:
+
+```text
+JPEG / PNG / WebP
+limite atual: 5 MB no arquivo selecionado
+```
+
+Logo:
+
+```text
+JPEG / PNG / WebP
+limite atual: 2 MB no arquivo selecionado
+```
+
+Confirmar:
+
+```text
+[ ] arquivo incompatível é bloqueado
+[ ] substituir imagem funciona
+[ ] remover imagem mantém fallback
+[ ] editor não quebra upload
+[ ] logo respeita catálogo correto
+```
+
+---
+
+## 8. Arquivos publicados
+
+```text
+[ ] admin/VERSION = catalogo/VERSION
+[ ] config.js contém somente valores públicos
+[ ] biblioteca Supabase está fixada em versão específica
+[ ] nenhum service_role
+[ ] nenhuma secret key
+[ ] nenhuma senha de banco
+[ ] nenhuma credencial de cliente
+[ ] /admin usa noindex/nofollow
+```
+
+---
+
+## 9. CSP e navegador
+
+Confirmar que alterações de dependências externas foram refletidas na CSP somente quando realmente necessárias.
+
+Não abrir a CSP de forma genérica apenas para contornar erro.
+
+---
+
+## 10. Critério de segurança
+
+A segurança está aprovada quando:
+
+```text
+[ ] Auditoria aplicável foi revisada
+[ ] Isolamento entre contas funciona
+[ ] Público continua somente leitura
+[ ] Recuperação de senha funciona
+[ ] Upload continua isolado
+[ ] Nenhum segredo foi publicado
+```
+
+O release completo só é liberado depois de concluir:
+
+```text
+docs/operations/RELEASE_CHECKLIST.md
+```

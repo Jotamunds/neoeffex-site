@@ -271,7 +271,22 @@ Confirmação de entrega:
 
 ---
 
-# 10. Preparação para exclusão definitiva
+# 10. Backup antes da exclusão definitiva
+
+Antes de apagar qualquer dado de forma irreversível:
+
+```text
+[ ] seguir docs/operations/BACKUP_AND_ROLLBACK.md
+[ ] proteger os dados que precisam ser preservados
+[ ] copiar os objetos do Storage incluídos no escopo
+[ ] registrar versão/commit quando a operação também envolver release
+```
+
+O dump do banco não substitui a cópia dos arquivos do Storage.
+
+---
+
+# 12. Preparação para exclusão definitiva
 
 A exclusão só pode entrar em preparação quando:
 
@@ -293,7 +308,7 @@ Offboarding remove dados de um cliente, não estrutura do sistema.
 
 ---
 
-# 11. Inventário antes da exclusão
+# 12. Inventário antes da exclusão
 
 Registrar pelo menos:
 
@@ -313,7 +328,7 @@ Em encerramento integral, repetir para cada catálogo.
 
 ---
 
-# 12. Imagens e Storage
+# 13. Imagens e Storage
 
 Banco de dados e arquivos do Storage precisam ser tratados como partes diferentes do offboarding.
 
@@ -332,7 +347,7 @@ Não remover uma pasta inteira do owner quando apenas um catálogo foi cancelado
 
 ---
 
-# 13. Exclusão de um único catálogo
+# 14. Exclusão de um único catálogo
 
 Quando houver autorização definitiva para apenas um catálogo:
 
@@ -350,7 +365,7 @@ Essa ação deve ser manual e deliberada.
 
 ---
 
-# 14. Encerramento integral da conta
+# 15. Encerramento integral da conta
 
 Quando **todos** os catálogos da conta forem encerrados:
 
@@ -367,7 +382,7 @@ Não remover o usuário enquanto ainda existir catálogo que precisa ser preserv
 
 ---
 
-# 15. Validação após exclusão definitiva
+# 16. Validação após exclusão definitiva
 
 ## Cancelamento parcial
 
@@ -390,7 +405,7 @@ Não remover o usuário enquanto ainda existir catálogo que precisa ser preserv
 
 ---
 
-# 16. Cancelamento revertido durante retenção
+# 17. Cancelamento revertido durante retenção
 
 Se o cliente desistir do cancelamento antes da exclusão definitiva:
 
@@ -406,7 +421,7 @@ Não recriar o catálogo se os dados ainda existem.
 
 ---
 
-# 17. Registro final
+# 18. Registro final
 
 ```text
 Cliente:
@@ -426,7 +441,7 @@ Observações:
 
 ---
 
-# 18. Checklist de offboarding
+# 19. Checklist de offboarding
 
 ```text
 [ ] Escopo confirmado
@@ -450,7 +465,7 @@ Observações:
 
 ---
 
-# 19. Critério de aprovação
+# 20. Critério de aprovação
 
 O offboarding está correto quando:
 
@@ -464,7 +479,7 @@ O offboarding está correto quando:
 
 ---
 
-# 20. Próximo nível de automação
+# 21. Próximo nível de automação
 
 Não criar automação de exclusão em massa nesta versão.
 

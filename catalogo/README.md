@@ -1,15 +1,80 @@
-# Catálogo público — Etapa 9
+# Catálogo público — Neoeffex
 
-Página pública de leitura em `neoeffex.com.br/catalogo/?catalogo=identificador`.
+Página pública:
+
+```text
+/catalogo/?catalogo=identificador
+```
+
+## Estrutura compartilhada
+
+O núcleo em `/catalogo/` continua único para todos os clientes.
+
+Ele controla:
+
+- leitura pública;
+- categorias;
+- produtos;
+- busca;
+- filtros;
+- carrinho;
+- WhatsApp;
+- identidade básica.
+
+Temas visuais específicos são carregados somente quando o slug possui um tema registrado em `config.js`.
+
+## Tema Lu Leve e Saudável
+
+Na `v0.1.9.4`:
+
+```text
+/catalogo/?catalogo=lu-leve-e-saudavel
+```
+
+carrega:
+
+```text
+assets/css/themes/lu-leve-e-saudavel.css
+```
+
+O tema usa como referência visual:
+
+```text
+/sites/lu-leve-e-saudavel/styles/base/variables.css
+```
+
+e as fontes locais já existentes em:
+
+```text
+/sites/lu-leve-e-saudavel/assets/fonts/
+```
+
+Outros slugs continuam usando o tema padrão do catálogo.
+
+## Segurança
+
+O tema é escolhido por uma lista fixa no código.
+
+O visitante não pode passar CSS, HTML ou JavaScript pela URL.
+
+A query string informa somente o slug do catálogo.
+
+Nenhuma migration ou alteração de RLS é necessária para a `v0.1.9.4`.
 
 ## Publicação
 
-1. Publique esta pasta como `/catalogo/` na raiz do site.
-2. Mantenha em `config.js` somente a URL e a chave publicável do Supabase.
-3. Execute as migrações de `admin/setup/` em ordem, incluindo `007_security_hardening.sql`.
-4. Execute `admin/setup/audits/production_security_audit.sql` e prossiga somente se todas as linhas retornarem `PASS`.
-5. No painel, configure o WhatsApp, ative os pedidos e use **Ver catálogo** para abrir o endereço público.
+Publique `/admin/` e `/catalogo/` com a mesma versão.
 
-O visitante consegue consultar somente catálogos ativos e produtos ativos, com imagens públicas opcionais e fallback visual. Quando os pedidos estão habilitados, ele pode montar um carrinho salvo localmente e abrir o WhatsApp com a mensagem pronta. A página não grava pedidos no banco e não possui login ou acesso à área administrativa.
+Para a Lu, mantenha também:
 
-Esta versão adiciona uma Política de Segurança de Conteúdo, política de referência e dependência do Supabase fixada em versão específica. Publique `/admin` e `/catalogo` sempre com o mesmo número de versão.
+```text
+/sites/lu-leve-e-saudavel/
+```
+
+disponível no domínio enquanto o tema referenciar as fontes locais desse caminho.
+
+O botão do site pode apontar para:
+
+```text
+/catalogo/?catalogo=lu-leve-e-saudavel
+```

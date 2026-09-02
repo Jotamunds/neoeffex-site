@@ -1,5 +1,29 @@
 # Changelog — Painel administrativo
 
+## [0.1.9.4] - 2026-09-02
+
+### Adicionado
+
+- Primeiro tema visual específico por slug no catálogo compartilhado.
+- Tema `lu-leve-e-saudavel` derivado das variáveis visuais da landing v0.1.18.
+- Sora e Manrope reutilizadas a partir dos arquivos locais já existentes do site.
+- Cabeçalho e rodapé do catálogo da Lu passam a retornar para `/sites/lu-leve-e-saudavel/`.
+- Documento operacional `CATALOG_THEME_LU.md`.
+
+### Visual
+
+- Paleta verde, creme, sage e dourado aplicada ao catálogo da Lu.
+- Cards, filtros, busca, hero, carrinho, botões e estados adaptados à identidade da marca.
+- Hover dos cards deixa de deslocar o componente, seguindo o sistema visual da landing.
+- Outros slugs continuam usando o tema padrão Neoeffex.
+
+### Segurança e compatibilidade
+
+- Tema é selecionado por whitelist fixa de slug.
+- Nenhum CSS, HTML ou JavaScript arbitrário é aceito pela URL.
+- Nenhuma migration, tabela, bucket, RLS ou fluxo de pedidos foi alterado.
+- Núcleo de `catalogo.js` permanece intacto.
+
 ## [0.1.9.3] - 2026-09-02
 
 ### Adicionado

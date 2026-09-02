@@ -539,7 +539,7 @@ identidade
 usuário
 ```
 
-Para suspensão e reativação operacional, use `docs/operations/CLIENT_SUSPENSION.md`.
+O procedimento completo de suspensão operacional será formalizado em `v0.1.9.1`.
 
 ---
 
@@ -669,4 +669,4 @@ aviso jurídico final
 catálogo demo oficial
 ```
 
-Suspensão, reativação e offboarding agora estão documentados na `v0.1.9.1`. Os demais itens pertencem aos próximos blocos da Etapa 10.
+Esses itens pertencem aos próximos blocos da Etapa 10.

@@ -1,5 +1,34 @@
 # Changelog — Painel administrativo
 
+## [0.1.9.1] - 2026-09-02
+
+### Adicionado
+
+- Procedimento de suspensão temporária sem exclusão de dados.
+- Procedimento de reativação reutilizando a mesma conta e o mesmo catálogo.
+- Processo de cancelamento/offboarding com separação entre pausa, retenção e exclusão definitiva.
+- Tratamento distinto para cancelamento de um catálogo e encerramento integral de uma conta.
+- Campos de ciclo de vida adicionados à ficha operacional do cliente.
+
+### Operação
+
+- A pausa do catálogo passa a ser o mecanismo padrão de suspensão.
+- Bloqueio de acesso administrativo, quando necessário, permanece uma ação manual controlada no Supabase.
+- Offboarding exige conferência do proprietário, outros catálogos e arquivos do Storage antes de qualquer exclusão.
+- Prazos de retenção e autorização final permanecem marcados como `PENDENTE DE DEFINIÇÃO COMERCIAL`.
+
+### Segurança
+
+- Suspensão não exclui usuário, catálogo, produtos, categorias ou imagens.
+- Cancelamento não autoriza exclusão imediata.
+- Nenhuma migration, tabela, bucket, política RLS ou fluxo de autenticação foi alterado.
+- Nenhum comando destrutivo ou automação de exclusão em massa foi adicionado.
+
+### Compatibilidade
+
+- Fluxos de onboarding da `v0.1.9` permanecem válidos.
+- Admin e catálogo público continuam usando a mesma base funcional.
+
 ## [0.1.9] - 2026-09-02
 
 ### Adicionado

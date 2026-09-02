@@ -150,16 +150,16 @@
         const notice = document.querySelector(".stage-notice");
         if (eyebrow) eyebrow.textContent = "ETAPA 10";
         if (phaseTitle) phaseTitle.textContent = "Operação e entrega";
-        if (phaseCopy) phaseCopy.textContent = "Onboarding e procedimentos operacionais para os primeiros clientes."; 
-        if (version) version.textContent = "ADMIN / 0.1.9";
+        if (phaseCopy) phaseCopy.textContent = "Onboarding, suspensão, reativação e encerramento operacional documentados."; 
+        if (version) version.textContent = "ADMIN / 0.1.9.1";
         if (notice) {
             notice.setAttribute("aria-label", "Status da décima etapa");
             const paragraph = notice.querySelector("p");
             if (paragraph) {
                 paragraph.replaceChildren();
                 const strong = document.createElement("strong");
-                strong.textContent = "Onboarding operacional disponível. ";
-                paragraph.append(strong, document.createTextNode("Use docs/operations/CLIENT_ONBOARDING.md para cadastrar e validar os primeiros clientes. A segurança da Etapa 9 permanece inalterada."));
+                strong.textContent = "Ciclo operacional documentado. ";
+                paragraph.append(strong, document.createTextNode("Use docs/operations/ para onboarding, suspensão, reativação e offboarding. A segurança da Etapa 9 permanece inalterada."));
             }
         }
     }

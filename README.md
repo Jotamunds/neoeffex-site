@@ -1,22 +1,106 @@
-# Landing Premium Neoeffex
+# Neoeffex
 
-Estrutura organizada da landing page.
+Site institucional e sistema de catálogo digital da Neoeffex.
 
-## Pastas
+## Estrutura principal
 
-- `index.html` — estrutura principal da página.
-- `assets/css/style.css` — estilos visuais, responsividade e animações.
-- `assets/js/script.js` — interações, menu, animações, FAQ e formulário.
-- `admin/` — base do painel administrativo de catálogos, disponível em `/admin/`.
-- `docs/` — documentação e especificações do design.
-- `design/` — arquivo-fonte/export do layout.
+- `index.html` e arquivos da raiz — landing page principal.
+- `admin/` — painel administrativo do sistema de catálogos.
+- `catalogo/` — catálogo público acessado por slug.
+- `admin/setup/` — migrations, auditoria e configuração do Supabase.
+- `docs/` — documentação do projeto.
+- `docs/operations/` — procedimentos operacionais para clientes.
 
-## Painel administrativo
+## Sistema de catálogo
 
-O painel começou como uma base estática e isolada para não afetar as landing pages existentes. Abra `admin/index.html` localmente ou acesse `neoeffex.com.br/admin/` após a publicação dos arquivos.
+O catálogo atual possui:
 
-Os produtos de demonstração ficam em `admin/data/products.js`. Login, banco de dados e permissões ainda não fazem parte desta primeira etapa.
+- autenticação por e-mail e senha;
+- recuperação de senha;
+- múltiplos catálogos por conta;
+- categorias e produtos;
+- preços, descrições e imagens;
+- editor simples de imagens;
+- identidade do comércio;
+- logo, descrição, região/endereço, horário e forma de atendimento;
+- catálogo público sem login;
+- busca e filtros;
+- carrinho;
+- envio do pedido para o WhatsApp.
+
+A versão operacional do catálogo é registrada separadamente em:
+
+```text
+admin/VERSION
+catalogo/VERSION
+```
+
+O `VERSION` da raiz pertence à landing page principal e não deve ser usado para versionar o catálogo.
+
+## Configuração
+
+Para configurar ou revisar o Supabase, use:
+
+```text
+admin/setup/SETUP.md
+```
+
+As migrations do catálogo devem ser aplicadas na ordem documentada.
+
+A migration mais recente antes da versão `0.1.9` é:
+
+```text
+admin/setup/008_catalog_identity.sql
+```
+
+A `v0.1.9` não adiciona migration.
+
+## Operação de clientes
+
+O processo oficial de cadastro dos primeiros clientes começa em:
+
+```text
+docs/operations/CLIENT_ONBOARDING.md
+```
+
+A ficha operacional reutilizável está em:
+
+```text
+docs/operations/CLIENT_TEMPLATE.md
+```
+
+O índice da Etapa 10 está em:
+
+```text
+docs/operations/README.md
+```
 
 ## Executar localmente
 
-Abra `index.html` diretamente no navegador ou use uma extensão como Live Server no VS Code.
+Use um servidor HTTP local, como Live Server no VS Code, e abra:
+
+```text
+/admin/
+/catalogo/?catalogo=slug-do-catalogo
+```
+
+Evite testar fluxos de autenticação, Storage e redirects abrindo os arquivos somente por `file://`.
+
+## Segurança
+
+Nunca coloque no repositório:
+
+- senha de cliente;
+- senha de banco;
+- chave secreta;
+- `service_role`;
+- token privado;
+- código de recuperação.
+
+Os arquivos `admin/config.js` e `catalogo/config.js` devem conter somente valores públicos necessários ao navegador.
+
+Antes de atender clientes, siga também o checklist de produção existente em:
+
+```text
+admin/setup/PRODUCTION-CHECKLIST.md
+```

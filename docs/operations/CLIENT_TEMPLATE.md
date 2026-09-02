@@ -30,6 +30,10 @@ Responsável Neoeffex pelo onboarding:
 ```
 
 Data de ativação:
+Data de suspensão:
+Data de reativação:
+Data de solicitação de cancelamento:
+Data de encerramento definitivo:
 
 Observações de status:
 
@@ -187,3 +191,58 @@ Responsável que aprovou:
 Use esta seção somente para informações operacionais necessárias.
 
 Não usar como cofre de credenciais.
+
+---
+
+## 13. Suspensão / reativação
+
+```text
+Suspensão solicitada: sim / não
+Data:
+Catálogo(s):
+Motivo operacional:
+Solicitado por:
+Executado por:
+Acesso administrativo bloqueado: sim / não / não aplicável
+URL pública validada após pausa: sim / não
+```
+
+Reativação:
+
+```text
+Data:
+Solicitado por:
+Executado por:
+Acesso administrativo restaurado: sim / não / não aplicável
+URL pública aprovada: sim / não
+Pedido de teste aprovado: sim / não / não aplicável
+```
+
+---
+
+## 14. Offboarding
+
+```text
+Tipo: parcial / integral
+Catálogo(s):
+Data da solicitação:
+Data da pausa:
+Retenção:
+PENDENTE DE DEFINIÇÃO COMERCIAL
+
+Exportação solicitada: sim / não
+Exportação concluída: sim / não / não aplicável
+Autorização final registrada: sim / não
+Exclusão definitiva realizada: sim / não
+Usuário removido: sim / não / não aplicável
+```
+
+Outros catálogos da mesma conta:
+
+```text
+[ ] Conferidos
+[ ] Preservados quando fora do escopo
+```
+
+Observações de encerramento:
+

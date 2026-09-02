@@ -17,6 +17,7 @@
 
     <!-- Scripts clássicos com defer: também funcionam ao abrir o HTML diretamente. -->
     <script src="./scripts/config.js" defer></script>
+    <script src="./scripts/catalog.js" defer></script>
     <script src="./scripts/whatsapp.js" defer></script>
     <script src="./scripts/promotion.js" defer></script>
     <script src="./scripts/mobile-order.js" defer></script>
@@ -33,7 +34,7 @@
 
     <!-- Remover este aviso somente após resolver as pendências de publicação. -->
     <aside class="project-status" aria-label="Status do desenvolvimento">
-        Revisão integrada · Pré-publicação · v0.1.18
+        Revisão integrada · Pré-publicação · v0.1.19
     </aside>
 
     <header class="site-header theme--paper">
@@ -50,7 +51,9 @@
                 </ul>
             </nav>
 
-            <a class="button site-header__contact" href="#contato">Contato</a>
+            <div class="site-header__actions">
+                <a class="button site-header__catalog" href="https://neoeffex.com.br/catalogo/?catalogo=lu-leve-e-saudavel" data-catalog-link>Abrir cardápio</a>
+            </div>
         </div>
     </header>
 
@@ -74,11 +77,8 @@
 
                     <!-- Links imóveis; somente a superfície interna recebe o bubble. -->
                     <div class="actions hero__actions">
-                        <a class="hero__action" href="#tradicionais">
-                            <span class="button hero__action-visual" data-intro="action">Ver preços</span>
-                        </a>
-                        <a class="hero__action" href="#contato" data-whatsapp data-contact-jump data-whatsapp-label="Fale conosco" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">
-                            <span class="button button--outline hero__action-visual" data-intro="action" data-whatsapp-text>Fale conosco</span>
+                        <a class="hero__action" href="https://neoeffex.com.br/catalogo/?catalogo=lu-leve-e-saudavel" data-catalog-link>
+                            <span class="button hero__action-visual" data-intro="action">Abrir cardápio</span>
                         </a>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                     <h2 class="promotion__title" id="promocao-title" data-promotion-title></h2>
                     <p class="promotion__description" data-promotion-description></p>
                 </div>
-                <a class="button button--outline promotion__action" href="#contato" data-whatsapp data-whatsapp-label="Consultar promoção" data-whatsapp-fallback="Consultar condições" aria-describedby="whatsapp-status">Consultar condições</a>
+                <a class="button promotion__action" href="https://neoeffex.com.br/catalogo/?catalogo=lu-leve-e-saudavel" data-catalog-link>Abrir cardápio</a>
             </div>
         </aside>
 
@@ -251,8 +251,8 @@
                 <!-- MENU:tradicionais:END -->
 
                 <div class="products__contact">
-                    <p>Já encontrou a melhor opção para a sua rotina?</p>
-                    <a class="button" href="#contato" data-whatsapp data-whatsapp-label="Pedir pelo WhatsApp" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">Fale conosco</a>
+                    <p>Já encontrou a melhor opção para a sua rotina? Monte o pedido completo no cardápio.</p>
+                    <a class="button" href="https://neoeffex.com.br/catalogo/?catalogo=lu-leve-e-saudavel" data-catalog-link>Abrir cardápio</a>
                 </div>
             </div>
         </section>
@@ -349,13 +349,13 @@
                 <!-- MENU:fitness:END -->
 
                 <div class="products__contact">
-                    <p>Escolha sua opção. As proteínas disponíveis são confirmadas no atendimento.</p>
-                    <a class="button" href="#contato" data-whatsapp data-whatsapp-label="Pedir pelo WhatsApp" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">Fale conosco</a>
+                    <p>Escolha sua opção e monte o pedido no cardápio. A disponibilidade final é confirmada pelo WhatsApp.</p>
+                    <a class="button" href="https://neoeffex.com.br/catalogo/?catalogo=lu-leve-e-saudavel" data-catalog-link>Abrir cardápio</a>
                 </div>
             </div>
         </section>
 
-        <!-- ETAPA 5: orientação de pedido, sem formulário ou seleção dentro do site. -->
+        <!-- v0.1.19: orientação integrada ao catálogo Neoeffex; confirmação continua no WhatsApp. -->
         <section class="section how-it-works theme--warm" id="como-funciona" aria-labelledby="como-funciona-title" tabindex="-1">
             <!-- DECORATION:steps:START -->
             <div class="section-decoration section-decoration--steps" aria-hidden="true">
@@ -379,28 +379,28 @@
                     <li class="how-it-works__step">
                         <span class="how-it-works__number" aria-hidden="true">01</span>
                         <div class="how-it-works__content">
-                            <h3 class="how-it-works__title">Escolha a categoria</h3>
-                            <p class="how-it-works__description">Tradicional ou fitness: encontre a opção para a sua rotina.</p>
+                            <h3 class="how-it-works__title">Abra o cardápio</h3>
+                            <p class="how-it-works__description">Veja os produtos disponíveis e use a busca ou os filtros para encontrar suas opções.</p>
                         </div>
                     </li>
                     <li class="how-it-works__step">
                         <span class="how-it-works__number" aria-hidden="true">02</span>
                         <div class="how-it-works__content">
-                            <h3 class="how-it-works__title">Escolha os detalhes</h3>
-                            <p class="how-it-works__description">Defina o tamanho, a quantidade e as proteínas que deseja.</p>
+                            <h3 class="how-it-works__title">Monte seu pedido</h3>
+                            <p class="how-it-works__description">Adicione os produtos ao carrinho e ajuste as quantidades antes de continuar.</p>
                         </div>
                     </li>
                     <li class="how-it-works__step">
                         <span class="how-it-works__number" aria-hidden="true">03</span>
                         <div class="how-it-works__content">
-                            <h3 class="how-it-works__title">Fale com a Lu</h3>
-                            <p class="how-it-works__description">Envie suas escolhas pelo WhatsApp para confirmar as opções e finalizar o pedido.</p>
+                            <h3 class="how-it-works__title">Envie pelo WhatsApp</h3>
+                            <p class="how-it-works__description">Confira o total estimado e abra a mensagem pronta para confirmar o pedido com a Lu.</p>
                         </div>
                     </li>
                 </ol>
                 <div class="how-it-works__contact">
-                    <a class="button" href="#contato" data-whatsapp data-whatsapp-label="Montar meu pedido" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">Fale conosco</a>
-                    <p>A montagem e a confirmação acontecem no atendimento.</p>
+                    <a class="button" href="https://neoeffex.com.br/catalogo/?catalogo=lu-leve-e-saudavel" data-catalog-link>Abrir cardápio</a>
+                    <p>A confirmação final de disponibilidade, recebimento e pagamento continua pelo WhatsApp.</p>
                 </div>
             </div>
         </section>
@@ -425,8 +425,8 @@
             <div class="container contact__layout">
                 <div class="contact__channels stack">
                     <p class="eyebrow">Contato e atendimento</p>
-                    <h2 id="contato-title" data-reveal>Fale com a Lu</h2>
-                    <p class="section__description">Para fazer seu pedido, tirar dúvidas e combinar o recebimento.</p>
+                    <h2 id="contato-title" data-reveal>Atendimento da Lu</h2>
+                    <p class="section__description">Informações de contato, regiões atendidas e opções de recebimento.</p>
 
                     <div class="contact-card contact-card--channel">
                         <h3 class="contact-card__title">Telefone e WhatsApp</h3>
@@ -441,10 +441,8 @@
                     </div>
 
                     <p class="contact__status" id="whatsapp-status" data-whatsapp-status>O atalho do WhatsApp não está disponível. Consulte os outros canais de contato.</p>
-                    <!-- Evita um botão sem ação dentro da própria seção de contato. -->
-                    <div data-whatsapp-only hidden>
-                        <a class="button" href="#contato" data-whatsapp data-whatsapp-label="Pedir pelo WhatsApp" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">Fale conosco</a>
-                    </div>
+                    <!-- Mantido para o controlador de disponibilidade, sem criar CTA concorrente nesta seção. -->
+                    <div data-whatsapp-only hidden></div>
 
                     <noscript>
                         <p class="contact__status">Sem JavaScript: <a href="https://wa.me/5511978766842" target="_blank" rel="noopener noreferrer">converse com a Lu pelo WhatsApp</a> ou ligue para <a href="tel:+5511978766842">+55 (11) 97876-6842</a>. As regiões e o Instagram continuam disponíveis.</p>
@@ -549,11 +547,13 @@
                 <div class="stack">
                     <p class="eyebrow">Sua semana mais leve</p>
                     <h2 id="fazer-pedido-title" data-reveal>Mais praticidade e sabor<br>para a sua semana.</h2>
-                    <p class="section__description">Confira as opções e faça seu pedido diretamente pelo WhatsApp.</p>
+                    <p class="section__description">Abra o cardápio, monte seu pedido e envie a mensagem pronta pelo WhatsApp.</p>
                 </div>
                 <div class="final-cta__actions">
-                    <a class="button" href="#contato" data-whatsapp data-whatsapp-label="Pedir pelo WhatsApp" data-whatsapp-fallback="Fale com a Lu" aria-describedby="whatsapp-status">Fale com a Lu</a>
-                    <a class="final-cta__contact" href="#contato">Ver contato e atendimento</a>
+                    <a class="button" href="https://neoeffex.com.br/catalogo/?catalogo=lu-leve-e-saudavel" data-catalog-link>Abrir cardápio</a>
+                    <a class="button button--outline final-cta__contact" href="#contato" data-whatsapp data-contact-jump data-whatsapp-label="Fale conosco" data-whatsapp-fallback="Fale conosco" aria-describedby="whatsapp-status">
+                        <span data-whatsapp-text>Fale conosco</span>
+                    </a>
                 </div>
             </div>
         </section>
@@ -588,9 +588,9 @@
     </footer>
 
     <!-- ETAPA 7: sem JavaScript, permanece no fluxo; nunca cobre o rodapé. -->
-    <aside class="mobile-order theme--paper" data-mobile-order aria-label="Atalho para contato e pedido">
+    <aside class="mobile-order theme--paper" data-mobile-order aria-label="Atalho para abrir o cardápio">
         <div class="container">
-            <a class="button mobile-order__button" href="#contato" data-whatsapp data-whatsapp-label="Pedir pelo WhatsApp" data-whatsapp-fallback="Fale com a Lu" aria-describedby="whatsapp-status">Fale com a Lu</a>
+            <a class="button mobile-order__button" href="https://neoeffex.com.br/catalogo/?catalogo=lu-leve-e-saudavel" data-catalog-link>Abrir cardápio</a>
         </div>
     </aside>
 </body>

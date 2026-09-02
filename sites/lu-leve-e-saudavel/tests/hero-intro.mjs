@@ -36,7 +36,7 @@ export function validateHeroIntro({ check, root, html, config }) {
     });
 
     check("Hero usa grupos explícitos sem data-reveal ou animação de ancestrais", () => {
-        assert.deepEqual([...hero.matchAll(/data-intro="([^"]+)"/g)].map((match) => match[1]), ["title", "title", "copy", "action", "action", "photo"]);
+        assert.deepEqual([...hero.matchAll(/data-intro="([^"]+)"/g)].map((match) => match[1]), ["title", "title", "copy", "action", "photo"]);
         assert.doesNotMatch(hero, /data-reveal|is-intro-running/);
         assert.doesNotMatch(html.replace(hero, ""), /data-intro=/);
         assert.match(hero, /<div class="hero__artwork" data-intro="photo">/);
@@ -446,16 +446,17 @@ export function validateHeroIntro({ check, root, html, config }) {
         noReplay(fixture);
     });
 
-    check("Bubble dos botões usa dois spans visuais dentro de links nativos estáveis", () => {
+    check("Bubble do CTA principal usa um span visual dentro de link nativo estável", () => {
         const anchors = [...hero.matchAll(/<a class="hero__action" href="([^"]+)"[^>]*>\s*<span class="([^"]+)" data-intro="action"[^>]*>([^<]+)<\/span>\s*<\/a>/g)];
-        assert.equal(anchors.length, 2);
-        assert.deepEqual(anchors.map((match) => [match[1], match[3]]), [["#tradicionais", "Ver preços"], ["#contato", "Fale conosco"]]);
+        assert.equal(anchors.length, 1);
+        assert.deepEqual(anchors.map((match) => [match[3]]), [["Abrir cardápio"]]);
+        assert.match(anchors[0][0], /data-catalog-link/);
         anchors.forEach((match) => {
             assert.ok(match[2].split(" ").includes("button"));
             assert.ok(match[2].split(" ").includes("hero__action-visual"));
             assert.doesNotMatch(match[0], /aria-hidden|tabindex|role=|onclick/);
         });
-        assert.doesNotMatch(hero, /<a\b[^>]*data-intro|data-intro="actions"/);
+        assert.doesNotMatch(hero, /Fale conosco|data-whatsapp|<a\b[^>]*data-intro|data-intro="actions"/);
     });
 
     check("Link e alvo de toque permanecem estáticos, cobrindo todo o pico permitido", () => {

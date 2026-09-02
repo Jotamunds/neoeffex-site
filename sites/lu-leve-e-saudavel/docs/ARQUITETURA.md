@@ -121,7 +121,8 @@ O telefone clicável usa `data-contact-phone-link`, com `tel:+` e o mesmo númer
 | Tradicionais / Ver preços | `#tradicionais` |
 | Fitness | `#fitness` |
 | Como funciona | `#como-funciona` |
-| Contato / Fale conosco | `#contato` |
+| Contato informativo | `#contato` |
+| Fale conosco | fechamento final → WhatsApp |
 | Pular para o conteúdo | `#conteudo` |
 
 Preserve os IDs para não quebrar links. Se um ID mudar, atualize todos os links e execute o verificador.
@@ -146,7 +147,7 @@ Não foram adicionados carrinho, pagamento, montagem de pedido dentro do site, f
 
 ## Contato — etapa 4
 
-contact-jump.js usa Web Animations API somente na superfície interna do Fale conosco inicial. O coordenador chama configure/destroy; nenhuma animação controla a navegação. O módulo cancela a intro antes do salto e substitui o salto anterior em cliques rápidos. Sem WAAPI, só o efeito é omitido. Altura/duração ficam em variables.css; contact-jump.css reserva a área clicável. Não há timers, janelas abertas pelo JS ou dependências. Dez scripts clássicos `defer`; links de pedido continuam independentes do coordenador.
+contact-jump.js usa Web Animations API somente na superfície interna do Fale conosco do fechamento final. O coordenador chama configure/destroy; nenhuma animação controla a navegação. O módulo cancela a intro antes do salto e substitui o salto anterior em cliques rápidos. Sem WAAPI, só o efeito é omitido. Altura/duração ficam em variables.css; contact-jump.css reserva a área clicável. Não há timers, janelas abertas pelo JS ou dependências. Dez scripts clássicos `defer`; links de pedido continuam independentes do coordenador.
 
 ## Cards — etapa 3
 

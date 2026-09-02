@@ -194,10 +194,10 @@ export function validateEnhancements({ check, root, html }) {
     check("Barra mobile tem rótulo legível, destino seguro e posição após o rodapé", () => {
         const bar = html.match(/<aside\b[^>]*data-mobile-order[\s\S]*?<\/aside>/)[0];
         assert.ok(html.indexOf(bar) > html.indexOf("</footer>"));
-        assert.match(bar, /aria-label="Atalho para contato e pedido"/);
-        assert.match(bar, /href="#contato"/);
-        assert.match(bar, /data-whatsapp-label="Pedir pelo WhatsApp"/);
-        assert.match(bar, /data-whatsapp-fallback="Fale com a Lu"/);
+        assert.match(bar, /aria-label="Atalho para abrir o cardápio"/);
+        assert.match(bar, /data-catalog-link/);
+        assert.match(bar, /catalogo\/\?catalogo=lu-leve-e-saudavel/);
+        assert.match(bar, />Abrir cardápio<\/a>/);
         assert.doesNotMatch(bar, /\bhidden\b|data-whatsapp-only|<button\b/);
         assert.doesNotMatch(html, /<html\b[^>]*has-mobile-order/);
     });

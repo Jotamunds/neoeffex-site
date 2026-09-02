@@ -1,0 +1,455 @@
+/*
+ * v0.1.9.4 — Tema do catálogo Lu Leve e Saudável.
+ *
+ * Fonte visual:
+ * sites/lu-leve-e-saudavel/styles/base/variables.css (site v0.1.18)
+ *
+ * O tema só é carregado quando:
+ * ?catalogo=lu-leve-e-saudavel
+ *
+ * Não copie regras estruturais da landing para cá.
+ * Este arquivo adapta somente identidade visual sobre o catálogo compartilhado.
+ */
+
+@font-face {
+    font-family: "Sora";
+    src: url("/sites/lu-leve-e-saudavel/assets/fonts/sora-variable.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 100 800;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("/sites/lu-leve-e-saudavel/assets/fonts/manrope-variable.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 200 800;
+    font-display: swap;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] {
+    color-scheme: light;
+
+    /* Mapeamento do sistema visual da Lu para os tokens do catálogo. */
+    --navy-950: #153b2b;
+    --navy-900: #153b2b;
+    --navy-800: #2b5b43;
+    --blue-600: #2b5b43;
+    --blue-500: #62856c;
+    --blue-100: #dce7d8;
+    --sky-50: #f7f2e8;
+    --surface: #fffcf7;
+    --surface-soft: #f8f2ed;
+    --border: #d6ded5;
+    --border-strong: #aebfa8;
+    --text: #17211b;
+    --text-muted: #59665d;
+    --text-subtle: #6f7b72;
+    --shadow: 0 2px 8px rgb(21 59 43 / 5%);
+    --shadow-hover: 0 8px 20px rgb(21 59 43 / 12%);
+
+    --lu-primary: #153b2b;
+    --lu-primary-light: #2b5b43;
+    --lu-sage: #dce7d8;
+    --lu-sage-dark: #aebfa8;
+    --lu-background: #f7f2e8;
+    --lu-surface: #fffcf7;
+    --lu-brand-background: #f8f2ed;
+    --lu-accent-soft: #f4e8b9;
+    --lu-accent: #e3c56b;
+    --lu-whatsapp: #1f7a45;
+    --lu-text-light: #f9f6ed;
+    --lu-border-dark: #62856c;
+
+    --lu-radius-small: 0.625rem;
+    --lu-radius-medium: 1rem;
+    --lu-radius-large: 1.5rem;
+    --lu-radius-pill: 999px;
+
+    font-family: "Manrope", system-ui, sans-serif;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] body,
+html[data-catalog-theme="lu-leve-e-saudavel"] button,
+html[data-catalog-theme="lu-leve-e-saudavel"] input {
+    font-family: "Manrope", system-ui, sans-serif;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] body {
+    background: var(--lu-background);
+    color: var(--text);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] button:focus-visible,
+html[data-catalog-theme="lu-leve-e-saudavel"] a:focus-visible,
+html[data-catalog-theme="lu-leve-e-saudavel"] input:focus-visible {
+    outline-color: rgb(21 59 43 / 35%);
+}
+
+/* Cabeçalho: parece parte da landing da Lu, não uma página azul da Neoeffex. */
+html[data-catalog-theme="lu-leve-e-saudavel"] .site-header {
+    border-bottom-color: var(--border);
+    background: var(--lu-surface);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .site-header__inner {
+    min-height: 74px;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .brand {
+    color: var(--lu-primary);
+    font-family: "Sora", system-ui, sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .brand__mark {
+    width: 18px;
+    height: 18px;
+    border-color: var(--lu-primary);
+    box-shadow: 9px 0 0 -5px var(--lu-accent);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .site-header__label {
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+/* Hero inspirado no theme--forest do site. */
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero {
+    background:
+        radial-gradient(circle at 84% 16%, rgb(220 231 216 / 20%), transparent 32%),
+        radial-gradient(circle at 10% 110%, rgb(227 197 107 / 13%), transparent 34%),
+        var(--lu-primary);
+    color: var(--lu-text-light);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero::after {
+    border-color: rgb(220 231 216 / 18%);
+    box-shadow:
+        0 0 0 38px rgb(220 231 216 / 3%),
+        0 0 0 78px rgb(220 231 216 / 2%);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero h1,
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-toolbar__heading h2,
+html[data-catalog-theme="lu-leve-e-saudavel"] .category-section__heading h2,
+html[data-catalog-theme="lu-leve-e-saudavel"] .cart-drawer__head h2 {
+    font-family: "Sora", system-ui, sans-serif;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero h1 {
+    color: var(--lu-text-light);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero .eyebrow {
+    color: var(--lu-accent-soft);
+    letter-spacing: 0.1em;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero .catalog-identity-description {
+    color: rgb(249 246 237 / 76%);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero .catalog-identity-detail {
+    color: rgb(249 246 237 / 78%);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero .catalog-identity-detail strong {
+    color: var(--lu-accent-soft);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-identity-logo img {
+    border-radius: var(--lu-radius-medium);
+    filter: drop-shadow(0 8px 18px rgb(0 0 0 / 12%));
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .share-button {
+    border-color: rgb(249 246 237 / 32%);
+    border-radius: var(--lu-radius-pill);
+    background: rgb(249 246 237 / 8%);
+    color: var(--lu-text-light);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .share-button:hover {
+    border-color: var(--lu-sage);
+    background: rgb(220 231 216 / 14%);
+}
+
+/* Área de produtos. */
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-main {
+    background: transparent;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .eyebrow {
+    color: var(--lu-primary-light);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-toolbar__heading h2,
+html[data-catalog-theme="lu-leve-e-saudavel"] .category-section__heading h2 {
+    color: var(--lu-primary);
+    letter-spacing: -0.025em;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .search-field {
+    border-color: var(--border);
+    border-radius: var(--lu-radius-medium);
+    background: var(--lu-surface);
+    box-shadow: var(--shadow);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .search-field:focus-within {
+    border-color: var(--lu-border-dark);
+    box-shadow: 0 0 0 3px rgb(21 59 43 / 10%);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .category-filter {
+    border-color: var(--border);
+    border-radius: var(--lu-radius-pill);
+    background: var(--lu-surface);
+    color: var(--text-muted);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .category-filter small {
+    background: var(--lu-brand-background);
+    color: var(--text-muted);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .category-filter:hover {
+    border-color: var(--lu-sage-dark);
+    color: var(--lu-primary);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .category-filter[aria-pressed="true"] {
+    border-color: var(--lu-primary);
+    background: var(--lu-primary);
+    color: var(--lu-text-light);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .category-filter[aria-pressed="true"] small {
+    background: rgb(249 246 237 / 14%);
+    color: var(--lu-text-light);
+}
+
+/* Cards: mantém o princípio do site de destacar sem deslocar o card. */
+html[data-catalog-theme="lu-leve-e-saudavel"] .product-card {
+    border-color: var(--border);
+    border-radius: var(--lu-radius-large);
+    background: var(--lu-surface);
+    box-shadow: var(--shadow);
+    transition:
+        border-color 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        box-shadow 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .product-card::after {
+    right: -48px;
+    bottom: -64px;
+    width: 132px;
+    height: 132px;
+    background: var(--lu-accent-soft);
+    opacity: 0.42;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .product-card:hover {
+    border-color: var(--lu-sage-dark);
+    box-shadow: var(--shadow-hover);
+    transform: none;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .product-card__category {
+    color: var(--lu-primary-light);
+    letter-spacing: 0.1em;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .product-card__price {
+    color: var(--lu-primary);
+    font-family: "Sora", system-ui, sans-serif;
+    font-weight: 700;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .product-card__media {
+    border-color: var(--border);
+    border-radius: var(--lu-radius-medium);
+    background: var(--lu-brand-background);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .product-card__mark {
+    border-color: var(--lu-sage-dark);
+    border-radius: var(--lu-radius-medium);
+    background: var(--lu-sage);
+    color: var(--lu-primary);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .product-card h3 {
+    color: var(--lu-primary);
+    font-family: "Sora", system-ui, sans-serif;
+    letter-spacing: -0.02em;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .product-card p {
+    color: var(--text-muted);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .add-product-button {
+    min-height: 42px;
+    border-color: var(--lu-primary);
+    border-radius: var(--lu-radius-pill);
+    background: var(--lu-primary);
+    color: var(--lu-text-light);
+    transition:
+        background 180ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        border-color 180ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .add-product-button:hover {
+    border-color: var(--lu-primary-light);
+    background: var(--lu-primary-light);
+    color: var(--lu-text-light);
+}
+
+/* Estados vazios e carregamento. */
+html[data-catalog-theme="lu-leve-e-saudavel"] .loading-spinner {
+    border-color: var(--lu-sage);
+    border-top-color: var(--lu-primary);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .empty-results > span {
+    color: var(--lu-primary-light);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .status-state .outline-button,
+html[data-catalog-theme="lu-leve-e-saudavel"] .empty-results .outline-button {
+    border-color: var(--lu-border-dark);
+    border-radius: var(--lu-radius-pill);
+    background: var(--lu-surface);
+    color: var(--lu-primary);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .outline-button:hover {
+    border-color: var(--lu-primary);
+    background: var(--lu-sage);
+}
+
+/* Carrinho. */
+html[data-catalog-theme="lu-leve-e-saudavel"] .cart-button {
+    border-color: rgb(249 246 237 / 15%);
+    background: var(--lu-primary);
+    color: var(--lu-text-light);
+    box-shadow: 0 16px 40px rgb(21 59 43 / 24%);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .cart-button:hover {
+    background: var(--lu-primary-light);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .cart-button strong {
+    background: var(--lu-accent);
+    color: var(--lu-primary);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .cart-overlay {
+    background: rgb(21 33 27 / 54%);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .cart-drawer {
+    border-left-color: var(--border);
+    background: var(--lu-surface);
+    box-shadow: -22px 0 60px rgb(21 59 43 / 18%);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .cart-close {
+    border-radius: var(--lu-radius-small);
+    background: var(--lu-surface);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .cart-item {
+    border-color: var(--border);
+    border-radius: var(--lu-radius-medium);
+    background: var(--lu-brand-background);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .quantity-control {
+    border-color: var(--lu-sage-dark);
+    border-radius: var(--lu-radius-small);
+    background: var(--lu-surface);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .quantity-control button {
+    color: var(--lu-primary);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .quantity-control button:hover {
+    background: var(--lu-sage);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .cart-total strong {
+    color: var(--lu-primary);
+    font-family: "Sora", system-ui, sans-serif;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .cart-instruction {
+    border-radius: var(--lu-radius-small);
+    background: var(--lu-brand-background);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .whatsapp-button {
+    border-radius: var(--lu-radius-pill);
+    background: var(--lu-whatsapp);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .whatsapp-button:hover {
+    background: #176438;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .toast {
+    border-radius: var(--lu-radius-medium);
+    background: var(--lu-primary);
+    box-shadow: 0 16px 44px rgb(21 59 43 / 24%);
+}
+
+/* Rodapé mantém a assinatura técnica discreta e devolve ao site da Lu. */
+html[data-catalog-theme="lu-leve-e-saudavel"] .site-footer {
+    border-top-color: var(--border);
+    background: var(--lu-surface);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .site-footer__inner {
+    color: var(--text-muted);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .site-footer a {
+    color: var(--lu-primary);
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .site-footer a:hover {
+    color: var(--lu-primary-light);
+}
+
+@media (max-width: 620px) {
+    html[data-catalog-theme="lu-leve-e-saudavel"] .brand {
+        font-size: 15px;
+    }
+
+    html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero h1 {
+        letter-spacing: -0.03em;
+    }
+
+    html[data-catalog-theme="lu-leve-e-saudavel"] .product-card {
+        border-radius: var(--lu-radius-medium);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-catalog-theme="lu-leve-e-saudavel"] .product-card,
+    html[data-catalog-theme="lu-leve-e-saudavel"] .add-product-button {
+        transition-duration: 0.01ms;
+    }
+}

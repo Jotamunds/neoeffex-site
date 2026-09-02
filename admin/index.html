@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://jnixmatzvyxvgnexhilg.supabase.co; connect-src 'self' https://jnixmatzvyxvgnexhilg.supabase.co wss://jnixmatzvyxvgnexhilg.supabase.co; frame-src 'none'; form-action 'self'; manifest-src 'self'; worker-src 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Base do painel administrativo de catálogos da Neoeffex.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#f7f9fc">
+    <title>Admin | Neoeffex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body class="is-loading">
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+    <section class="auth-screen" id="authScreen" aria-labelledby="authTitle">
+        <div class="auth-panel">
+            <a class="brand" href="../" aria-label="Voltar para o site da Neoeffex">
+                <span class="brand__mark" aria-hidden="true"></span>
+                <span>neoeffex</span>
+            </a>
+            <div class="auth-copy">
+                <span class="eyebrow">CATALOG_SYSTEM / ADMIN</span>
+                <h1 id="authTitle">Acesse seu painel.</h1>
+                <p>Entre com o e-mail e a senha criados para a sua conta.</p>
+            </div>
+
+            <form class="auth-form" id="loginForm" novalidate>
+                <label for="email">E-mail</label>
+                <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required>
+                <label for="password">Senha</label>
+                <div class="password-field">
+                    <input id="password" name="password" type="password" autocomplete="current-password" required>
+                    <button id="passwordToggle" type="button" aria-label="Mostrar senha">Mostrar</button>
+                </div>
+                <button class="primary-button" id="loginButton" type="submit">Entrar no painel</button>
+                <button class="text-button" id="recoveryButton" type="button">Esqueci minha senha</button>
+                <p class="auth-feedback" id="authFeedback" role="status" aria-live="polite"></p>
+            </form>
+
+            <form class="auth-form" id="recoveryForm" novalidate hidden>
+                <p class="form-intro">Informe seu e-mail. Se houver uma conta vinculada, enviaremos um link seguro para redefinir a senha.</p>
+                <label for="recoveryEmail">E-mail</label>
+                <input id="recoveryEmail" name="recoveryEmail" type="email" autocomplete="email" inputmode="email" required>
+                <button class="primary-button" id="recoverySubmit" type="submit">Enviar link de redefinição</button>
+                <button class="text-button" id="backToLogin" type="button">Voltar para o login</button>
+                <p class="auth-feedback" id="recoveryFeedback" role="status" aria-live="polite"></p>
+            </form>
+
+            <div class="auth-setup" id="authSetup" hidden>
+                <strong>Conexão ainda não configurada</strong>
+                <p>Preencha a URL e a chave publicável do projeto em <code>admin/config.js</code> e siga o arquivo <code>admin/setup/SETUP.md</code>.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar" aria-label="Navegação do painel">
+            <div class="sidebar__top">
+                <a class="brand" href="../" aria-label="Voltar para o site da Neoeffex">
+                    <span class="brand__mark" aria-hidden="true"></span>
+                    <span>neoeffex</span>
+                </a>
+                <span class="environment">CATALOG_SYSTEM</span>
+            </div>
+
+            <nav class="menu" aria-label="Seções do painel">
+                <a class="menu__item" href="#visao-geral">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+                    Visão geral
+                </a>
+                <a class="menu__item menu__item--active" href="#produtos" aria-current="page">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z"></path><path d="M4 12.5 12 17l8-4.5"></path><path d="M4 17 12 21l8-4"></path></svg>
+                    Produtos
+                    <span class="menu__counter" id="menuProductCount">0</span>
+                </a>
+                <a class="menu__item" href="#categorias" id="categoriesMenuLink">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>
+                    Categorias
+                    <span class="menu__counter" id="menuCategoryCount">0</span>
+                </a>
+                <a class="menu__item" href="#pedidos" id="ordersMenuLink">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 8h10l2 12H5L7 8Z"></path><path d="M9 8a3 3 0 0 1 6 0"></path></svg>
+                    Pedidos
+                </a>
+            </nav>
+
+            <div class="sidebar__bottom">
+                <div class="phase-card">
+                    <span class="phase-card__eyebrow">ETAPA 9</span>
+                    <strong>Pronto para validação</strong>
+                    <p>Permissões mínimas, sessão validada e auditoria para a publicação.</p>
+                </div>
+                <span class="version">ADMIN / 0.1.7</span>
+            </div>
+        </aside>
+
+        <div class="app-main">
+            <header class="topbar">
+                <button class="icon-button menu-button" id="menuButton" type="button" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+                </button>
+                <nav class="breadcrumb" aria-label="Localização atual">
+                    <a href="../">Neoeffex</a>
+                    <span aria-hidden="true">/</span>
+                    <strong>Admin</strong>
+                </nav>
+                <div class="topbar__actions">
+                    <button class="icon-button" id="themeButton" type="button" aria-label="Ativar tema escuro" title="Alternar tema">
+                        <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+                        <svg class="theme-icon theme-icon--moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"></path></svg>
+                    </button>
+                    <span class="account-email" id="accountEmail" title="Conta conectada"></span>
+                    <button class="icon-button" id="signOutButton" type="button" aria-label="Sair do painel" title="Sair">
+                        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10 5H5v14h5"></path><path d="m14 8 4 4-4 4M18 12H9"></path></svg>
+                    </button>
+                    <span class="avatar" aria-hidden="true">N</span>
+                </div>
+            </header>
+
+            <main id="conteudo" class="content">
+                <section class="page-heading" id="visao-geral" aria-labelledby="pageTitle">
+                    <div>
+                        <span class="eyebrow">PAINEL ADMINISTRATIVO</span>
+                        <h1 id="pageTitle">Produtos</h1>
+                        <p>Organize produtos, categorias e catálogos em um único lugar.</p>
+                    </div>
+                    <div class="page-heading__actions">
+                        <a class="secondary-button secondary-link is-disabled" id="viewCatalogLink" href="#" aria-disabled="true" tabindex="-1" target="_blank" rel="noopener noreferrer">Ver catálogo</a>
+                        <button class="secondary-button" id="newCatalogButton" type="button">Novo catálogo</button>
+                        <button class="primary-button" id="newProductButton" type="button">
+                            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
+                            Novo produto
+                        </button>
+                    </div>
+                </section>
+
+                <section class="stage-notice" aria-label="Status da nona etapa">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 10v5M12 7h.01"></path></svg>
+                    <p><strong>Validação de produção disponível.</strong> Aplique a migração 007 e confirme todos os itens da auditoria antes de atender o primeiro cliente.</p>
+                </section>
+
+                <section class="catalog-switcher" aria-label="Catálogo selecionado">
+                    <div>
+                        <span class="catalog-switcher__label">CATÁLOGO ATUAL</span>
+                        <strong id="activeCatalogName">Carregando catálogo…</strong>
+                    </div>
+                    <label class="catalog-select-field">
+                        <span class="sr-only">Selecionar catálogo</span>
+                        <select id="catalogSelect" disabled>
+                            <option>Carregando…</option>
+                        </select>
+                    </label>
+                    <button class="icon-button" id="editCatalogButton" type="button" aria-label="Editar catálogo atual" title="Editar catálogo atual" disabled>
+                        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 19h4l9-9a2.8 2.8 0 0 0-4-4l-9 9v4Z"></path><path d="m12.5 7.5 4 4"></path></svg>
+                    </button>
+                </section>
+
+                <section class="summary-grid" aria-label="Resumo do catálogo">
+                    <article class="summary-card">
+                        <span class="summary-card__label">Produtos cadastrados</span>
+                        <strong id="totalProducts">0</strong>
+                        <span class="summary-card__detail"><i class="dot dot--blue"></i> Catálogo conectado</span>
+                    </article>
+                    <article class="summary-card">
+                        <span class="summary-card__label">Produtos ativos</span>
+                        <strong id="activeProducts">0</strong>
+                        <span class="summary-card__detail"><i class="dot dot--green"></i> Visíveis no catálogo</span>
+                    </article>
+                    <article class="summary-card">
+                        <span class="summary-card__label">Categorias</span>
+                        <strong id="categoryCount">0</strong>
+                        <span class="summary-card__detail"><i class="dot dot--purple"></i> No catálogo selecionado</span>
+                    </article>
+                </section>
+
+                <section class="catalog-section" id="produtos" aria-labelledby="productsTitle">
+                    <div class="section-heading">
+                        <div>
+                            <h2 id="productsTitle">Catálogo atual</h2>
+                            <p id="tableDescription">Carregando produtos…</p>
+                        </div>
+                        <div class="catalog-actions">
+                            <label class="search-field">
+                                <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.2 4.2"></path></svg>
+                                <span class="sr-only">Buscar produtos</span>
+                                <input id="productSearch" type="search" placeholder="Buscar produto">
+                            </label>
+                            <label class="filter-field">
+                                <span class="sr-only">Filtrar por status</span>
+                                <select id="statusFilter">
+                                    <option value="all">Todos os status</option>
+                                    <option value="active">Ativos</option>
+                                    <option value="paused">Pausados</option>
+                                </select>
+                            </label>
+                            <button class="secondary-button catalog-actions__button" id="manageCategoriesButton" type="button">Categorias</button>
+                        </div>
+                    </div>
+
+                    <section class="product-table" aria-label="Tabela de produtos do catálogo atual" tabindex="0">
+                        <div class="product-table__head" aria-hidden="true">
+                            <span>Produto</span>
+                            <span>Categoria</span>
+                            <span>Preço</span>
+                            <span>Status</span>
+                            <span></span>
+                        </div>
+                        <div id="productsList" class="product-list" aria-live="polite"></div>
+                    </section>
+                    <p class="empty-state" id="emptyState" hidden>Nenhum produto corresponde aos filtros selecionados.</p>
+                </section>
+
+                <section class="orders-section" id="pedidos" aria-labelledby="ordersTitle">
+                    <div class="section-heading">
+                        <div>
+                            <span class="eyebrow">ATENDIMENTO</span>
+                            <h2 id="ordersTitle">Pedidos pelo WhatsApp</h2>
+                            <p>O carrinho é enviado diretamente ao número configurado para este catálogo.</p>
+                        </div>
+                        <button class="secondary-button" id="configureOrdersButton" type="button" disabled>Configurar pedidos</button>
+                    </div>
+                    <div class="orders-summary">
+                        <div>
+                            <span class="orders-summary__label">Status</span>
+                            <strong id="ordersStatus">Nenhum catálogo selecionado</strong>
+                        </div>
+                        <div>
+                            <span class="orders-summary__label">WhatsApp</span>
+                            <strong id="ordersWhatsapp">Não configurado</strong>
+                        </div>
+                        <div>
+                            <span class="orders-summary__label">Instrução ao cliente</span>
+                            <p id="ordersMessage">Selecione ou crie um catálogo para configurar.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="category-anchor" id="categorias" aria-hidden="true"></section>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle" aria-hidden="true" hidden>
+        <div class="modal__card">
+            <div class="modal__head">
+                <div>
+                    <span class="eyebrow">CATÁLOGO</span>
+                    <h2 id="productModalTitle">Novo produto</h2>
+                    <p id="productModalDescription">Preencha os dados que serão exibidos no catálogo.</p>
+                </div>
+                <button class="icon-button" id="closeProductModal" type="button" aria-label="Fechar formulário">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+                </button>
+            </div>
+
+            <form class="product-form" id="productForm" novalidate>
+                <input id="productId" name="productId" type="hidden">
+                <div class="form-field form-field--full">
+                    <label for="productName">Nome do produto</label>
+                    <input id="productName" name="productName" type="text" maxlength="140" autocomplete="off" required>
+                </div>
+                <div class="form-field">
+                    <label for="productCategory">Categoria</label>
+                    <select id="productCategory" name="productCategory" required></select>
+                </div>
+                <div class="form-field">
+                    <label for="productPrice">Preço</label>
+                    <div class="price-field"><span aria-hidden="true">R$</span><input id="productPrice" name="productPrice" type="number" min="0" max="99999999.99" step="0.01" inputmode="decimal" required></div>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="productDescription">Descrição</label>
+                    <textarea id="productDescription" name="productDescription" maxlength="500" rows="4"></textarea>
+                    <span class="field-hint" id="descriptionCounter">0 / 500</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="productImage">Imagem do produto</label>
+                    <div class="product-image-field">
+                        <div class="product-image-preview" id="productImagePreview">
+                            <img id="productImagePreviewImage" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" hidden>
+                            <span id="productImagePreviewFallback" aria-hidden="true">N</span>
+                        </div>
+                        <div class="product-image-input">
+                            <input id="productImage" name="productImage" type="file" accept="image/jpeg,image/png,image/webp">
+                            <span class="field-help">Opcional. Use JPEG, PNG ou WebP com no máximo 5 MB.</span>
+                        </div>
+                    </div>
+                    <label class="checkbox-field checkbox-field--compact" id="removeProductImageField" hidden>
+                        <input id="removeProductImage" name="removeProductImage" type="checkbox">
+                        <span><strong>Remover imagem atual</strong><small>O produto voltará a usar a identificação padrão.</small></span>
+                    </label>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="productStatus">Status</label>
+                    <select id="productStatus" name="productStatus">
+                        <option value="active">Ativo — visível no catálogo</option>
+                        <option value="paused">Pausado — oculto do catálogo</option>
+                    </select>
+                </div>
+                <p class="form-feedback" id="productFeedback" role="status" aria-live="polite"></p>
+                <div class="modal__actions">
+                    <div class="modal__danger-actions" id="productDangerActions" hidden>
+                        <button class="secondary-button" id="toggleStatusButton" type="button">Pausar produto</button>
+                        <button class="danger-button" id="deleteProductButton" type="button">Excluir</button>
+                    </div>
+                    <button class="primary-button" id="saveProductButton" type="submit">Salvar produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="catalogModal" role="dialog" aria-modal="true" aria-labelledby="catalogModalTitle" aria-hidden="true" hidden>
+        <div class="modal__card modal__card--medium">
+            <div class="modal__head">
+                <div>
+                    <span class="eyebrow">CATÁLOGO</span>
+                    <h2 id="catalogModalTitle">Novo catálogo</h2>
+                    <p id="catalogModalDescription">Defina o nome e o endereço que será usado no catálogo público.</p>
+                </div>
+                <button class="icon-button" id="closeCatalogModal" type="button" aria-label="Fechar formulário">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+                </button>
+            </div>
+
+            <form class="product-form" id="catalogForm" novalidate>
+                <input id="catalogId" name="catalogId" type="hidden">
+                <div class="form-field form-field--full">
+                    <label for="catalogName">Nome do catálogo</label>
+                    <input id="catalogName" name="catalogName" type="text" maxlength="100" autocomplete="off" required>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="catalogSlug">Identificador do endereço</label>
+                    <input id="catalogSlug" name="catalogSlug" type="text" maxlength="80" autocomplete="off" autocapitalize="none" spellcheck="false" required>
+                    <span class="field-help">Use letras minúsculas, números e hífens. Ex.: <strong>cafeteria-central</strong>.</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label class="checkbox-field">
+                        <input id="catalogActive" name="catalogActive" type="checkbox" checked>
+                        <span><strong>Catálogo ativo</strong><small>Deixe marcado para prepará-lo para publicação quando a página pública estiver disponível.</small></span>
+                    </label>
+                </div>
+                <div class="form-field form-field--full form-divider">
+                    <span class="form-section-title">PEDIDOS PELO WHATSAPP</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="catalogWhatsapp">Número do WhatsApp</label>
+                    <input id="catalogWhatsapp" name="catalogWhatsapp" type="tel" maxlength="20" autocomplete="tel" inputmode="tel" placeholder="5511978766842">
+                    <span class="field-help">Informe DDI + DDD + número. Pontuação e espaços serão removidos automaticamente.</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="catalogOrderMessage">Instrução ao cliente</label>
+                    <textarea id="catalogOrderMessage" name="catalogOrderMessage" maxlength="300" rows="3">Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.</textarea>
+                    <span class="field-help">Este texto será incluído no final da mensagem do pedido.</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label class="checkbox-field">
+                        <input id="catalogOrdersEnabled" name="catalogOrdersEnabled" type="checkbox">
+                        <span><strong>Receber pedidos</strong><small>Exibe os botões de adicionar, o carrinho e o envio pelo WhatsApp no catálogo público.</small></span>
+                    </label>
+                </div>
+                <p class="form-feedback" id="catalogFeedback" role="status" aria-live="polite"></p>
+                <div class="modal__actions modal__actions--right">
+                    <button class="primary-button" id="saveCatalogButton" type="submit">Salvar catálogo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="categoryModal" role="dialog" aria-modal="true" aria-labelledby="categoryModalTitle" aria-hidden="true" hidden>
+        <div class="modal__card modal__card--medium">
+            <div class="modal__head">
+                <div>
+                    <span class="eyebrow">CATEGORIAS</span>
+                    <h2 id="categoryModalTitle">Categorias do catálogo</h2>
+                    <p id="categoryModalDescription">As categorias ajudam a organizar os produtos de <span id="categoryCatalogName"></span>.</p>
+                </div>
+                <button class="icon-button" id="closeCategoryModal" type="button" aria-label="Fechar categorias">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+                </button>
+            </div>
+
+            <form class="category-form" id="categoryForm" novalidate>
+                <input id="categoryId" name="categoryId" type="hidden">
+                <label class="sr-only" for="categoryName">Nome da categoria</label>
+                <input id="categoryName" name="categoryName" type="text" maxlength="80" autocomplete="off" placeholder="Nova categoria" required>
+                <button class="primary-button" id="saveCategoryButton" type="submit">Adicionar</button>
+            </form>
+            <p class="form-feedback category-feedback" id="categoryFeedback" role="status" aria-live="polite"></p>
+            <div class="category-list" id="categoryList" aria-live="polite"></div>
+            <p class="empty-state" id="emptyCategoryState" hidden>Você ainda não cadastrou categorias para este catálogo.</p>
+        </div>
+    </div>
+
+    <div class="modal modal--confirm" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" aria-describedby="deleteModalDescription" aria-hidden="true" hidden>
+        <div class="modal__card modal__card--small">
+            <div class="modal__head">
+                <div>
+                    <span class="eyebrow">AÇÃO IRREVERSÍVEL</span>
+                    <h2 id="deleteModalTitle">Excluir produto?</h2>
+                </div>
+                <button class="icon-button" id="closeDeleteModal" type="button" aria-label="Cancelar exclusão">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+                </button>
+            </div>
+            <p id="deleteModalDescription">Esta ação removerá o produto do banco de dados e não poderá ser desfeita.</p>
+            <div class="modal__actions modal__actions--confirm">
+                <button class="secondary-button" id="cancelDeleteButton" type="button">Cancelar</button>
+                <button class="danger-button" id="confirmDeleteButton" type="button">Excluir produto</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-overlay" id="mobileOverlay" hidden></div>
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
+    <script src="config.js" defer></script>
+    <script src="assets/js/admin.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://jnixmatzvyxvgnexhilg.supabase.co; connect-src 'self' https://jnixmatzvyxvgnexhilg.supabase.co wss://jnixmatzvyxvgnexhilg.supabase.co; frame-src 'none'; form-action 'self'; manifest-src 'self'; worker-src 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Consulte produtos, categorias e preços neste catálogo digital.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#071a2d">
+    <title>Catálogo | Neoeffex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/catalogo.css">
+</head>
+<body class="is-loading">
+    <a class="skip-link" href="#conteudo">Ir para o catálogo</a>
+
+    <header class="site-header">
+        <div class="container site-header__inner">
+            <a class="brand" href="../" aria-label="Ir para o site da Neoeffex">
+                <span class="brand__mark" aria-hidden="true"></span>
+                <span>neoeffex</span>
+            </a>
+            <span class="site-header__label">CATÁLOGO DIGITAL</span>
+        </div>
+    </header>
+
+    <main id="conteudo">
+        <section class="status-state" id="loadingState" aria-live="polite" aria-busy="true">
+            <div class="loading-spinner" aria-hidden="true"></div>
+            <strong>Carregando catálogo…</strong>
+            <span>Preparando os produtos para você.</span>
+        </section>
+
+        <section class="status-state status-state--error" id="errorState" hidden aria-live="assertive">
+            <span class="status-state__icon" aria-hidden="true">!</span>
+            <strong id="errorTitle">Catálogo indisponível</strong>
+            <span id="errorMessage">Não foi possível abrir este catálogo agora.</span>
+            <button class="outline-button" id="retryButton" type="button">Tentar novamente</button>
+        </section>
+
+        <div id="catalogContent" hidden>
+            <section class="catalog-hero">
+                <div class="container catalog-hero__inner">
+                    <div class="catalog-hero__copy">
+                        <span class="eyebrow">CATÁLOGO ATUALIZADO</span>
+                        <h1 id="catalogName">Catálogo</h1>
+                        <p>Explore os produtos disponíveis e encontre o que procura.</p>
+                    </div>
+                    <button class="share-button" id="shareButton" type="button">
+                        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"></circle><circle cx="6" cy="12" r="2.5"></circle><circle cx="18" cy="19" r="2.5"></circle><path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5"></path></svg>
+                        Compartilhar
+                    </button>
+                </div>
+            </section>
+
+            <section class="catalog-main container" aria-labelledby="productsTitle">
+                <div class="catalog-toolbar">
+                    <div class="catalog-toolbar__heading">
+                        <div>
+                            <span class="eyebrow">PRODUTOS</span>
+                            <h2 id="productsTitle">Conheça o catálogo</h2>
+                        </div>
+                        <p id="resultSummary" aria-live="polite"></p>
+                    </div>
+
+                    <label class="search-field">
+                        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.2 4.2"></path></svg>
+                        <span class="sr-only">Buscar no catálogo</span>
+                        <input id="catalogSearch" type="search" placeholder="Buscar produto" autocomplete="off">
+                    </label>
+
+                    <div class="category-filters" id="categoryFilters" role="group" aria-label="Filtrar por categoria"></div>
+                </div>
+
+                <div class="catalog-sections" id="catalogSections"></div>
+                <div class="empty-results" id="emptyResults" hidden>
+                    <span aria-hidden="true">⌕</span>
+                    <strong id="emptyResultsTitle">Nenhum produto encontrado</strong>
+                    <p id="emptyResultsMessage">Tente buscar outro termo ou escolher uma categoria diferente.</p>
+                    <button class="outline-button" id="clearFiltersButton" type="button">Limpar filtros</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <span>Catálogo digital</span>
+            <a href="../">Tecnologia Neoeffex</a>
+        </div>
+    </footer>
+
+    <button class="cart-button" id="cartButton" type="button" aria-controls="cartDrawer" aria-expanded="false" hidden>
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5h2l1.7 9.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.7L20.5 8H7"></path><circle cx="10" cy="19" r="1.4"></circle><circle cx="18" cy="19" r="1.4"></circle></svg>
+        <span>Ver pedido</span>
+        <strong id="cartCount">0</strong>
+    </button>
+
+    <div class="cart-overlay" id="cartOverlay" hidden></div>
+    <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true" tabindex="-1" inert>
+        <div class="cart-drawer__head">
+            <div>
+                <span class="eyebrow">SEU PEDIDO</span>
+                <h2 id="cartTitle">Carrinho</h2>
+            </div>
+            <button class="cart-close" id="closeCartButton" type="button" aria-label="Fechar carrinho">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems" aria-live="polite"></div>
+        <div class="cart-empty" id="cartEmpty">
+            <strong>Seu carrinho está vazio</strong>
+            <p>Adicione os produtos que deseja pedir.</p>
+        </div>
+        <div class="cart-drawer__footer" id="cartFooter" hidden>
+            <div class="cart-total"><span>Total estimado</span><strong id="cartTotal">R$ 0,00</strong></div>
+            <p class="cart-instruction" id="cartInstruction"></p>
+            <a class="whatsapp-button" id="whatsappButton" href="#" target="_blank" rel="noopener noreferrer">
+                Enviar pedido pelo WhatsApp
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.4 2.7 1.8 4.1 4.5 5"></path></svg>
+            </a>
+            <button class="clear-cart-button" id="clearCartButton" type="button">Limpar carrinho</button>
+        </div>
+    </aside>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
+    <script src="config.js" defer></script>
+    <script src="assets/js/catalogo.js" defer></script>
+</body>
+</html>

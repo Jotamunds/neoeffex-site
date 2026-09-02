@@ -1,5 +1,24 @@
 # Changelog — Painel administrativo
 
+## [0.1.10] - 2026-09-02
+
+### Catálogo público
+
+- Atualizada a logo específica do catálogo `lu-leve-e-saudavel` a partir do pack oficial recebido.
+- Criado ativo quadrado dedicado em `catalogo/assets/images/brands/lu-leve-e-saudavel/logo-catalogo.webp`.
+- Logo exibida sem moldura externa e com cantos discretamente arredondados.
+- Logo cadastrada no Storage permanece como fallback caso o ativo local não carregue.
+- Toast de “adicionado ao pedido” movido para cima do botão flutuante do carrinho.
+- Toast passa a ignorar eventos de ponteiro para nunca impedir clique no carrinho.
+- Ajuste mobile posiciona toast e carrinho com espaçamento consistente.
+
+### Compatibilidade e segurança
+
+- Nenhuma migration nova.
+- Nenhuma alteração em tabelas, buckets, RLS, autenticação ou fluxo do WhatsApp.
+- Outros catálogos continuam usando suas logos cadastradas normalmente.
+- Tema da Lu continua isolado pelo slug.
+
 ## [0.1.9.4] - 2026-09-02
 
 ### Adicionado

@@ -150,16 +150,16 @@
         const notice = document.querySelector(".stage-notice");
         if (eyebrow) eyebrow.textContent = "ETAPA 10";
         if (phaseTitle) phaseTitle.textContent = "Operação e entrega";
-        if (phaseCopy) phaseCopy.textContent = "Operação concluída e primeiro tema visual de catálogo configurado."; 
-        if (version) version.textContent = "ADMIN / 0.1.9.4";
+        if (phaseCopy) phaseCopy.textContent = "Catálogo da Lu atualizado e ajustes de interface concluídos."; 
+        if (version) version.textContent = "ADMIN / 0.1.10";
         if (notice) {
             notice.setAttribute("aria-label", "Status da décima etapa");
             const paragraph = notice.querySelector("p");
             if (paragraph) {
                 paragraph.replaceChildren();
                 const strong = document.createElement("strong");
-                strong.textContent = "Tema da Lu disponível. ";
-                paragraph.append(strong, document.createTextNode("O slug lu-leve-e-saudavel agora aplica a identidade visual do site sem alterar os demais catálogos. A segurança da Etapa 9 permanece inalterada."));
+                strong.textContent = "Catálogo v0.1.10 disponível. ";
+                paragraph.append(strong, document.createTextNode("A Lu usa nova logo quadrada e as notificações não bloqueiam mais o botão do carrinho. A segurança da Etapa 9 permanece inalterada."));
             }
         }
     }

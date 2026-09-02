@@ -106,7 +106,7 @@ Evitar novas funcionalidades antes de observar o uso real, salvo correção impe
 
 ## Extensão pós-Etapa 10 — tema do primeiro catálogo
 
-A `v0.1.9.4` adiciona:
+A `v0.1.10` adiciona:
 
 ```text
 CATALOG_THEME_LU.md
@@ -116,3 +116,8 @@ para documentar a integração visual do catálogo da Lu Leve e Saudável.
 
 Essa personalização é específica do slug e não altera o núcleo funcional dos demais catálogos.
 
+---
+
+## v0.1.10
+
+Ajustes visuais no catálogo da Lu e correção do posicionamento das notificações sobre o carrinho.

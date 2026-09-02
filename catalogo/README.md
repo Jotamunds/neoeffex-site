@@ -78,3 +78,16 @@ O botão do site pode apontar para:
 ```text
 /catalogo/?catalogo=lu-leve-e-saudavel
 ```
+
+---
+
+## v0.1.10 — ajustes do catálogo da Lu
+
+- o slug `lu-leve-e-saudavel` usa uma logo quadrada derivada do pack oficial da marca;
+- a imagem é exibida sem moldura externa, com apenas os cantos levemente arredondados;
+- se o ativo local falhar, a logo cadastrada no Storage continua como fallback;
+- as notificações do catálogo ficam acima do botão flutuante do carrinho;
+- o toast usa `pointer-events: none` para nunca bloquear o botão em resoluções estreitas.
+
+Nenhuma migration, RLS ou regra de Storage foi alterada.
+

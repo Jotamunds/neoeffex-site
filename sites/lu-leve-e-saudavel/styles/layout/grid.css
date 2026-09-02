@@ -37,6 +37,7 @@
     text-align: center;
     font-weight: var(--font-weight-semibold);
     line-height: var(--line-height-compact);
+    display: none;
 }
 
 .skip-link {

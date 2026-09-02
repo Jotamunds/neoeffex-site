@@ -2,12 +2,19 @@
     "use strict";
 
     const identityBucket = "catalog-identities";
+    const logoOverrides = Object.freeze({
+        "lu-leve-e-saudavel": "assets/images/brands/lu-leve-e-saudavel/logo-catalogo.webp"
+    });
     let initAttempts = 0;
 
     function getCatalogSlug() {
         const value = new URLSearchParams(window.location.search).get("catalogo") || "";
         const slug = value.trim().toLocaleLowerCase("pt-BR");
         return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) ? slug : "";
+    }
+
+    function getLogoOverride(slug) {
+        return slug && logoOverrides[slug] ? logoOverrides[slug] : "";
     }
 
     function getLogoUrl(client, path) {
@@ -62,7 +69,10 @@
             defaultDescription.hidden = hasCustomDescription;
         }
 
-        const logoUrl = getLogoUrl(client, catalog.logo_path);
+        const slug = getCatalogSlug();
+        const overrideLogoUrl = getLogoOverride(slug);
+        const storageLogoUrl = getLogoUrl(client, catalog.logo_path);
+        const logoUrl = overrideLogoUrl || storageLogoUrl;
 
         if (logoUrl) {
             const logoBox = document.createElement("div");
@@ -76,6 +86,16 @@
             image.decoding = "async";
 
             image.addEventListener("error", function () {
+                if (
+                    overrideLogoUrl
+                    && storageLogoUrl
+                    && image.dataset.logoFallback !== "storage"
+                ) {
+                    image.dataset.logoFallback = "storage";
+                    image.src = storageLogoUrl;
+                    return;
+                }
+
                 logoBox.remove();
             });
 
@@ -156,7 +176,8 @@
         if (!result.data) return;
 
         const hasIdentity = Boolean(
-            result.data.logo_path
+            getLogoOverride(slug)
+            || result.data.logo_path
             || result.data.short_description
             || result.data.service_area
             || result.data.business_hours

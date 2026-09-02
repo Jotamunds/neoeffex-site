@@ -46,6 +46,7 @@ window.NEOEFFEX_SUPABASE_CONFIG = Object.freeze({
             siteUrl: "../sites/lu-leve-e-saudavel/",
             themeColor: "#153b2b",
             brandName: "Lu Leve e Saudável",
+            headerLogo: "assets/images/brands/lu-leve-e-saudavel/logo-header.webp",
             headerLabel: "CARDÁPIO DIGITAL"
         })
     });
@@ -74,8 +75,18 @@ window.NEOEFFEX_SUPABASE_CONFIG = Object.freeze({
             headerBrand.href = theme.siteUrl;
             headerBrand.setAttribute("aria-label", "Voltar para o site " + theme.brandName);
 
-            const brandName = headerBrand.querySelector("span:last-child");
-            if (brandName) brandName.textContent = theme.brandName;
+            if (theme.headerLogo) {
+                const image = document.createElement("img");
+                image.className = "brand__image";
+                image.src = theme.headerLogo;
+                image.alt = theme.brandName;
+                image.decoding = "async";
+
+                headerBrand.replaceChildren(image);
+            } else {
+                const brandName = headerBrand.querySelector("span:last-child");
+                if (brandName) brandName.textContent = theme.brandName;
+            }
         }
 
         if (headerLabel) headerLabel.textContent = theme.headerLabel;

@@ -89,7 +89,7 @@ html[data-catalog-theme="lu-leve-e-saudavel"] input:focus-visible {
 /* Cabeçalho: parece parte da landing da Lu, não uma página azul da Neoeffex. */
 html[data-catalog-theme="lu-leve-e-saudavel"] .site-header {
     border-bottom-color: var(--border);
-    background: var(--lu-surface);
+    background: #f8f0e9;
 }
 
 html[data-catalog-theme="lu-leve-e-saudavel"] .site-header__inner {
@@ -97,18 +97,23 @@ html[data-catalog-theme="lu-leve-e-saudavel"] .site-header__inner {
 }
 
 html[data-catalog-theme="lu-leve-e-saudavel"] .brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 58px;
     color: var(--lu-primary);
-    font-family: "Sora", system-ui, sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    text-decoration: none;
 }
 
 html[data-catalog-theme="lu-leve-e-saudavel"] .brand__mark {
-    width: 18px;
-    height: 18px;
-    border-color: var(--lu-primary);
-    box-shadow: 9px 0 0 -5px var(--lu-accent);
+    display: none;
+}
+
+html[data-catalog-theme="lu-leve-e-saudavel"] .brand__image {
+    display: block;
+    width: clamp(172px, 18vw, 205px);
+    height: auto;
+    max-height: 62px;
+    object-fit: contain;
 }
 
 html[data-catalog-theme="lu-leve-e-saudavel"] .site-header__label {
@@ -164,9 +169,27 @@ html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero .catalog-identity-de
     color: var(--lu-accent-soft);
 }
 
+html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-identity-logo {
+    display: block;
+    width: 124px;
+    height: 124px;
+    max-width: none;
+    margin-bottom: 22px;
+    overflow: hidden;
+    border: 0;
+    border-radius: 12px;
+    background: #f6efe8;
+}
+
 html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-identity-logo img {
-    border-radius: var(--lu-radius-medium);
-    filter: drop-shadow(0 8px 18px rgb(0 0 0 / 12%));
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    border-radius: inherit;
+    object-fit: cover;
+    filter: none;
 }
 
 html[data-catalog-theme="lu-leve-e-saudavel"] .share-button {
@@ -434,8 +457,20 @@ html[data-catalog-theme="lu-leve-e-saudavel"] .site-footer a:hover {
 }
 
 @media (max-width: 620px) {
+    html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-identity-logo {
+        width: 108px;
+        height: 108px;
+        margin-bottom: 18px;
+        border-radius: 10px;
+    }
+
     html[data-catalog-theme="lu-leve-e-saudavel"] .brand {
-        font-size: 15px;
+        min-height: 52px;
+    }
+
+    html[data-catalog-theme="lu-leve-e-saudavel"] .brand__image {
+        width: clamp(150px, 48vw, 176px);
+        max-height: 54px;
     }
 
     html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero h1 {
@@ -444,6 +479,14 @@ html[data-catalog-theme="lu-leve-e-saudavel"] .site-footer a:hover {
 
     html[data-catalog-theme="lu-leve-e-saudavel"] .product-card {
         border-radius: var(--lu-radius-medium);
+    }
+}
+
+@media (max-width: 420px) {
+    html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-identity-logo {
+        width: 96px;
+        height: 96px;
+        border-radius: 9px;
     }
 }
 

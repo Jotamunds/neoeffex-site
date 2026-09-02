@@ -941,7 +941,7 @@ body.has-cart-open {
     position: fixed;
     z-index: 90;
     right: 22px;
-    bottom: 22px;
+    bottom: 82px;
     max-width: min(340px, calc(100vw - 44px));
     padding: 12px 15px;
     border: 1px solid rgba(255, 255, 255, 0.14);
@@ -951,6 +951,7 @@ body.has-cart-open {
     font-size: 12px;
     box-shadow: 0 16px 44px rgba(7, 26, 45, 0.28);
     opacity: 0;
+    pointer-events: none;
     transform: translateY(12px);
     transition: opacity 180ms ease, transform 180ms ease;
 }
@@ -1034,6 +1035,12 @@ body.has-cart-open {
     .cart-button {
         right: 16px;
         bottom: 16px;
+    }
+
+    .toast {
+        right: 16px;
+        bottom: 76px;
+        max-width: min(340px, calc(100vw - 32px));
     }
 
     .cart-drawer {

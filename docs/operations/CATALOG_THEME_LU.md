@@ -175,3 +175,67 @@ Nesse momento, revisar somente:
 - origem das fontes locais, caso a pasta `/sites/lu-leve-e-saudavel/` deixe de existir no domínio Neoeffex.
 
 O tema não depende de `localStorage` compartilhado entre os dois domínios.
+
+---
+
+## v0.1.10 — logo do catálogo
+
+A identidade pública da Lu passa a priorizar o ativo:
+
+```text
+catalogo/assets/images/brands/lu-leve-e-saudavel/logo-catalogo.webp
+```
+
+Esse arquivo foi recortado do símbolo presente no pack oficial recebido para a Lu.
+
+Exibição:
+
+```text
+quadrada
+sem moldura externa
+cantos levemente arredondados
+object-fit: cover
+```
+
+Tamanhos aproximados:
+
+```text
+desktop: 124 × 124 px
+mobile:  108 × 108 px
+até 420: 96 × 96 px
+```
+
+A imagem do Storage permanece como fallback caso o ativo local não carregue.
+
+---
+
+## v0.1.10.1 — pack de identidade atualizado
+
+Pack recebido:
+
+```text
+logo-com-texto-na-direita.png
+logo-com-texto-na-esquerda.png
+logo-quadrada-com-texto.png
+logo-quadrada-sem-texto.png
+```
+
+Ativos escolhidos para o catálogo:
+
+```text
+Cabeçalho:
+logo-com-texto-na-esquerda.png
+→ logo-header.webp
+
+Hero:
+logo-quadrada-sem-texto.png
+→ logo-catalogo.webp
+```
+
+Motivo:
+
+- o cabeçalho precisa de leitura horizontal rápida;
+- o símbolo à esquerda cria continuidade natural com o conteúdo;
+- no hero, o nome “Lu Leve e Saudável” já é exibido pelo catálogo, então a versão quadrada sem texto evita repetição;
+- a imagem quadrada mantém somente um arredondamento discreto nos cantos, sem moldura externa.
+

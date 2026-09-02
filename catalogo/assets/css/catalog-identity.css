@@ -1,60 +1,124 @@
-/* Etapa 8 — identidade básica do comércio. */
+/* v0.1.8.1 — correção visual da identidade básica do comércio. */
+
+.catalog-hero__inner {
+    align-items: flex-start;
+    min-height: 0;
+    padding-block: 46px 48px;
+}
+
+.catalog-hero__copy {
+    max-width: 760px;
+}
+
+.catalog-hero .share-button {
+    margin-top: 4px;
+}
+
 .catalog-identity-logo {
     display: grid;
-    width: min(190px, 48vw);
-    height: 108px;
-    margin-bottom: 24px;
+    width: min(150px, 42vw);
+    height: 86px;
+    margin-bottom: 20px;
     overflow: hidden;
-    padding: 12px;
+    padding: 10px;
     place-items: center;
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 12px;
+    border-radius: 11px;
     background: #f7f7f5;
 }
 
 .catalog-identity-logo img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-.catalog-identity-description {
+.catalog-hero .catalog-identity-description {
     max-width: 680px;
+    margin: 14px 0 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: clamp(14px, 1.5vw, 16px);
+    line-height: 1.65;
 }
 
 .catalog-identity-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 16px;
-    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px 24px;
+    max-width: 720px;
+    margin-top: 22px;
 }
 
-.catalog-identity-detail {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
+.catalog-hero .catalog-identity-detail {
+    display: grid;
+    align-content: start;
+    gap: 3px;
+    min-width: 0;
     margin: 0;
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 11px;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 13px;
+    line-height: 1.45;
 }
 
-.catalog-identity-detail strong {
+.catalog-hero .catalog-identity-detail strong {
     color: rgba(255, 255, 255, 0.9);
     font-size: 9px;
+    font-weight: 700;
     letter-spacing: 0.08em;
+    line-height: 1.35;
     text-transform: uppercase;
+}
+
+.catalog-hero .catalog-identity-detail span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+    .catalog-hero__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 24px;
+        padding-block: 38px 40px;
+    }
+
+    .catalog-hero .share-button {
+        align-self: flex-start;
+        margin-top: 0;
+    }
+
+    .catalog-identity-details {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 620px) {
     .catalog-identity-logo {
-        width: min(170px, 52vw);
-        height: 96px;
-        margin-bottom: 20px;
+        width: min(140px, 48vw);
+        height: 80px;
+        margin-bottom: 18px;
     }
 
     .catalog-identity-details {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 7px;
+        grid-template-columns: 1fr;
+        gap: 11px;
+        margin-top: 18px;
+    }
+
+    .catalog-hero .catalog-identity-detail {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 420px) {
+    .catalog-hero__inner {
+        gap: 20px;
+        padding-block: 32px 36px;
+    }
+
+    .catalog-identity-logo {
+        width: 128px;
+        height: 74px;
     }
 }

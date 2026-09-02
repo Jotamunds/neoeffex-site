@@ -754,6 +754,7 @@ check("Configuração mantém os campos públicos bem formados", () => {
     assert.equal(typeof app.config.promotion.title, "string");
     assert.equal(typeof app.config.promotion.description, "string");
     assert.equal(typeof app.config.developer.url, "string");
+    assert.equal(app.config.developer.url, "https://www.neoeffex.com.br/");
 });
 
 check("Dados públicos de emergência do HTML acompanham a configuração", () => {
@@ -976,10 +977,12 @@ check("Crédito da Neoeffex alterna entre link HTTPS e texto", () => {
         app.config.developer.url = "https://example.com/credito";
         runScript("main.js");
         const credit = element("[data-developer-credit]");
-        assert.equal(credit.children.length, 1);
-        assert.equal(credit.children[0].textContent, `Desenvolvido por ${app.config.developer.name}`);
-        assert.equal(credit.children[0].getAttribute("href"), "https://example.com/credito");
-        assert.equal(credit.children[0].getAttribute("rel"), "noopener noreferrer");
+        assert.equal(credit.children.length, 2);
+        assert.equal(credit.children[0].textContent, "Desenvolvido por ");
+        assert.equal(credit.children[1].textContent, app.config.developer.name);
+        assert.equal(credit.children[1].getAttribute("href"), "https://example.com/credito");
+        assert.equal(credit.children[1].getAttribute("target"), "_blank");
+        assert.equal(credit.children[1].getAttribute("rel"), "noopener noreferrer");
         app.config.developer.url = invalid;
         runScript("main.js");
         assert.equal(credit.children.length, 0);

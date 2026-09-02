@@ -1,4 +1,4 @@
-# Preparação para publicação — v0.1.19
+# Preparação para publicação — v0.1.20
 
 Este pacote é de pré-publicação. Não configura hospedagem, não envia alterações ao GitHub e não publica automaticamente. O código funciona sem instalação ou build; ferramentas Node.js são opcionais para manutenção e verificações.
 
@@ -109,3 +109,13 @@ O destino final e o método de publicação precisam ser escolhidos por você. E
 Abra a URL final com HTTPS, confirme os arquivos carregados, teste os três atalhos de navegação, os CTAs do catálogo e todos os canais de contato. Verifique novamente imagens, preços, mobile e metadados na URL real. Não marque como concluído com base apenas no resultado local.
 
 Se surgir um erro, use o histórico do seu repositório para recuperar a última versão aprovada. Não substitua sua pasta `.git` por outra e não use push forçado como rotina de atualização.
+
+## Crédito Neoeffex
+
+No rodapé, apenas `Neoeffex` é link para:
+
+```text
+https://www.neoeffex.com.br/
+```
+
+`Desenvolvido por` permanece texto normal. O link abre em nova aba com `noopener noreferrer`.

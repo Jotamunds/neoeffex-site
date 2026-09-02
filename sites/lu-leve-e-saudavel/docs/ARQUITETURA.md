@@ -176,3 +176,13 @@ Na v0.1.14.1, cada botão inicial é um link `hero__action` com um span `button 
 Pendências automáticas e itens de revisão humana são separados. Um resultado sem pendências automáticas não confirma fotos reais, titularidade de telefone, correção comercial, acessibilidade ou publicação. Não há sinalizador JavaScript que remova `noindex`: a liberação é uma edição explícita do HTML depois da revisão documentada.
 
 O pacote de desenvolvimento contém os dados e ferramentas de manutenção. A hospedagem precisa apenas de `index.html`, `styles/`, `scripts/` e dos assets usados, preservando caminhos e licenças. Não existe build obrigatório. Consulte `docs/PUBLICACAO.md`.
+
+## Crédito Neoeffex
+
+No rodapé, apenas `Neoeffex` é link para:
+
+```text
+https://www.neoeffex.com.br/
+```
+
+`Desenvolvido por` permanece texto normal. O link abre em nova aba com `noopener noreferrer`.

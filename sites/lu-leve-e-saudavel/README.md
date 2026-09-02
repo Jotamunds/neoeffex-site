@@ -1,4 +1,4 @@
-# Lu Leve e Saudável — v0.1.19
+# Lu Leve e Saudável — v0.1.20
 
 Landing page mobile-first e cardápio digital de marmitas tradicionais e fitness. O projeto é estático, não depende de bibliotecas externas e pode funcionar em uma subpasta, como `neoeffex.com/lu-leve-e-saudavel`.
 
@@ -69,3 +69,13 @@ Em `scripts/config.js`, `motion.enabled` desliga todos os efeitos. Os controles 
 ## Publicação
 
 Antes de publicar, confirme preços, fotos, endereço/horários, regiões, Instagram e destinatário do WhatsApp com a responsável. A landing não envia mensagens automaticamente nem contém pagamento. O carrinho e a montagem do pedido ficam no catálogo compartilhado; a confirmação final continua no WhatsApp.
+
+## v0.1.20 — crédito Neoeffex
+
+No rodapé, `Desenvolvido por` continua como texto e somente `Neoeffex` aponta para:
+
+```text
+https://www.neoeffex.com.br/
+```
+
+O link abre em nova aba com `noopener noreferrer`.

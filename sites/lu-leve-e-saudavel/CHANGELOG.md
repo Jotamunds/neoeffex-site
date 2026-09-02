@@ -1,5 +1,13 @@
 # Histórico
 
+## v0.1.20 — Link oficial da Neoeffex no footer
+
+- Configurado `https://www.neoeffex.com.br/` como URL oficial do desenvolvedor.
+- No crédito `Desenvolvido por Neoeffex`, somente `Neoeffex` passa a ser clicável.
+- O link abre em nova aba com `target="_blank"` e `rel="noopener noreferrer"`.
+- O fallback sem JavaScript continua exibindo `Desenvolvido por Neoeffex` como texto.
+- Nenhuma alteração em catálogo, preços, WhatsApp, imagens ou animações.
+
 ## v0.1.19 — Integração com o catálogo Neoeffex
 
 - Adicionado `scripts/catalog.js` para centralizar a navegação ao catálogo `lu-leve-e-saudavel`.

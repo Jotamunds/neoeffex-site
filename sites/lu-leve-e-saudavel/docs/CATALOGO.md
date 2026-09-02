@@ -81,3 +81,17 @@ catalog: {
 ```
 
 Não espalhe outra URL do catálogo pelo JavaScript.
+
+## Cabeçalho mobile
+
+Em telas de celular (`max-width: 47.999rem`), o botão de catálogo do cabeçalho superior é ocultado para dar prioridade visual à marca.
+
+A navegação ao catálogo continua disponível por:
+
+- hero;
+- blocos de produtos;
+- Como funciona;
+- CTA final;
+- barra fixa mobile.
+
+A logo do cabeçalho é centralizada e ampliada somente nesse breakpoint.

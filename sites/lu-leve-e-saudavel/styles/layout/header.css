@@ -111,14 +111,29 @@
     }
 }
 
-@media (max-width: 29.999rem) {
-    .site-header__actions {
-        width: 100%;
+/* No celular, o catálogo continua acessível pelo CTA fixo e pelos demais
+ * pontos da página. O cabeçalho fica reservado para a marca e a navegação.
+ */
+@media (max-width: 47.999rem) {
+    .site-header__inner {
+        justify-content: center;
     }
 
-    .site-header__actions .button {
+    .site-header__brand {
         width: 100%;
-        padding-inline: var(--space-2);
-        font-size: var(--font-size-small);
+        justify-content: center;
+        margin-inline: auto;
+    }
+
+    .site-header__brand-image {
+        width: clamp(11rem, 54vw, 14rem);
+    }
+
+    .site-header__actions {
+        display: none;
+    }
+
+    .site-nav {
+        width: 100%;
     }
 }

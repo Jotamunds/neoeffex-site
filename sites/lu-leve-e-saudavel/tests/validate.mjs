@@ -176,7 +176,11 @@ check("Contratos CSS de cabeçalho e hero mobile-first", () => {
     const heroCss = readFileSync(join(root, "styles/sections/hero.css"), "utf8");
     assert.match(headerCss, /flex-wrap:\s*wrap/);
     assert.match(headerCss, /min-height:\s*var\(--control-size\)/);
-    assert.doesNotMatch(headerCss, /display:\s*none|visibility:\s*hidden/);
+    assert.match(headerCss, /@media\s*\(max-width:\s*47\.999rem\)/);
+    assert.match(headerCss, /\.site-header__actions\s*\{\s*display:\s*none;/);
+    assert.match(headerCss, /\.site-header__brand\s*\{[\s\S]*?width:\s*100%;[\s\S]*?justify-content:\s*center;/);
+    assert.match(headerCss, /\.site-header__brand-image\s*\{\s*width:\s*clamp\(11rem,\s*54vw,\s*14rem\);/);
+    assert.doesNotMatch(headerCss, /\.site-nav\s*\{[^}]*display:\s*none/);
     assert.match(heroCss, /@media\s*\(min-width:\s*60rem\)/);
     assert.match(heroCss, /grid-template-columns:\s*minmax\(0,\s*1\.1fr\)\s*minmax\(0,\s*0\.9fr\)/);
     assert.match(heroCss, /object-fit:\s*cover/);

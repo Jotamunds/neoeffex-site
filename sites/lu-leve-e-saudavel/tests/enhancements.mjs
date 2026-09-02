@@ -255,13 +255,15 @@ export function validateEnhancements({ check, root, html }) {
         assert.match(read("styles/base/variables.css"), /--font-size-body:\s*1rem/);
     });
 
-    check("Cabeçalho pode quebrar linhas com texto ampliado sem ocultar atalhos", () => {
+    check("Cabeçalho pode quebrar linhas e preserva atalhos de navegação no mobile", () => {
         const header = read("styles/layout/header.css");
         assert.match(header, /\.site-header__inner\s*\{[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap/);
         assert.match(header, /\.site-header__brand\s*\{[^}]*max-width:\s*100%/);
         assert.match(header, /\.site-nav\s*\{[^}]*flex-basis:\s*100%/);
         assert.match(header, /@media\s*\(min-width:\s*60rem\)/);
-        assert.doesNotMatch(header, /display:\s*none|white-space:\s*nowrap|overflow:\s*hidden/);
+        assert.match(header, /@media\s*\(max-width:\s*47\.999rem\)/);
+        assert.match(header, /\.site-header__actions\s*\{\s*display:\s*none;/);
+        assert.doesNotMatch(header, /\.site-nav\s*\{[^}]*display:\s*none|white-space:\s*nowrap|overflow:\s*hidden/);
     });
 
     check("Barra mede altura real, fontes e redimensionamento sem duplicar observadores", () => {

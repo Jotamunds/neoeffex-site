@@ -10,7 +10,9 @@
 - A seção de contato permanece informativa, com telefone, Instagram, regiões e recebimento, sem CTA concorrente.
 - “Como funciona” descreve o fluxo real: abrir cardápio, montar carrinho e enviar pelo WhatsApp.
 - O feedback visual de contato foi movido do hero para o botão final.
-- Cabeçalho mobile usa o CTA do cardápio em largura total nas telas menores.
+- No celular, o CTA “Abrir cardápio” é removido somente do cabeçalho superior; os demais acessos ao catálogo permanecem.
+- Logo do cabeçalho fica maior e centralizada em telas de até `47.999rem`.
+- Desktop e tablet maior preservam o cabeçalho com o CTA do catálogo.
 - Versão sincronizada em `VERSION`, `config.js`, `README.md`, faixa de revisão e documentação de publicação.
 - Removidos instaladores, arquivos avulsos e o teste temporário de aplicação da v0.1.18, todos já incorporados à estrutura final.
 - Adicionados testes de resolução local/produção e regressão dos links do catálogo.

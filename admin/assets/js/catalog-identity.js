@@ -151,15 +151,15 @@
         if (eyebrow) eyebrow.textContent = "ETAPA 10";
         if (phaseTitle) phaseTitle.textContent = "Operação e entrega";
         if (phaseCopy) phaseCopy.textContent = "Catálogo da Lu atualizado e ajustes de interface concluídos."; 
-        if (version) version.textContent = "ADMIN / 0.1.11";
+        if (version) version.textContent = "ADMIN / 0.1.12";
         if (notice) {
             notice.setAttribute("aria-label", "Status da décima etapa");
             const paragraph = notice.querySelector("p");
             if (paragraph) {
                 paragraph.replaceChildren();
                 const strong = document.createElement("strong");
-                strong.textContent = "Catálogo v0.1.11 disponível. ";
-                paragraph.append(strong, document.createTextNode("O MVP opera com um catálogo por conta e mantém a segurança das etapas anteriores."));
+                strong.textContent = "Catálogo v0.1.12 disponível. ";
+                paragraph.append(strong, document.createTextNode("Sessões, edição, logos, carrinho e exclusão de catálogo pausado foram atualizados."));
             }
         }
     }
@@ -188,8 +188,17 @@
         const closeButton = document.getElementById("closeCatalogModal");
         if (closeButton) closeButton.addEventListener("click", cancelPendingSave);
         if (modal) {
-            modal.addEventListener("click", function (event) {
-                if (event.target === modal) cancelPendingSave();
+            let pointerStartedOnBackdrop = false;
+            modal.addEventListener("pointerdown", function (event) {
+                pointerStartedOnBackdrop = event.button === 0 && event.target === modal;
+            });
+            modal.addEventListener("pointerup", function (event) {
+                const shouldCancel = pointerStartedOnBackdrop && event.button === 0 && event.target === modal;
+                pointerStartedOnBackdrop = false;
+                if (shouldCancel) cancelPendingSave();
+            });
+            modal.addEventListener("pointercancel", function () {
+                pointerStartedOnBackdrop = false;
             });
             new MutationObserver(function () {
                 if (!modal.hidden) return;

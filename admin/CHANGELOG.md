@@ -1,5 +1,29 @@
 # Changelog — Painel administrativo
 
+## [0.1.12] - 2026-09-02
+
+### Admin
+
+- Fechamento dos modais por fundo exige que o clique comece e termine fora do card; arrastar do card para fora não fecha mais a edição.
+- Login e logout avisam as demais abas do Admin na mesma origem, mantendo uma única conta ativa no navegador.
+- O identificador acompanha automaticamente as alterações do nome até o cliente editá-lo manualmente.
+- A edição manual do identificador remove espaços, acentos, maiúsculas e caracteres especiais em tempo real.
+- Catálogos pausados exibem opção de exclusão com confirmação; catálogo ativo não pode ser excluído por esse fluxo.
+
+### Logos e catálogo público
+
+- Centralização e `object-position` das logos passam a fazer parte do estilo compartilhado, valendo para todas as contas.
+- O editor aplica autoajuste inicial às logos de qualquer catálogo e tenta remover margens vazias detectáveis.
+- Ao abrir o WhatsApp, o carrinho atual é salvo como último carrinho e então limpo.
+- O carrinho vazio oferece `Restaurar último carrinho` quando houver um pedido anterior válido neste navegador.
+
+### Banco e segurança
+
+- Nova migration `010_delete_paused_catalog.sql` executa a exclusão em uma transação com `SECURITY INVOKER`.
+- A função valida usuário autenticado, propriedade e status pausado antes de remover catálogo, produtos e categorias.
+- Execução da função é revogada de `public` e `anon` e concedida somente a `authenticated`.
+- Arquivos são removidos posteriormente pela Storage API, conforme a orientação do Supabase.
+
 ## [0.1.11] - 2026-09-02
 
 ### Regra do MVP

@@ -95,7 +95,7 @@
                     <strong>Pronto para validação</strong>
                     <p>Permissões mínimas, sessão validada e auditoria para a publicação.</p>
                 </div>
-                <span class="version">ADMIN / 0.1.7</span>
+                <span class="version">ADMIN / 0.1.12</span>
             </div>
         </aside>
 
@@ -335,7 +335,7 @@
                 <div class="form-field form-field--full">
                     <label for="catalogSlug">Identificador do endereço</label>
                     <input id="catalogSlug" name="catalogSlug" type="text" maxlength="80" autocomplete="off" autocapitalize="none" spellcheck="false" required>
-                    <span class="field-help">Use letras minúsculas, números e hífens. Ex.: <strong>cafeteria-central</strong>.</span>
+                    <span class="field-help">Gerado pelo nome e ajustado para letras minúsculas, números e hífens. Você ainda pode editá-lo; a alteração muda o link público.</span>
                 </div>
                 <div class="form-field form-field--full">
                     <label class="checkbox-field">
@@ -363,7 +363,10 @@
                     </label>
                 </div>
                 <p class="form-feedback" id="catalogFeedback" role="status" aria-live="polite"></p>
-                <div class="modal__actions modal__actions--right">
+                <div class="modal__actions">
+                    <div class="modal__danger-actions" id="catalogDangerActions" hidden>
+                        <button class="danger-button" id="deleteCatalogButton" type="button">Excluir catálogo pausado</button>
+                    </div>
                     <button class="primary-button" id="saveCatalogButton" type="submit">Salvar catálogo</button>
                 </div>
             </form>

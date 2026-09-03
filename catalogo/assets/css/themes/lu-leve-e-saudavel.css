@@ -170,7 +170,8 @@ html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-hero .catalog-identity-de
 }
 
 html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-identity-logo {
-    display: block;
+    display: grid;
+    place-items: center;
     width: 124px;
     height: 124px;
     max-width: none;
@@ -189,6 +190,7 @@ html[data-catalog-theme="lu-leve-e-saudavel"] .catalog-identity-logo img {
     max-height: none;
     border-radius: inherit;
     object-fit: cover;
+    object-position: center center;
     filter: none;
 }
 

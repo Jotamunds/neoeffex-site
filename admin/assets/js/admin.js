@@ -4,6 +4,7 @@
     const config = window.NEOEFFEX_SUPABASE_CONFIG || {};
     const storageKey = "neoeffex-admin-theme";
     const authStorageKey = "neoeffex-admin-auth";
+    const authSyncStorageKey = "neoeffex-admin-auth-sync";
     const activeCatalogStorageKey = "neoeffex-admin-active-catalog";
     const root = document.documentElement;
     const body = document.body;
@@ -54,11 +55,13 @@
     const removeProductImage = document.getElementById("removeProductImage");
     const removeProductImageField = document.getElementById("removeProductImageField");
     const productDangerActions = document.getElementById("productDangerActions");
+    const catalogDangerActions = document.getElementById("catalogDangerActions");
     const saveProductButton = document.getElementById("saveProductButton");
     const saveCatalogButton = document.getElementById("saveCatalogButton");
     const saveCategoryButton = document.getElementById("saveCategoryButton");
     const toggleStatusButton = document.getElementById("toggleStatusButton");
     const deleteProductButton = document.getElementById("deleteProductButton");
+    const deleteCatalogButton = document.getElementById("deleteCatalogButton");
     const confirmDeleteButton = document.getElementById("confirmDeleteButton");
     const categoryList = document.getElementById("categoryList");
     const emptyCategoryState = document.getElementById("emptyCategoryState");
@@ -74,6 +77,7 @@
     let productImageObjectUrl = null;
     let authenticatedUserId = null;
     const productImagesBucket = "catalog-products";
+    const catalogIdentitiesBucket = "catalog-identities";
     const maximumProductImageSize = 5 * 1024 * 1024;
 
     function setFeedback(element, message, type) {
@@ -126,6 +130,18 @@
         }
     }
 
+    function notifyAuthTabs(action) {
+        try {
+            window.localStorage.setItem(authSyncStorageKey, JSON.stringify({
+                action: action,
+                timestamp: Date.now(),
+                nonce: Math.random().toString(36).slice(2)
+            }));
+        } catch (error) {
+            // A sessão local continua funcionando se o navegador bloquear armazenamento local.
+        }
+    }
+
     function showLogin() {
         authenticatedUserId = null;
         body.classList.remove("is-authenticated");
@@ -164,6 +180,17 @@
             .replace(/[\u0300-\u036f]/g, "")
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/^-+|-+$/g, "")
+            .slice(0, 80);
+    }
+
+    function sanitizeSlugDraft(value) {
+        return String(value || "")
+            .toLocaleLowerCase("pt-BR")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-+/g, "")
             .slice(0, 80);
     }
 
@@ -541,6 +568,7 @@
     function setCatalogFormLoading(isLoading) {
         saveCatalogButton.disabled = isLoading;
         saveCatalogButton.textContent = isLoading ? "Salvando…" : "Salvar catálogo";
+        deleteCatalogButton.disabled = isLoading;
     }
 
     function setCategoryFormLoading(isLoading) {
@@ -626,13 +654,14 @@
         document.getElementById("catalogId").value = editing ? catalog.id : "";
         document.getElementById("catalogName").value = editing ? catalog.name : "";
         document.getElementById("catalogSlug").value = editing ? catalog.slug : "";
-        document.getElementById("catalogSlug").dataset.touched = editing ? "true" : "";
+        document.getElementById("catalogSlug").dataset.touched = "";
         document.getElementById("catalogActive").checked = editing ? catalog.is_active : true;
         document.getElementById("catalogWhatsapp").value = editing ? (catalog.whatsapp_number || "") : "";
         document.getElementById("catalogOrderMessage").value = editing
             ? (catalog.order_message || "Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.")
             : "Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.";
         document.getElementById("catalogOrdersEnabled").checked = editing ? Boolean(catalog.orders_enabled) : false;
+        catalogDangerActions.hidden = !editing || Boolean(catalog.is_active);
         setCatalogFormLoading(false);
         window.setTimeout(function () {
             document.getElementById("catalogName").focus();
@@ -740,12 +769,19 @@
     function openDeleteModal(deletion) {
         pendingDeletion = deletion;
         const isCategory = deletion.type === "category";
+        const isCatalog = deletion.type === "catalog";
         deletion.baseModal.setAttribute("aria-hidden", "true");
-        document.getElementById("deleteModalTitle").textContent = isCategory ? "Excluir categoria?" : "Excluir produto?";
-        document.getElementById("deleteModalDescription").textContent = isCategory
-            ? "A categoria “" + deletion.name + "” será removida. Essa ação não poderá ser desfeita."
-            : "O produto “" + deletion.name + "” será removido do banco de dados e não poderá ser desfeito.";
-        confirmDeleteButton.textContent = isCategory ? "Excluir categoria" : "Excluir produto";
+        document.getElementById("deleteModalTitle").textContent = isCatalog
+            ? "Excluir catálogo pausado?"
+            : (isCategory ? "Excluir categoria?" : "Excluir produto?");
+        document.getElementById("deleteModalDescription").textContent = isCatalog
+            ? "O catálogo “" + deletion.name + "”, suas categorias, produtos e imagens vinculadas serão removidos. Essa ação não poderá ser desfeita."
+            : (isCategory
+                ? "A categoria “" + deletion.name + "” será removida. Essa ação não poderá ser desfeita."
+                : "O produto “" + deletion.name + "” será removido do banco de dados e não poderá ser desfeito.");
+        confirmDeleteButton.textContent = isCatalog
+            ? "Excluir catálogo"
+            : (isCategory ? "Excluir categoria" : "Excluir produto");
         deleteModal.hidden = false;
         deleteModal.setAttribute("aria-hidden", "false");
         window.setTimeout(function () {
@@ -1050,11 +1086,61 @@
         setFeedback(categoryFeedback, categoryId ? "Categoria atualizada." : "Categoria adicionada.", "success");
     }
 
+    async function removeStoredFiles(bucket, paths) {
+        const candidates = Array.isArray(paths) ? paths : [paths];
+        const uniquePaths = Array.from(new Set(candidates.filter(function (path) {
+            return typeof path === "string" && path;
+        })));
+        let firstError = null;
+
+        for (let index = 0; index < uniquePaths.length; index += 1000) {
+            const result = await client.storage.from(bucket).remove(uniquePaths.slice(index, index + 1000));
+            if (result.error && !firstError) firstError = result.error;
+        }
+        return firstError;
+    }
+
     async function deletePendingItem() {
         if (!pendingDeletion) return;
         const deletion = pendingDeletion;
         confirmDeleteButton.disabled = true;
         confirmDeleteButton.textContent = "Excluindo…";
+
+        if (deletion.type === "catalog") {
+            const result = await client.rpc("delete_own_paused_catalog", {
+                catalog_id_to_delete: deletion.id
+            });
+
+            confirmDeleteButton.disabled = false;
+            if (result.error || !result.data) {
+                console.error("Erro ao excluir catálogo pausado", result.error);
+                closeDeleteModal();
+                setFeedback(catalogFeedback, result.error && result.error.message && result.error.message.includes("pausado")
+                    ? "Somente um catálogo pausado pode ser excluído. Atualize a página e tente novamente."
+                    : "Não foi possível excluir o catálogo. Confirme se a migration 010 foi aplicada.", "error");
+                return;
+            }
+
+            const storageErrors = await Promise.all([
+                removeStoredFiles(productImagesBucket, result.data.product_image_paths),
+                removeStoredFiles(catalogIdentitiesBucket, [result.data.logo_path])
+            ]);
+            const storageCleanupFailed = storageErrors.some(Boolean);
+
+            closeDeleteModal();
+            closeCatalogModal();
+            catalogs = [];
+            categories = [];
+            products = [];
+            activeCatalog = null;
+            clearRememberedCatalog();
+            await loadCatalogs();
+            showToast(storageCleanupFailed
+                ? "Catálogo excluído, mas algum arquivo não pôde ser removido do armazenamento."
+                : "Catálogo excluído com sucesso.");
+            return;
+        }
+
         const { data, error } = await client
             .from(deletion.type === "category" ? "categories" : "products")
             .delete()
@@ -1146,6 +1232,7 @@
             return;
         }
 
+        notifyAuthTabs("signed-in");
         await showDashboard(data.user);
         loginButton.disabled = false;
         loginButton.textContent = "Entrar no painel";
@@ -1192,6 +1279,7 @@
         updateSummary();
         renderProducts();
         showLogin();
+        notifyAuthTabs("signed-out");
     }
 
     function initializeConfiguredPanel() {
@@ -1276,7 +1364,13 @@
         const slugInput = document.getElementById("catalogSlug");
         if (!slugInput.dataset.touched) slugInput.value = slugify(this.value);
     });
-    document.getElementById("catalogSlug").addEventListener("input", function () { this.dataset.touched = "true"; });
+    document.getElementById("catalogSlug").addEventListener("input", function () {
+        this.dataset.touched = "true";
+        this.value = sanitizeSlugDraft(this.value);
+    });
+    document.getElementById("catalogSlug").addEventListener("blur", function () {
+        this.value = slugify(this.value);
+    });
     document.getElementById("closeProductModal").addEventListener("click", closeProductModal);
     document.getElementById("closeCatalogModal").addEventListener("click", closeCatalogModal);
     document.getElementById("closeCategoryModal").addEventListener("click", closeCategoryModal);
@@ -1292,18 +1386,38 @@
             baseModal: productModal
         });
     });
+    deleteCatalogButton.addEventListener("click", function () {
+        if (!activeCatalog || activeCatalog.is_active) return;
+        openDeleteModal({
+            type: "catalog",
+            id: activeCatalog.id,
+            name: activeCatalog.name,
+            baseModal: catalogModal
+        });
+    });
     document.getElementById("closeDeleteModal").addEventListener("click", closeDeleteModal);
     document.getElementById("cancelDeleteButton").addEventListener("click", closeDeleteModal);
     confirmDeleteButton.addEventListener("click", deletePendingItem);
-    [productModal, catalogModal, categoryModal].forEach(function (modal) {
-        modal.addEventListener("click", function (event) {
-            if (event.target !== modal) return;
-            if (modal === productModal) closeProductModal();
-            if (modal === catalogModal) closeCatalogModal();
-            if (modal === categoryModal) closeCategoryModal();
+    function dismissOnBackdropPointer(modal, closeModal) {
+        let startedOnBackdrop = false;
+
+        modal.addEventListener("pointerdown", function (event) {
+            startedOnBackdrop = event.button === 0 && event.target === modal;
         });
-    });
-    deleteModal.addEventListener("click", function (event) { if (event.target === deleteModal) closeDeleteModal(); });
+        modal.addEventListener("pointerup", function (event) {
+            const shouldClose = startedOnBackdrop && event.button === 0 && event.target === modal;
+            startedOnBackdrop = false;
+            if (shouldClose) closeModal();
+        });
+        modal.addEventListener("pointercancel", function () {
+            startedOnBackdrop = false;
+        });
+    }
+
+    dismissOnBackdropPointer(productModal, closeProductModal);
+    dismissOnBackdropPointer(catalogModal, closeCatalogModal);
+    dismissOnBackdropPointer(categoryModal, closeCategoryModal);
+    dismissOnBackdropPointer(deleteModal, closeDeleteModal);
     loginForm.addEventListener("submit", handleLogin);
     recoveryForm.addEventListener("submit", handleRecovery);
     document.getElementById("recoveryButton").addEventListener("click", showRecovery);
@@ -1315,6 +1429,9 @@
         passwordToggle.setAttribute("aria-label", visible ? "Mostrar senha" : "Ocultar senha");
     });
     document.getElementById("signOutButton").addEventListener("click", signOut);
+    window.addEventListener("storage", function (event) {
+        if (event.key === authSyncStorageKey && event.newValue) window.location.reload();
+    });
     themeButton.addEventListener("click", function () { setTheme(root.dataset.theme === "dark" ? "light" : "dark"); });
     menuButton.addEventListener("click", function () { toggleMenu(); });
     mobileOverlay.addEventListener("click", function () { toggleMenu(false); });

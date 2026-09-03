@@ -26,12 +26,14 @@
     const cartTotal = document.getElementById("cartTotal");
     const cartInstruction = document.getElementById("cartInstruction");
     const whatsappButton = document.getElementById("whatsappButton");
+    const restoreCartButton = document.getElementById("restoreCartButton");
     const toast = document.getElementById("toast");
     let client = null;
     let catalog = null;
     let categories = [];
     let products = [];
     let cart = {};
+    let lastCart = {};
     let selectedCategory = "all";
     let toastTimeout = null;
     let lastFocusedElement = null;
@@ -238,20 +240,33 @@
         return catalog ? "neoeffex-catalog-cart-" + catalog.id : "";
     }
 
+    function getLastCartStorageKey() {
+        return catalog ? "neoeffex-catalog-last-cart-" + catalog.id : "";
+    }
+
+    function sanitizeStoredCart(value) {
+        const sanitized = {};
+        if (!value || typeof value !== "object" || Array.isArray(value)) return sanitized;
+
+        Object.keys(value).forEach(function (productId) {
+            const quantity = Math.floor(Number(value[productId]));
+            if (getProduct(productId) && quantity > 0) sanitized[productId] = Math.min(quantity, 99);
+        });
+        return sanitized;
+    }
+
     function loadCart() {
         cart = {};
+        lastCart = {};
         if (!ordersAvailable()) return;
         try {
-            const stored = JSON.parse(window.localStorage.getItem(getCartStorageKey()) || "{}");
-            if (stored && typeof stored === "object" && !Array.isArray(stored)) {
-                Object.keys(stored).forEach(function (productId) {
-                    const quantity = Math.floor(Number(stored[productId]));
-                    if (getProduct(productId) && quantity > 0) cart[productId] = Math.min(quantity, 99);
-                });
-            }
+            cart = sanitizeStoredCart(JSON.parse(window.localStorage.getItem(getCartStorageKey()) || "{}"));
+            lastCart = sanitizeStoredCart(JSON.parse(window.localStorage.getItem(getLastCartStorageKey()) || "{}"));
             saveCart();
+            saveLastCart();
         } catch (error) {
             cart = {};
+            lastCart = {};
         }
     }
 
@@ -265,12 +280,26 @@
         }
     }
 
-    function getCartEntries() {
-        return Object.keys(cart).map(function (productId) {
+    function saveLastCart() {
+        const key = getLastCartStorageKey();
+        if (!key) return;
+        try {
+            window.localStorage.setItem(key, JSON.stringify(lastCart));
+        } catch (error) {
+            // A restauração continua disponível durante esta visita se o armazenamento estiver bloqueado.
+        }
+    }
+
+    function getCartEntriesFrom(source) {
+        return Object.keys(source).map(function (productId) {
             const product = getProduct(productId);
-            const quantity = Math.min(Math.max(Math.floor(Number(cart[productId])) || 0, 0), 99);
+            const quantity = Math.min(Math.max(Math.floor(Number(source[productId])) || 0, 0), 99);
             return product && quantity ? { product: product, quantity: quantity } : null;
         }).filter(Boolean);
+    }
+
+    function getCartEntries() {
+        return getCartEntriesFrom(cart);
     }
 
     function updateCartQuantity(productId, change) {
@@ -344,6 +373,7 @@
     function renderCart() {
         const available = ordersAvailable();
         const entries = available ? getCartEntries() : [];
+        const restorableEntries = available ? getCartEntriesFrom(lastCart) : [];
         const itemCount = entries.reduce(function (sum, entry) { return sum + entry.quantity; }, 0);
         const total = entries.reduce(function (sum, entry) { return sum + Number(entry.product.price) * entry.quantity; }, 0);
         cartButton.hidden = !available;
@@ -351,6 +381,7 @@
         cartItems.replaceChildren();
         entries.forEach(function (entry) { cartItems.appendChild(createCartItem(entry)); });
         cartEmpty.hidden = entries.length > 0;
+        restoreCartButton.hidden = entries.length > 0 || restorableEntries.length === 0;
         cartFooter.hidden = entries.length === 0;
         if (entries.length) {
             cartTotal.textContent = formatCurrency(total);
@@ -495,6 +526,27 @@
         cart = {};
         saveCart();
         renderCart();
+    });
+    restoreCartButton.addEventListener("click", function () {
+        cart = sanitizeStoredCart(lastCart);
+        saveCart();
+        renderCart();
+        showToast("Último carrinho restaurado.");
+    });
+    whatsappButton.addEventListener("click", function (event) {
+        if (!ordersAvailable() || !getCartEntries().length) {
+            event.preventDefault();
+            return;
+        }
+
+        lastCart = Object.assign({}, cart);
+        saveLastCart();
+        window.setTimeout(function () {
+            cart = {};
+            saveCart();
+            renderCart();
+            showToast("Carrinho limpo. Você pode restaurar o último carrinho.");
+        }, 0);
     });
     window.addEventListener("keydown", function (event) {
         if (event.key === "Escape" && cartDrawer.classList.contains("cart-drawer--open")) closeCart();

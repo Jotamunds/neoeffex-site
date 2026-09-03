@@ -1,83 +1,92 @@
 # Hamburgueria — modelo premium Neoeffex
 
+## Importante — pacote corrigido
+
+A primeira geração da `v0.2.0.1` possuía uma incompatibilidade entre o import usado pelo Three.js (`three/examples/jsm/...`) e o alias disponível no import map (`three/addons/...`). Este pacote corrige a incompatibilidade.
+
+Além disso, a landing agora segue **progressive enhancement**: todo o conteúdo HTML/CSS permanece visível mesmo se o runtime 3D não carregar. O 3D e as animações enriquecem a página, mas não são mais necessários para ela existir visualmente.
+
+
 Landing premium para hamburgueria integrada ao catálogo compartilhado da Neoeffex.
 
-A partir da `v0.2.0`, o hero usa uma cena 3D em tempo real com:
+## v0.2.0.1 — Live Server + Vite sem conflito
+
+A landing continua usando:
 
 - Vite;
 - Three.js;
 - GSAP;
-- modelo local em `GLB`;
+- GLB local;
 - materiais PBR;
-- iluminação de estúdio com `HDRI` local;
-- animação de montagem, flutuação, parallax e reação de luz ao ponteiro;
-- fallback visual sem WebGL;
-- `prefers-reduced-motion`.
+- HDRI local;
+- animação 3D em tempo real.
 
-Produtos, categorias, carrinho e pedido continuam centralizados no catálogo compartilhado da Neoeffex. A landing não mantém um segundo carrinho.
-
-## Estrutura
+A diferença desta correção é a separação entre **código-fonte** e **arquivos que o navegador abre diretamente**.
 
 ```text
 modelos/hamburgueria/
-├── index.html
+├── index.html                  # abre diretamente pelo Live Server
+├── assets/                     # runtime do Live Server
+│   ├── css/
+│   └── js/
+├── models/
+│   └── burger.glb
+├── hdr/
+│   └── burger-studio.hdr
+├── source/                     # código-fonte Vite
+│   ├── index.html
+│   ├── src/
+│   └── public/
+├── tools/
+│   ├── sync-live.mjs
+│   └── publish-build.mjs
+├── tests/
 ├── package.json
 ├── vite.config.js
 ├── VERSION
-├── CHANGELOG.md
-├── README.md
-├── public/
-│   ├── hdr/
-│   │   └── burger-studio.hdr
-│   └── models/
-│       └── burger.glb
-├── src/
-│   ├── main.js
-│   ├── config.js
-│   ├── catalog.js
-│   ├── site.js
-│   ├── burger3d.js
-│   └── site.css
-└── tests/
-    └── validate.mjs
+└── CHANGELOG.md
 ```
 
-## Catálogo Neoeffex
+## Testar pelo Live Server da raiz da Neoeffex
 
-Por padrão, os CTAs usam:
+Abra o **Live Server na pasta principal do repositório** e acesse:
 
 ```text
-/catalogo/?catalogo=modelo-hamburgueria
+http://127.0.0.1:5500/modelos/hamburgueria/
 ```
 
-O slug é configurado em:
+A página raiz já está pronta para esse modo.
+
+O catálogo local será resolvido na mesma origem:
 
 ```text
-src/config.js
+http://127.0.0.1:5500/catalogo/?catalogo=modelo-hamburgueria
 ```
 
-Exemplo:
+Assim `/admin/`, `/catalogo/` e `/modelos/hamburgueria/` podem ser testados no mesmo servidor.
 
-```js
-catalog: {
-    slug: "brasa-burger",
-    developmentOrigin: "http://localhost:8080",
-    productionOrigin: "https://neoeffex.com.br",
-    path: "/catalogo/"
-}
+### Depois de alterar o código-fonte
+
+Edite os arquivos em:
+
+```text
+modelos/hamburgueria/source/
 ```
 
-O catálogo correspondente precisa existir no `/admin/`.
-
-## Desenvolvimento
-
-Na raiz do repositório, abra um terminal para o catálogo local:
+e sincronize a versão do Live Server:
 
 ```powershell
-py -m http.server 8080
+cd modelos/hamburgueria
+npm run live:sync
 ```
 
-Em outro terminal:
+O Live Server detectará as alterações nos arquivos da raiz normalmente.
+
+> O modo `live:sync` usa import map e CDN público apenas para resolver Three.js e GSAP durante o teste direto pelo Live Server. GLB e HDRI continuam locais.
+
+## Desenvolvimento com Vite
+
+Se quiser usar HMR:
 
 ```powershell
 cd modelos/hamburgueria
@@ -85,52 +94,82 @@ npm install
 npm run dev
 ```
 
-O Vite exibirá o endereço da landing, normalmente em `http://localhost:5173/`. Em desenvolvimento, os CTAs usam `developmentOrigin` e levam para `http://localhost:8080/catalogo/?catalogo=...`, permitindo testar a landing Vite e o catálogo estático ao mesmo tempo.
+O Vite usa `source/` como raiz do projeto.
 
-## Build
+Quando a landing estiver no servidor Vite, os CTAs locais usam:
 
-```bash
+```text
+http://127.0.0.1:5500/catalogo/?catalogo=modelo-hamburgueria
+```
+
+## Build de produção
+
+```powershell
 npm run build
 ```
 
-A pasta gerada é:
+gera:
 
 ```text
-dist/
+modelos/hamburgueria/dist/
 ```
 
-O `vite.config.js` usa `base: "./"`, permitindo publicar o build em subpasta. Como o repositório Neoeffex publica arquivos estáticos, **o conteúdo destinado à produção deve ser o build de `dist/`**, não os módulos ES de desenvolvimento em `src/`.
+O Vite usa:
 
-## Modelo 3D e HDRI
+```js
+base: "./"
+```
 
-Arquivos atuais:
+por isso os assets do build funcionam quando a landing é publicada em:
 
 ```text
-public/models/burger.glb
-public/hdr/burger-studio.hdr
+/modelos/hamburgueria/
 ```
 
-A `v0.2.0` já usa esses arquivos em produção. O `GLB` atual foi criado como base 3D otimizada e separa ingredientes por nomes de mesh, permitindo animar e substituir materiais individualmente.
+### Preparar a própria pasta para publicação
 
-Na etapa seguinte, o mesmo caminho pode receber um modelo ainda mais fotográfico sem alterar a arquitetura da landing.
+Depois de instalar as dependências uma vez:
 
-## Performance
-
-O renderer limita `devicePixelRatio`, reduz sombras e partículas em telas menores e pausa a renderização quando a aba fica oculta.
-
-Se WebGL ou o modelo falhar, a composição CSS anterior permanece como fallback.
-
-## Validação
-
-```bash
-npm run validate
-npm run build
+```powershell
+npm run build:publish
 ```
 
-Antes de publicar como site real:
+Esse comando:
 
-1. troque nome, telefone, endereço e horários em `src/config.js`;
-2. configure o slug real do catálogo;
-3. substitua textos e conteúdo demonstrativo;
-4. valide desktop e mobile;
-5. remova `noindex, nofollow` somente quando o cliente aprovar a publicação.
+1. gera `dist/`;
+2. remove somente os arquivos de runtime antigos da raiz;
+3. copia o build compilado para `modelos/hamburgueria/`;
+4. preserva `source/`, `tools/`, testes e documentação.
+
+Depois disso, a pasta continua funcionando no Live Server e também pode ser publicada no GitHub/hospedagem como site estático.
+
+No build de produção, Three.js e GSAP são empacotados pelo Vite; o servidor não precisa de Node, Vite ou `npm install`.
+
+## Catálogo Neoeffex
+
+O slug continua configurado em:
+
+```text
+source/src/config.js
+```
+
+Padrão atual:
+
+```text
+modelo-hamburgueria
+```
+
+Produção:
+
+```text
+https://neoeffex.com.br/catalogo/?catalogo=modelo-hamburgueria
+```
+
+## Segurança e fallback
+
+- nenhuma dependência da Hostinger;
+- nenhuma chave privada no frontend;
+- GLB e HDRI locais;
+- fallback visual se WebGL/modelo falhar;
+- `prefers-reduced-motion` preservado;
+- `noindex, nofollow` continua ativo enquanto o modelo não for publicado para um cliente real.

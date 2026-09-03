@@ -1,11 +1,13 @@
 {
   "name": "neoeffex-modelo-hamburgueria",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.0-patch.1",
   "type": "module",
   "scripts": {
+    "live:sync": "node tools/sync-live.mjs",
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
+    "build:publish": "npm run build && node tools/publish-build.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "validate": "node tests/validate.mjs"
   },

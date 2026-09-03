@@ -1,3 +1,24 @@
+# v0.2.0.1
+
+## Correção do pacote v0.2.0.1
+
+- Corrigido o import de `GLTFLoader` e `RGBELoader` para `three/addons/...`, compatível com o import map do Live Server.
+- Adicionado alias defensivo `three/examples/jsm/` no import map.
+- A classe `.reveal` agora usa progressive enhancement: o conteúdo começa visível e só é animado pelo GSAP quando o runtime realmente carrega.
+- Se CDN, GSAP, Three.js, WebGL, GLB ou HDRI falharem, a landing continua visível e o hambúrguer CSS permanece como fallback.
+- Esta correção substitui o primeiro ZIP v0.2.0.1; a versão permanece `0.2.0.1` porque o pacote anterior não deve ser commitado.
+
+
+- Corrige o fluxo de desenvolvimento para permitir testar novamente pela raiz do repositório com Live Server.
+- O código-fonte Vite foi isolado em `source/`; a raiz de `modelos/hamburgueria/` volta a conter uma versão diretamente navegável.
+- `npm run live:sync` sincroniza HTML, CSS, módulos JS, GLB e HDRI para a raiz da landing.
+- No modo Live Server, Three.js e GSAP são resolvidos por import map; o build de produção continua empacotando as dependências pelo Vite.
+- `npm run build` gera `dist/`.
+- `npm run build:publish` gera o build e publica os arquivos estáticos na própria pasta `modelos/hamburgueria/`.
+- O catálogo local passa a usar a mesma origem/porta quando a landing é aberta em `/modelos/hamburgueria/`, evitando a dependência fixa da porta 8080.
+- Base Vite configurada com `base: "./"` para publicação segura em subpasta.
+- Adicionados testes para detectar regressão de CSS não carregado, módulos Vite crus no Live Server e inconsistências entre assets 3D de origem/runtime.
+
 # Changelog — Hamburgueria
 
 ## v0.2.0

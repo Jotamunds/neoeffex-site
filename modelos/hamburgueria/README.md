@@ -88,3 +88,10 @@ Antes de usar como site real:
 3. crie/configure o catálogo correspondente no Admin;
 4. confirme telefone, endereço e horários;
 5. remova `noindex, nofollow` somente quando o site estiver pronto para indexação.
+
+## v0.1.1 — movimento e hero gastronômico
+
+- O hambúrguer do hero continua 100% local, agora com mais camadas visuais e textura.
+- Não há dependência nova de React, Vite ou APIs externas para as animações.
+- Cards informativos não mudam de posição nem recebem destaque ao passar o mouse.
+- O movimento do hero, cards decorativos, números e revelações respeita `prefers-reduced-motion`.

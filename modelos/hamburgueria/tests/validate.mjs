@@ -49,6 +49,10 @@ check("sem innerHTML na configuração dinâmica", !fs.readFileSync(path.join(ro
 check("slug do catálogo presente", runtimeText.includes('slug: "modelo-hamburgueria"'));
 check("links de catálogo marcados", runtimeText.includes("data-catalog-link"));
 check("suporte a movimento reduzido", runtimeText.includes("prefers-reduced-motion"));
+check("hero com cena enriquecida", runtimeText.includes("burger-scene") && runtimeText.includes("burger-art__bacon") && runtimeText.includes("burger-art__pickle"));
+check("parallax do hero presente", runtimeText.includes("paintParallax"));
+check("contadores animados presentes", runtimeText.includes("animateCounter"));
+check("cards sem hover de elevação", runtimeText.includes(".features article:hover") && runtimeText.includes("transform: none"));
 
 for (const forbidden of ["package.json", "package-lock.json", "node_modules", "src", "app"]) {
     check(`sem ${forbidden} na raiz do módulo`, !fs.existsSync(path.join(root, forbidden)));

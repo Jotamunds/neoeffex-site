@@ -1,5 +1,5 @@
--- Auditoria somente de leitura para a Etapa 9.
--- Execute depois de 007_security_hardening.sql.
+-- Auditoria somente de leitura para a v0.1.12.
+-- Execute depois de 010_delete_paused_catalog.sql.
 -- O resultado esperado é PASS em todas as linhas.
 
 with
@@ -27,6 +27,11 @@ required_anon_columns (table_name, column_name) as (
         ('catalogs', 'whatsapp_number'),
         ('catalogs', 'orders_enabled'),
         ('catalogs', 'order_message'),
+        ('catalogs', 'logo_path'),
+        ('catalogs', 'short_description'),
+        ('catalogs', 'service_area'),
+        ('catalogs', 'business_hours'),
+        ('catalogs', 'fulfillment_mode'),
         ('categories', 'id'),
         ('categories', 'catalog_id'),
         ('categories', 'name'),
@@ -181,6 +186,21 @@ checks (check_name, passed, details) as (
     union all
 
     select
+        'bucket de logos possui limites seguros',
+        count(*) = 1
+            and bool_and(bucket.public)
+            and bool_and(bucket.file_size_limit = 2097152)
+            and bool_and(
+                bucket.allowed_mime_types @> array['image/jpeg', 'image/png', 'image/webp']::text[]
+                and cardinality(bucket.allowed_mime_types) = 3
+            ),
+        'catalog-identities deve aceitar somente JPEG, PNG e WebP de até 2 MB'
+    from storage.buckets as bucket
+    where bucket.id = 'catalog-identities'
+
+    union all
+
+    select
         'políticas do Storage pertencem somente a authenticated',
         count(*) = 3
             and bool_and(policy.roles = array['authenticated']::name[]),
@@ -197,6 +217,22 @@ checks (check_name, passed, details) as (
     union all
 
     select
+        'políticas das logos pertencem somente a authenticated',
+        count(*) = 3
+            and bool_and(policy.roles = array['authenticated']::name[]),
+        'consulta, upload e exclusão de logos precisam exigir sessão autenticada'
+    from pg_policies as policy
+    where policy.schemaname = 'storage'
+        and policy.tablename = 'objects'
+        and policy.policyname in (
+            'catalog_identity_logos_select_own',
+            'catalog_identity_logos_insert_own',
+            'catalog_identity_logos_delete_own'
+        )
+
+    union all
+
+    select
         'função de atualização usa SECURITY INVOKER sem execução pública',
         count(*) = 1
             and bool_and(not routine.prosecdef)
@@ -207,6 +243,28 @@ checks (check_name, passed, details) as (
     join pg_namespace as routine_schema on routine_schema.oid = routine.pronamespace
     where routine_schema.nspname = 'public'
         and routine.proname = 'set_updated_at'
+
+    union all
+
+    select
+        'exclusão de catálogo usa SECURITY INVOKER e privilégio mínimo',
+        count(*) = 1
+            and bool_and(not routine.prosecdef)
+            and coalesce(not has_function_privilege(
+                'anon',
+                to_regprocedure('public.delete_own_paused_catalog(uuid)'),
+                'EXECUTE'
+            ), false)
+            and coalesce(has_function_privilege(
+                'authenticated',
+                to_regprocedure('public.delete_own_paused_catalog(uuid)'),
+                'EXECUTE'
+            ), false),
+        'somente authenticated pode chamar delete_own_paused_catalog e a função não pode elevar privilégios'
+    from pg_proc as routine
+    join pg_namespace as routine_schema on routine_schema.oid = routine.pronamespace
+    where routine_schema.nspname = 'public'
+        and routine.proname = 'delete_own_paused_catalog'
 )
 select
     check_name as verificacao,

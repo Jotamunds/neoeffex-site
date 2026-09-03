@@ -151,15 +151,15 @@
         if (eyebrow) eyebrow.textContent = "ETAPA 10";
         if (phaseTitle) phaseTitle.textContent = "Operação e entrega";
         if (phaseCopy) phaseCopy.textContent = "Catálogo da Lu atualizado e ajustes de interface concluídos."; 
-        if (version) version.textContent = "ADMIN / 0.1.10.1";
+        if (version) version.textContent = "ADMIN / 0.1.12";
         if (notice) {
             notice.setAttribute("aria-label", "Status da décima etapa");
             const paragraph = notice.querySelector("p");
             if (paragraph) {
                 paragraph.replaceChildren();
                 const strong = document.createElement("strong");
-                strong.textContent = "Catálogo v0.1.10.1 disponível. ";
-                paragraph.append(strong, document.createTextNode("As logos reais da Lu foram aplicadas ao cabeçalho e ao hero do catálogo. A segurança da Etapa 9 permanece inalterada."));
+                strong.textContent = "Catálogo v0.1.12 disponível. ";
+                paragraph.append(strong, document.createTextNode("Sessões, edição, logos, carrinho e exclusão de catálogo pausado foram atualizados."));
             }
         }
     }
@@ -188,8 +188,17 @@
         const closeButton = document.getElementById("closeCatalogModal");
         if (closeButton) closeButton.addEventListener("click", cancelPendingSave);
         if (modal) {
-            modal.addEventListener("click", function (event) {
-                if (event.target === modal) cancelPendingSave();
+            let pointerStartedOnBackdrop = false;
+            modal.addEventListener("pointerdown", function (event) {
+                pointerStartedOnBackdrop = event.button === 0 && event.target === modal;
+            });
+            modal.addEventListener("pointerup", function (event) {
+                const shouldCancel = pointerStartedOnBackdrop && event.button === 0 && event.target === modal;
+                pointerStartedOnBackdrop = false;
+                if (shouldCancel) cancelPendingSave();
+            });
+            modal.addEventListener("pointercancel", function () {
+                pointerStartedOnBackdrop = false;
             });
             new MutationObserver(function () {
                 if (!modal.hidden) return;
@@ -490,5 +499,195 @@
         script.src = scriptPath;
         script.async = false;
         document.head.appendChild(script);
+    }
+}());
+
+
+(function enforceSingleCatalogPolicy() {
+    "use strict";
+
+    const duplicateMessages = [
+        "este identificador já está em uso",
+        "este endereço de catálogo já está em uso",
+        "este endereco de catálogo já está em uso",
+        "este endereco de catalogo já está em uso"
+    ];
+
+    let toastTimer = null;
+    let lastDuplicateNotice = "";
+
+    function getElements() {
+        return {
+            catalogSelect: document.getElementById("catalogSelect"),
+            newCatalogButton: document.getElementById("newCatalogButton"),
+            catalogForm: document.getElementById("catalogForm"),
+            catalogId: document.getElementById("catalogId"),
+            catalogFeedback: document.getElementById("catalogFeedback"),
+            toast: document.getElementById("toast")
+        };
+    }
+
+    function countCatalogs(catalogSelect) {
+        if (!catalogSelect) return 0;
+
+        return Array.from(catalogSelect.options).filter(function (option) {
+            return Boolean(String(option.value || "").trim());
+        }).length;
+    }
+
+    function showPolicyToast(message) {
+        const toast = document.getElementById("toast");
+        if (!toast || !message) return;
+
+        window.clearTimeout(toastTimer);
+        toast.textContent = message;
+        toast.hidden = false;
+
+        window.requestAnimationFrame(function () {
+            toast.classList.add("toast--visible");
+        });
+
+        toastTimer = window.setTimeout(function () {
+            toast.classList.remove("toast--visible");
+
+            window.setTimeout(function () {
+                toast.hidden = true;
+            }, 180);
+        }, 4200);
+    }
+
+    function setCatalogFeedback(message) {
+        const feedback = document.getElementById("catalogFeedback");
+        if (!feedback) return;
+
+        feedback.textContent = message;
+        feedback.dataset.type = "error";
+    }
+
+    function updateSingleCatalogInterface() {
+        const elements = getElements();
+        const catalogCount = countCatalogs(elements.catalogSelect);
+        const hasCatalog = catalogCount > 0;
+
+        if (elements.newCatalogButton) {
+            elements.newCatalogButton.hidden = hasCatalog;
+            elements.newCatalogButton.disabled = hasCatalog;
+            elements.newCatalogButton.title = hasCatalog
+                ? "Esta conta já possui um catálogo."
+                : "Criar catálogo";
+        }
+
+        if (elements.catalogSelect) {
+            const selectField = elements.catalogSelect.closest(".catalog-select-field");
+
+            if (selectField) {
+                // Um único catálogo não precisa de seletor. Contas antigas com mais
+                // de um catálogo continuam podendo alternar entre eles até revisão.
+                selectField.hidden = catalogCount === 1;
+            }
+        }
+
+        const pageDescription = document.querySelector(".page-heading p");
+        if (pageDescription) {
+            pageDescription.textContent = "Organize produtos, categorias e configurações do seu catálogo em um único lugar.";
+        }
+    }
+
+    function hasExistingCatalog() {
+        const catalogSelect = document.getElementById("catalogSelect");
+        return countCatalogs(catalogSelect) > 0;
+    }
+
+    function blockSecondCatalog(event) {
+        const catalogId = document.getElementById("catalogId");
+        const editingExistingCatalog = Boolean(catalogId && catalogId.value);
+
+        if (editingExistingCatalog || !hasExistingCatalog()) return false;
+
+        if (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }
+
+        const message = "Esta conta já possui um catálogo. Edite o catálogo existente.";
+        setCatalogFeedback(message);
+        showPolicyToast(message);
+        return true;
+    }
+
+    function isDuplicateCatalogMessage(message) {
+        const normalized = String(message || "").trim().toLocaleLowerCase("pt-BR");
+        if (!normalized) return false;
+
+        return duplicateMessages.some(function (candidate) {
+            return normalized.includes(candidate);
+        }) || (
+            normalized.includes("já está em uso")
+            && (
+                normalized.includes("identificador")
+                || normalized.includes("endereço")
+                || normalized.includes("endereco")
+            )
+        );
+    }
+
+    function observeDuplicateFeedback(catalogFeedback) {
+        if (!catalogFeedback) return;
+
+        const notifyIfNeeded = function () {
+            const message = catalogFeedback.textContent.trim();
+
+            if (!isDuplicateCatalogMessage(message) || message === lastDuplicateNotice) {
+                if (!message) lastDuplicateNotice = "";
+                return;
+            }
+
+            lastDuplicateNotice = message;
+            showPolicyToast(message);
+        };
+
+        const observer = new MutationObserver(notifyIfNeeded);
+        observer.observe(catalogFeedback, {
+            childList: true,
+            characterData: true,
+            subtree: true
+        });
+
+        notifyIfNeeded();
+    }
+
+    function initialize() {
+        const elements = getElements();
+
+        if (
+            !elements.catalogSelect
+            || !elements.newCatalogButton
+            || !elements.catalogForm
+        ) {
+            return;
+        }
+
+        elements.newCatalogButton.addEventListener("click", function (event) {
+            blockSecondCatalog(event);
+        }, true);
+
+        elements.catalogForm.addEventListener("submit", function (event) {
+            blockSecondCatalog(event);
+        }, true);
+
+        const catalogObserver = new MutationObserver(updateSingleCatalogInterface);
+        catalogObserver.observe(elements.catalogSelect, {
+            childList: true,
+            subtree: true
+        });
+
+        observeDuplicateFeedback(elements.catalogFeedback);
+        updateSingleCatalogInterface();
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initialize, { once: true });
+    } else {
+        initialize();
     }
 }());

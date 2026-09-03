@@ -5,23 +5,23 @@ Este documento descreve a ordem técnica atual para preparar o Supabase usado po
 ## Versão de referência
 
 ```text
-Catálogo: 0.1.9
-Migration mais recente: 008_catalog_identity.sql
+Catálogo: 0.1.12
+Migration mais recente: 010_delete_paused_catalog.sql
 ```
 
-A `v0.1.9` é operacional/documental e **não adiciona migration**.
+A `v0.1.12` exige a migration 010 para liberar a exclusão confirmada de catálogo pausado.
 
 ---
 
 ## 1. Instalação já existente
 
-Se o projeto já chegou corretamente à `v0.1.8.x` e a identidade do comércio funciona:
+Se o projeto já chegou corretamente à `v0.1.11`:
 
 1. confirme que `008_catalog_identity.sql` já foi aplicada;
-2. confirme que uma logo e as informações de identidade aparecem no catálogo público;
-3. confirme que `admin/VERSION` e `catalogo/VERSION` estão sincronizados;
-4. não execute migration apenas por atualizar para `0.1.9`;
-5. continue com `docs/operations/CLIENT_ONBOARDING.md`.
+2. confirme que `009_single_catalog_per_owner.sql` já foi aplicada;
+3. aplique `010_delete_paused_catalog.sql` no SQL Editor;
+4. execute `audits/production_security_audit.sql`;
+5. confirme que `admin/VERSION` e `catalogo/VERSION` estão em `0.1.12`.
 
 ### Atenção à ordem 007 → 008
 
@@ -58,6 +58,8 @@ No SQL Editor, aplique as migrations nesta ordem:
 006_product_images.sql
 007_security_hardening.sql
 008_catalog_identity.sql
+009_single_catalog_per_owner.sql
+010_delete_paused_catalog.sql
 ```
 
 Depois:
@@ -65,7 +67,7 @@ Depois:
 1. execute `audits/production_security_audit.sql`;
 2. confirme os resultados esperados da auditoria;
 3. execute os testes de `PRODUCTION-CHECKLIST.md`;
-4. teste identidade e logo adicionadas pela migration 008;
+4. teste identidade, logo e exclusão de catálogo pausado;
 5. somente então inicie o onboarding de um cliente.
 
 ---
@@ -144,22 +146,29 @@ Antes do onboarding:
 
 ```text
 [ ] Login funciona
+[ ] Login ou logout em uma aba atualiza outra aba do mesmo Admin
 [ ] Recuperação de senha funciona
 [ ] Conta A não acessa dados da Conta B
 [ ] Criar catálogo funciona
 [ ] Pausar catálogo retira o catálogo do público
 [ ] Reativar catálogo funciona
+[ ] Catálogo ativo não oferece exclusão
+[ ] Catálogo pausado exige confirmação e pode ser excluído
+[ ] Identificador acompanha o nome e sanitiza edição manual
 [ ] Categorias funcionam
 [ ] Produtos funcionam
 [ ] Produto sem imagem usa fallback
 [ ] Upload de produto funciona
 [ ] Identidade do comércio funciona
 [ ] Logo funciona
+[ ] Logo fica centralizada também em uma segunda conta
 [ ] Busca pública funciona
 [ ] Filtros funcionam
 [ ] Carrinho funciona
 [ ] Total está correto
 [ ] WhatsApp abre com o número correto
+[ ] Abrir o WhatsApp limpa o carrinho
+[ ] Último carrinho pode ser restaurado
 [ ] Aba anônima consegue ler somente o conteúdo público
 ```
 

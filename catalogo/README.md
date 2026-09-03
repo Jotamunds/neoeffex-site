@@ -112,3 +112,26 @@ Escolhas:
 - o marcador genérico do cabeçalho deixa de ser exibido no tema da Lu;
 - demais catálogos continuam com o cabeçalho padrão.
 
+---
+
+## v0.1.11 — um catálogo por cliente
+
+A alteração é administrativa: cada conta do MVP passa a possuir somente um catálogo.
+
+A página pública continua sendo resolvida pelo slug:
+
+```text
+/catalogo/?catalogo=identificador
+```
+
+O slug permanece globalmente único. Nenhuma URL pública existente é alterada.
+
+---
+
+## v0.1.12 — logos e último carrinho
+
+- A área de logo compartilhada centraliza imagens quadradas, horizontais e verticais em todos os catálogos; a correção não depende do tema da Lu.
+- O tema `lu-leve-e-saudavel` preserva os ativos oficiais, agora com posicionamento central explícito.
+- Ao clicar em `Enviar pedido pelo WhatsApp`, o carrinho atual é guardado como último carrinho e então limpo.
+- Quando o carrinho está vazio e existe um pedido anterior válido, aparece o botão `Restaurar último carrinho`.
+- O último carrinho continua armazenado somente no navegador e separado pelo identificador interno do catálogo.

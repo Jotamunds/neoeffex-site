@@ -463,8 +463,17 @@
         closeButton.addEventListener("click", cancelEditor);
         cancelButton.addEventListener("click", cancelEditor);
         applyButton.addEventListener("click", applyEditor);
-        overlay.addEventListener("click", function (event) {
-            if (event.target === overlay) cancelEditor();
+        let pointerStartedOnOverlay = false;
+        overlay.addEventListener("pointerdown", function (event) {
+            pointerStartedOnOverlay = event.button === 0 && event.target === overlay;
+        });
+        overlay.addEventListener("pointerup", function (event) {
+            const shouldCancel = pointerStartedOnOverlay && event.button === 0 && event.target === overlay;
+            pointerStartedOnOverlay = false;
+            if (shouldCancel) cancelEditor();
+        });
+        overlay.addEventListener("pointercancel", function () {
+            pointerStartedOnOverlay = false;
         });
 
         autoButton.addEventListener("click", autoAdjust);
@@ -542,7 +551,11 @@
 
             updateZoomText();
             updateModeButtons();
-            renderPreview();
+            if (config.kind === "logo" && !storedState) {
+                autoAdjust();
+            } else {
+                renderPreview();
+            }
 
             window.setTimeout(function () {
                 editor.canvas.focus({ preventScroll: true });

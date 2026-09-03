@@ -16,7 +16,7 @@ Não execute migrations apenas porque existe um novo release de frontend.
 A migration mais recente da base atual é:
 
 ```text
-008_catalog_identity.sql
+010_delete_paused_catalog.sql
 ```
 
 Para uma instalação nova:
@@ -30,6 +30,8 @@ Para uma instalação nova:
 006_product_images.sql
 007_security_hardening.sql
 008_catalog_identity.sql
+009_single_catalog_per_owner.sql
+010_delete_paused_catalog.sql
 ```
 
 ### Regra 007 → 008
@@ -47,6 +49,10 @@ Se a 007 for reaplicada:
 ```
 
 Não publicar depois de reaplicar somente a 007.
+
+### Regra 009 → 010
+
+A `009` reforça `uma conta → um catálogo`. A `010` adiciona a função transacional de exclusão de catálogo pausado e o ajuste da política de remoção de logos. Em uma instalação nova, execute ambas nessa ordem.
 
 ---
 
@@ -136,8 +142,10 @@ Confirmar:
 [ ] B não altera categorias de A
 [ ] B não altera produtos de A
 [ ] B não exclui dados de A
+[ ] B não chama a exclusão de catálogo de A
+[ ] Catálogo ativo não é excluído pela função da migration 010
 [ ] Imagens de B usam owner B
-[ ] Logout remove a sessão
+[ ] Logout remove a sessão e atualiza outra aba na mesma origem
 ```
 
 Se qualquer item falhar:
@@ -157,7 +165,8 @@ NÃO PUBLICAR
 [ ] Catálogo pausado não expõe conteúdo
 [ ] Visitante não possui escrita
 [ ] Carrinho funciona
-[ ] WhatsApp funciona
+[ ] WhatsApp funciona e limpa o carrinho após o clique
+[ ] Último carrinho pode ser restaurado
 ```
 
 ---
@@ -186,6 +195,7 @@ Confirmar:
 [ ] remover imagem mantém fallback
 [ ] editor não quebra upload
 [ ] logo respeita catálogo correto
+[ ] logo fica centralizada em contas sem tema específico
 ```
 
 ---

@@ -1,97 +1,136 @@
-# Modelo Hamburgueria — Neoeffex
+# Hamburgueria — modelo premium Neoeffex
 
-Landing page estática derivada do conceito visual recebido da Hostinger, reescrita para funcionar sem React, Vite, Tailwind, Radix, shadcn, Framer Motion ou Hostinger Ecommerce.
+Landing premium para hamburgueria integrada ao catálogo compartilhado da Neoeffex.
 
-## Objetivo
+A partir da `v0.2.0`, o hero usa uma cena 3D em tempo real com:
 
-O módulo contém somente a landing page. Produtos, categorias, carrinho e pedido continuam centralizados no catálogo compartilhado da Neoeffex.
+- Vite;
+- Three.js;
+- GSAP;
+- modelo local em `GLB`;
+- materiais PBR;
+- iluminação de estúdio com `HDRI` local;
+- animação de montagem, flutuação, parallax e reação de luz ao ponteiro;
+- fallback visual sem WebGL;
+- `prefers-reduced-motion`.
 
-Por padrão, todos os elementos com `data-catalog-link` apontam para:
+Produtos, categorias, carrinho e pedido continuam centralizados no catálogo compartilhado da Neoeffex. A landing não mantém um segundo carrinho.
+
+## Estrutura
+
+```text
+modelos/hamburgueria/
+├── index.html
+├── package.json
+├── vite.config.js
+├── VERSION
+├── CHANGELOG.md
+├── README.md
+├── public/
+│   ├── hdr/
+│   │   └── burger-studio.hdr
+│   └── models/
+│       └── burger.glb
+├── src/
+│   ├── main.js
+│   ├── config.js
+│   ├── catalog.js
+│   ├── site.js
+│   ├── burger3d.js
+│   └── site.css
+└── tests/
+    └── validate.mjs
+```
+
+## Catálogo Neoeffex
+
+Por padrão, os CTAs usam:
 
 ```text
 /catalogo/?catalogo=modelo-hamburgueria
 ```
 
-Em localhost/IP privado, `assets/js/catalog.js` resolve o catálogo local. Em produção, usa `https://neoeffex.com.br/catalogo/`.
-
-## Estrutura
+O slug é configurado em:
 
 ```text
-modelos/modelo-hamburgueria/
-├── index.html
-├── VERSION
-├── CHANGELOG.md
-├── README.md
-├── assets/
-│   ├── css/
-│   │   └── site.css
-│   └── js/
-│       ├── config.js
-│       ├── catalog.js
-│       └── site.js
-└── tests/
-    └── validate.mjs
+src/config.js
 ```
-
-## Personalização
-
-Edite `assets/js/config.js` para alterar:
-
-- nome do comércio;
-- marca exibida no cabeçalho;
-- telefone;
-- endereço;
-- horários;
-- texto de delivery;
-- slug do catálogo.
-
-O slug deve corresponder ao catálogo criado no `/admin/`.
 
 Exemplo:
 
 ```js
 catalog: {
     slug: "brasa-burger",
+    developmentOrigin: "http://localhost:8080",
     productionOrigin: "https://neoeffex.com.br",
     path: "/catalogo/"
 }
 ```
 
-## Teste local
+O catálogo correspondente precisa existir no `/admin/`.
 
-A partir da raiz do repositório:
+## Desenvolvimento
+
+Na raiz do repositório, abra um terminal para o catálogo local:
 
 ```powershell
 py -m http.server 8080
 ```
 
-Abra:
+Em outro terminal:
 
-```text
-http://localhost:8080/modelos/modelo-hamburgueria/
+```powershell
+cd modelos/hamburgueria
+npm install
+npm run dev
 ```
 
-O botão de pedido deverá apontar para:
+O Vite exibirá o endereço da landing, normalmente em `http://localhost:5173/`. Em desenvolvimento, os CTAs usam `developmentOrigin` e levam para `http://localhost:8080/catalogo/?catalogo=...`, permitindo testar a landing Vite e o catálogo estático ao mesmo tempo.
 
-```text
-http://localhost:8080/catalogo/?catalogo=modelo-hamburgueria
+## Build
+
+```bash
+npm run build
 ```
 
-## Publicação
+A pasta gerada é:
 
-O módulo é estático e não precisa de `npm install`, build ou servidor Node.
+```text
+dist/
+```
 
-Antes de usar como site real:
+O `vite.config.js` usa `base: "./"`, permitindo publicar o build em subpasta. Como o repositório Neoeffex publica arquivos estáticos, **o conteúdo destinado à produção deve ser o build de `dist/`**, não os módulos ES de desenvolvimento em `src/`.
 
-1. troque o conteúdo demonstrativo;
-2. altere o slug em `config.js`;
-3. crie/configure o catálogo correspondente no Admin;
-4. confirme telefone, endereço e horários;
-5. remova `noindex, nofollow` somente quando o site estiver pronto para indexação.
+## Modelo 3D e HDRI
 
-## v0.1.1 — movimento e hero gastronômico
+Arquivos atuais:
 
-- O hambúrguer do hero continua 100% local, agora com mais camadas visuais e textura.
-- Não há dependência nova de React, Vite ou APIs externas para as animações.
-- Cards informativos não mudam de posição nem recebem destaque ao passar o mouse.
-- O movimento do hero, cards decorativos, números e revelações respeita `prefers-reduced-motion`.
+```text
+public/models/burger.glb
+public/hdr/burger-studio.hdr
+```
+
+A `v0.2.0` já usa esses arquivos em produção. O `GLB` atual foi criado como base 3D otimizada e separa ingredientes por nomes de mesh, permitindo animar e substituir materiais individualmente.
+
+Na etapa seguinte, o mesmo caminho pode receber um modelo ainda mais fotográfico sem alterar a arquitetura da landing.
+
+## Performance
+
+O renderer limita `devicePixelRatio`, reduz sombras e partículas em telas menores e pausa a renderização quando a aba fica oculta.
+
+Se WebGL ou o modelo falhar, a composição CSS anterior permanece como fallback.
+
+## Validação
+
+```bash
+npm run validate
+npm run build
+```
+
+Antes de publicar como site real:
+
+1. troque nome, telefone, endereço e horários em `src/config.js`;
+2. configure o slug real do catálogo;
+3. substitua textos e conteúdo demonstrativo;
+4. valide desktop e mobile;
+5. remova `noindex, nofollow` somente quando o cliente aprovar a publicação.

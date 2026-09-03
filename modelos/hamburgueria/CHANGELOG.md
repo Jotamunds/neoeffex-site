@@ -1,29 +1,33 @@
-# Changelog — Modelo Hamburgueria
+# Changelog — Hamburgueria
+
+## v0.2.0
+
+- Pasta oficial alterada para `modelos/hamburgueria/`.
+- Projeto migrado para Vite mantendo a landing separada do catálogo Neoeffex.
+- Three.js adicionado somente para o hero 3D.
+- GSAP e ScrollTrigger adicionados para montagem, parallax, scroll e revelações.
+- Adicionado `public/models/burger.glb` local, sem dependência da Hostinger.
+- Adicionado `public/hdr/burger-studio.hdr` local para iluminação ambiente.
+- Materiais do hambúrguer convertidos para PBR com roughness, clearcoat, bump e texturas procedurais.
+- Ingredientes do modelo recebem materiais diferentes: pão, carne, queijo, bacon, alface, picles, cebola, molho e gergelim.
+- Hambúrguer monta as camadas na abertura e depois mantém flutuação suave.
+- Câmera e luz principal reagem discretamente ao ponteiro em desktop.
+- Cena reage ao scroll sem alterar o layout da landing.
+- Adicionados vapor 3D e partículas de brasa.
+- Qualidade do renderer é reduzida automaticamente em telas menores.
+- Renderização pausa quando a aba fica oculta.
+- Mantido fallback CSS caso WebGL, HDRI ou GLB não possam ser usados.
+- Mantido `prefers-reduced-motion`.
+- Cards informativos continuam sem hover de seleção/elevação.
+- Integração com `/catalogo/?catalogo=...` preservada e centralizada em `src/catalog.js`.
 
 ## v0.1.1
 
-- Hero gastronômico enriquecido com novas camadas: cebola, picles, bacon, molho, queijo com gotejamento e textura de chapa nos smash burgers.
-- Pão recebeu volume, brilho, sementes e sombreamento mais natural.
-- Adicionados vapor, faíscas, halo de calor, anéis decorativos e etiquetas flutuantes ao redor do hambúrguer.
-- Adicionado movimento contínuo e suave no hero, com parallax pelo ponteiro em dispositivos compatíveis.
-- Badge `Direto da chapa` ganhou brilho periódico e pulso discreto do ícone.
-- Cards decorativos do catálogo agora se movimentam automaticamente, sem hover de seleção.
-- Removido o hover que levantava/destacava os cards de diferenciais.
-- Cabeçalho reage à rolagem com fundo e sombra mais definidos.
-- Revelações no scroll receberam atraso escalonado e movimento mais orgânico.
-- Métricas da seção Sobre agora contam até o valor final quando entram na tela.
-- Mantido suporte integral a `prefers-reduced-motion`.
+- Hero gastronômico enriquecido em CSS.
+- Adicionados vapor, faíscas, ingredientes extras e parallax 2D.
+- Removido hover de seleção dos cards informativos.
 
 ## v0.1.0
 
-- Removida toda a arquitetura React/Vite/Tailwind do projeto exportado pela Hostinger.
-- Removidas dependências de `Hostinger Ecommerce`, checkout, booking, inventário e carrinho próprio.
-- Removidos `package.json`, `package-lock.json`, componentes shadcn/Radix e hooks dependentes do ambiente original.
-- Landing page reescrita em HTML, CSS e JavaScript puro.
-- Hero original dependente de `images.hostinger.com` substituído por composição visual local em CSS.
-- Navegação e animações implementadas sem bibliotecas externas de JavaScript.
-- Adicionado suporte a `prefers-reduced-motion`.
-- CTAs conectados ao catálogo compartilhado Neoeffex pelo slug configurável.
-- Adicionado comportamento local/produção para links do catálogo.
-- Informações comerciais centralizadas em `assets/js/config.js`.
-- Adicionados testes estáticos de estrutura e ausência de dependências Hostinger.
+- Removidas dependências específicas do e-commerce da Hostinger.
+- Landing reescrita e integrada ao catálogo compartilhado da Neoeffex.

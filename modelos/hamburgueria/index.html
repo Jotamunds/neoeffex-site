@@ -3,14 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Modelo Neoeffex para hamburgueria com landing page estática e integração ao catálogo digital.">
+    <meta name="description" content="Landing premium para hamburgueria com experiência 3D e integração ao catálogo digital Neoeffex.">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#130d09">
     <title>Brasa Burger | Modelo Neoeffex</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -66,19 +65,17 @@
                 </div>
 
                 <div class="hero__visual reveal" aria-hidden="true">
-                    <div class="burger-scene" id="burgerScene">
-                        <div class="burger-scene__halo"></div>
-                        <div class="burger-scene__ring burger-scene__ring--one"></div>
-                        <div class="burger-scene__ring burger-scene__ring--two"></div>
-                        <div class="burger-scene__spark burger-scene__spark--1"></div>
-                        <div class="burger-scene__spark burger-scene__spark--2"></div>
-                        <div class="burger-scene__spark burger-scene__spark--3"></div>
-                        <div class="burger-scene__spark burger-scene__spark--4"></div>
-                        <div class="burger-scene__spark burger-scene__spark--5"></div>
+                    <div class="burger-stage" id="burgerStage">
+                        <canvas class="burger-canvas" id="burgerCanvas"></canvas>
+                        <div class="burger-stage__aura"></div>
+                        <div class="burger-stage__ring burger-stage__ring--one"></div>
+                        <div class="burger-stage__ring burger-stage__ring--two"></div>
                         <span class="burger-note burger-note--blend"><strong>180g</strong> blend</span>
                         <span class="burger-note burger-note--brioche"><strong>Brioche</strong> tostado</span>
+                        <span class="burger-note burger-note--fire">chapa <strong>quente</strong></span>
+                        <div class="burger-stage__loader"><span></span><small>Preparando a chapa</small></div>
 
-                        <div class="burger-art">
+                        <div class="burger-art burger-art--fallback">
                             <div class="burger-art__steam burger-art__steam--1"></div>
                             <div class="burger-art__steam burger-art__steam--2"></div>
                             <div class="burger-art__steam burger-art__steam--3"></div>
@@ -238,8 +235,6 @@
         </div>
     </footer>
 
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/catalog.js"></script>
-    <script src="assets/js/site.js"></script>
+    <script type="module" src="./src/main.js"></script>
 </body>
 </html>

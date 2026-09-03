@@ -15,6 +15,7 @@ import { validateCardHover } from "./card-hover.mjs";
 import { validateContactJump } from "./contact-jump.mjs";
 import { validateForkHighlight } from "./fork-highlight.mjs";
 import { validatePriceCountup } from "./price-countup.mjs";
+import { validateCatalogLink } from "./catalog-link.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(join(root, "index.html"), "utf8");
@@ -116,13 +117,14 @@ check("Menu principal com os três destinos definidos", () => {
     assert.deepEqual(targets, ["#tradicionais", "#fitness", "#como-funciona"]);
 });
 
-check("Contato explícito e navegação nativa no cabeçalho", () => {
+check("Cardápio é a ação prioritária e única no cabeçalho", () => {
     const header = html.match(/<header\b[\s\S]*?<\/header>/)[0];
     const navigation = header.match(/<nav\b[\s\S]*?<\/nav>/)[0];
-    const contact = header.match(/<a\b[^>]*class="[^"]*site-header__contact[^"]*"[^>]*>Contato<\/a>/);
-    assert.ok(contact, "O contato deve estar escrito, não apenas representado por um ícone.");
-    assert.match(contact[0], /href="#contato"/);
-    assert.ok(!navigation.includes(contact[0]), "Contato é uma ação separada dos três atalhos.");
+    const catalog = header.match(/<a\b[^>]*class="[^"]*site-header__catalog[^"]*"[^>]*>Abrir cardápio<\/a>/);
+    assert.ok(catalog, "O cabeçalho deve destacar o acesso ao cardápio.");
+    assert.match(catalog[0], /data-catalog-link/);
+    assert.ok(!navigation.includes(catalog[0]), "Cardápio é uma ação separada dos três atalhos.");
+    assert.doesNotMatch(header, /site-header__contact|>Contato<\/a>/);
     assert.doesNotMatch(navigation, /\bhidden\b|aria-hidden="true"|href="javascript:/);
     assert.match(header, /aria-label="Lu Leve e Saudável — início"/);
 });
@@ -133,8 +135,9 @@ check("Abertura curta, texto antes da foto e imagem identificada", () => {
     assert.doesNotMatch(hero, /stage-placeholder/);
     assert.equal((hero.match(/<img\b/g) || []).length, 1);
     assert.ok(hero.indexOf("<h1") < hero.indexOf("<figure"));
-    assert.match(hero, /href="#tradicionais">\s*<span\b[^>]*>Ver preços<\/span>\s*<\/a>/);
-    assert.match(hero, /href="#contato"[^>]*>\s*<span\b[^>]*>Fale conosco<\/span>\s*<\/a>/);
+    assert.match(hero, /data-catalog-link[^>]*>\s*<span\b[^>]*>Abrir cardápio<\/span>\s*<\/a>/);
+    assert.equal((hero.match(/class="hero__action"/g) || []).length, 1);
+    assert.doesNotMatch(hero, /Fale conosco|data-whatsapp|href="#contato"/);
     const figure = hero.match(/<figure\b[\s\S]*?<\/figure>/)[0];
     assert.doesNotMatch(figure, /<h[1-6]\b|<a\b|<button\b/);
     assert.match(figure, /<figcaption[^>]*>[^<]+<\/figcaption>/);
@@ -173,7 +176,11 @@ check("Contratos CSS de cabeçalho e hero mobile-first", () => {
     const heroCss = readFileSync(join(root, "styles/sections/hero.css"), "utf8");
     assert.match(headerCss, /flex-wrap:\s*wrap/);
     assert.match(headerCss, /min-height:\s*var\(--control-size\)/);
-    assert.doesNotMatch(headerCss, /display:\s*none|visibility:\s*hidden/);
+    assert.match(headerCss, /@media\s*\(max-width:\s*47\.999rem\)/);
+    assert.match(headerCss, /\.site-header__actions\s*\{\s*display:\s*none;/);
+    assert.match(headerCss, /\.site-header__brand\s*\{[\s\S]*?width:\s*100%;[\s\S]*?justify-content:\s*center;/);
+    assert.match(headerCss, /\.site-header__brand-image\s*\{\s*width:\s*clamp\(11rem,\s*54vw,\s*14rem\);/);
+    assert.doesNotMatch(headerCss, /\.site-nav\s*\{[^}]*display:\s*none/);
     assert.match(heroCss, /@media\s*\(min-width:\s*60rem\)/);
     assert.match(heroCss, /grid-template-columns:\s*minmax\(0,\s*1\.1fr\)\s*minmax\(0,\s*0\.9fr\)/);
     assert.match(heroCss, /object-fit:\s*cover/);
@@ -343,7 +350,7 @@ check("Scripts clássicos, defer e ordem de inicialização", () => {
         return attributes.match(/src="([^"]+)"/)[1];
     });
 
-    assert.deepEqual(paths, ["./scripts/config.js", "./scripts/whatsapp.js", "./scripts/promotion.js", "./scripts/mobile-order.js", "./scripts/hero-intro.js", "./scripts/contact-jump.js", "./scripts/fork-highlight.js", "./scripts/price-countup.js", "./scripts/animations.js", "./scripts/main.js"]);
+    assert.deepEqual(paths, ["./scripts/config.js", "./scripts/catalog.js", "./scripts/whatsapp.js", "./scripts/promotion.js", "./scripts/mobile-order.js", "./scripts/hero-intro.js", "./scripts/contact-jump.js", "./scripts/fork-highlight.js", "./scripts/price-countup.js", "./scripts/animations.js", "./scripts/main.js"]);
 
     for (const file of scriptFiles) {
         new vm.Script(readFileSync(file, "utf8"), { filename: relative(root, file) });
@@ -482,21 +489,20 @@ check("Como funciona mantém três orientações no HTML sem formulário", () =>
     assert.match(steps, /role="list"/);
     assert.equal((steps.match(/<li\b/g) || []).length, 3);
     assert.equal((steps.match(/<h3\b/g) || []).length, 3);
-    assert.match(steps, /Tradicional ou fitness/);
-    assert.match(steps, /tamanho, a quantidade e as proteínas/);
-    assert.match(steps, /pelo WhatsApp/);
+    assert.match(steps, /Abra o cardápio/);
+    assert.match(steps, /Adicione os produtos ao carrinho/);
+    assert.match(steps, /Envie pelo WhatsApp/);
     const numbers = [...steps.matchAll(/class="how-it-works__number" aria-hidden="true">(\d+)<\/span>/g)].map((match) => match[1]);
     assert.deepEqual(numbers, ["01", "02", "03"]);
     assert.doesNotMatch(section, /<form\b|<input\b|<select\b|<details\b/);
 });
 
-check("Chamada de pedido direciona ao atendimento, sem checkout no site", () => {
+check("Chamada de pedido direciona ao catálogo e mantém confirmação no WhatsApp", () => {
     const section = html.match(/<section\b[^>]*id="como-funciona"[\s\S]*?<\/section>/)[0];
-    const action = section.match(/<a\b[^>]*data-whatsapp\s[^>]*>/)[0];
-    assert.match(action, /href="#contato"/);
-    assert.match(action, /data-whatsapp-label="Montar meu pedido"/);
-    assert.match(action, /data-whatsapp-fallback="Fale conosco"/);
-    assert.match(section, /A montagem e a confirmação acontecem no atendimento/);
+    const action = section.match(/<a\b[^>]*data-catalog-link[^>]*>/)[0];
+    assert.match(action, /catalogo\/\?catalogo=lu-leve-e-saudavel/);
+    assert.match(section, /confirmação final de disponibilidade, recebimento e pagamento continua pelo WhatsApp/);
+    assert.doesNotMatch(section, /data-whatsapp-label="Montar meu pedido"/);
 });
 
 check("Promoção fica antes dos preços e oculta sem JavaScript", () => {
@@ -508,7 +514,9 @@ check("Promoção fica antes dos preços e oculta sem JavaScript", () => {
     assert.ok(html.indexOf('id="promocao"') > html.indexOf('id="inicio"'));
     assert.ok(html.indexOf('id="promocao"') < html.indexOf('id="tradicionais"'));
     assert.doesNotMatch(promotion, /price-card|MENU:|<dialog\b|role="alert"/);
-    assert.match(promotion, /data-whatsapp-label="Consultar promoção"/);
+    assert.match(promotion, /data-catalog-link/);
+    assert.match(promotion, />Abrir cardápio<\/a>/);
+    assert.doesNotMatch(promotion, /data-whatsapp/);
 });
 
 check("CSS mantém promoção no fluxo e passos empilhados no celular", () => {
@@ -536,6 +544,7 @@ check("Contato mostra canais e recebimento por extenso", () => {
     assert.match(contactSection, /data-contact-address-row hidden/);
     assert.match(contactSection, /data-contact-hours-row hidden/);
     assert.match(contactSection, /data-whatsapp-only hidden/);
+    assert.doesNotMatch(contactSection, />Fale conosco<\/a>/);
     assert.match(contactSection, /com taxa adicional/);
     assert.match(contactSection, /Consulte o endereço antes de se deslocar/);
     assert.doesNotMatch(contactSection, /<form\b|<iframe\b/);
@@ -584,8 +593,11 @@ check("Fechamento mantém chamada, contatos e crédito no rodapé", () => {
     const finalSection = html.match(/<section\b[^>]*id="fazer-pedido"[\s\S]*?<\/section>/)[0];
     assert.ok(html.indexOf('id="contato"') < html.indexOf('id="instagram"'));
     assert.ok(html.indexOf('id="instagram"') < html.indexOf('id="fazer-pedido"'));
-    assert.match(finalSection, /data-whatsapp-label="Pedir pelo WhatsApp"/);
-    assert.match(finalSection, /href="#contato">Ver contato e atendimento/);
+    assert.match(finalSection, /data-catalog-link/);
+    assert.match(finalSection, />Abrir cardápio<\/a>/);
+    assert.match(finalSection, /data-whatsapp[^>]*data-contact-jump/);
+    assert.match(finalSection, /data-whatsapp-text>Fale conosco<\/span>/);
+    assert.equal((html.match(/data-whatsapp-text>Fale conosco<\/span>/g) || []).length, 1);
     assert.match(footer, /data-contact-phone-link hidden/);
     assert.match(footer, /data-instagram-link/);
     assert.match(footer, /data-contact-regions/);
@@ -742,6 +754,7 @@ check("Configuração mantém os campos públicos bem formados", () => {
     assert.equal(typeof app.config.promotion.title, "string");
     assert.equal(typeof app.config.promotion.description, "string");
     assert.equal(typeof app.config.developer.url, "string");
+    assert.equal(app.config.developer.url, "https://www.neoeffex.com.br/");
 });
 
 check("Dados públicos de emergência do HTML acompanham a configuração", () => {
@@ -803,8 +816,8 @@ check("Campos opcionais e proteção de protocolo dos links", () => {
     assert.equal(element("[data-developer-credit]").children.length, 0);
 });
 
-check("Todos os botões de pedido respeitam configuração e fallback", () => {
-    assert.ok(whatsappTags.length >= 7);
+check("Contato direto fica somente no fechamento e respeita configuração e fallback", () => {
+    assert.equal(whatsappTags.length, 1);
     app.whatsapp.init({ whatsappNumber: phoneFixture, whatsappMessage: "Pedido de teste" });
 
     for (const link of selectors.get("[data-whatsapp]")) {
@@ -964,10 +977,12 @@ check("Crédito da Neoeffex alterna entre link HTTPS e texto", () => {
         app.config.developer.url = "https://example.com/credito";
         runScript("main.js");
         const credit = element("[data-developer-credit]");
-        assert.equal(credit.children.length, 1);
-        assert.equal(credit.children[0].textContent, `Desenvolvido por ${app.config.developer.name}`);
-        assert.equal(credit.children[0].getAttribute("href"), "https://example.com/credito");
-        assert.equal(credit.children[0].getAttribute("rel"), "noopener noreferrer");
+        assert.equal(credit.children.length, 2);
+        assert.equal(credit.children[0].textContent, "Desenvolvido por ");
+        assert.equal(credit.children[1].textContent, app.config.developer.name);
+        assert.equal(credit.children[1].getAttribute("href"), "https://example.com/credito");
+        assert.equal(credit.children[1].getAttribute("target"), "_blank");
+        assert.equal(credit.children[1].getAttribute("rel"), "noopener noreferrer");
         app.config.developer.url = invalid;
         runScript("main.js");
         assert.equal(credit.children.length, 0);
@@ -1028,6 +1043,7 @@ validateCardHover({ check, root, html, config: deliveredConfig });
 validateContactJump({ check, root, html, config: deliveredConfig });
 validateForkHighlight({ check, root, html, config: deliveredConfig });
 validatePriceCountup({ check, root, html, config: deliveredConfig });
+validateCatalogLink({ check, root, html, config: deliveredConfig });
 
 console.log(`\n${passed} grupos aprovados; ${failures.length} falhas.`);
 

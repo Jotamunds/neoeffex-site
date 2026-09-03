@@ -1,9 +1,13 @@
-# Lu Leve e Saudável — v0.1.18
+# Lu Leve e Saudável — v0.1.20
 
 Landing page mobile-first e cardápio digital de marmitas tradicionais e fitness. O projeto é estático, não depende de bibliotecas externas e pode funcionar em uma subpasta, como `neoeffex.com/lu-leve-e-saudavel`.
 
 ## Estado desta versão
 
+- Integração com o catálogo Neoeffex em `/catalogo/?catalogo=lu-leve-e-saudavel`.
+- CTAs principais do cabeçalho, hero, Como funciona, fechamento e barra mobile levam ao catálogo.
+- Em localhost/IP privado, `scripts/catalog.js` usa o catálogo local; fora do ambiente local, usa `https://neoeffex.com.br/catalogo/?catalogo=lu-leve-e-saudavel`.
+- O WhatsApp direto continua disponível nas áreas de contato e nos atalhos já existentes do conteúdo.
 - Base completa das versões v0.1.0 a v0.1.16 preservada.
 - Garfinho da v0.1.17 integrado ao card tradicional de 400 g.
 - Contagem dos preços da v0.1.18 integrada ao controlador central de movimento.
@@ -25,7 +29,8 @@ Depois, abra `http://localhost:8080/sites/lu-leve-e-saudavel/` a partir da pasta
 
 - `index.html`: conteúdo estático, marcação semântica e referências locais.
 - `styles/main.css`: ponto único de entrada dos estilos.
-- `scripts/config.js`: versão, contatos, promoção, créditos e controles de movimento.
+- `scripts/config.js`: versão, catálogo, contatos, promoção, créditos e controles de movimento.
+- `scripts/catalog.js`: resolve a URL local/produção e sincroniza os links `[data-catalog-link]`.
 - `data/menu.json`: fonte editável de preços, combos e acréscimos.
 - `tools/build-menu.mjs`: regenera apenas as regiões do cardápio no HTML.
 - `tests/validate.mjs`: valida integração, acessibilidade, dados, assets e regressões.
@@ -63,4 +68,14 @@ Em `scripts/config.js`, `motion.enabled` desliga todos os efeitos. Os controles 
 
 ## Publicação
 
-Antes de publicar, confirme preços, fotos, endereço/horários, regiões, Instagram e destinatário do WhatsApp com a responsável. O projeto não envia mensagens automaticamente e não contém checkout ou pagamento no site.
+Antes de publicar, confirme preços, fotos, endereço/horários, regiões, Instagram e destinatário do WhatsApp com a responsável. A landing não envia mensagens automaticamente nem contém pagamento. O carrinho e a montagem do pedido ficam no catálogo compartilhado; a confirmação final continua no WhatsApp.
+
+## v0.1.20 — crédito Neoeffex
+
+No rodapé, `Desenvolvido por` continua como texto e somente `Neoeffex` aponta para:
+
+```text
+https://www.neoeffex.com.br/
+```
+
+O link abre em nova aba com `noopener noreferrer`.

@@ -25,7 +25,7 @@ Os controles são `motion.fork` e `motion.prices`. A chave geral, movimento redu
 
 ## Etapa 4 — contato e pulinho
 
-O botão “Fale conosco” da abertura abre o WhatsApp da Lu: `https://wa.me/5511978766842`. O número não leva sinal de + no wa.me. Todos os botões com `data-whatsapp` usam o número e a mensagem de `config.contact`; telefone e ligação aparecem por extenso no contato/rodapé. O menu “Contato” continua levando à seção, onde também há Instagram e informações de atendimento.
+Na v0.1.19, “Abrir cardápio” é o único CTA do hero. O botão “Fale conosco” foi movido para o fechamento final e abre o WhatsApp da Lu: `https://wa.me/5511978766842`. O número não leva sinal de + no wa.me; telefone e ligação continuam por extenso no contato/rodapé. O menu “Contato” continua levando à seção, onde também há Instagram e informações de atendimento.
 
 Somente o botão inicial marcado com `data-contact-jump` recebe o pulinho. A superfície interna sobe 4px e volta em 280ms. A âncora e o foco ficam parados, com área transparente ampliada no topo para cobrir o pico de 6px. Não há pulinho em todos os links nem animação contínua.
 
@@ -58,7 +58,7 @@ Em configurações antigas, a chave contact ausente usa true. Use `contact: fals
 
 ### Conferência manual
 
-1. Clique no Fale conosco inicial: conferir a conversa da Lu, sem enviar mensagem de teste. Não basta a URL ter formato válido.
+1. Clique no Fale conosco do fechamento final: conferir a conversa da Lu, sem enviar mensagem de teste. Não basta a URL ter formato válido.
 2. Verifique toque, Enter, cliques rápidos e Ctrl/Cmd+clique: uma abertura por ativação nativa, sem espera artificial.
 3. Clique durante o bubble e nas bordas: superfície preservada, foco e área de toque estáveis.
 4. Desligue motion.contact e depois enabled; o link deve continuar funcionando. Teste movimento reduzido, impressão e retorno do aplicativo.
@@ -297,7 +297,7 @@ O checklist de publicação mantém quatro pendências automáticas: URL da Neoe
 
 1. Recarregue no topo sem âncora e observe título → apoio → botões → foto/broto. Se estático, confira o status pelo console.
 2. Confira 320, 375, 430, 768, 960 e 1440px: foto, borda e contorno devem crescer juntos, sem rolagem lateral ou recorte; legenda parada. Teste o pico máximo 1,06 e também sem organic-backgrounds; restaure as opções depois.
-3. Clique/toque no centro e nas bordas de Ver preços e Fale conosco durante o bubble: navegação imediata, sem deslocar a área clicável. Confira os dois botões lado a lado e empilhados, hover e foco visível.
+3. Clique/toque no centro e nas bordas de Abrir cardápio durante o bubble: navegação imediata, sem deslocar a área clicável. Confira hover e foco visível. O Fale conosco não participa da intro; ele fica no fechamento final.
 4. Use Tab/Shift+Tab/Enter imediatamente; foco e leitura não devem esperar.
 5. Role antes de terminar; a abertura deve voltar ao normal e não repetir ao subir.
 6. Abra diretamente #tradicionais, #fitness e #contato; volte pelo histórico com posição restaurada.

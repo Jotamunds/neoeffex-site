@@ -1,6 +1,6 @@
-# Verificação técnica — v0.1.18
+# Verificação técnica — v0.1.19
 
-A v0.1.17 acrescenta quatro grupos para o garfinho e a v0.1.18 acrescenta seis para a contagem dos preços. Eles complementam as verificações anteriores da abertura, bubble, cards, WhatsApp, pulinho, fundos e decorações. Confira o roteiro específico em `ANIMACOES.md`. A validação é de código, cálculos e simulações; a conferência visual em navegador continua separada.
+A v0.1.17 acrescenta quatro grupos para o garfinho, a v0.1.18 acrescenta seis para a contagem dos preços e a v0.1.19 adiciona a integração com o catálogo. Eles complementam as verificações anteriores da abertura, bubble, cards, WhatsApp, pulinho, fundos e decorações. Confira o roteiro específico em `ANIMACOES.md`. A validação é de código, cálculos e simulações; a conferência visual em navegador continua separada.
 
 Para conferir os novos ícones, execute também `node tools/build-decorations.mjs --check`. No navegador, compare as quatro combinações das classes `organic-backgrounds` e `decorative-elements`; abaixo de 60rem o haltere deve desaparecer, e os botânicos devem ficar menores. Confira ausência de rolagem lateral, cliques/foco livres e nenhuma interferência com preços, foto ou curvas. O roteiro completo dos elementos está em `DECORACOES.md`. Essa revisão visual ainda não foi executada.
 
@@ -133,7 +133,7 @@ Para conferir somente se o cardápio está sincronizado, use `node tools/build-m
 
 Antes da sequência abaixo, execute também a conferência do pulinho/WhatsApp em ANIMACOES.md. Os testes não abrem aplicativos ou enviam mensagens. Execute a conferência dos cards descrita em `ANIMACOES.md`: cinco cards, mouse/toque, bordas, configurações, acessibilidade e retorno estático. A suite valida contratos CSS e controle, não renderiza hover real.
 
-1. Abra o `index.html` e confirme a faixa “Revisão integrada · Pré-publicação · v0.1.18”. Teste também a sequência, o bubble nos botões, o garfinho, a contagem dos preços e o movimento conjunto de foto, borda e contorno conforme `ANIMACOES.md`.
+1. Abra o `index.html` e confirme a faixa “Revisão integrada · Pré-publicação · v0.1.19”. Teste também a sequência, o bubble nos botões, o garfinho, a contagem dos preços e o movimento conjunto de foto, borda e contorno conforme `ANIMACOES.md`.
 2. Clique em Tradicionais, Fitness e Como funciona; confira o destino.
 3. Clique em Contato; confirme que a seção mostra regiões e formas de recebimento.
 4. Sem preencher o telefone, confirme que não é aberta uma conversa de WhatsApp.

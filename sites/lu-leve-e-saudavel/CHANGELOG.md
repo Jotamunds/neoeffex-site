@@ -1,5 +1,31 @@
 # Histórico
 
+## v0.1.20 — Link oficial da Neoeffex no footer
+
+- Configurado `https://www.neoeffex.com.br/` como URL oficial do desenvolvedor.
+- No crédito `Desenvolvido por Neoeffex`, somente `Neoeffex` passa a ser clicável.
+- O link abre em nova aba com `target="_blank"` e `rel="noopener noreferrer"`.
+- O fallback sem JavaScript continua exibindo `Desenvolvido por Neoeffex` como texto.
+- Nenhuma alteração em catálogo, preços, WhatsApp, imagens ou animações.
+
+## v0.1.19 — Integração com o catálogo Neoeffex
+
+- Adicionado `scripts/catalog.js` para centralizar a navegação ao catálogo `lu-leve-e-saudavel`.
+- Links do catálogo usam a instância local em localhost/IP privado e a URL oficial da Neoeffex nos demais domínios.
+- “Abrir cardápio” passa a ser a ação principal no cabeçalho, hero, promoção, blocos de preços, Como funciona, fechamento e barra mobile.
+- Removidos CTAs de contato concorrentes do cabeçalho, hero, promoção e blocos de preços.
+- “Fale conosco” fica somente no fechamento final, como ação secundária após “Abrir cardápio”.
+- A seção de contato permanece informativa, com telefone, Instagram, regiões e recebimento, sem CTA concorrente.
+- “Como funciona” descreve o fluxo real: abrir cardápio, montar carrinho e enviar pelo WhatsApp.
+- O feedback visual de contato foi movido do hero para o botão final.
+- No celular, o CTA “Abrir cardápio” é removido somente do cabeçalho superior; os demais acessos ao catálogo permanecem.
+- Logo do cabeçalho fica maior e centralizada em telas de até `47.999rem`.
+- Desktop e tablet maior preservam o cabeçalho com o CTA do catálogo.
+- Versão sincronizada em `VERSION`, `config.js`, `README.md`, faixa de revisão e documentação de publicação.
+- Removidos instaladores, arquivos avulsos e o teste temporário de aplicação da v0.1.18, todos já incorporados à estrutura final.
+- Adicionados testes de resolução local/produção e regressão dos links do catálogo.
+- Nenhuma alteração em preços, número do WhatsApp, imagens, dados comerciais ou lógica do catálogo.
+
 ## v0.1.18 — Integração final e contagem dos preços
 
 - Arquivos avulsos da contagem movidos para `scripts/` e `styles/components/`, respeitando a arquitetura existente.

@@ -273,10 +273,13 @@ export function validateContactJump({ check, root, html, config }) {
 
     check("Contato mantém marcação explícita, tokens próprios e nenhuma navegação por JS", () => {
         assert.equal((html.match(/\sdata-contact-jump(?=\s|>)/g) || []).length, 1);
-        assert.match(html, /data-intro="action" data-whatsapp-text>Fale conosco/);
+        const finalSection = html.match(/<section\b[^>]*id="fazer-pedido"[\s\S]*?<\/section>/)[0];
+        assert.match(finalSection, /data-contact-jump/);
+        assert.match(finalSection, /data-whatsapp-text>Fale conosco/);
         assert.match(read("styles/base/variables.css"), /--contact-jump-duration:\s*280ms/);
         assert.match(read("styles/base/variables.css"), /--contact-jump-height:\s*4px/);
-        assert.match(read("styles/components/contact-jump.css"), /\.hero__action\[data-contact-jump\]::after\s*\{\s*inset-block-start:\s*-6px/);
+        assert.match(read("styles/components/contact-jump.css"), /\.final-cta__contact\[data-contact-jump\]/);
+        assert.match(read("styles/components/contact-jump.css"), /\[data-whatsapp-text\]\s*\{\s*pointer-events:\s*none/);
         assert.equal(read("styles/main.css").split('./components/contact-jump.css').length - 1, 1);
         assert.doesNotMatch(script, /preventDefault|stopPropagation|window\.open|location\s*=|setTimeout|setInterval|requestAnimationFrame|fetch\(|\.finished|commitStyles|offsetWidth|innerHTML/);
         assert.match(script, /passive:\s*true/);

@@ -121,3 +121,17 @@ Essa personalização é específica do slug e não altera o núcleo funcional d
 ## v0.1.10
 
 Ajustes visuais no catálogo da Lu e correção do posicionamento das notificações sobre o carrinho.
+
+---
+
+## v0.1.11 — um catálogo por cliente
+
+Consulte:
+
+```text
+SINGLE_CATALOG_POLICY.md
+```
+
+Antes da migration 009, execute o diagnóstico somente leitura para confirmar que
+nenhuma conta existente possui múltiplos catálogos.
+

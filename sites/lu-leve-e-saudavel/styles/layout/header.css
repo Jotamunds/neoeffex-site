@@ -30,8 +30,21 @@
     height: auto;
 }
 
-.site-header__contact {
+.site-header__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: var(--space-1);
     margin-inline-start: auto;
+}
+
+.site-header__actions .button {
+    min-height: var(--control-size);
+}
+
+.site-header__catalog {
+    margin-inline-start: 0;
 }
 
 .site-nav {
@@ -90,10 +103,37 @@
         gap: var(--space-4);
     }
 
-    .site-header__contact {
+    .site-header__actions {
         grid-column: 3;
         grid-row: 1;
         justify-self: end;
         margin-inline-start: 0;
+    }
+}
+
+/* No celular, o catálogo continua acessível pelo CTA fixo e pelos demais
+ * pontos da página. O cabeçalho fica reservado para a marca e a navegação.
+ */
+@media (max-width: 47.999rem) {
+    .site-header__inner {
+        justify-content: center;
+    }
+
+    .site-header__brand {
+        width: 100%;
+        justify-content: center;
+        margin-inline: auto;
+    }
+
+    .site-header__brand-image {
+        width: clamp(11rem, 54vw, 14rem);
+    }
+
+    .site-header__actions {
+        display: none;
+    }
+
+    .site-nav {
+        width: 100%;
     }
 }

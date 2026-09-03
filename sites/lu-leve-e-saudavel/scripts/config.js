@@ -7,7 +7,7 @@
     window.LuLeve = window.LuLeve || {};
 
     window.LuLeve.config = {
-        version: "0.1.18",
+        version: "0.1.20",
         // Cada efeito pode ser desligado sem alterar conteúdo ou links.
         // Use true/false, sem aspas.
         motion: {
@@ -19,6 +19,13 @@
             prices: true,
             reveal: true,
             smoothScroll: true
+        },
+        catalog: {
+            // O catálogo continua hospedado pela Neoeffex mesmo se o site mudar de domínio.
+            slug: "lu-leve-e-saudavel",
+            productionUrl: "https://neoeffex.com.br/catalogo/?catalogo=lu-leve-e-saudavel",
+            // Usado somente em localhost, IP privado ou abertura direta do arquivo.
+            localPath: "../../catalogo/?catalogo=lu-leve-e-saudavel"
         },
         contact: {
             // Número brasileiro completo: 55 + DDD + número, somente dígitos.
@@ -44,9 +51,7 @@
         },
         developer: {
             name: "Neoeffex",
-            // Preencha a URL oficial HTTPS para ativar o link no rodapé.
-            // Vazio: o crédito permanece como texto, sem endereço inventado.
-            url: ""
+            url: "https://www.neoeffex.com.br/"
         }
     };
 })();

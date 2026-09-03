@@ -11,7 +11,7 @@
 
 Não há formulário, cadastro, carrinho, mapa de endereço desconhecido ou envio automático de mensagens.
 
-O WhatsApp foi configurado com o número informado para Maria Luzimar: +55 (11) 97876-6842. Todos os botões de pedido, incluindo Fale conosco da abertura, usam a configuração central. O wa.me prepara a mensagem; o cliente ainda precisa enviá-la.
+O WhatsApp foi configurado com o número informado para Maria Luzimar: +55 (11) 97876-6842. Na v0.1.19, o site prioriza o catálogo e mantém o CTA direto “Fale conosco” somente no fechamento final. O wa.me prepara a mensagem; o cliente ainda precisa enviá-la.
 
 ## Configuração
 

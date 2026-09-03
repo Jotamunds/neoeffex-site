@@ -1,6 +1,10 @@
-/* Cobre o pico de até 6px sem mover a âncora ou seu foco.
- * A superfície visual continua sem eventos; cliques pertencem ao link fixo.
+/* v0.1.19 — contato direto restrito ao fechamento final.
+ * Somente o conteúdo visual recebe o feedback; o link permanece estável.
  */
-.hero__action[data-contact-jump]::after {
-    inset-block-start: -6px;
+.final-cta__contact[data-contact-jump] {
+    position: relative;
+}
+
+.final-cta__contact[data-contact-jump] [data-whatsapp-text] {
+    pointer-events: none;
 }

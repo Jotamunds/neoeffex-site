@@ -7,211 +7,39 @@ import { siteConfig } from "./config.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function makeNoiseTexture({ base, speckles, lines = false, size = 256 }) {
-    const canvas = document.createElement("canvas");
-    canvas.width = size;
-    canvas.height = size;
-    const context = canvas.getContext("2d");
-    context.fillStyle = base;
-    context.fillRect(0, 0, size, size);
-
-    let seed = 92821;
-    const random = () => {
-        seed = (seed * 48271) % 2147483647;
-        return seed / 2147483647;
-    };
-
-    speckles.forEach(({ color, count, min = 1, max = 4, alpha = 1 }) => {
-        context.fillStyle = color;
-        context.globalAlpha = alpha;
-        for (let index = 0; index < count; index += 1) {
-            const radius = min + random() * (max - min);
-            context.beginPath();
-            context.arc(random() * size, random() * size, radius, 0, Math.PI * 2);
-            context.fill();
-        }
-    });
-
-    if (lines) {
-        context.globalAlpha = 0.16;
-        context.strokeStyle = "#120805";
-        context.lineWidth = 2;
-        for (let row = 0; row < 16; row += 1) {
-            const y = 18 + row * 15 + random() * 4;
-            context.beginPath();
-            context.moveTo(0, y);
-            for (let x = 0; x <= size; x += 22) {
-                context.quadraticCurveTo(x + 10, y + (random() - 0.5) * 7, x + 22, y + (random() - 0.5) * 3);
-            }
-            context.stroke();
-        }
-    }
-
-    context.globalAlpha = 1;
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(1.35, 1.35);
-    texture.needsUpdate = true;
-    return texture;
-}
-
-function makeBumpTexture({ contrast = 1, size = 256 }) {
-    const canvas = document.createElement("canvas");
-    canvas.width = size;
-    canvas.height = size;
-    const context = canvas.getContext("2d");
-    const data = context.createImageData(size, size);
-    let seed = 71237;
-    const random = () => {
-        seed = (seed * 16807) % 2147483647;
-        return seed / 2147483647;
-    };
-    for (let index = 0; index < data.data.length; index += 4) {
-        const value = Math.max(0, Math.min(255, 128 + (random() - 0.5) * 120 * contrast));
-        data.data[index] = value;
-        data.data[index + 1] = value;
-        data.data[index + 2] = value;
-        data.data[index + 3] = 255;
-    }
-    context.putImageData(data, 0, 0);
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(2.4, 2.4);
-    return texture;
-}
-
 function makeSteamTexture() {
     const canvas = document.createElement("canvas");
     canvas.width = 128;
     canvas.height = 128;
     const context = canvas.getContext("2d");
     const gradient = context.createRadialGradient(64, 64, 4, 64, 64, 56);
-    gradient.addColorStop(0, "rgba(255,255,255,.52)");
-    gradient.addColorStop(0.35, "rgba(255,238,224,.20)");
+    gradient.addColorStop(0, "rgba(255,255,255,.62)");
+    gradient.addColorStop(0.35, "rgba(255,238,224,.24)");
     gradient.addColorStop(1, "rgba(255,255,255,0)");
     context.fillStyle = gradient;
     context.fillRect(0, 0, 128, 128);
     return new THREE.CanvasTexture(canvas);
 }
 
-function createMaterials(renderer) {
-    const maxAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-    const bunMap = makeNoiseTexture({
-        base: "#c8752b",
-        speckles: [
-            { color: "#efa75d", count: 160, min: 0.5, max: 2.2, alpha: 0.48 },
-            { color: "#6f2f12", count: 80, min: 0.7, max: 2.7, alpha: 0.20 }
-        ]
-    });
-    const meatMap = makeNoiseTexture({
-        base: "#4b1e13",
-        speckles: [
-            { color: "#23100c", count: 330, min: 0.8, max: 3.8, alpha: 0.82 },
-            { color: "#a34d28", count: 120, min: 0.5, max: 2.4, alpha: 0.28 }
-        ],
-        lines: true
-    });
-    bunMap.anisotropy = maxAnisotropy;
-    meatMap.anisotropy = maxAnisotropy;
-
-    const bunBump = makeBumpTexture({ contrast: 0.48 });
-    const meatBump = makeBumpTexture({ contrast: 1.25 });
-
-    return {
-        bun: new THREE.MeshPhysicalMaterial({
-            color: 0xd47f33,
-            map: bunMap,
-            bumpMap: bunBump,
-            bumpScale: 0.035,
-            roughness: 0.46,
-            metalness: 0,
-            clearcoat: 0.12,
-            clearcoatRoughness: 0.72,
-            sheen: 0.18,
-            sheenColor: new THREE.Color(0xff8b3a)
-        }),
-        bunDark: new THREE.MeshPhysicalMaterial({
-            color: 0xaa5721,
-            map: bunMap,
-            bumpMap: bunBump,
-            bumpScale: 0.025,
-            roughness: 0.52,
-            clearcoat: 0.08,
-            clearcoatRoughness: 0.8
-        }),
-        meat: new THREE.MeshStandardMaterial({
-            color: 0x542014,
-            map: meatMap,
-            bumpMap: meatBump,
-            bumpScale: 0.085,
-            roughness: 0.78,
-            metalness: 0
-        }),
-        cheese: new THREE.MeshPhysicalMaterial({
-            color: 0xffaa24,
-            roughness: 0.28,
-            metalness: 0,
-            clearcoat: 0.16,
-            clearcoatRoughness: 0.6
-        }),
-        bacon: new THREE.MeshPhysicalMaterial({
-            color: 0xb24e2a,
-            roughness: 0.48,
-            clearcoat: 0.18,
-            clearcoatRoughness: 0.58
-        }),
-        lettuce: new THREE.MeshStandardMaterial({ color: 0x517a2e, roughness: 0.72, side: THREE.DoubleSide }),
-        pickle: new THREE.MeshPhysicalMaterial({ color: 0x6f8d36, roughness: 0.42, clearcoat: 0.14 }),
-        onion: new THREE.MeshPhysicalMaterial({
-            color: 0xd7b7d8,
-            roughness: 0.32,
-            transparent: true,
-            opacity: 0.86,
-            transmission: 0.06,
-            thickness: 0.12
-        }),
-        sauce: new THREE.MeshPhysicalMaterial({ color: 0x8d2114, roughness: 0.26, clearcoat: 0.3, clearcoatRoughness: 0.42 }),
-        seed: new THREE.MeshStandardMaterial({ color: 0xf2d293, roughness: 0.58 })
-    };
-}
-
-function materialForName(name, materials) {
-    const value = name.toLowerCase();
-    if (value.includes("bottom_bun")) return materials.bunDark;
-    if (value.includes("bun")) return materials.bun;
-    if (value.includes("patty")) return materials.meat;
-    if (value.includes("cheese")) return materials.cheese;
-    if (value.includes("bacon")) return materials.bacon;
-    if (value.includes("lettuce")) return materials.lettuce;
-    if (value.includes("pickle")) return materials.pickle;
-    if (value.includes("onion")) return materials.onion;
-    if (value.includes("sauce")) return materials.sauce;
-    if (value.includes("sesame")) return materials.seed;
-    return null;
-}
-
 function addSteam(scene) {
     const texture = makeSteamTexture();
     const steam = [];
-    for (let index = 0; index < 8; index += 1) {
+    for (let index = 0; index < 7; index += 1) {
         const material = new THREE.SpriteMaterial({
             map: texture,
             transparent: true,
             depthWrite: false,
-            opacity: 0.16,
+            opacity: 0.18,
             color: index % 2 ? 0xffeee4 : 0xffffff,
             blending: THREE.AdditiveBlending
         });
         const sprite = new THREE.Sprite(material);
-        sprite.position.set((Math.random() - 0.5) * 2.1, 1.2 + Math.random() * 2.0, (Math.random() - 0.5) * 0.55);
-        const scale = 0.55 + Math.random() * 0.55;
-        sprite.scale.set(scale, scale * 1.25, 1);
+        sprite.position.set((Math.random() - 0.5) * 2.0, 1.0 + Math.random() * 1.5, (Math.random() - 0.5) * 0.4);
+        const scale = 0.55 + Math.random() * 0.5;
+        sprite.scale.set(scale, scale * 1.18, 1);
         sprite.userData = {
             baseX: sprite.position.x,
-            speed: 0.15 + Math.random() * 0.14,
+            speed: 0.14 + Math.random() * 0.14,
             phase: Math.random() * Math.PI * 2
         };
         scene.add(sprite);
@@ -221,14 +49,14 @@ function addSteam(scene) {
 }
 
 function addEmbers(scene) {
-    const count = 28;
+    const count = 24;
     const positions = new Float32Array(count * 3);
     const speeds = [];
     for (let index = 0; index < count; index += 1) {
-        positions[index * 3] = (Math.random() - 0.5) * 4.4;
-        positions[index * 3 + 1] = -1.1 + Math.random() * 3.9;
-        positions[index * 3 + 2] = (Math.random() - 0.5) * 1.2;
-        speeds.push(0.08 + Math.random() * 0.18);
+        positions[index * 3] = (Math.random() - 0.5) * 4.2;
+        positions[index * 3 + 1] = -1.1 + Math.random() * 3.7;
+        positions[index * 3 + 2] = (Math.random() - 0.5) * 1.1;
+        speeds.push(0.08 + Math.random() * 0.16);
     }
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -245,28 +73,63 @@ function addEmbers(scene) {
     return { points, speeds };
 }
 
-function animateModelAssembly(modelRoot, reducedMotion) {
-    if (reducedMotion) return;
-    const layers = [];
-    modelRoot.traverse((object) => {
-        if (!object.isMesh || !object.name) return;
-        const originalZ = object.position.z;
-        const normalized = THREE.MathUtils.clamp((originalZ - 1.1) / 1.5, -1, 1);
-        object.userData.originalZ = originalZ;
-        object.position.z = originalZ + normalized * 1.7 + (normalized >= 0 ? 0.34 : -0.2);
-        layers.push(object);
+function enhanceMaterial(material, renderer) {
+    if (!material) return;
+    const anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    const textures = [
+        material.map,
+        material.normalMap,
+        material.roughnessMap,
+        material.metalnessMap,
+        material.aoMap,
+        material.emissiveMap
+    ].filter(Boolean);
+
+    textures.forEach((texture) => {
+        texture.anisotropy = anisotropy;
+        if (texture === material.map || texture === material.emissiveMap) {
+            texture.colorSpace = THREE.SRGBColorSpace;
+        }
     });
 
-    gsap.to(modelRoot.scale, { x: 1, y: 1, z: 1, duration: 1.25, ease: "power3.out" });
-    gsap.to(modelRoot.rotation, { z: 0, duration: 1.5, ease: "power3.out" });
-    layers.forEach((layer, index) => {
-        gsap.to(layer.position, {
-            z: layer.userData.originalZ,
-            duration: 1.05,
-            delay: 0.12 + index * 0.018,
-            ease: "back.out(1.25)"
-        });
-    });
+    material.envMapIntensity = material.envMapIntensity ?? 1.1;
+    material.needsUpdate = true;
+}
+
+function fitModel(model, compact) {
+    const box = new THREE.Box3().setFromObject(model);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    model.position.sub(center);
+
+    const targetWidth = compact ? 4.0 : 4.45;
+    const targetHeight = compact ? 3.05 : 3.5;
+    const width = Math.max(size.x, size.z);
+    const height = size.y;
+    const scale = Math.min(targetWidth / Math.max(width, 0.01), targetHeight / Math.max(height, 0.01));
+    model.scale.setScalar(scale);
+
+    const fitted = new THREE.Box3().setFromObject(model);
+    const fittedSize = fitted.getSize(new THREE.Vector3());
+    const fittedCenter = fitted.getCenter(new THREE.Vector3());
+    model.position.x -= fittedCenter.x;
+    model.position.y -= fittedCenter.y - (compact ? -0.04 : -0.02);
+    model.position.z -= fittedCenter.z;
+
+    return { size: fittedSize };
+}
+
+function introAnimation(modelRig, modelRoot, reducedMotion) {
+    if (reducedMotion) return;
+    modelRig.position.set(0.16, -0.2, 0);
+    modelRig.rotation.set(-0.04, -0.28, -0.08);
+    modelRig.scale.setScalar(0.84);
+
+    const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+    timeline.to(modelRig.position, { x: 0, y: 0.02, duration: 1.15 }, 0);
+    timeline.to(modelRig.rotation, { x: 0, y: 0.10, z: 0, duration: 1.2 }, 0);
+    timeline.to(modelRig.scale, { x: 1, y: 1, z: 1, duration: 1.05 }, 0.05);
+    timeline.to(modelRoot.rotation, { z: -0.02, duration: 0.9 }, 0.15);
 }
 
 export function initBurger3D() {
@@ -295,56 +158,51 @@ export function initBurger3D() {
 
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.12;
+    renderer.toneMappingExposure = 1.18;
     renderer.shadowMap.enabled = !compact;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
     const pixelRatioLimit = compact ? siteConfig.hero3d.mobilePixelRatio : siteConfig.hero3d.maxPixelRatio;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, pixelRatioLimit));
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(compact ? 38 : 32, 1, 0.1, 50);
-    camera.position.set(0, compact ? 0.35 : 0.15, compact ? 7.4 : 6.7);
+    const camera = new THREE.PerspectiveCamera(compact ? 34 : 29, 1, 0.1, 50);
+    camera.position.set(0, compact ? 0.20 : 0.14, compact ? 7.3 : 6.5);
 
     const modelRig = new THREE.Group();
     const modelRoot = new THREE.Group();
-    modelRoot.rotation.x = -Math.PI / 2;
-    modelRoot.rotation.z = reducedMotion ? 0 : -0.08;
-    modelRoot.scale.setScalar(reducedMotion ? 1 : 0.82);
     modelRig.add(modelRoot);
     scene.add(modelRig);
 
-    const warmKey = new THREE.SpotLight(0xff8a3d, 72, 15, Math.PI / 5.5, 0.6, 1.35);
-    warmKey.position.set(4.3, 5.2, 4.2);
-    warmKey.target.position.set(0, 0.7, 0);
+    const warmKey = new THREE.SpotLight(0xff9a47, 72, 16, Math.PI / 5.6, 0.64, 1.22);
+    warmKey.position.set(4.8, 4.6, 4.2);
+    warmKey.target.position.set(0, 0.3, 0.1);
     warmKey.castShadow = !compact;
     warmKey.shadow.mapSize.set(compact ? 512 : 1024, compact ? 512 : 1024);
     scene.add(warmKey, warmKey.target);
 
-    const fill = new THREE.DirectionalLight(0xffd2b0, 2.4);
-    fill.position.set(-4, 2.6, 4);
+    const fill = new THREE.DirectionalLight(0xffead6, 2.2);
+    fill.position.set(-4.2, 2.8, 3.8);
     scene.add(fill);
 
-    const rim = new THREE.PointLight(0xff5a16, 38, 11, 1.5);
-    rim.position.set(-3.1, 3.2, -2.7);
+    const rim = new THREE.PointLight(0xff641a, 24, 10, 1.7);
+    rim.position.set(-2.4, 2.3, -2.8);
     scene.add(rim);
 
-    const coolFill = new THREE.PointLight(0x6584ff, 8, 10, 2);
-    coolFill.position.set(2, -1.5, -3.5);
-    scene.add(coolFill);
+    const bounce = new THREE.PointLight(0xf9d4b0, 5, 6, 2.2);
+    bounce.position.set(0, -1.25, 2.4);
+    scene.add(bounce);
 
     const shadowPlane = new THREE.Mesh(
-        new THREE.PlaneGeometry(5.4, 3.4),
-        new THREE.ShadowMaterial({ color: 0x000000, transparent: true, opacity: 0.34 })
+        new THREE.PlaneGeometry(5.8, 3.9),
+        new THREE.ShadowMaterial({ color: 0x000000, transparent: true, opacity: 0.27 })
     );
     shadowPlane.rotation.x = -Math.PI / 2;
-    shadowPlane.position.set(0, -1.55, 0.1);
+    shadowPlane.position.set(0, -1.42, 0.0);
     shadowPlane.receiveShadow = true;
     scene.add(shadowPlane);
 
     const steam = compact ? [] : addSteam(scene);
     const embers = addEmbers(scene);
-    const materials = createMaterials(renderer);
     const clock = new THREE.Clock();
     const pointer = { x: 0, y: 0 };
     const pointerSmooth = { x: 0, y: 0 };
@@ -368,43 +226,40 @@ export function initBurger3D() {
     const loader = new GLTFLoader();
     loader.load(modelUrl, (gltf) => {
         const model = gltf.scene;
+        modelRoot.rotation.set(0, Math.PI * 0.07, reducedMotion ? 0 : -0.02);
+
         model.traverse((object) => {
             if (!object.isMesh) return;
             object.castShadow = !compact;
             object.receiveShadow = true;
-            const material = materialForName(`${object.name || ""} ${object.parent?.name || ""}`, materials);
-            if (material) object.material = material;
+            if (Array.isArray(object.material)) object.material.forEach((material) => enhanceMaterial(material, renderer));
+            else enhanceMaterial(object.material, renderer);
         });
 
+        fitModel(model, compact);
         modelRoot.add(model);
-        model.updateMatrixWorld(true);
-        const box = new THREE.Box3().setFromObject(modelRoot);
-        const center = box.getCenter(new THREE.Vector3());
-        model.position.x -= center.x;
-        model.position.z -= center.y - 0.18;
-
         modelLoaded = true;
         stage.classList.add("is-webgl-ready");
-        animateModelAssembly(modelRoot, reducedMotion);
+        introAnimation(modelRig, modelRoot, reducedMotion);
 
         if (!reducedMotion) {
             gsap.to(modelRig.position, {
-                y: 0.12,
+                y: 0.08,
                 duration: 2.8,
                 repeat: -1,
                 yoyo: true,
                 ease: "sine.inOut"
             });
             gsap.to(modelRig.rotation, {
-                y: 0.09,
-                duration: 4.6,
+                y: 0.11,
+                duration: 5.0,
                 repeat: -1,
                 yoyo: true,
                 ease: "sine.inOut"
             });
-            gsap.to(modelRig.rotation, {
-                z: -0.04,
-                duration: 3.6,
+            gsap.to(modelRoot.rotation, {
+                z: 0.01,
+                duration: 4.0,
                 repeat: -1,
                 yoyo: true,
                 ease: "sine.inOut"
@@ -414,11 +269,11 @@ export function initBurger3D() {
                 trigger: hero,
                 start: "top top",
                 end: "bottom top",
-                scrub: 0.7,
+                scrub: 0.75,
                 onUpdate: (self) => {
-                    modelRig.position.x = self.progress * (compact ? 0.18 : 0.55);
-                    modelRig.rotation.y = self.progress * 0.36;
-                    modelRig.scale.setScalar(1 - self.progress * 0.09);
+                    modelRig.position.x = self.progress * (compact ? 0.10 : 0.30);
+                    modelRig.rotation.y = 0.02 + self.progress * 0.17;
+                    modelRig.scale.setScalar(1 - self.progress * 0.05);
                 }
             });
         }
@@ -459,10 +314,10 @@ export function initBurger3D() {
     function updateParticles(elapsed, delta) {
         steam.forEach((sprite, index) => {
             sprite.position.y += sprite.userData.speed * delta;
-            sprite.position.x = sprite.userData.baseX + Math.sin(elapsed * 0.7 + sprite.userData.phase) * 0.18;
-            sprite.material.opacity = 0.08 + (1 - Math.min((sprite.position.y - 1.1) / 3.0, 1)) * 0.14;
-            if (sprite.position.y > 4.1) {
-                sprite.position.y = 1.3 + (index % 3) * 0.12;
+            sprite.position.x = sprite.userData.baseX + Math.sin(elapsed * 0.75 + sprite.userData.phase) * 0.18;
+            sprite.material.opacity = 0.10 + (1 - Math.min((sprite.position.y - 1.0) / 3.0, 1)) * 0.15;
+            if (sprite.position.y > 3.9) {
+                sprite.position.y = 1.2 + (index % 3) * 0.12;
                 sprite.position.x = sprite.userData.baseX;
             }
         });
@@ -470,8 +325,8 @@ export function initBurger3D() {
         const positions = embers.points.geometry.attributes.position.array;
         for (let index = 0; index < embers.speeds.length; index += 1) {
             positions[index * 3 + 1] += embers.speeds[index] * delta;
-            positions[index * 3] += Math.sin(elapsed * 1.4 + index) * 0.0007;
-            if (positions[index * 3 + 1] > 3.0) positions[index * 3 + 1] = -1.05;
+            positions[index * 3] += Math.sin(elapsed * 1.5 + index) * 0.0007;
+            if (positions[index * 3 + 1] > 2.8) positions[index * 3 + 1] = -1.05;
         }
         embers.points.geometry.attributes.position.needsUpdate = true;
         embers.points.rotation.y = Math.sin(elapsed * 0.16) * 0.08;
@@ -485,16 +340,16 @@ export function initBurger3D() {
         if (!reducedMotion) {
             pointerSmooth.x += (pointer.x - pointerSmooth.x) * 0.055;
             pointerSmooth.y += (pointer.y - pointerSmooth.y) * 0.055;
-            modelRoot.rotation.y = pointerSmooth.x * 0.16;
-            modelRoot.rotation.z = pointerSmooth.y * -0.055;
-            camera.position.x = pointerSmooth.x * 0.18;
-            camera.position.y = (compact ? 0.35 : 0.15) + pointerSmooth.y * -0.10;
-            warmKey.position.x = 4.3 + pointerSmooth.x * 1.2;
-            warmKey.position.y = 5.2 + pointerSmooth.y * -0.8;
+            modelRoot.rotation.y = Math.PI * 0.07 + pointerSmooth.x * 0.12;
+            modelRoot.rotation.x = pointerSmooth.y * -0.03;
+            camera.position.x = pointerSmooth.x * 0.14;
+            camera.position.y = (compact ? 0.20 : 0.14) + pointerSmooth.y * -0.06;
+            warmKey.position.x = 4.8 + pointerSmooth.x * 0.95;
+            warmKey.position.y = 4.6 + pointerSmooth.y * -0.58;
             updateParticles(elapsed, delta);
         }
 
-        camera.lookAt(0, compact ? 0.15 : 0.2, 0);
+        camera.lookAt(0, compact ? 0.03 : 0.07, 0);
         renderer.render(scene, camera);
         requestAnimationFrame(render);
     }
@@ -523,7 +378,6 @@ export function initBurger3D() {
         resizeObserver.disconnect();
         ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
         renderer.dispose();
-        Object.values(materials).forEach((material) => material.dispose());
     }, { once: true });
 
     window.setTimeout(() => {

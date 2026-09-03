@@ -67,7 +67,7 @@ function hash(file) {
     return crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex");
 }
 
-check("versão 0.2.0.1", version === "0.2.0.1");
+check("versão 0.2.1", version === "0.2.1");
 check("Live Server carrega CSS diretamente", liveHtml.includes('./assets/css/site.css'));
 check("Live Server usa módulo runtime", liveHtml.includes('./assets/js/main.js'));
 check("Live Server não aponta para source/src", !liveHtml.includes('./src/main.js') && !liveHtml.includes('/source/'));
@@ -94,6 +94,9 @@ check("HDRI runtime igual ao HDRI fonte", hash("hdr/burger-studio.hdr") === hash
 check("fallback visual preservado", (liveHtml + sourceText).includes("burger-art--fallback"));
 check("movimento reduzido preservado", (liveCss + sourceText).includes("prefers-reduced-motion"));
 check("slug configurável preservado", sourceText.includes('slug: "modelo-hamburgueria"'));
+check("GLB real substituído (tamanho > 3MB)", fs.statSync(path.join(root, "models/burger.glb")).size > 3_000_000);
+check("loader preserva materiais do GLB", sourceText.includes("enhanceMaterial") && !sourceText.includes("materialForName("));
+check("README menciona o GLB do usuário", fs.readFileSync(path.join(root, "README.md"), "utf8").includes("hamburger.glb"));
 
 check("GLTFLoader usa alias Three addons compatível com Live Server", sourceText.includes('three/addons/loaders/GLTFLoader.js'));
 check("RGBELoader usa alias Three addons compatível com Live Server", sourceText.includes('three/addons/loaders/RGBELoader.js'));
@@ -102,4 +105,4 @@ check("conteúdo reveal é visível por padrão", /\.reveal\s*\{\s*opacity:\s*1;
 
 
 if (failures) process.exit(1);
-console.log("\nValidação v0.2.0.1 concluída sem erros.");
+console.log("\nValidação v0.2.1 concluída sem erros.");

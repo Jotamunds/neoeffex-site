@@ -960,7 +960,7 @@ svg { display: block; }
     .burger-art { transform: translateZ(0) rotate(-3deg); }
 }
 
-/* v0.2.0 — palco 3D do hero */
+/* v0.2.1 — modelo GLB real */
 .hero__visual {
     min-height: 610px;
     perspective: none;
@@ -969,7 +969,7 @@ svg { display: block; }
 .burger-stage {
     --load-progress: 0%;
     position: relative;
-    width: min(620px, 100%);
+    width: min(600px, 100%);
     aspect-ratio: 1 / 1;
     display: grid;
     place-items: center;
@@ -992,9 +992,9 @@ svg { display: block; }
 .burger-canvas {
     position: absolute;
     z-index: 3;
-    inset: -4%;
-    width: 108%;
-    height: 108%;
+    inset: -3%;
+    width: 106%;
+    height: 106%;
     opacity: 0;
     transform: scale(.985);
     transition: opacity .55s ease, transform .8s cubic-bezier(.2,.8,.2,1);
@@ -1109,11 +1109,11 @@ svg { display: block; }
     z-index: 7;
 }
 
-.burger-note--blend { left: 1%; top: 20%; }
-.burger-note--brioche { right: 0; bottom: 18%; }
+.burger-note--blend { left: 2%; top: 22%; }
+.burger-note--brioche { right: 2%; bottom: 20%; }
 .burger-note--fire {
-    right: 5%;
-    top: 16%;
+    right: 4%;
+    top: 18%;
     min-width: 102px;
     transform: rotate(3deg);
     animation: noteFloat 6.1s ease-in-out -2.2s infinite;

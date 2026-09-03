@@ -1,5 +1,19 @@
 # Hamburgueria — modelo premium Neoeffex
 
+## v0.2.1 — modelo GLB real do usuário
+
+Esta versão troca o hambúrguer procedural/anterior pelo arquivo `hamburger.glb` enviado pelo usuário.
+
+Principais diferenças:
+
+- o modelo exibido no hero passa a ser o GLB real;
+- os materiais embutidos no arquivo são preservados;
+- o código 3D deixa de substituir visualmente cada ingrediente por materiais gerados em JavaScript;
+- o hambúrguer é centralizado e escalado automaticamente para o palco do hero;
+- o fluxo de Live Server continua igual ao da `v0.2.0.1` corrigida.
+
+Se o navegador estiver mostrando o hambúrguer anterior, faça um hard refresh (`Ctrl + Shift + R`) para invalidar o cache do `burger.glb`.
+
 ## Importante — pacote corrigido
 
 A primeira geração da `v0.2.0.1` possuía uma incompatibilidade entre o import usado pelo Three.js (`three/examples/jsm/...`) e o alias disponível no import map (`three/addons/...`). Este pacote corrige a incompatibilidade.

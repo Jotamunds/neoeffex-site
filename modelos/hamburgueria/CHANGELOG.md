@@ -1,3 +1,11 @@
+# v0.2.1
+
+- Substitui o `burger.glb` anterior pelo arquivo real enviado pelo usuário (`hamburger.glb`).
+- O hero 3D agora preserva os materiais e texturas originais do GLB, em vez de repintar pão, carne, queijo e bacon por JavaScript.
+- Loader refeito para normalizar automaticamente o modelo no palco, centralizar, ajustar escala e manter a landing compatível com Live Server.
+- Mantidas partículas de vapor, brasas, iluminação quente de estúdio, parallax leve, scroll e fallback visual.
+- Atualizados os arquivos sincronizados em `models/` e `source/public/models/`.
+
 # v0.2.0.1
 
 ## Correção do pacote v0.2.0.1

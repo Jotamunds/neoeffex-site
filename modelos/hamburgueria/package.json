@@ -1,7 +1,7 @@
 {
   "name": "neoeffex-modelo-hamburgueria",
   "private": true,
-  "version": "0.2.0-patch.1",
+  "version": "0.2.1",
   "type": "module",
   "scripts": {
     "live:sync": "node tools/sync-live.mjs",

@@ -182,6 +182,188 @@ sem solicitação explícita.
 
 Se houver `VERSION`, `CHANGELOG.md` ou equivalente na área modificada, verifique se a alteração exige atualização.
 
+# ENTREGA DE ATUALIZAÇÕES
+
+Ao concluir uma alteração em qualquer projeto da Neoeffex, não responda apenas que a tarefa foi concluída.
+
+Apresente um resumo objetivo contendo:
+
+## Versão
+
+Se o projeto possuir `VERSION`, informe a versão atualizada.
+
+Quando a solicitação representar uma nova etapa relevante, atualize a versão seguindo o padrão já existente no projeto.
+
+Não invente um novo padrão de versionamento se o projeto já possuir um.
+
+## Alterações realizadas
+
+Explique brevemente:
+
+* o que foi alterado;
+* qual problema foi corrigido;
+* qual funcionalidade foi adicionada;
+* decisões técnicas importantes.
+
+Evite explicações excessivamente longas.
+
+## Arquivos alterados
+
+Informe os principais arquivos criados ou modificados.
+
+Exemplo:
+
+```text
+Alterados:
+- index.html
+- assets/css/main.css
+- assets/js/catalog.js
+
+Criados:
+- assets/js/theme-switcher.js
+```
+
+Não liste arquivos gerados automaticamente sem relevância.
+
+## Testes e validações
+
+Informe quais verificações foram executadas.
+
+Exemplo:
+
+```text
+Validações:
+- responsividade desktop/mobile
+- abertura do catálogo
+- carrinho
+- WhatsApp
+- console sem erros
+```
+
+Se não foi possível executar determinado teste, informe claramente.
+
+Nunca diga que algo foi testado se não foi realmente verificado.
+
+## Riscos e pendências
+
+Se existir algo que ainda dependa de:
+
+* Supabase;
+* SQL;
+* configuração externa;
+* credencial;
+* teste manual;
+* deploy;
+* aprovação de conteúdo;
+
+informe isso separadamente.
+
+Não esconda pendências.
+
+## VERSION E CHANGELOG
+
+Se a área modificada possuir:
+
+```text
+VERSION
+CHANGELOG.md
+```
+
+verifique se devem ser atualizados.
+
+Mudanças relevantes devem ser documentadas seguindo o padrão já existente.
+
+Não altere o histórico de versões anteriores.
+
+## Commit
+
+Ao final de uma alteração pronta para commit, sugira uma mensagem curta seguindo o padrão utilizado no projeto.
+
+Exemplo:
+
+```text
+v0.2.2 - corrige integração do catálogo no modelo odontológico
+```
+
+Não execute `git push` automaticamente sem solicitação explícita.
+
+## Entrega de arquivos
+
+Quando estiver operando em um ambiente que permita gerar arquivos ou pacotes:
+
+* preserve a estrutura original do projeto;
+* não inclua `.git`;
+* não remova arquivos não relacionados;
+* prefira entregar apenas a pasta/projeto atualizado quando solicitado;
+* se gerar ZIP, mantenha os caminhos corretos para que possa ser extraído sobre o projeto existente.
+
+Antes de gerar um pacote, verifique se ele contém todos os arquivos necessários para a alteração funcionar.
+
+## Formato padrão da resposta final
+
+Sempre que adequado, utilize:
+
+```text
+Versão:
+vX.X.X
+
+Feito:
+- alteração 1
+- alteração 2
+- alteração 3
+
+Arquivos principais:
+- arquivo
+- arquivo
+
+Validado:
+- teste
+- teste
+
+Pendências:
+- nenhuma
+
+Commit sugerido:
+vX.X.X - descrição
+```
+
+Se não houver pendências, informe:
+
+```text
+Pendências: nenhuma identificada
+```
+
+# ATUALIZAÇÕES DURANTE O DESENVOLVIMENTO
+
+Para tarefas grandes, informe o progresso em etapas importantes.
+
+Não envie mensagens para cada pequena edição.
+
+Atualizações úteis incluem:
+
+* causa do problema identificada;
+* etapa principal concluída;
+* problema inesperado encontrado;
+* mudança de abordagem necessária;
+* testes iniciados ou concluídos.
+
+Exemplo:
+
+```text
+Identifiquei a causa: o catálogo estava usando o slug fixo em dois pontos diferentes. Vou centralizar a resolução na configuração existente para evitar correções específicas por cliente.
+```
+
+Evite mensagens genéricas como:
+
+```text
+Estou trabalhando nisso.
+Continuando.
+Quase pronto.
+```
+
+As atualizações devem trazer informação técnica útil.
+
+
 ## Continuidade
 
 Use `PROJECT_CONTEXT.md` para entender a arquitetura atual.

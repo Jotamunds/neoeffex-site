@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Frutas, verduras e alimentos selecionados para fazer parte da sua rotina todos os dias.">
+    <meta name="theme-color" content="#39794E">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Verde Viva | Hortifruti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/catalog.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header class="site-header">
+        <a class="brand" href="#inicio"><strong data-copy="brand.name">Verde Viva</strong><span data-copy="brand.segment">Hortifruti</span></a>
+        <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="site-nav" data-menu-toggle hidden><i></i><i></i></button>
+        <nav class="nav" id="site-nav" aria-label="Navegação principal">
+            <a href="#inicio">Início</a>
+            <a href="#sobre">Sobre</a>
+            <a href="#inspiracoes">Inspirações</a>
+            <a href="#diferenciais">Diferenciais</a>
+            <a href="#contato">Contato</a>
+            <a class="nav-catalog" href="#catalog-notice" data-catalog-link>Ver produtos <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main id="conteudo">
+        <section class="hero" id="inicio" aria-labelledby="hero-title">
+            <picture class="hero-image">
+                <source media="(max-width: 600px)" srcset="assets/img/hero-mobile.webp" data-image="heroMobile">
+                <img src="assets/img/hero.webp" data-image="hero" alt="Seleção de frutas e vegetais frescos" width="1920" height="1280" fetchpriority="high">
+            </picture>
+            <div class="hero-overlay" aria-hidden="true"></div>
+            <div class="hero-content">
+                <p class="eyebrow" data-copy="hero.eyebrow">HORTIFRUTI · FRESCOR · QUALIDADE</p>
+                <h1 id="hero-title" data-copy="hero.title">Frescor que você vê.<br>Qualidade que você leva.</h1>
+                <p class="hero-copy" data-copy="hero.description">Frutas, verduras e alimentos selecionados para fazer parte da sua rotina todos os dias.</p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="#catalog-notice" data-catalog-link>Ver produtos <span aria-hidden="true">↗</span></a>
+                    <a class="button button-quiet" href="#sobre">Conhecer o hortifruti</a>
+                </div>
+            </div>
+            <p class="hero-note">FRESCO TODOS OS DIAS <span aria-hidden="true"></span> VERDE · NATURAL · SELECIONADO</p>
+        </section>
+
+        <div class="catalog-notice" id="catalog-notice" tabindex="-1" role="status" hidden>
+            <strong>O catálogo ainda não está disponível.</strong>
+            <p>Tente novamente mais tarde. Você pode continuar conhecendo o site.</p>
+        </div>
+        <noscript><p class="catalog-notice">Ative o JavaScript para abrir o catálogo configurado e experimentar as cores. O conteúdo desta página continua disponível abaixo.</p></noscript>
+
+        <section class="intro section" id="sobre" aria-labelledby="about-title">
+            <div class="section-heading reveal">
+                <p class="eyebrow">A NOSSA ESCOLHA</p>
+                <h2 id="about-title" data-copy="about.title">Frescor e qualidade<br>para todos os dias.</h2>
+            </div>
+            <div class="intro-grid">
+                <div class="intro-copy reveal">
+                    <p data-copy="about.description">Cada escolha começa com um cuidado simples: alimentos bonitos, bem conservados e prontos para a sua mesa. Seleção atenta, variedade e uma organização que torna a compra mais leve.</p>
+                    <a class="text-link" href="#diferenciais">Conheça nosso cuidado <span aria-hidden="true">→</span></a>
+                </div>
+                <figure class="intro-image reveal">
+                    <img src="assets/img/banca.webp" data-image="about" alt="Frutas e verduras organizadas em uma banca de hortifruti" width="1200" height="900" loading="lazy" decoding="async">
+                    <figcaption>Qualidade que se reconhece à primeira vista.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="categories section" id="inspiracoes" aria-labelledby="inspirations-title">
+            <div class="section-heading reveal">
+                <p class="eyebrow">ENCONTRE O SEU FRESCOR</p>
+                <h2 id="inspirations-title">Uma mesa cheia de boas escolhas.</h2>
+                <p class="section-description">Inspirações para o dia a dia. Consulte os produtos e a disponibilidade no catálogo.</p>
+            </div>
+            <div class="category-grid">
+                <a href="#catalog-notice" data-catalog-link class="category-card reveal"><b>01</b><h3>Uma mesa colorida</h3><span>Mais cor em cada refeição <i aria-hidden="true">↗</i></span></a>
+                <a href="#catalog-notice" data-catalog-link class="category-card reveal"><b>02</b><h3>Refeições leves</h3><span>Frescor para a sua rotina <i aria-hidden="true">↗</i></span></a>
+                <a href="#catalog-notice" data-catalog-link class="category-card reveal"><b>03</b><h3>Receitas caseiras</h3><span>O cuidado começa na escolha <i aria-hidden="true">↗</i></span></a>
+                <a href="#catalog-notice" data-catalog-link class="category-card reveal"><b>04</b><h3>Sabor no preparo</h3><span>Pequenos toques, boas receitas <i aria-hidden="true">↗</i></span></a>
+                <a href="#catalog-notice" data-catalog-link class="category-card reveal"><b>05</b><h3>Escolhas da estação</h3><span>Descubra os sabores do momento <i aria-hidden="true">↗</i></span></a>
+                <a href="#catalog-notice" data-catalog-link class="category-card reveal"><b>06</b><h3>A feira da semana</h3><span>Praticidade para todos os dias <i aria-hidden="true">↗</i></span></a>
+            </div>
+        </section>
+
+        <section class="benefits section" id="diferenciais" aria-labelledby="benefits-title">
+            <div class="benefits-top">
+                <div class="section-heading reveal"><p class="eyebrow">CUIDADO EM CADA ESCOLHA</p><h2 id="benefits-title">Comprar bem<br>deve ser simples.</h2></div>
+                <p class="reveal">Cuidado na escolha, leveza no ambiente e produtos que fazem diferença nas pequenas rotinas.</p>
+            </div>
+            <div class="benefit-list">
+                <article class="benefit reveal"><span>01</span><h3>Seleção diária</h3><p>Produtos escolhidos com atenção antes de chegarem às nossas bancas.</p></article>
+                <article class="benefit reveal"><span>02</span><h3>Frescor real</h3><p>Rotatividade e cuidado para preservar o que a natureza oferece de melhor.</p></article>
+                <article class="benefit reveal"><span>03</span><h3>Boa variedade</h3><p>Opções para a feira da semana, a receita de hoje e novas descobertas.</p></article>
+                <article class="benefit reveal"><span>04</span><h3>Atendimento próximo</h3><p>Uma experiência acolhedora, prática e fácil de resolver.</p></article>
+            </div>
+        </section>
+
+        <section class="journey section" aria-labelledby="journey-title">
+            <div class="journey-head reveal"><p class="eyebrow">DO CAMPO À ROTINA</p><h2 id="journey-title">Da seleção até a sua mesa.</h2></div>
+            <ol class="steps">
+                <li class="reveal"><b>01</b><h3>Seleção</h3><p>Produtos escolhidos com atenção à qualidade.</p></li>
+                <li class="reveal"><b>02</b><h3>Organização</h3><p>Um ambiente cuidado e fácil de comprar.</p></li>
+                <li class="reveal"><b>03</b><h3>Frescor</h3><p>Rotatividade e cuidado com os alimentos.</p></li>
+                <li class="reveal"><b>04</b><h3>Praticidade</h3><p>Uma experiência simples para encontrar o que precisa.</p></li>
+            </ol>
+        </section>
+
+        <section class="gallery section" aria-labelledby="gallery-title">
+            <div class="gallery-copy reveal"><p class="eyebrow">PARA A SUA ROTINA</p><h2 id="gallery-title">Mais cor, mais frescor,<br>mais sabor.</h2><p>Uma escolha que começa no olhar e continua em cada refeição.</p><a class="text-link" href="#catalog-notice" data-catalog-link>Conferir opções <span aria-hidden="true">→</span></a></div>
+            <div class="gallery-images reveal">
+                <img class="gallery-tall" src="assets/img/salada.webp" data-image="salad" alt="Salada fresca com folhas verdes e vegetais" width="1200" height="1815" loading="lazy" decoding="async">
+                <img class="gallery-small" src="assets/img/vegetais.webp" data-image="vegetables" alt="Vegetais coloridos em uma refeição" width="1200" height="800" loading="lazy" decoding="async">
+            </div>
+        </section>
+
+        <section class="testimonials section" aria-labelledby="reviews-title">
+            <div class="section-heading reveal"><p class="eyebrow">AVALIAÇÕES FICTÍCIAS · EXEMPLO DO MODELO</p><h2 id="reviews-title">Uma escolha que se percebe.</h2></div>
+            <div class="quote-grid">
+                <blockquote class="reveal"><p>“A organização faz toda diferença. Dá vontade de levar tudo, porque está sempre bonito e fresco.”</p><footer>ANA M. <span>· avaliação demonstrativa</span></footer></blockquote>
+                <blockquote class="reveal"><p>“Encontro o que preciso para a semana sem perder tempo. A qualidade é muito consistente.”</p><footer>BRUNO R. <span>· avaliação demonstrativa</span></footer></blockquote>
+                <blockquote class="reveal"><p>“As frutas e as folhas chegam lindas em casa. Virou uma parada certa na minha rotina.”</p><footer>LÍVIA S. <span>· avaliação demonstrativa</span></footer></blockquote>
+            </div>
+        </section>
+
+        <section class="faq section" aria-labelledby="faq-title">
+            <div class="section-heading reveal"><p class="eyebrow">DÚVIDAS FREQUENTES</p><h2 id="faq-title">Para escolher com tranquilidade.</h2></div>
+            <div class="faq-list reveal">
+                <details><summary>Quais produtos estão disponíveis?<span aria-hidden="true">+</span></summary><p>Abra o <a href="#catalog-notice" data-catalog-link>catálogo</a> para conhecer as opções disponíveis no momento.</p></details>
+                <details><summary>Como consultar preços?<span aria-hidden="true">+</span></summary><p>Os preços e as descrições atualizados acompanham cada produto no catálogo.</p></details>
+                <details><summary>Como saber a origem dos produtos?<span aria-hidden="true">+</span></summary><p>Confira as descrições disponíveis no catálogo e confirme as informações com o estabelecimento antes de concluir seu pedido.</p></details>
+                <details><summary>Onde encontro o endereço e os horários?<span aria-hidden="true">+</span></summary><p>As informações de atendimento cadastradas pelo estabelecimento aparecem no <a href="#catalog-notice" data-catalog-link>catálogo</a>.</p></details>
+                <details><summary>Como faço um pedido?<span aria-hidden="true">+</span></summary><p>Abra o catálogo, escolha os produtos e monte seu carrinho. Quando os pedidos estiverem habilitados, use o botão de WhatsApp do próprio catálogo para continuar.</p></details>
+            </div>
+        </section>
+
+        <section class="final-cta" id="contato" aria-labelledby="contact-title">
+            <img class="final-image" src="assets/img/salada.webp" data-image="salad" alt="" width="1200" height="1815" loading="lazy" decoding="async">
+            <div class="final-overlay" aria-hidden="true"></div>
+            <div class="final-content reveal">
+                <p class="eyebrow" data-copy="brand.name">Verde Viva</p>
+                <h2 id="contact-title" data-copy="final.title">Tudo mais fresco começa<br>com uma boa escolha.</h2>
+                <p data-copy="final.description">Conheça as opções disponíveis e encontre mais sabor para o seu dia a dia.</p>
+                <div class="final-actions"><a class="button button-primary" href="#catalog-notice" data-catalog-link>Ver produtos <span aria-hidden="true">↗</span></a><a class="button button-quiet" href="#catalog-notice" data-catalog-link>Consultar atendimento</a></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <a class="brand" href="#inicio"><strong data-copy="brand.name">Verde Viva</strong><span data-copy="brand.segment">Hortifruti</span></a>
+        <p data-copy="footer.description">Frescor, cuidado e boas escolhas para a sua rotina.</p>
+        <div class="footer-links"><a href="#sobre">Sobre</a><a href="#inspiracoes">Inspirações</a><a href="#catalog-notice" data-catalog-link>Catálogo</a><a href="#catalog-notice" data-catalog-link>Atendimento</a></div>
+        <div class="footer-bottom">
+            <span>© <span data-year>2026</span> <span data-copy="brand.name">Verde Viva</span></span>
+            <span>Desenvolvido por <a href="https://neoeffex.com.br/">Neoeffex</a></span>
+            <span class="socials"><a href="#" data-social="instagram" target="_blank" rel="noopener noreferrer" hidden>Instagram</a><a href="#" data-social="facebook" target="_blank" rel="noopener noreferrer" hidden>Facebook</a></span>
+        </div>
+        <p class="demo-note">Modelo demonstrativo Neoeffex. Marca e avaliações fictícias; imagens ilustrativas.</p>
+    </footer>
+
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-haspopup="dialog" aria-controls="theme-dialog" aria-expanded="false" hidden>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3a9 9 0 1 0 0 18h1.2a2 2 0 0 0 1.2-3.6 1.4 1.4 0 0 1 .8-2.5H17a4 4 0 0 0 4-4A8.5 8.5 0 0 0 12 3Z"/><circle cx="7.5" cy="10" r=".6"/><circle cx="10.5" cy="6.8" r=".6"/><circle cx="15" cy="7.5" r=".6"/></svg>
+        Cores
+    </button>
+    <dialog class="theme-dialog" id="theme-dialog" aria-labelledby="theme-title" aria-describedby="theme-description">
+        <div class="theme-heading"><h2 id="theme-title">As cores do seu site</h2><button id="theme-close" class="theme-close" type="button" aria-label="Fechar painel de cores" autofocus>×</button></div>
+        <p id="theme-description">Experimente uma combinação ou escolha suas cores. A prévia fica salva só neste navegador.</p>
+        <div class="theme-presets" role="group" aria-label="Paletas prontas">
+            <button type="button" data-preset="original" aria-pressed="false">Original</button>
+            <button type="button" data-preset="mercado" aria-pressed="false">Verde e azul</button>
+            <button type="button" data-preset="solar" aria-pressed="false">Laranja</button>
+        </div>
+        <div id="theme-fields"></div>
+        <div class="theme-actions"><button id="theme-reset" type="button">Restaurar</button><button id="theme-copy" type="button">Copiar cores</button></div>
+        <textarea id="theme-code" aria-label="Códigos das cores para copiar" rows="7" readonly hidden></textarea>
+        <p class="theme-status" id="theme-status" role="status" aria-live="polite">A personalização se aplica a esta landing page.</p>
+    </dialog>
+</body>
+</html>

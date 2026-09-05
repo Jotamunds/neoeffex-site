@@ -2,6 +2,22 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.15] - 2026-09-05
+
+### Alterado
+- Implementação da Opção 2 no Hero: layout centralizado de alto impacto com moldura panorâmica widescreen de 16:9, iluminação ambiente traseira e efeito de transição inferior suave (fade-to-black).
+- Adicionados widgets de conversão com glassmorphism flutuante (+340% Conversão, Score 99 e WhatsApp).
+- Implementada régua horizontal minimalista na base do Hero com os 5 pilares estratégicos (Entendimento até Lançamento).
+- Otimização responsiva com ajuste vertical e empilhamento adaptado no mobile, além de compatibilidade com prefers-reduced-motion.
+- Cache busting de stylesheet atualizado para `?v=0.1.15`.
+
+## [0.1.14] - 2026-09-05
+
+### Alterado
+- Reformulação do bloco visual do Hero: substituição do layout terminal/pipeline ("estilo IA") por um Bento Box moderno com 4 cards de valor (Design Exclusivo, Velocidade 99/100, Roteiro de Vendas e Conexão WhatsApp ao vivo).
+- Otimização responsiva e suporte a movimento reduzido para os cards do Bento Grid.
+- Cache busting de stylesheet atualizado para `?v=0.1.14`.
+
 ## [0.1.11] - 2026-09-04
 
 ### Adicionado

@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=Manrope:wght@400;500;600&amp;family=Open+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=0.1.13">
+  <link rel="stylesheet" href="assets/css/style.css?v=0.1.15">
   <noscript>
     <style>
       .loader { display: none !important; }
@@ -45,25 +45,129 @@
 
   <main id="conteudo">
     <section class="hero section" id="inicio" data-od-id="hero">
-      <div class="container hero-grid">
-        <div class="hero-copy">
+      <div class="container hero-centered">
+        <div class="hero-copy hero-copy-centered">
           <div class="eyebrow" data-od-id="label-hero">Páginas de Alta Conversão / Neoeffex</div>
-          <h1 class="headline-upper" data-od-id="titulo-hero">Landing pages que transformam <span class="accent-text">visitantes</span> em clientes.</h1>
-          <p class="lead">Estrutura persuasiva, visual exclusivo e velocidade máxima para fazer a sua empresa vender mais na internet.</p>
-          <div class="hero-actions"><button class="btn btn-primary open-contact" type="button" data-od-id="cta-hero"><span>Solicitar projeto</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button><a class="btn" href="#projetos" data-od-id="cta-projetos"><span>Ver projetos</span></a></div>
-          <div class="build-note"><span class="status-dot"></span>Planejada para vender · Rápida no celular · Pronta para anúncios</div>
+          <h1 class="headline-upper hero-title-lg" data-od-id="titulo-hero">Landing pages que transformam <span class="accent-text">visitantes</span> em clientes.</h1>
+          <p class="lead hero-lead-centered">Estrutura persuasiva, visual exclusivo e velocidade máxima para fazer a sua empresa vender mais na internet.</p>
+          <div class="hero-actions hero-actions-centered">
+            <button class="btn btn-primary open-contact" type="button" data-od-id="cta-hero">
+              <span>Solicitar projeto</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+            </button>
+            <a class="btn" href="#projetos" data-od-id="cta-projetos">
+              <span>Ver projetos</span>
+            </a>
+          </div>
+          <div class="build-note build-note-centered">
+            <span class="status-dot"></span>Planejada para vender · Rápida no celular · Pronta para anúncios
+          </div>
         </div>
-        <div class="system-visual" data-od-id="visual-fluxo-digital" aria-label="Fluxo visual do desenvolvimento de uma landing page">
-          <div class="float-tag tag-one">100% NO AR</div><div class="float-tag tag-two">ALTA CONVERSÃO</div>
-          <div class="system-frame">
-            <div class="frame-head"><span>NEOEFFEX / O CAMINHO PARA SUA PÁGINA VENDER</span><span class="window-dots"><i></i><i></i><i></i></span></div>
-            <div class="pipeline"><div class="pipeline-flow"></div>
-              <div class="pipe-node"><span class="node-index"></span><span class="node-main"><strong>Entendimento</strong><small>Seu negócio, público e diferencial</small></span><span class="node-state">ALINHADO</span></div>
-              <div class="pipe-node"><span class="node-index"></span><span class="node-main"><strong>Roteiro de Vendas</strong><small>Argumentos e textos persuasivos</small></span><span class="node-state">ESTRUTURADO</span></div>
-              <div class="pipe-node"><span class="node-index"></span><span class="node-main"><strong>Design Exclusivo</strong><small>Identidade moderna que passa autoridade</small></span><span class="node-state">CRIADO</span></div>
-              <div class="pipe-node"><span class="node-index"></span><span class="node-main"><strong>Velocidade Máxima</strong><small>Carregamento instantâneo no celular</small></span><span class="node-state">OTIMIZADO</span></div>
-              <div class="pipe-node"><span class="node-index"></span><span class="node-main"><strong>Lançamento</strong><small>Conectada ao WhatsApp e pronta</small></span><span class="node-state">NO AR</span></div>
+
+        <!-- Widescreen Panorâmico com Fade Inferior -->
+        <div class="hero-widescreen-frame" data-od-id="hero-widescreen" aria-label="Vitrine visual de alta conversão Neoeffex">
+          <div class="widescreen-ambient-glow"></div>
+          
+          <div class="widescreen-browser">
+            <div class="widescreen-header">
+              <div class="window-dots">
+                <span class="dot-close"></span>
+                <span class="dot-min"></span>
+                <span class="dot-max"></span>
+              </div>
+              <div class="widescreen-url">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span>neoeffex.com.br</span>
+              </div>
+              <div class="widescreen-status">
+                <span class="status-beacon"></span>
+                <span>Alta Conversão</span>
+              </div>
             </div>
+
+            <div class="widescreen-viewport">
+              <div class="mock-canvas">
+                <div class="mock-nav">
+                  <div class="mock-logo"><span></span>neoeffex</div>
+                  <div class="mock-menu">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="mock-cta">Falar com Consultor</div>
+                </div>
+
+                <div class="mock-hero-content">
+                  <div class="mock-pill">DESIGN SOB MEDIDA & ALTA CONVERSÃO</div>
+                  <div class="mock-headline">Sua Empresa Vendendo 24h por Dia</div>
+                  <div class="mock-subline">Estrutura pensada estrategicamente para transformar tráfego em vendas reais.</div>
+                  <div class="mock-btn-row">
+                    <span class="mock-main-btn">Quero Minha Landing Page</span>
+                    <span class="mock-ghost-btn">Ver Portfólio</span>
+                  </div>
+                </div>
+
+                <!-- Floating Glass Cards (Widgets de Conversão & Performance) -->
+                <div class="glass-float float-left">
+                  <div class="glass-icon-circle green">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  </div>
+                  <div class="glass-info">
+                    <strong>+340% Conversão</strong>
+                    <small>Leads qualificados gerados</small>
+                  </div>
+                </div>
+
+                <div class="glass-float float-right">
+                  <div class="glass-icon-circle blue">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  </div>
+                  <div class="glass-info">
+                    <strong>Score 99 no Celular</strong>
+                    <small>0.6s de abertura instantânea</small>
+                  </div>
+                </div>
+
+                <div class="glass-float float-chat">
+                  <div class="glass-whatsapp-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  </div>
+                  <div class="glass-info">
+                    <strong>Novo Lead WhatsApp</strong>
+                    <small>“Gostaria de fechar o projeto hoje”</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fade inferior cinematográfico que dissolve para o fundo da página -->
+              <div class="widescreen-fade-bottom"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Faixa Horizontal de Pilares / Jornada Estratégica -->
+        <div class="hero-pillars-bar" data-od-id="hero-pilares" aria-label="Nossos pilares de entrega">
+          <div class="pillar-item">
+            <span class="pillar-num">01</span>
+            <span class="pillar-title">Entendimento</span>
+          </div>
+          <div class="pillar-sep" aria-hidden="true"></div>
+          <div class="pillar-item">
+            <span class="pillar-num">02</span>
+            <span class="pillar-title">Roteiro de Vendas</span>
+          </div>
+          <div class="pillar-sep" aria-hidden="true"></div>
+          <div class="pillar-item">
+            <span class="pillar-num">03</span>
+            <span class="pillar-title">Design Exclusivo</span>
+          </div>
+          <div class="pillar-sep" aria-hidden="true"></div>
+          <div class="pillar-item">
+            <span class="pillar-num">04</span>
+            <span class="pillar-title">Velocidade Máxima</span>
+          </div>
+          <div class="pillar-sep" aria-hidden="true"></div>
+          <div class="pillar-item">
+            <span class="pillar-num">05</span>
+            <span class="pillar-title">Lançamento</span>
           </div>
         </div>
       </div>

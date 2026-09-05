@@ -102,8 +102,8 @@ function fitModel(model, compact) {
     const size = box.getSize(new THREE.Vector3());
     model.position.sub(center);
 
-    const targetWidth = compact ? 4.0 : 4.45;
-    const targetHeight = compact ? 3.05 : 3.5;
+    const targetWidth = compact ? 2.6 : 2.75;
+    const targetHeight = compact ? 2.15 : 2.25;
     const width = Math.max(size.x, size.z);
     const height = size.y;
     const scale = Math.min(targetWidth / Math.max(width, 0.01), targetHeight / Math.max(height, 0.01));
@@ -113,7 +113,7 @@ function fitModel(model, compact) {
     const fittedSize = fitted.getSize(new THREE.Vector3());
     const fittedCenter = fitted.getCenter(new THREE.Vector3());
     model.position.x -= fittedCenter.x;
-    model.position.y -= fittedCenter.y - (compact ? -0.04 : -0.02);
+    model.position.y -= fittedCenter.y;
     model.position.z -= fittedCenter.z;
 
     return { size: fittedSize };
@@ -197,7 +197,7 @@ export function initBurger3D() {
         new THREE.ShadowMaterial({ color: 0x000000, transparent: true, opacity: 0.27 })
     );
     shadowPlane.rotation.x = -Math.PI / 2;
-    shadowPlane.position.set(0, -1.42, 0.0);
+    shadowPlane.position.set(0, -1.28, 0.0);
     shadowPlane.receiveShadow = true;
     scene.add(shadowPlane);
 
@@ -209,8 +209,11 @@ export function initBurger3D() {
     let active = true;
     let modelLoaded = false;
 
-    const modelUrl = import.meta.env.BASE_URL + siteConfig.hero3d.model;
-    const environmentUrl = import.meta.env.BASE_URL + siteConfig.hero3d.environment;
+    const baseUrl = (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.BASE_URL)
+        ? import.meta.env.BASE_URL
+        : new URL("../../", import.meta.url).href;
+    const modelUrl = new URL(siteConfig.hero3d.model, baseUrl).href;
+    const environmentUrl = new URL(siteConfig.hero3d.environment, baseUrl).href;
 
     const hdrLoader = new RGBELoader();
     hdrLoader.load(environmentUrl, (texture) => {

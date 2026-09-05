@@ -107,20 +107,8 @@ function indent(text, spaces) {
 function renderCard(product, category, menu) {
     const title = `${product.id}-title`;
     const combos = product.combos.map((combo) => indent(renderCombo(combo, menu), 12)).join("\n");
-    const hasForkHighlight = product.id === "tradicional-400";
-    const highlightAttribute = hasForkHighlight ? " data-fork-highlight-target" : "";
-    const forkHighlight = hasForkHighlight ? `
-    <span class="fork-highlight" data-fork-highlight aria-hidden="true">
-        <svg class="fork-highlight__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <path d="M4 2v5"></path>
-            <path d="M8 2v5"></path>
-            <path d="M12 2v5"></path>
-            <path d="M4 7a4 4 0 0 0 8 0"></path>
-            <path d="M8 11v11"></path>
-        </svg>
-    </span>` : "";
 
-    return `<article class="price-card surface"${highlightAttribute} aria-labelledby="${title}" aria-describedby="acrescimos-${category}">${forkHighlight}
+    return `<article class="price-card surface" aria-labelledby="${title}" aria-describedby="acrescimos-${category}">
     <header class="price-card__header">
         <h3 class="price-card__title" id="${title}">${escapeHtml(product.name)}</h3>
         <p class="price-card__description">${escapeHtml(product.description)}</p>

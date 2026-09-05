@@ -64,15 +64,10 @@ export function validateForkHighlight({ check, root, html, config }) {
     const script = read("scripts/fork-highlight.js");
     const css = read("styles/components/fork-highlight.css");
 
-    check("Garfinho identifica apenas o card tradicional de 400 g", () => {
-        assert.equal(config.motion.fork, true);
-        assert.equal((html.match(/data-fork-highlight-target/g) || []).length, 1);
-        assert.equal((html.match(/data-fork-highlight(?=\s)/g) || []).length, 1);
-        const card = html.match(/<article class="price-card surface" data-fork-highlight-target[\s\S]*?<\/article>/)?.[0];
-        assert.ok(card);
-        assert.match(card, /id="tradicional-400-title">400 g<\/h3>/);
-        assert.match(card, /aria-hidden="true"/);
-        assert.match(card, /focusable="false"/);
+    check("Garfinho desativado e ausente na versão simplificada", () => {
+        assert.equal(config.motion.fork, false);
+        assert.equal((html.match(/data-fork-highlight-target/g) || []).length, 0);
+        assert.equal((html.match(/data-fork-highlight(?=\s)/g) || []).length, 0);
         assert.equal(read("styles/main.css").split("./components/fork-highlight.css").length - 1, 1);
         assert.ok(html.indexOf("fork-highlight.js") < html.indexOf("animations.js"));
     });

@@ -6,7 +6,7 @@
 
     window.LuLeve = window.LuLeve || {};
     const root = document.documentElement;
-    const settings = { enabled: true, intro: true, cards: true, contact: true, fork: true, prices: true, reveal: true, smoothScroll: true };
+    const settings = { enabled: true, intro: true, cards: true, contact: true, fork: false, prices: false, reveal: true, smoothScroll: true };
     const seen = new WeakSet();
     let initialized = false;
     let preference = null;

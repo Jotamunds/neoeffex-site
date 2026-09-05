@@ -92,7 +92,7 @@ export function validatePriceCountup({ check, root, html, config }) {
 
     check("Contagem de preços está conectada à estrutura final", () => {
         assert.equal(config.version, "0.1.20");
-        assert.equal(config.motion.prices, true);
+        assert.equal(config.motion.prices, false);
         assert.match(html, /<script src="\.\/scripts\/price-countup\.js" defer><\/script>/);
         assert.ok(html.indexOf("price-countup.js") < html.indexOf("animations.js"));
         assert.equal(read("styles/main.css").split("./components/price-countup.css").length - 1, 1);

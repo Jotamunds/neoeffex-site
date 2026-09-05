@@ -15,8 +15,8 @@
             intro: true,
             cards: true,
             contact: true,
-            fork: true,
-            prices: true,
+            fork: false,
+            prices: false,
             reveal: true,
             smoothScroll: true
         },

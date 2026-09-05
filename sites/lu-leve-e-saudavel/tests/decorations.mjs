@@ -178,8 +178,8 @@ export function validateDecorations({ check, root, html }) {
         assert.equal(read("index.html"), before);
     });
 
-    check("Seis ícones e o garfinho coexistem com cinco ondas, sem desenho em runtime", () => {
-        assert.equal((html.match(/<svg\b/g) || []).length, 12);
+    check("Seis ícones coexistem com cinco ondas, sem desenho em runtime", () => {
+        assert.equal((html.match(/<svg\b/g) || []).length, 11);
         assert.equal((html.match(/<svg class="organic-wave/g) || []).length, 5);
         assert.equal((html.match(/<script\b/g) || []).length, 11);
         assert.doesNotMatch(html, /<script[^>]*(?:lucide|decorations)|<use\b|<img[^>]*\.svg/);

@@ -17,6 +17,7 @@
     color: var(--color-primary);
     opacity: 0;
     pointer-events: none;
+    filter: drop-shadow(0 2px 6px var(--color-shadow-soft));
 }
 
 .fork-highlight::before {
@@ -32,7 +33,7 @@
 
 .fork-highlight__icon {
     display: block;
-    width: 62%;
+    width: 58%;
     height: auto;
 }
 

@@ -870,7 +870,8 @@
         const payload = getProductPayload();
         if (!payload) return;
 
-        const productId = document.getElementById("productId").value;
+        const productIdField = document.getElementById("productId");
+        const productId = productIdField.value;
         const currentProduct = products.find(function (product) { return product.id === productId; }) || null;
         const imageFile = productImageInput.files && productImageInput.files[0];
         const imageValidationMessage = validateProductImage(imageFile);
@@ -878,77 +879,115 @@
             setFeedback(productFeedback, imageValidationMessage, "error");
             return;
         }
+
         setProductFormLoading(true);
         setFeedback(productFeedback, "", "");
-        let result;
+
         let uploadedImagePath = "";
-        let imageCleanupFailed = false;
-        if (productId) {
-            if (imageFile) {
-                const uploadResult = await uploadProductImage(imageFile, productId);
-                if (uploadResult.error) {
-                    console.error("Erro ao enviar imagem", uploadResult.error);
-                    setFeedback(productFeedback, "Não foi possível enviar a imagem. Confirme se a migração 006 foi executada.", "error");
-                    setProductFormLoading(false);
+        let savedProductId = productId;
+        let isNewProduct = !productId;
+        let createdProductRecord = false;
+
+        try {
+            if (productId) {
+                if (imageFile) {
+                    const uploadResult = await uploadProductImage(imageFile, productId);
+                    if (uploadResult.error) {
+                        console.error("Erro ao enviar imagem", uploadResult.error);
+                        setFeedback(productFeedback, "Não foi possível enviar a imagem. Confirme se a migração 006 foi executada.", "error");
+                        return;
+                    }
+                    uploadedImagePath = uploadResult.path;
+                    payload.image_path = uploadedImagePath;
+                } else if (removeProductImage.checked && currentProduct && currentProduct.image_path) {
+                    payload.image_path = null;
+                }
+                const updateResult = await client.from("products").update(payload).eq("id", productId).select("id, image_path").single();
+                if (updateResult.error) {
+                    console.error("Erro ao salvar produto", updateResult.error);
+                    if (uploadedImagePath) await removeStoredProductImage(uploadedImagePath);
+                    setFeedback(productFeedback, "Não foi possível salvar o produto. Tente novamente.", "error");
                     return;
                 }
+            } else {
+                const insertResult = await client.from("products").insert(Object.assign({}, payload, {
+                    catalog_id: activeCatalog.id,
+                    sort_order: getNextSortOrder(products)
+                })).select("id, image_path").single();
+
+                if (insertResult.error) {
+                    console.error("Erro ao cadastrar produto", insertResult.error);
+                    setFeedback(productFeedback, "Não foi possível salvar o produto. Tente novamente.", "error");
+                    return;
+                }
+                savedProductId = insertResult.data.id;
+                createdProductRecord = true;
+            }
+
+            if (isNewProduct && imageFile) {
+                const uploadResult = await uploadProductImage(imageFile, savedProductId);
+                if (uploadResult.error) {
+                    console.error("Erro ao enviar imagem", uploadResult.error);
+                    const compensationResult = await client.from("products").delete().eq("id", savedProductId);
+                    if (compensationResult.error) {
+                        console.error("Falha na exclusão compensatória do produto", compensationResult.error);
+                        productIdField.value = savedProductId;
+                        await loadActiveCatalogData();
+                        setFeedback(productFeedback, "O produto foi criado, mas a imagem não pôde ser enviada. Você pode editar este produto e tentar adicionar a imagem novamente.", "error");
+                        return;
+                    }
+                    setFeedback(productFeedback, "Não foi possível enviar a imagem. O produto não foi criado; confirme se a migração 006 foi executada.", "error");
+                    return;
+                }
+
                 uploadedImagePath = uploadResult.path;
-                payload.image_path = uploadedImagePath;
-            } else if (removeProductImage.checked && currentProduct && currentProduct.image_path) {
-                payload.image_path = null;
-            }
-            result = await client.from("products").update(payload).eq("id", productId).select("id, image_path").single();
-        } else {
-            result = await client.from("products").insert(Object.assign({}, payload, {
-                catalog_id: activeCatalog.id,
-                sort_order: getNextSortOrder(products)
-            })).select("id, image_path").single();
-        }
+                const imageUpdateResult = await client.from("products")
+                    .update({ image_path: uploadedImagePath })
+                    .eq("id", savedProductId)
+                    .select("id")
+                    .single();
 
-        if (result.error) {
-            console.error("Erro ao salvar produto", result.error);
-            if (uploadedImagePath) await removeStoredProductImage(uploadedImagePath);
-            setFeedback(productFeedback, "Não foi possível salvar o produto. Tente novamente.", "error");
+                if (imageUpdateResult.error) {
+                    console.error("Erro ao vincular imagem", imageUpdateResult.error);
+                    const cleanupError = await removeStoredProductImage(uploadedImagePath);
+                    if (cleanupError) console.error("Falha ao remover imagem órfã", cleanupError);
+
+                    const compensationResult = await client.from("products").delete().eq("id", savedProductId);
+                    if (compensationResult.error) {
+                        console.error("Falha na exclusão compensatória após erro de vinculação", compensationResult.error);
+                        productIdField.value = savedProductId;
+                        await loadActiveCatalogData();
+                        setFeedback(productFeedback, "O produto foi criado, mas a imagem não pôde ser vinculada. Tente salvar novamente para concluir a vinculação.", "error");
+                        return;
+                    }
+                    setFeedback(productFeedback, "Não foi possível vincular a imagem. O produto não foi criado.", "error");
+                    return;
+                }
+            }
+
+            let imageCleanupFailed = false;
+            const previousImagePath = currentProduct && currentProduct.image_path;
+            if (previousImagePath && (uploadedImagePath || removeProductImage.checked)) {
+                imageCleanupFailed = Boolean(await removeStoredProductImage(previousImagePath));
+            }
+
+            closeProductModal();
+            await loadActiveCatalogData();
+            showToast(imageCleanupFailed
+                ? "Produto salvo, mas a imagem anterior não pôde ser removida do armazenamento."
+                : (productId ? "Produto atualizado com sucesso." : "Produto cadastrado com sucesso."));
+        } catch (unexpectedError) {
+            console.error("Erro inesperado ao salvar produto", unexpectedError);
+            if (createdProductRecord && savedProductId) {
+                productIdField.value = savedProductId;
+                await loadActiveCatalogData();
+                setFeedback(productFeedback, "Ocorreu uma falha inesperada. O produto foi salvo; você pode continuar editando-o.", "error");
+            } else {
+                setFeedback(productFeedback, "Ocorreu um erro inesperado. Tente novamente.", "error");
+            }
+        } finally {
             setProductFormLoading(false);
-            return;
         }
-
-        const savedProductId = productId || result.data.id;
-        if (!productId && imageFile) {
-            const uploadResult = await uploadProductImage(imageFile, savedProductId);
-            if (uploadResult.error) {
-                console.error("Erro ao enviar imagem", uploadResult.error);
-                await client.from("products").delete().eq("id", savedProductId);
-                setFeedback(productFeedback, "Não foi possível enviar a imagem. O produto não foi criado; confirme se a migração 006 foi executada.", "error");
-                setProductFormLoading(false);
-                return;
-            }
-            uploadedImagePath = uploadResult.path;
-            const imageUpdateResult = await client.from("products")
-                .update({ image_path: uploadedImagePath })
-                .eq("id", savedProductId)
-                .select("id")
-                .single();
-            if (imageUpdateResult.error) {
-                console.error("Erro ao vincular imagem", imageUpdateResult.error);
-                await removeStoredProductImage(uploadedImagePath);
-                await client.from("products").delete().eq("id", savedProductId);
-                setFeedback(productFeedback, "Não foi possível vincular a imagem. O produto não foi criado.", "error");
-                setProductFormLoading(false);
-                return;
-            }
-        }
-
-        const previousImagePath = currentProduct && currentProduct.image_path;
-        if (previousImagePath && (uploadedImagePath || removeProductImage.checked)) {
-            imageCleanupFailed = Boolean(await removeStoredProductImage(previousImagePath));
-        }
-
-        closeProductModal();
-        await loadActiveCatalogData();
-        showToast(imageCleanupFailed
-            ? "Produto salvo, mas a imagem anterior não pôde ser removida do armazenamento."
-            : (productId ? "Produto atualizado com sucesso." : "Produto cadastrado com sucesso."));
     }
 
     async function toggleProductStatus() {
@@ -1298,6 +1337,8 @@
                 storageKey: authStorageKey
             }
         });
+        window.NEOEFFEX_SUPABASE_CLIENT = client;
+        window.dispatchEvent(new CustomEvent("neoeffex:client-ready", { detail: client }));
 
         client.auth.onAuthStateChange(function (event, session) {
             if (event === "SIGNED_OUT") {

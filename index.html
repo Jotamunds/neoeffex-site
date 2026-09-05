@@ -11,6 +11,7 @@
   <meta property="og:description" content="Estratégia, design e código. Do conceito ao deploy. Landing pages personalizadas pela Neoeffex.">
   <meta property="og:image" content="https://neoeffex.com.br/assets/img/og-neoeffex.jpg">
   <meta property="og:locale" content="pt_BR">
+  <link rel="canonical" href="https://neoeffex.com.br/">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
@@ -18,7 +19,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=Manrope:wght@400;500;600&amp;family=Open+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=0.1.12">
+  <link rel="stylesheet" href="assets/css/style.css?v=0.1.13">
+  <noscript>
+    <style>
+      .loader { display: none !important; }
+    </style>
+  </noscript>
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -30,7 +36,7 @@
     <div class="container navbar">
       <a class="brand" href="#inicio" aria-label="Neoeffex, início" data-od-id="logo-neoeffex"><span class="brand-mark" aria-hidden="true"></span><span>neoeffex</span></a>
       <nav class="nav-links" id="navLinks" aria-label="Navegação principal">
-        <a class="nav-link" href="#servicos">Serviços</a><a class="nav-link" href="#processo">Processo</a><a class="nav-link" href="#projetos">Projetos</a><a class="nav-link" href="#catalogo">Catálogo</a><a class="nav-link" href="#sobre">Sobre</a><a class="nav-link" href="#contato">Contato</a>
+        <a class="nav-link" href="#servicos">Serviços</a><a class="nav-link" href="#projetos">Projetos</a><a class="nav-link" href="#processo">Processo</a><a class="nav-link" href="#catalogo">Catálogo</a><a class="nav-link" href="#sobre">Sobre</a><a class="nav-link" href="#contato">Contato</a>
         <button class="btn nav-cta open-contact" type="button" data-od-id="cta-navbar"><span>Solicitar projeto</span></button>
       </nav>
       <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks" data-od-id="controle-menu"><span></span></button>
@@ -44,7 +50,7 @@
           <div class="eyebrow" data-od-id="label-hero">Páginas de Alta Conversão / Neoeffex</div>
           <h1 class="headline-upper" data-od-id="titulo-hero">Landing pages que transformam <span class="accent-text">visitantes</span> em clientes.</h1>
           <p class="lead">Estrutura persuasiva, visual exclusivo e velocidade máxima para fazer a sua empresa vender mais na internet.</p>
-          <div class="hero-actions"><button class="btn btn-primary open-contact" type="button" data-od-id="cta-hero"><span>Criar página para meu negócio</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button><a class="btn" href="#processo" data-od-id="cta-processo"><span>Ver como funciona</span></a></div>
+          <div class="hero-actions"><button class="btn btn-primary open-contact" type="button" data-od-id="cta-hero"><span>Solicitar projeto</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button><a class="btn" href="#projetos" data-od-id="cta-projetos"><span>Ver projetos</span></a></div>
           <div class="build-note"><span class="status-dot"></span>Planejada para vender · Rápida no celular · Pronta para anúncios</div>
         </div>
         <div class="system-visual" data-od-id="visual-fluxo-digital" aria-label="Fluxo visual do desenvolvimento de uma landing page">
@@ -78,40 +84,10 @@
         <div class="services-grid">
           <article class="service-card reveal" data-od-id="servico-estrategia"><div class="service-top"><span class="service-num">01 / ESTRATÉGIA</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span></div><h3>Roteiro de Vendas</h3><p>Organizamos a ordem certa dos argumentos para quebrar objeções e despertar o desejo de compra.</p></article>
           <article class="service-card reveal" data-od-id="servico-design"><div class="service-top"><span class="service-num">02 / DESIGN</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 9v11"/></svg></span></div><h3>Visual Único e Profissional</h3><p>Nada de páginas genéricas. Criamos uma identidade sob medida que transmite autoridade imediata.</p></article>
-          <article class="service-card reveal" data-od-id="servico-desenvolvimento"><div class="service-top"><span class="service-num">03 / MOBILE</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span></div><h3>Perfeita no Celular</h3><p>Mais de 80% do público acessa por smartphone. Sua página será rápida, bonita e fácil de navegar.</p></article>
+          <article class="service-card reveal" data-od-id="servico-desenvolvimento"><div class="service-top"><span class="service-num">03 / MOBILE</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span></div><h3>Perfeita no Celular</h3><p>A grande maioria dos acessos acontece pelo smartphone. Sua página é projetada prioritariamente para abrir rápido e ser fácil de navegar no celular.</p></article>
           <article class="service-card reveal" data-od-id="servico-movimento"><div class="service-top"><span class="service-num">04 / EXPERIÊNCIA</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M15 8l4 4-4 4"/><circle cx="5" cy="12" r="2"/></svg></span></div><h3>Interações que Valorizam</h3><p>Movimentos e detalhes elegantes que destacam seu produto e mantêm o cliente atento.</p></article>
           <article class="service-card reveal" data-od-id="servico-integracoes"><div class="service-top"><span class="service-num">05 / CONVERSÃO</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 8h8v8H8zM3 12h5M16 12h5M12 3v5M12 16v5"/></svg></span></div><h3>Conexão Direta com Vendas</h3><p>Botão de WhatsApp sempre visível, formulários inteligentes e rastreamento para seus anúncios.</p></article>
           <article class="service-card reveal" data-od-id="servico-publicacao"><div class="service-top"><span class="service-num">06 / SUPORTE</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 19V5M7 10l5-5 5 5M5 19h14"/></svg></span></div><h3>Publicação e Domínio</h3><p>Cuidamos de tudo: configuração do endereço, hospedagem rápida e segurança com cadeado SSL.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section custom-section" data-od-id="personalizacao">
-      <div class="container split">
-        <div class="custom-copy reveal from-left"><div class="eyebrow">Feita Sob Medida</div><h2 class="headline-upper" data-od-id="titulo-personalizacao">Sem cara de template pronto.</h2><p class="lead">Seu negócio é único. Sua página deve refletir sua autoridade em cada detalhe.</p><ul><li>Identidade da sua empresa</li><li>Foco no seu cliente ideal</li><li>Apresentação do seu produto</li><li>Chamadas claras para ação</li><li>Visual moderno e refinado</li><li>Preparada para crescer</li></ul></div>
-        <div class="interface-stack reveal" data-od-id="visual-personalizacao" aria-label="Três composições de interface diferentes">
-          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-copy"><i class="mini-line"></i><i class="mini-line short"></i><i class="mini-cta"></i></div><div class="mini-art"></div></div></div>
-          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-art"></div><div class="mini-copy"><i class="mini-line"></i><i class="mini-line short"></i><i class="mini-cta"></i></div></div></div>
-          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-copy"><i class="mini-line short"></i><i class="mini-line"></i><i class="mini-cta"></i></div><div class="mini-art"></div></div></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="processo" data-od-id="processo">
-      <div class="container">
-        <div class="section-head reveal"><div class="eyebrow">Passo a passo simples</div><h2 class="headline-upper" data-od-id="titulo-processo">Como funciona na prática.</h2><p class="lead">Sem termos difíceis. Você acompanha cada etapa de forma transparente.</p></div>
-        <div class="process-wrap reveal" data-od-id="linha-processo"><div class="process-line"><div class="process-progress"></div></div><div class="process-grid">
-          <article class="step"><span class="step-dot"></span><small>01 / INÍCIO</small><h3>Alinhamento</h3><p>Ouvimos seu objetivo e público.</p></article><article class="step"><span class="step-dot"></span><small>02 / ROTEIRO</small><h3>Estrutura</h3><p>Montamos o texto de vendas.</p></article><article class="step"><span class="step-dot"></span><small>03 / VISUAL</small><h3>Design</h3><p>Desenhamos sua página exclusiva.</p></article><article class="step"><span class="step-dot"></span><small>04 / PROGRAMAÇÃO</small><h3>Construção</h3><p>Programamos com alta velocidade.</p></article><article class="step"><span class="step-dot"></span><small>05 / REVISÃO</small><h3>Ajustes</h3><p>Você confere e refinamos juntos.</p></article><article class="step"><span class="step-dot"></span><small>06 / LANÇAMENTO</small><h3>No Ar</h3><p>Publicada e pronta para vender.</p></article>
-        </div></div>
-      </div>
-    </section>
-
-    <section class="section compare" data-od-id="comparacao">
-      <div class="container">
-        <div class="section-head reveal"><div class="eyebrow">Por que escolher a Neoeffex</div><h2 class="headline-upper" data-od-id="titulo-comparacao">A diferença entre um site comum e uma página que vende.</h2></div>
-        <div class="compare-grid">
-          <article class="compare-panel reveal" data-od-id="painel-landing-generica"><div class="compare-label"><span>Site comum da internet</span><span>PADRÃO</span></div><ul class="compare-list"><li><span>Base</span><strong>Template pronto baixado</strong></li><li><span>Estrutura</span><strong>Layout genérico e confuso</strong></li><li><span>Velocidade</span><strong>Pesado e lento no celular</strong></li><li><span>Adaptação</span><strong>Seu texto espremido em caixas</strong></li><li><span>Resultado</span><strong>O cliente entra e vai embora</strong></li></ul></article>
-          <article class="compare-panel featured reveal" data-od-id="painel-landing-neoeffex"><div class="compare-label"><span>Landing Page Neoeffex</span><span>SOB MEDIDA</span></div><ul class="compare-list"><li><span>Base</span><strong>Design 100% exclusivo</strong></li><li><span>Estrutura</span><strong>Roteiro pensado para converter</strong></li><li><span>Velocidade</span><strong>Abertura instantânea no 4G</strong></li><li><span>Adaptação</span><strong>Criada em volta do seu produto</strong></li><li><span>Resultado</span><strong>Mais contatos no seu WhatsApp</strong></li></ul></article>
         </div>
       </div>
     </section>
@@ -276,6 +252,36 @@
       </div>
     </section>
 
+    <section class="section custom-section" data-od-id="personalizacao">
+      <div class="container split">
+        <div class="custom-copy reveal from-left"><div class="eyebrow">Feita Sob Medida</div><h2 class="headline-upper" data-od-id="titulo-personalizacao">Sem cara de template pronto.</h2><p class="lead">Seu negócio é único. Sua página deve refletir sua autoridade em cada detalhe.</p><ul><li>Identidade da sua empresa</li><li>Foco no seu cliente ideal</li><li>Apresentação do seu produto</li><li>Chamadas claras para ação</li><li>Visual moderno e refinado</li><li>Preparada para crescer</li></ul></div>
+        <div class="interface-stack reveal" data-od-id="visual-personalizacao" aria-label="Três composições de interface diferentes">
+          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-copy"><i class="mini-line"></i><i class="mini-line short"></i><i class="mini-cta"></i></div><div class="mini-art"></div></div></div>
+          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-art"></div><div class="mini-copy"><i class="mini-line"></i><i class="mini-line short"></i><i class="mini-cta"></i></div></div></div>
+          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-copy"><i class="mini-line short"></i><i class="mini-line"></i><i class="mini-cta"></i></div><div class="mini-art"></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="processo" data-od-id="processo">
+      <div class="container">
+        <div class="section-head reveal"><div class="eyebrow">Passo a passo simples</div><h2 class="headline-upper" data-od-id="titulo-processo">Como funciona na prática.</h2><p class="lead">Sem termos difíceis. Você acompanha cada etapa de forma transparente.</p></div>
+        <div class="process-wrap reveal" data-od-id="linha-processo"><div class="process-line"><div class="process-progress"></div></div><div class="process-grid">
+          <article class="step"><span class="step-dot"></span><small>01 / INÍCIO</small><h3>Alinhamento</h3><p>Ouvimos seu objetivo e público.</p></article><article class="step"><span class="step-dot"></span><small>02 / ROTEIRO</small><h3>Estrutura</h3><p>Montamos o texto de vendas.</p></article><article class="step"><span class="step-dot"></span><small>03 / VISUAL</small><h3>Design</h3><p>Desenhamos sua página exclusiva.</p></article><article class="step"><span class="step-dot"></span><small>04 / PROGRAMAÇÃO</small><h3>Construção</h3><p>Programamos com alta velocidade.</p></article><article class="step"><span class="step-dot"></span><small>05 / REVISÃO</small><h3>Ajustes</h3><p>Você confere e refinamos juntos.</p></article><article class="step"><span class="step-dot"></span><small>06 / LANÇAMENTO</small><h3>No Ar</h3><p>Publicada e pronta para vender.</p></article>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="section compare" data-od-id="comparacao">
+      <div class="container">
+        <div class="section-head reveal"><div class="eyebrow">Por que escolher a Neoeffex</div><h2 class="headline-upper" data-od-id="titulo-comparacao">A diferença entre um site comum e uma página que vende.</h2></div>
+        <div class="compare-grid">
+          <article class="compare-panel reveal" data-od-id="painel-landing-generica"><div class="compare-label"><span>Site comum da internet</span><span>PADRÃO</span></div><ul class="compare-list"><li><span>Base</span><strong>Template pronto baixado</strong></li><li><span>Estrutura</span><strong>Layout genérico e confuso</strong></li><li><span>Velocidade</span><strong>Pesado e lento no celular</strong></li><li><span>Adaptação</span><strong>Seu texto espremido em caixas</strong></li><li><span>Resultado</span><strong>O cliente entra e vai embora</strong></li></ul></article>
+          <article class="compare-panel featured reveal" data-od-id="painel-landing-neoeffex"><div class="compare-label"><span>Landing Page Neoeffex</span><span>SOB MEDIDA</span></div><ul class="compare-list"><li><span>Base</span><strong>Design sob medida para seu negócio</strong></li><li><span>Estrutura</span><strong>Roteiro pensado para converter</strong></li><li><span>Velocidade</span><strong>Carregamento ágil no celular</strong></li><li><span>Adaptação</span><strong>Criada em volta do seu produto</strong></li><li><span>Resultado</span><strong>Mais contatos no seu WhatsApp</strong></li></ul></article>
+        </div>
+      </div>
+    </section>
+
     <section class="section quality-band" data-od-id="qualidade">
       <div class="container"><div class="quality-panel reveal"><div><div class="eyebrow">Garantia de qualidade</div><h2 class="headline-upper" data-od-id="titulo-qualidade">Impecável no visual. Imbatível na velocidade.</h2><p class="lead">Cada detalhe é verificado antes do lançamento para que seu cliente tenha a melhor experiência possível.</p></div><div class="checks" aria-label="Itens verificados na entrega"><div class="check"><span class="check-mark">✓</span><span>100% Otimizada para celular</span><code>GARANTIDO</code></div><div class="check"><span class="check-mark">✓</span><span>Navegação leve e fluida</span><code>GARANTIDO</code></div><div class="check"><span class="check-mark">✓</span><span>Botões de WhatsApp testados</span><code>GARANTIDO</code></div><div class="check"><span class="check-mark">✓</span><span>Velocidade máxima no Google</span><code>GARANTIDO</code></div></div></div></div>
     </section>
@@ -283,7 +289,7 @@
     <section class="section" id="catalogo" data-od-id="catalogo-digital">
       <div class="container">
         <div class="section-head reveal"><div class="eyebrow">Catálogo digital</div><h2 class="headline-upper" data-od-id="titulo-catalogo">Seu comércio no celular do cliente.</h2><p class="lead">Catálogo digital com carrinho e envio de pedido direto pelo WhatsApp. Sem app para baixar, sem taxa por venda, sem complicação.</p></div>
-        <div class="services-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="services-grid catalog-services-grid">
           <article class="service-card reveal">
             <div class="service-top"><span class="service-num">01 / PAINEL</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 13h4"/></svg></span></div>
             <h3>Cadastre seus produtos</h3>
@@ -309,9 +315,9 @@
     <section class="section" data-od-id="faq">
       <div class="container faq-grid"><div class="reveal"><div class="eyebrow">Dúvidas comuns</div><h2 class="headline-upper" data-od-id="titulo-faq">Perguntas frequentes.</h2><p class="muted">Tudo o que você precisa saber antes de iniciar.</p></div><div class="accordion reveal">
         <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Eu não entendo de tecnologia. Vou conseguir acompanhar o projeto?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Com certeza! Cuidamos de 100% da parte técnica (design, programação, hospedagem e segurança). Nosso contato é direto, simples e sem jargões complicados.</p></div></div></article>
-        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>A página funciona bem em qualquer celular?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim. Mais de 80% do tráfego hoje vem de smartphones. Por isso, projetamos pensando primeiro na experiência mobile, com abertura rápida e botões confortáveis.</p></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>A página funciona bem em qualquer celular?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim. A maioria dos clientes navega pelo smartphone. Por isso, projetamos pensando primeiro na experiência mobile, com abertura rápida e botões confortáveis.</p></div></div></article>
         <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Os clientes entram em contato direto pelo meu WhatsApp?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim! Ao clicar no botão da página, a conversa é aberta no seu WhatsApp com uma mensagem personalizada para você saber de onde o cliente veio.</p></div></div></article>
-        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Vocês também ajudam a colocar o site no ar?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim. Cuidamos de todo o processo de publicação, configuração do seu endereço próprio (ex: suaempresa.com.br) e testes finais antes da entrega.</p></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Vocês também ajudam a colocar o site no ar?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim. Auxiliamos na escolha ou configuração do seu domínio próprio (ex: suaempresa.com.br) e cuidamos de toda a publicação, hospedagem rápida e segurança com certificado SSL.</p></div></div></article>
       </div></div>
     </section>
 
@@ -320,11 +326,11 @@
     </section>
   </main>
 
-  <footer data-od-id="rodape"><div class="container"><div class="footer-top"><a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"></span><span>neoeffex</span></a><div class="footer-links"><a href="#servicos">Serviços</a><a href="#processo">Processo</a><a href="#projetos">Projetos</a><a href="#catalogo">Catálogo</a><a href="#contato">Contato</a><a href="admin/">Área do Lojista</a></div></div><div class="footer-bottom"><span>Desenvolvimento digital sob medida.</span><span>© <span id="year"></span> NEOEFFEX</span></div></div></footer>
+  <footer data-od-id="rodape"><div class="container"><div class="footer-top"><a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"></span><span>neoeffex</span></a><div class="footer-links"><a href="#servicos">Serviços</a><a href="#projetos">Projetos</a><a href="#processo">Processo</a><a href="#catalogo">Catálogo</a><a href="#contato">Contato</a><a href="privacidade.html">Privacidade</a><a href="admin/">Área do Lojista</a></div></div><div class="footer-bottom"><span>Desenvolvimento digital sob medida.</span><span>© <span id="year"></span> NEOEFFEX</span></div></div></footer>
 
   <div class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true" data-od-id="modal-contato">
     <div class="modal-card"><div class="modal-head"><div><div class="eyebrow">VAMOS CONVERSAR</div><h2 id="modalTitle">Conte-nos sobre o seu projeto.</h2><p>Preencha os pontos essenciais e entraremos em contato rapidamente.</p></div><button class="close-modal" type="button" aria-label="Fechar formulário">×</button></div>
-      <form id="contactForm" novalidate><div class="form-grid"><div class="field"><label for="name">Seu nome</label><input id="name" name="name" autocomplete="name" placeholder="Como podemos chamar você?" required></div><div class="field"><label for="business">Nome da sua empresa ou marca</label><input id="business" name="business" autocomplete="organization" placeholder="Ex: Barbearia Silva, Dra. Ana..." required></div><div class="field full"><label for="email">Seu melhor e-mail</label><input id="email" name="email" type="email" autocomplete="email" placeholder="contato@suaempresa.com.br" required></div><div class="field full"><label for="brief">O que você gostaria de alcançar com a página?</label><textarea id="brief" name="brief" placeholder="Conte sobre seu produto ou serviço, seu público e o que você precisa." required></textarea></div></div><div class="form-actions"><span class="form-note">Seus dados serão enviados com total sigilo.</span><button class="btn btn-primary" type="submit"><span>Enviar e receber contato</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button></div><p class="form-status" id="formStatus" role="status"></p></form>
+      <form id="contactForm" novalidate><div class="form-grid"><div class="field"><label for="name">Seu nome</label><input id="name" name="name" autocomplete="name" placeholder="Como podemos chamar você?" required></div><div class="field"><label for="business">Nome da sua empresa ou marca</label><input id="business" name="business" autocomplete="organization" placeholder="Ex: Barbearia Silva, Dra. Ana..."></div><div class="field full"><label for="email">Seu melhor e-mail</label><input id="email" name="email" type="email" autocomplete="email" placeholder="contato@suaempresa.com.br" required></div><div class="field full"><label for="brief">O que você gostaria de alcançar com a página?</label><textarea id="brief" name="brief" placeholder="Conte sobre seu produto ou serviço, seu público e o que você precisa."></textarea></div></div><div class="form-actions"><span class="form-note">Usamos os dados informados apenas para responder à sua solicitação. Saiba mais em nosso <a href="privacidade.html" target="_blank" rel="noopener" style="text-decoration: underline; color: inherit;">aviso de privacidade</a>.</span><button class="btn btn-primary" type="submit"><span>Enviar e receber contato</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button></div><p class="form-status" id="formStatus" role="status"></p></form>
     </div>
   </div>
 
@@ -332,6 +338,6 @@
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
 
-  <script src="assets/js/script.js?v=0.1.12"></script>
+  <script src="assets/js/script.js?v=0.1.13"></script>
 </body>
 </html>

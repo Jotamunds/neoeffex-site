@@ -61,8 +61,17 @@
         return value + " produto" + (value === 1 ? "" : "s");
     }
 
+    function isSimulationMode() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const configuredSlugs = (window.NEOEFFEX_CATALOG_CONFIG && window.NEOEFFEX_CATALOG_CONFIG.simulationSlugs) || ["demo-neoeffex"];
+        return urlParams.get("demo") === "1"
+            || urlParams.get("simulacao") === "1"
+            || Boolean(catalog && configuredSlugs.includes(catalog.slug))
+            || Boolean(catalog && catalog.fulfillment_mode === "simulation");
+    }
+
     function ordersAvailable() {
-        return Boolean(catalog && catalog.orders_enabled && catalog.whatsapp_number);
+        return Boolean(catalog && (isSimulationMode() || (catalog.orders_enabled && catalog.whatsapp_number)));
     }
 
     function getProductImageUrl(imagePath) {
@@ -221,9 +230,11 @@
             const categoryProducts = visibleProducts.filter(function (product) { return product.category_id === category.id; });
             if (categoryProducts.length) catalogSections.appendChild(createCategorySection(category, categoryProducts));
         });
+        const textoDisponibilidade = products.length === 1 ? "disponível" : "disponíveis";
+        const textoEncontrado = visibleProducts.length === 1 ? "encontrado" : "encontrados";
         resultSummary.textContent = visibleProducts.length === products.length
-            ? pluralizeProducts(products.length) + " disponível" + (products.length === 1 ? "" : "is")
-            : pluralizeProducts(visibleProducts.length) + " encontrado" + (visibleProducts.length === 1 ? "" : "s");
+            ? pluralizeProducts(products.length) + " " + textoDisponibilidade
+            : pluralizeProducts(visibleProducts.length) + " " + textoEncontrado;
         emptyResults.hidden = visibleProducts.length !== 0;
         if (!products.length) {
             emptyResultsTitle.textContent = "Catálogo em preparação";
@@ -385,9 +396,19 @@
         cartFooter.hidden = entries.length === 0;
         if (entries.length) {
             cartTotal.textContent = formatCurrency(total);
-            cartInstruction.textContent = catalog.order_message || "Confirme os detalhes pelo WhatsApp.";
-            whatsappButton.href = "https://wa.me/" + catalog.whatsapp_number
-                + "?text=" + encodeURIComponent(buildOrderMessage(entries, total));
+            const orderMessage = buildOrderMessage(entries, total);
+            if (isSimulationMode()) {
+                cartInstruction.textContent = "Ambiente de demonstração: este pedido fictício não será enviado a um comércio real.";
+                whatsappButton.removeAttribute("target");
+                whatsappButton.href = "#simulacao";
+                whatsappButton.dataset.simulation = "true";
+            } else {
+                delete whatsappButton.dataset.simulation;
+                cartInstruction.textContent = catalog.order_message || "Confirme os detalhes pelo WhatsApp.";
+                whatsappButton.target = "_blank";
+                whatsappButton.href = "https://wa.me/" + catalog.whatsapp_number
+                    + "?text=" + encodeURIComponent(orderMessage);
+            }
         } else {
             whatsappButton.removeAttribute("href");
         }
@@ -443,7 +464,7 @@
             return;
         }
         const catalogResult = await client.from("catalogs")
-            .select("id, name, slug, whatsapp_number, orders_enabled, order_message")
+            .select("id, name, slug, whatsapp_number, orders_enabled, order_message, logo_path, short_description, service_area, business_hours, fulfillment_mode")
             .eq("slug", slug).eq("is_active", true).maybeSingle();
         if (catalogResult.error) {
             console.error("Erro ao carregar catálogo", catalogResult.error);
@@ -455,6 +476,10 @@
             return;
         }
         catalog = catalogResult.data;
+        window.NEOEFFEX_ACTIVE_CATALOG = catalog;
+        window.dispatchEvent(new CustomEvent("neoeffex:catalog-loaded", {
+            detail: { client: client, catalog: catalog }
+        }));
         const [categoriesResult, productsResult] = await Promise.all([
             client.from("categories").select("id, catalog_id, name, sort_order, created_at")
                 .eq("catalog_id", catalog.id).order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
@@ -539,6 +564,18 @@
             return;
         }
 
+        if (whatsappButton.dataset.simulation === "true") {
+            event.preventDefault();
+            const entries = getCartEntries();
+            const total = entries.reduce(function (sum, entry) { return sum + Number(entry.product.price) * entry.quantity; }, 0);
+            const message = buildOrderMessage(entries, total);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(message).catch(function () {});
+            }
+            showToast("Demonstração: mensagem copiada para transferência. Nenhum pedido foi enviado.");
+            return;
+        }
+
         lastCart = Object.assign({}, cart);
         saveLastCart();
         window.setTimeout(function () {
@@ -564,5 +601,7 @@
             storageKey: "neoeffex-public-catalog"
         }
     });
+    window.NEOEFFEX_SUPABASE_CLIENT = client;
+    window.dispatchEvent(new CustomEvent("neoeffex:client-ready", { detail: client }));
     loadCatalog();
 }());

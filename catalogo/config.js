@@ -7,26 +7,20 @@ window.NEOEFFEX_SUPABASE_CONFIG = Object.freeze({
     publishableKey: "sb_publishable_XzM6rVYH5ZZvd555tVp0XA_q5mTn8-2"
 });
 
+window.NEOEFFEX_CATALOG_CONFIG = Object.freeze({
+    simulationSlugs: Object.freeze(["demo-neoeffex"])
+});
+
 (function loadCatalogIdentityModule() {
     "use strict";
 
-    if (window.supabase && !window.NEOEFFEX_CAPTURE_CLIENT_ENABLED) {
-        const originalCreateClient = window.supabase.createClient.bind(window.supabase);
-        window.supabase.createClient = function () {
-            const coreClient = originalCreateClient.apply(null, arguments);
-            if (!window.NEOEFFEX_SUPABASE_CLIENT) window.NEOEFFEX_SUPABASE_CLIENT = coreClient;
-            return coreClient;
-        };
-        window.NEOEFFEX_CAPTURE_CLIENT_ENABLED = true;
-    }
-
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = "assets/css/catalog-identity.css";
+    stylesheet.href = "assets/css/catalog-identity.css?v=0.1.13";
     document.head.appendChild(stylesheet);
 
     const script = document.createElement("script");
-    script.src = "assets/js/catalog-identity.js";
+    script.src = "assets/js/catalog-identity.js?v=0.1.13";
     script.async = false;
     document.head.appendChild(script);
 }());

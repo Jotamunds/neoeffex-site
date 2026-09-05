@@ -142,53 +142,22 @@
         }
     }
 
-    async function init() {
+    function handleCatalogData(client, catalogData) {
+        if (!client || !catalogData) return;
         const slug = getCatalogSlug();
-
-        if (!slug) return;
-
-        const client = window.NEOEFFEX_SUPABASE_CLIENT || null;
-
-        if (!client) {
-            initAttempts += 1;
-
-            if (initAttempts <= 100) {
-                window.setTimeout(init, 40);
-            }
-
-            return;
-        }
-
-        initAttempts = 0;
-
-        const result = await client
-            .from("catalogs")
-            .select("id, name, logo_path, short_description, service_area, business_hours, fulfillment_mode")
-            .eq("slug", slug)
-            .eq("is_active", true)
-            .maybeSingle();
-
-        if (result.error) {
-            console.error("Erro ao carregar identidade pública do catálogo", result.error);
-            return;
-        }
-
-        if (!result.data) return;
-
         const hasIdentity = Boolean(
             getLogoOverride(slug)
-            || result.data.logo_path
-            || result.data.short_description
-            || result.data.service_area
-            || result.data.business_hours
-            || result.data.fulfillment_mode
+            || catalogData.logo_path
+            || catalogData.short_description
+            || catalogData.service_area
+            || catalogData.business_hours
+            || catalogData.fulfillment_mode
         );
-
         if (!hasIdentity) return;
 
         const renderWhenHeroIsReady = function () {
             if (document.getElementById("catalogName")) {
-                renderIdentity(client, result.data);
+                renderIdentity(client, catalogData);
             }
         };
 
@@ -197,6 +166,22 @@
         } else {
             renderWhenHeroIsReady();
         }
+    }
+
+    function init() {
+        const slug = getCatalogSlug();
+        if (!slug) return;
+
+        if (window.NEOEFFEX_ACTIVE_CATALOG && window.NEOEFFEX_SUPABASE_CLIENT) {
+            handleCatalogData(window.NEOEFFEX_SUPABASE_CLIENT, window.NEOEFFEX_ACTIVE_CATALOG);
+            return;
+        }
+
+        window.addEventListener("neoeffex:catalog-loaded", function (event) {
+            if (event.detail && event.detail.client && event.detail.catalog) {
+                handleCatalogData(event.detail.client, event.detail.catalog);
+            }
+        }, { once: true });
     }
 
     init();

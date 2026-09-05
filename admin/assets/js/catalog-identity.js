@@ -11,20 +11,27 @@
     let logoObjectUrl = "";
     let identityToastTimeout = null;
 
+    function setupIdentity(form) {
+        injectIdentityFields(form);
+        updateStageLabels();
+        attachEvents(form);
+    }
+
     function init() {
         const form = document.getElementById("catalogForm");
         if (!form) return;
         client = window.NEOEFFEX_SUPABASE_CLIENT || null;
         if (!client) {
-            initAttempts += 1;
-            if (initAttempts <= 100) window.setTimeout(init, 40);
+            window.addEventListener("neoeffex:client-ready", function (event) {
+                client = (event && event.detail) || window.NEOEFFEX_SUPABASE_CLIENT || null;
+                if (client) {
+                    setupIdentity(form);
+                }
+            }, { once: true });
             return;
         }
-        initAttempts = 0;
 
-        injectIdentityFields(form);
-        updateStageLabels();
-        attachEvents(form);
+        setupIdentity(form);
     }
 
     function injectIdentityFields(form) {
@@ -503,7 +510,7 @@
 }());
 
 
-(function enforceSingleCatalogPolicy() {
+(function notifyDuplicateCatalogSlug() {
     "use strict";
 
     const duplicateMessages = [
@@ -516,26 +523,7 @@
     let toastTimer = null;
     let lastDuplicateNotice = "";
 
-    function getElements() {
-        return {
-            catalogSelect: document.getElementById("catalogSelect"),
-            newCatalogButton: document.getElementById("newCatalogButton"),
-            catalogForm: document.getElementById("catalogForm"),
-            catalogId: document.getElementById("catalogId"),
-            catalogFeedback: document.getElementById("catalogFeedback"),
-            toast: document.getElementById("toast")
-        };
-    }
-
-    function countCatalogs(catalogSelect) {
-        if (!catalogSelect) return 0;
-
-        return Array.from(catalogSelect.options).filter(function (option) {
-            return Boolean(String(option.value || "").trim());
-        }).length;
-    }
-
-    function showPolicyToast(message) {
+    function showDuplicateToast(message) {
         const toast = document.getElementById("toast");
         if (!toast || !message) return;
 
@@ -554,65 +542,6 @@
                 toast.hidden = true;
             }, 180);
         }, 4200);
-    }
-
-    function setCatalogFeedback(message) {
-        const feedback = document.getElementById("catalogFeedback");
-        if (!feedback) return;
-
-        feedback.textContent = message;
-        feedback.dataset.type = "error";
-    }
-
-    function updateSingleCatalogInterface() {
-        const elements = getElements();
-        const catalogCount = countCatalogs(elements.catalogSelect);
-        const hasCatalog = catalogCount > 0;
-
-        if (elements.newCatalogButton) {
-            elements.newCatalogButton.hidden = hasCatalog;
-            elements.newCatalogButton.disabled = hasCatalog;
-            elements.newCatalogButton.title = hasCatalog
-                ? "Esta conta já possui um catálogo."
-                : "Criar catálogo";
-        }
-
-        if (elements.catalogSelect) {
-            const selectField = elements.catalogSelect.closest(".catalog-select-field");
-
-            if (selectField) {
-                // Um único catálogo não precisa de seletor. Contas antigas com mais
-                // de um catálogo continuam podendo alternar entre eles até revisão.
-                selectField.hidden = catalogCount === 1;
-            }
-        }
-
-        const pageDescription = document.querySelector(".page-heading p");
-        if (pageDescription) {
-            pageDescription.textContent = "Organize produtos, categorias e configurações do seu catálogo em um único lugar.";
-        }
-    }
-
-    function hasExistingCatalog() {
-        const catalogSelect = document.getElementById("catalogSelect");
-        return countCatalogs(catalogSelect) > 0;
-    }
-
-    function blockSecondCatalog(event) {
-        const catalogId = document.getElementById("catalogId");
-        const editingExistingCatalog = Boolean(catalogId && catalogId.value);
-
-        if (editingExistingCatalog || !hasExistingCatalog()) return false;
-
-        if (event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-        }
-
-        const message = "Esta conta já possui um catálogo. Edite o catálogo existente.";
-        setCatalogFeedback(message);
-        showPolicyToast(message);
-        return true;
     }
 
     function isDuplicateCatalogMessage(message) {
@@ -643,7 +572,7 @@
             }
 
             lastDuplicateNotice = message;
-            showPolicyToast(message);
+            showDuplicateToast(message);
         };
 
         const observer = new MutationObserver(notifyIfNeeded);
@@ -657,32 +586,10 @@
     }
 
     function initialize() {
-        const elements = getElements();
-
-        if (
-            !elements.catalogSelect
-            || !elements.newCatalogButton
-            || !elements.catalogForm
-        ) {
-            return;
+        const catalogFeedback = document.getElementById("catalogFeedback");
+        if (catalogFeedback) {
+            observeDuplicateFeedback(catalogFeedback);
         }
-
-        elements.newCatalogButton.addEventListener("click", function (event) {
-            blockSecondCatalog(event);
-        }, true);
-
-        elements.catalogForm.addEventListener("submit", function (event) {
-            blockSecondCatalog(event);
-        }, true);
-
-        const catalogObserver = new MutationObserver(updateSingleCatalogInterface);
-        catalogObserver.observe(elements.catalogSelect, {
-            childList: true,
-            subtree: true
-        });
-
-        observeDuplicateFeedback(elements.catalogFeedback);
-        updateSingleCatalogInterface();
     }
 
     if (document.readyState === "loading") {

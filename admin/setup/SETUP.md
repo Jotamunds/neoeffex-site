@@ -5,23 +5,24 @@ Este documento descreve a ordem técnica atual para preparar o Supabase usado po
 ## Versão de referência
 
 ```text
-Catálogo: 0.1.12
-Migration mais recente: 010_delete_paused_catalog.sql
+Catálogo: 0.1.13
+Migrations mais recentes:
+  - 011_remove_single_catalog_per_owner.sql
+  - 012_enforce_paused_catalog_delete_policy.sql
 ```
 
-A `v0.1.12` exige a migration 010 para liberar a exclusão confirmada de catálogo pausado.
+A `v0.1.13` consolida o suporte a múltiplos catálogos por conta e alinha a política RLS de exclusão direta de catálogos para exigir estado pausado.
 
 ---
 
 ## 1. Instalação já existente
 
-Se o projeto já chegou corretamente à `v0.1.11`:
+Se o projeto já chegou à `v0.1.12`:
 
-1. confirme que `008_catalog_identity.sql` já foi aplicada;
-2. confirme que `009_single_catalog_per_owner.sql` já foi aplicada;
-3. aplique `010_delete_paused_catalog.sql` no SQL Editor;
-4. execute `audits/production_security_audit.sql`;
-5. confirme que `admin/VERSION` e `catalogo/VERSION` estão em `0.1.12`.
+1. aplique `011_remove_single_catalog_per_owner.sql` (remove índice único de owner_id);
+2. aplique `012_enforce_paused_catalog_delete_policy.sql` (alinha RLS de exclusão ao estado pausado);
+3. execute `audits/production_security_audit.sql`;
+4. confirme que `admin/VERSION` e `catalogo/VERSION` estão em `0.1.13`.
 
 ### Atenção à ordem 007 → 008
 
@@ -58,9 +59,12 @@ No SQL Editor, aplique as migrations nesta ordem:
 006_product_images.sql
 007_security_hardening.sql
 008_catalog_identity.sql
-009_single_catalog_per_owner.sql
 010_delete_paused_catalog.sql
+011_remove_single_catalog_per_owner.sql
+012_enforce_paused_catalog_delete_policy.sql
 ```
+
+*(Nota: em instalações novas, a migration 009 foi superada pela 011 e não deve ser aplicada).*
 
 Depois:
 

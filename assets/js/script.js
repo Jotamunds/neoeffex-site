@@ -163,4 +163,18 @@
       formStatus.classList.remove('show');
     });
 
+    document.querySelectorAll('.btn-interact').forEach(button => {
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const card = button.closest('.project-card');
+        card.classList.add('is-active');
+      });
+    });
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('mouseleave', () => {
+        card.classList.remove('is-active');
+      });
+    });
+
     document.querySelector('#year').textContent = new Date().getFullYear();

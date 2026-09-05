@@ -5,10 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Landing pages personalizadas, do conceito ao deploy. Estrategia, design, desenvolvimento, integracoes e publicacao pela Neoeffex.">
   <title>Neoeffex — Landing pages sob medida</title>
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://neoeffex.com.br/">
+  <meta property="og:title" content="Neoeffex — Landing pages sob medida">
+  <meta property="og:description" content="Estratégia, design e código. Do conceito ao deploy. Landing pages personalizadas pela Neoeffex.">
+  <meta property="og:image" content="https://neoeffex.com.br/assets/img/og-neoeffex.jpg">
+  <meta property="og:locale" content="pt_BR">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=Manrope:wght@400;500;600&amp;family=Open+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=0.1.11">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -20,7 +30,7 @@
     <div class="container navbar">
       <a class="brand" href="#inicio" aria-label="Neoeffex, início" data-od-id="logo-neoeffex"><span class="brand-mark" aria-hidden="true"></span><span>neoeffex</span></a>
       <nav class="nav-links" id="navLinks" aria-label="Navegação principal">
-        <a class="nav-link" href="#servicos">Serviços</a><a class="nav-link" href="#processo">Processo</a><a class="nav-link" href="#projetos">Projetos</a><a class="nav-link" href="#sobre">Sobre</a><a class="nav-link" href="#contato">Contato</a>
+        <a class="nav-link" href="#servicos">Serviços</a><a class="nav-link" href="#processo">Processo</a><a class="nav-link" href="#projetos">Projetos</a><a class="nav-link" href="#catalogo">Catálogo</a><a class="nav-link" href="#sobre">Sobre</a><a class="nav-link" href="#contato">Contato</a>
         <button class="btn nav-cta open-contact" type="button" data-od-id="cta-navbar"><span>Solicitar projeto</span></button>
       </nav>
       <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks" data-od-id="controle-menu"><span></span></button>
@@ -108,17 +118,60 @@
 
     <section class="section" id="projetos" data-od-id="projetos">
       <div class="container">
-        <div class="section-head reveal"><div class="eyebrow">Projetos</div><h2 class="headline-upper" data-od-id="titulo-projetos">Sistemas visuais para contextos reais.</h2><p class="lead">Estruturas prontas para receber cases verificados.</p></div>
+        <div class="section-head reveal"><div class="eyebrow">Projetos</div><h2 class="headline-upper" data-od-id="titulo-projetos">Modelos prontos e cases em operação.</h2><p class="lead">Demonstrações interativas que podem ser adaptadas para o seu negócio.</p></div>
         <div class="projects-grid">
-          <article class="project-card reveal" data-od-id="projeto-placeholder-fintech"><div class="project-meta"><span>Projeto conceito 01</span><span>Fintech / SaaS</span></div><div class="project-art"><span class="art-sidebar"></span><span class="art-grid"><i></i><i></i><i></i></span></div><div class="project-copy"><h3>Interface orientada à confiança</h3><p>Espaço reservado para um case verificado.</p></div></article>
-          <article class="project-card reveal" data-od-id="projeto-placeholder-servicos"><div class="project-meta"><span>Projeto conceito 02</span><span>Serviços / B2B</span></div><div class="project-art"><span class="art-sidebar"></span><span class="art-grid"><i></i><i></i><i></i></span></div><div class="project-copy"><h3>Clareza para uma oferta complexa</h3><p>Estrutura pronta para um projeto real.</p></div></article>
-          <article class="project-card reveal" data-od-id="projeto-placeholder-produto"><div class="project-meta"><span>Projeto conceito 03</span><span>Produto digital</span></div><div class="project-art"><span class="art-sidebar"></span><span class="art-grid"><i></i><i></i><i></i></span></div><div class="project-copy"><h3>Produto apresentado como experiência</h3><p>Interface, interação e performance.</p><span class="placeholder-note">CASE_SLOT / READY</span></div></article>
+          <a class="project-card reveal" href="modelos/hamburgueria/" target="_blank" rel="noopener" data-od-id="projeto-hamburgueria">
+            <div class="project-art"><img src="modelos/hamburgueria/assets/img/thumbnail.webp" alt="Landing page 3D de hamburgueria com hambúrguer interativo" width="600" height="400" loading="lazy"></div>
+            <div class="project-info"><div class="project-meta"><span>Hamburgueria 3D</span><span>Gastronomia</span></div><h3>Experiência 3D interativa</h3><p>Hero com hambúrguer em Three.js, animações GSAP e integração com catálogo.</p><span class="project-live">Ver demonstração <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M14 7l5 5-5 5"/></svg></span></div>
+          </a>
+          <a class="project-card reveal" href="modelos/barbearia1/" target="_blank" rel="noopener" data-od-id="projeto-barbearia">
+            <div class="project-art"><img src="modelos/barbearia1/assets/images/barbearia-hero.jpg" alt="Interior de barbearia moderna com cadeiras e iluminação ambiente" width="600" height="400" loading="lazy"></div>
+            <div class="project-info"><div class="project-meta"><span>Barbearia</span><span>Serviços</span></div><h3>Landing com agendamento e galeria</h3><p>Sistema de cores dinâmico, galeria com lightbox e botão de WhatsApp.</p><span class="project-live">Ver demonstração <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M14 7l5 5-5 5"/></svg></span></div>
+          </a>
+          <a class="project-card reveal" href="modelos/clinica-odontologica/" target="_blank" rel="noopener" data-od-id="projeto-clinica">
+            <div class="project-art"><img src="modelos/clinica-odontologica/assets/img/hero-clinica.webp" alt="Consultório odontológico moderno e iluminado" width="600" height="400" loading="lazy"></div>
+            <div class="project-info"><div class="project-meta"><span>Clínica Odontológica</span><span>Saúde</span></div><h3>Design premium para saúde</h3><p>Paleta clean com branco e azul, hero com imagem de fundo e seletor de paletas.</p><span class="project-live">Ver demonstração <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M14 7l5 5-5 5"/></svg></span></div>
+          </a>
+          <a class="project-card reveal" href="modelos/hortifruti/" target="_blank" rel="noopener" data-od-id="projeto-hortifruti">
+            <div class="project-art"><img src="modelos/hortifruti/assets/img/hero.webp" alt="Bancada de hortifruti com vegetais frescos e coloridos" width="600" height="400" loading="lazy"></div>
+            <div class="project-info"><div class="project-meta"><span>Hortifruti</span><span>Comércio local</span></div><h3>Catálogo visual para comércio</h3><p>Identidade verde, integração com catálogo digital e pedidos via WhatsApp.</p><span class="project-live">Ver demonstração <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M14 7l5 5-5 5"/></svg></span></div>
+          </a>
+          <a class="project-card reveal" href="sites/lu-leve-e-saudavel/" target="_blank" rel="noopener" data-od-id="projeto-lu-leve">
+            <div class="project-art"><img src="sites/lu-leve-e-saudavel/assets/images/hero/marmita-640.webp" alt="Marmita fitness saudável com arroz, frango e legumes" width="600" height="400" loading="lazy"></div>
+            <div class="project-info"><div class="project-meta"><span>Lu Leve e Saudável</span><span>Case real</span></div><h3>Cardápio digital + delivery</h3><p>Site em operação com catálogo integrado, carrinho e envio de pedidos.</p><span class="project-live">Ver case <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M14 7l5 5-5 5"/></svg></span></div>
+          </a>
         </div>
       </div>
     </section>
 
     <section class="section quality-band" data-od-id="qualidade">
       <div class="container"><div class="quality-panel reveal"><div><div class="eyebrow">Padrão de entrega</div><h2 class="headline-upper" data-od-id="titulo-qualidade">Bonita no primeiro olhar. Sólida em cada detalhe.</h2><p class="lead">Conteúdo, interface e comportamento em um único produto.</p></div><div class="checks" aria-label="Itens verificados na entrega"><div class="check"><span class="check-mark">✓</span><span>Responsividade real</span><code>VERIFIED</code></div><div class="check"><span class="check-mark">✓</span><span>Estados de interação</span><code>VERIFIED</code></div><div class="check"><span class="check-mark">✓</span><span>Formulários e integrações</span><code>VERIFIED</code></div><div class="check"><span class="check-mark">✓</span><span>Performance e publicação</span><code>VERIFIED</code></div></div></div></div>
+    </section>
+
+    <section class="section" id="catalogo" data-od-id="catalogo-digital">
+      <div class="container">
+        <div class="section-head reveal"><div class="eyebrow">Catálogo digital</div><h2 class="headline-upper" data-od-id="titulo-catalogo">Seu comércio no celular do cliente.</h2><p class="lead">Catálogo digital com carrinho e envio de pedido direto pelo WhatsApp. Sem app, sem taxa, sem complicação.</p></div>
+        <div class="services-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <article class="service-card reveal">
+            <div class="service-top"><span class="service-num">01 / ADMIN</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 13h4"/></svg></span></div>
+            <h3>Cadastre seus produtos</h3>
+            <p>Painel simples para organizar categorias, preços, descrições e fotos.</p>
+          </article>
+          <article class="service-card reveal">
+            <div class="service-top"><span class="service-num">02 / SHARE</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1"/></svg></span></div>
+            <h3>Compartilhe o catálogo</h3>
+            <p>Seu cliente acessa pelo celular, sem baixar aplicativo. Rápido e direto.</p>
+          </article>
+          <article class="service-card reveal">
+            <div class="service-top"><span class="service-num">03 / ORDER</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></span></div>
+            <h3>Receba pedidos no WhatsApp</h3>
+            <p>Carrinho automático montado e enviado direto na sua conversa.</p>
+          </article>
+        </div>
+        <div style="text-align: center; margin-top: 48px;" class="reveal">
+          <a class="btn btn-primary" href="catalogo/?catalogo=lu-leve-e-saudavel" target="_blank" rel="noopener"><span>Ver catálogo em ação</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></a>
+        </div>
+      </div>
     </section>
 
     <section class="section" data-od-id="faq">
@@ -135,14 +188,18 @@
     </section>
   </main>
 
-  <footer data-od-id="rodape"><div class="container"><div class="footer-top"><a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"></span><span>neoeffex</span></a><div class="footer-links"><a href="#servicos">Serviços</a><a href="#processo">Processo</a><a href="#projetos">Projetos</a><a href="#contato">Contato</a><a href="admin/">Acesso administrativo</a></div></div><div class="footer-bottom"><span>Desenvolvimento digital sob medida.</span><span>© <span id="year"></span> NEOEFFEX</span></div></div></footer>
+  <footer data-od-id="rodape"><div class="container"><div class="footer-top"><a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"></span><span>neoeffex</span></a><div class="footer-links"><a href="#servicos">Serviços</a><a href="#processo">Processo</a><a href="#projetos">Projetos</a><a href="#catalogo">Catálogo</a><a href="#contato">Contato</a><a href="admin/">Área do Lojista</a></div></div><div class="footer-bottom"><span>Desenvolvimento digital sob medida.</span><span>© <span id="year"></span> NEOEFFEX</span></div></div></footer>
 
   <div class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true" data-od-id="modal-contato">
-    <div class="modal-card"><div class="modal-head"><div><div class="eyebrow">PROJECT_REQUEST</div><h2 id="modalTitle">Vamos entender seu projeto.</h2><p>Preencha os pontos essenciais. Nenhum dado será enviado nesta demonstração.</p></div><button class="close-modal" type="button" aria-label="Fechar formulário">×</button></div>
-      <form id="contactForm" novalidate><div class="form-grid"><div class="field"><label for="name">Seu nome</label><input id="name" name="name" autocomplete="name" placeholder="Como podemos chamar você?" required></div><div class="field"><label for="business">Empresa ou marca</label><input id="business" name="business" autocomplete="organization" placeholder="Nome do negócio"></div><div class="field full"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" placeholder="voce@empresa.com" required></div><div class="field full"><label for="brief">O que a página precisa realizar?</label><textarea id="brief" name="brief" placeholder="Conte sobre a oferta, o público e o objetivo principal." required></textarea></div></div><div class="form-actions"><span class="form-note">FORM_MODE / DEMONSTRAÇÃO LOCAL</span><button class="btn btn-primary" type="submit"><span>Validar solicitação</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button></div><p class="form-status" id="formStatus" role="status"></p></form>
+    <div class="modal-card"><div class="modal-head"><div><div class="eyebrow">PROJECT_REQUEST</div><h2 id="modalTitle">Vamos entender seu projeto.</h2><p>Preencha os pontos essenciais e entraremos em contato.</p></div><button class="close-modal" type="button" aria-label="Fechar formulário">×</button></div>
+      <form id="contactForm" novalidate><div class="form-grid"><div class="field"><label for="name">Seu nome</label><input id="name" name="name" autocomplete="name" placeholder="Como podemos chamar você?" required></div><div class="field"><label for="business">Empresa ou marca</label><input id="business" name="business" autocomplete="organization" placeholder="Nome do negócio"></div><div class="field full"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" placeholder="voce@empresa.com" required></div><div class="field full"><label for="brief">O que a página precisa realizar?</label><textarea id="brief" name="brief" placeholder="Conte sobre a oferta, o público e o objetivo principal." required></textarea></div></div><div class="form-actions"><span class="form-note">Seus dados serão enviados com segurança.</span><button class="btn btn-primary" type="submit"><span>Enviar solicitação</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button></div><p class="form-status" id="formStatus" role="status"></p></form>
     </div>
   </div>
 
-  <script src="assets/js/script.js"></script>
+  <a class="fab-whatsapp" href="https://wa.me/5511997763958?text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20Neoeffex%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os." target="_blank" rel="noopener noreferrer" aria-label="Conversar pelo WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script src="assets/js/script.js?v=0.1.11"></script>
 </body>
 </html>

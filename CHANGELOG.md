@@ -2,6 +2,25 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.11] - 2026-09-04
+
+### Adicionado
+- Botão flutuante (FAB) de WhatsApp integrado diretamente para contato (+55 11 99776-3958).
+- Nova seção "Catálogo Digital" na home (`#catalogo`) apresentando o sistema SaaS como produto com 3 etapas e link de demonstração em tempo real.
+- Vitrine de projetos reais substituindo placeholders abstratos: Hamburgueria 3D, Barbearia, Clínica Odontológica, Hortifruti e case real Lu Leve e Saudável.
+- Envio real de formulário via FormSubmit.co para e-mail comercial com feedback visual e tratamento de erro.
+- Meta tags Open Graph (`og:title`, `og:description`, `og:image`, `og:url`), Twitter Card e imagem de pré-visualização social (`og-neoeffex.jpg`).
+- Favicons em múltiplos tamanhos (`favicon-32x32.png`, `favicon-16x16.png`, `apple-touch-icon.png` e `favicon.ico`).
+
+### Alterado
+- Removidos avisos de "demonstração local" do modal de contato.
+- Grid de projetos reformulado para 5 cards com suporte a imagens reais, layout adaptativo e hover com link direto.
+- Mitigado risco de overflow horizontal no Safari/iOS adicionando `overflow: hidden` na seção `.hero`.
+- Adicionado `max-height` e scroll seguro ao menu mobile na navbar para acomodar novos itens.
+- Rodapé atualizado com link "Catálogo" e link renomeado para "Área do Lojista".
+- Case Lu Leve e Saudável liberado para indexação e sem tarja de pré-publicação.
+- Cache busting de assets atualizado para `?v=0.1.11`.
+
 ## [0.1.10] - 2026-08-19
 
 ### Adicionado

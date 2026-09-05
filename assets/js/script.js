@@ -121,21 +121,46 @@
       requestAnimationFrame(() => formStatus.classList.add('show'));
     }
 
-    form.addEventListener('submit', event => {
+    form.addEventListener('submit', async event => {
       event.preventDefault();
       if (!form.checkValidity()) {
         showFormStatus('Revise os campos obrigatórios para continuar.', 'error');
         form.reportValidity();
         return;
       }
-      showFormStatus('Solicitação validada. Integre este formulário ao canal comercial para ativar o envio.', 'success');
-      submitButton.classList.add('is-confirmed');
-      submitLabel.textContent = 'Solicitação validada';
+
+      submitButton.disabled = true;
+      submitLabel.textContent = 'Enviando...';
+
+      try {
+        const formData = new FormData(form);
+        const response = await fetch('https://formsubmit.co/ajax/joaogabrielvs2022@gmail.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(formData))
+        });
+
+        if (response.ok) {
+          showFormStatus('Solicitação enviada com sucesso! Entraremos em contato em breve.', 'success');
+          submitButton.classList.add('is-confirmed');
+          submitLabel.textContent = 'Solicitação enviada';
+          form.reset();
+        } else {
+          throw new Error('Erro no envio');
+        }
+      } catch (error) {
+        showFormStatus('Erro ao enviar. Tente novamente ou entre em contato pelo WhatsApp.', 'error');
+        submitLabel.textContent = 'Enviar solicitação';
+        submitButton.disabled = false;
+      }
     });
+
     form.addEventListener('input', () => {
       if (!submitButton.classList.contains('is-confirmed')) return;
       submitButton.classList.remove('is-confirmed');
-      submitLabel.textContent = 'Validar solicitação';
+      submitLabel.textContent = 'Enviar solicitação';
+      submitButton.disabled = false;
       formStatus.classList.remove('show');
     });
+
     document.querySelector('#year').textContent = new Date().getFullYear();

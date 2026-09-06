@@ -1,15 +1,17 @@
 /**
- * Neoeffex 3D Scene — Brand Mark Vitrine
+ * Neoeffex 3D Scene — Brand Mark Particles
  *
- * A self-contained ES module that renders a geometric brand mark
- * (diamond + torus ring) with dark metallic material and blue
- * accent lighting. Supports scroll-driven animation, mouse
- * interaction, mobile optimisations, and reduced-motion.
+ * A self-contained ES module that renders a particle system
+ * forming the Neoeffex "N" logo using Three.js and custom shaders.
+ * Supports scroll-driven animation, mouse interaction, mobile
+ * optimisations, and reduced-motion.
  *
  * @module scene
  */
 
 import * as THREE from 'three';
+import { loadSVGPixels } from './particle-source.js';
+import { createParticleLogo } from './particle-logo.js';
 
 // ---------------------------------------------------------------------------
 // Module-level state
@@ -18,7 +20,9 @@ import * as THREE from 'three';
 let renderer = null;
 let scene = null;
 let camera = null;
-let brandGroup = null;      // Group holding diamond + ring
+let particlePoints = null;
+let particleMaterial = null;
+let brandGroup = null;      // Group holding the particles
 let animationId = null;
 let isVisible = true;
 let observer = null;
@@ -45,30 +49,18 @@ let resizeTimer = null;
 // Container reference for resize / cleanup
 let _container = null;
 
-// Material reference for opacity fade
-let brandMaterial = null;
-
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-/**
- * Clamp a number between min and max.
- */
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-/**
- * Linear interpolation.
- */
 function lerp(a, b, t) {
   return a + (b - a) * t;
 }
 
-/**
- * Re-map a value from one range to another, clamped to the output range.
- */
 function mapRange(value, inMin, inMax, outMin, outMax) {
   const t = clamp((value - inMin) / (inMax - inMin), 0, 1);
   return lerp(outMin, outMax, t);
@@ -90,6 +82,10 @@ function onResize() {
     camera.updateProjectionMatrix();
 
     renderer.setSize(width, height);
+    
+    if (particleMaterial) {
+      particleMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, _isMobile ? 1.0 : 1.5);
+    }
   }, 150);
 }
 
@@ -118,75 +114,46 @@ function setupVisibilityObserver(container) {
 }
 
 // ---------------------------------------------------------------------------
-// Build the 3D brand mark
+// Async Setup (Load SVG and generate particles)
 // ---------------------------------------------------------------------------
 
-function createBrandMark() {
-  const group = new THREE.Group();
+async function setupParticles() {
+  try {
+    // Particle count logic based on instructions
+    let particleCount = 4000;
+    if (_isMobile) {
+      particleCount = 1800; // Mobile: 1500–2000
+    }
+    
+    // Load SVG and extract pixels
+    const targetPositions = await loadSVGPixels('/img/logos/neoeffex-n-logo-white.svg', particleCount);
+    
+    // Create points and material
+    const result = createParticleLogo(targetPositions, { isMobile: _isMobile, reducedMotion: _reducedMotion });
+    particlePoints = result.points;
+    particleMaterial = result.material;
+    
+    brandGroup = new THREE.Group();
+    brandGroup.add(particlePoints);
+    
+    // Position group to fit composition (similar to Etapa 3)
+    // The "N" will be slightly on the right
+    brandGroup.position.set(0.5, 0, 0);
+    scene.add(brandGroup);
+    
+    // Animate uProgress using GSAP if available
+    if (!_reducedMotion && window.gsap) {
+      window.gsap.to(particleMaterial.uniforms.uProgress, {
+        value: 1.0,
+        duration: 2.2,
+        ease: 'power2.out'
+      });
+    }
 
-  // -- Shared material -------------------------------------------------------
-
-  brandMaterial = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color(0x0a0e1a),
-    metalness: 0.85,
-    roughness: 0.15,
-    clearcoat: 0.6,
-    clearcoatRoughness: 0.2,
-    transparent: true,
-    opacity: 1,
-  });
-
-  // -- Diamond (scaled octahedron) -------------------------------------------
-
-  const diamondGeo = new THREE.OctahedronGeometry(1.0, 0);
-  const diamond = new THREE.Mesh(diamondGeo, brandMaterial);
-  diamond.scale.set(1.0, 1.4, 1.0); // tall diamond silhouette
-  group.add(diamond);
-
-  // -- Torus ring ------------------------------------------------------------
-
-  const torusTube = 0.025;
-  const torusRadius = 1.3;
-  const torusRadialSegments = _isMobile ? 12 : 16;
-  const torusTubularSegments = _isMobile ? 32 : 64;
-
-  const torusGeo = new THREE.TorusGeometry(
-    torusRadius,
-    torusTube,
-    torusRadialSegments,
-    torusTubularSegments
-  );
-
-  const ring = new THREE.Mesh(torusGeo, brandMaterial);
-  ring.rotation.x = Math.PI / 2; // tilt so ring sits horizontally around diamond
-  group.add(ring);
-
-  return group;
-}
-
-// ---------------------------------------------------------------------------
-// Lighting
-// ---------------------------------------------------------------------------
-
-function setupLighting() {
-  // Ambient — very subtle fill
-  const ambient = new THREE.AmbientLight(0x1a1a2e, 0.4);
-  scene.add(ambient);
-
-  // Key directional light
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-  dirLight.position.set(3, 5, 4);
-  scene.add(dirLight);
-
-  // Neoeffex blue accent
-  const bluePoint = new THREE.PointLight(0x2d7dff, 1.2, 20);
-  bluePoint.position.set(-3, 2, 3);
-  scene.add(bluePoint);
-
-  // Lighter blue fill
-  const lightBluePoint = new THREE.PointLight(0x7fb2ff, 0.6, 20);
-  lightBluePoint.position.set(4, -1, -2);
-  scene.add(lightBluePoint);
+  } catch (err) {
+    console.error('[Neoeffex 3D] Error generating particles:', err);
+    // If it fails, fallback to CSS will trigger manually or the canvas remains empty.
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -203,26 +170,26 @@ function animate() {
 
   const elapsed = performance.now() - startTime;
 
-  // -- Base rotation ---------------------------------------------------------
-
-  brandGroup.rotation.y += 0.003;
-  brandGroup.rotation.x += 0.001;
-
-  // -- Floating (sine wave on Y) --------------------------------------------
-
-  brandGroup.position.y = Math.sin(elapsed * 0.001) * 0.08;
-
-  // -- Mouse interaction (lerp towards target) ------------------------------
-
-  if (!_isMobile) {
-    mouseCurrentX = lerp(mouseCurrentX, mouseTargetX, 0.04);
-    mouseCurrentY = lerp(mouseCurrentY, mouseTargetY, 0.04);
-
-    brandGroup.rotation.y += mouseCurrentX * 0.3;
-    brandGroup.rotation.x += mouseCurrentY * 0.15;
+  if (particleMaterial) {
+    particleMaterial.uniforms.uTime.value = elapsed * 0.001;
+    
+    if (!_isMobile) {
+      mouseCurrentX = lerp(mouseCurrentX, mouseTargetX, 0.04);
+      mouseCurrentY = lerp(mouseCurrentY, mouseTargetY, 0.04);
+      
+      particleMaterial.uniforms.uMouse.value.set(mouseCurrentX, mouseCurrentY);
+      
+      // Very subtle base rotation tied to mouse on the group
+      brandGroup.rotation.y = mouseCurrentX * 0.15;
+      brandGroup.rotation.x = mouseCurrentY * 0.08;
+    }
+    
+    // Micro idle rotation on the group
+    if (!_reducedMotion) {
+      brandGroup.rotation.y += Math.sin(elapsed * 0.0005) * 0.0005;
+      brandGroup.rotation.x += Math.cos(elapsed * 0.0004) * 0.0005;
+    }
   }
-
-  // -- Scroll-driven transforms ---------------------------------------------
 
   applyScrollTransforms();
 
@@ -230,31 +197,31 @@ function animate() {
 }
 
 /**
- * Apply scale / position / opacity changes driven by scroll progress.
+ * Apply scale / position changes driven by scroll progress.
  */
 function applyScrollTransforms() {
+  if (!brandGroup || !particleMaterial) return;
   const p = scrollProgress;
 
   if (p <= 0.3) {
-    // Phase 1 — scale up & fade in
-    const scale = mapRange(p, 0, 0.3, 0.6, 1.0);
+    // Normal view in hero
+    const scale = mapRange(p, 0, 0.3, 1.0, 1.1);
     brandGroup.scale.setScalar(scale);
-    brandMaterial.opacity = mapRange(p, 0, 0.3, 0, 1);
-  } else if (p <= 0.7) {
-    // Phase 2 — slow additional rotation, slight shift right
-    brandGroup.scale.setScalar(1.0);
-    brandMaterial.opacity = 1;
-
-    const shiftX = mapRange(p, 0.3, 0.7, 0, 0.5);
-    brandGroup.position.x = shiftX;
+    brandGroup.position.y = mapRange(p, 0, 0.3, 0, -0.2);
+    brandGroup.rotation.z = mapRange(p, 0, 0.3, 0, -0.05);
+    
+    // Full opacity for the container
+    particleMaterial.opacity = 1.0;
   } else {
-    // Phase 3 — scale down & fade out
-    const scale = mapRange(p, 0.7, 1.0, 1.0, 0.7);
+    // Scrolling out - N starts to dissolve/fade
+    const scale = mapRange(p, 0.3, 1.0, 1.1, 0.8);
     brandGroup.scale.setScalar(scale);
-    brandMaterial.opacity = mapRange(p, 0.7, 1.0, 1, 0);
-
-    // Keep the rightward shift from Phase 2
-    brandGroup.position.x = 0.5;
+    brandGroup.position.y = mapRange(p, 0.3, 1.0, -0.2, -1.0);
+    brandGroup.rotation.z = mapRange(p, 0.3, 1.0, -0.05, -0.2);
+    
+    // We can simulate dissolving by affecting uProgress, but fade is safer.
+    // We use a global transparency approach or reduce uProgress slightly:
+    particleMaterial.uniforms.uProgress.value = mapRange(p, 0.3, 1.0, 1.0, 0.5);
   }
 }
 
@@ -262,15 +229,6 @@ function applyScrollTransforms() {
 // Public API
 // ---------------------------------------------------------------------------
 
-/**
- * Initialise the Three.js scene inside the given container.
- *
- * @param {HTMLElement} container - DOM element to host the canvas (e.g. `#threeCanvas`).
- * @param {object}      options
- * @param {boolean}     options.isMobile      - Simplify geometry & skip mouse.
- * @param {boolean}     options.reducedMotion - Render a single static frame.
- * @returns {{ destroy: Function } | null} Handle, or null on failure.
- */
 export function init(container, options = {}) {
   try {
     _isMobile = !!options.isMobile;
@@ -278,12 +236,11 @@ export function init(container, options = {}) {
     _container = container;
 
     // ----- Renderer ---------------------------------------------------------
-
     const maxDPR = _isMobile ? 1.0 : 1.5;
 
     renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: true, // MSAA helps smooth particles
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDPR));
     renderer.setSize(container.clientWidth, container.clientHeight);
@@ -291,7 +248,6 @@ export function init(container, options = {}) {
     container.appendChild(renderer.domElement);
 
     // ----- Scene & camera ---------------------------------------------------
-
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(
@@ -300,33 +256,23 @@ export function init(container, options = {}) {
       0.1,
       100
     );
+    // Adjusted camera distance for the new particles scale
     camera.position.set(0, 0, 5);
 
-    // ----- Lighting ---------------------------------------------------------
-
-    setupLighting();
-
-    // ----- Brand mark -------------------------------------------------------
-
-    brandGroup = createBrandMark();
-    scene.add(brandGroup);
+    // ----- Particles Async Load ---------------------------------------------
+    setupParticles();
 
     // ----- Start time -------------------------------------------------------
-
     startTime = performance.now();
 
     // ----- Visibility observer ----------------------------------------------
-
     setupVisibilityObserver(container);
 
     // ----- Resize listener --------------------------------------------------
-
     window.addEventListener('resize', onResize);
 
     // ----- Render -----------------------------------------------------------
-
     if (_reducedMotion) {
-      // Static single render — no animation loop
       applyScrollTransforms();
       renderer.render(scene, camera);
     } else {
@@ -335,60 +281,39 @@ export function init(container, options = {}) {
 
     return { destroy };
   } catch (err) {
-    // WebGL unavailable or any other init error — let caller show CSS fallback
     console.warn('[Neoeffex 3D] Initialisation failed:', err);
     return null;
   }
 }
 
-/**
- * Update the scroll progress value (0 → 1).
- *
- * @param {number} progress - Normalised scroll position, 0 at top, 1 at bottom.
- */
 export function updateScrollProgress(progress) {
   scrollProgress = clamp(progress, 0, 1);
-
-  // If reduced-motion, re-render the single frame with new scroll state
   if (_reducedMotion && renderer && scene && camera) {
     applyScrollTransforms();
     renderer.render(scene, camera);
   }
 }
 
-/**
- * Update the mouse position for interactive rotation.
- *
- * @param {number} normalizedX - Horizontal position, –1 (left) to 1 (right).
- * @param {number} normalizedY - Vertical position, –1 (top) to 1 (bottom).
- */
 export function updateMouse(normalizedX, normalizedY) {
   if (_isMobile || _reducedMotion) return;
   mouseTargetX = clamp(normalizedX, -1, 1);
   mouseTargetY = clamp(normalizedY, -1, 1);
 }
 
-/**
- * Tear down the scene — dispose GPU resources and remove DOM / listeners.
- */
 export function destroy() {
-  // Stop animation loop
   if (animationId !== null) {
     cancelAnimationFrame(animationId);
     animationId = null;
   }
 
-  // Disconnect visibility observer
   if (observer) {
     observer.disconnect();
     observer = null;
   }
 
-  // Remove resize listener
   window.removeEventListener('resize', onResize);
   clearTimeout(resizeTimer);
 
-  // Dispose Three.js objects
   if (scene) {
     scene.traverse((obj) => {
       if (obj.geometry) obj.geometry.dispose();
@@ -402,7 +327,6 @@ export function destroy() {
     });
   }
 
-  // Dispose renderer and remove canvas
   if (renderer) {
     renderer.dispose();
     if (renderer.domElement && renderer.domElement.parentNode) {
@@ -411,16 +335,16 @@ export function destroy() {
     renderer = null;
   }
 
-  // Null out references
   scene = null;
   camera = null;
   brandGroup = null;
-  brandMaterial = null;
+  particlePoints = null;
+  particleMaterial = null;
   _container = null;
 }
 
 // ---------------------------------------------------------------------------
-// Auto-initialisation — runs after the page is already usable
+// Auto-initialisation
 // ---------------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -434,12 +358,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const handle = init(container, { isMobile, reducedMotion });
 
   if (!handle) {
-    // WebGL failed — show CSS fallback
     if (fallback) fallback.classList.add('is-active');
     return;
   }
 
-  // --- Mouse integration (shared with Etapa 2 cursor) --------------------
   if (!isMobile && !reducedMotion) {
     window.addEventListener('mousemove', (e) => {
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
@@ -448,7 +370,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- ScrollTrigger integration ------------------------------------------
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     const threeSection = document.getElementById('threeSection');
     if (threeSection) {

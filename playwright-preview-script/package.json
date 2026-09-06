@@ -1,0 +1,12 @@
+{
+  "name": "neoeffex-playwright-preview-script",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "previews": "node tools/generate-previews.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.55.0"
+  }
+}

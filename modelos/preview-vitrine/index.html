@@ -1,17 +1,33 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-active-theme="hamburgueria">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Neoeffex · Preview Vitrine</title>
-    <meta name="description" content="Vitrine de modelos com previews em vídeo e imagem para a página /modelos da Neoeffex." />
+    <title>Neoeffex · Vitrine de Modelos</title>
+    <meta name="description" content="Seu site não precisa parecer um site. Vitrine de modelos interativos Neoeffex." />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Styles -->
     <link rel="preload" href="assets/css/modelos-preview.css" as="style" />
     <link rel="stylesheet" href="assets/css/modelos-preview.css" />
 </head>
 <body>
+    <!-- Custom Cursor -->
+    <div id="customCursor" class="custom-cursor" aria-hidden="true">
+        <span class="cursor-dot"></span>
+        <span class="cursor-label"></span>
+    </div>
+
     <div class="site-shell">
+        <!-- Dynamic Glow Layer -->
+        <div class="ambient-glow" aria-hidden="true"></div>
+
         <header class="topbar">
-            <a class="brand" href="#inicio" aria-label="Neoeffex">
+            <a class="brand" href="#inicio" aria-label="Neoeffex" data-cursor="↗">
                 <span class="brand-mark"></span>
                 <span class="brand-text">neoeffex</span>
             </a>
@@ -20,186 +36,262 @@
                 <a href="#hamburgueria">Hamburgueria</a>
                 <a href="#clinica">Clínica</a>
                 <a href="#hortifruti">Hortifruti</a>
-                <a href="#barbearia">Barbearia</a>
                 <a href="#lu">Lu Leve</a>
             </nav>
 
-            <a class="button button--ghost" href="/contato">Solicitar projeto</a>
+            <a class="button button--ghost button--magnetic" href="/contato" data-cursor="↗" data-magnetic>
+                <span>Solicitar projeto</span>
+                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
         </header>
 
         <main id="inicio">
-            <section class="hero">
-                <p class="eyebrow">Preview system / modelos Neoeffex</p>
-                <h1>
-                    Seus modelos<br />
-                    <span>em movimento.</span>
-                </h1>
-                <p class="hero-copy">
-                    Estrutura pronta para usar previews em <strong>WebM + MP4</strong> com poster em <strong>WebP</strong>,
-                    carregamento leve e vitrine em tela cheia para a página <code>/modelos</code>.
-                </p>
-                <div class="hero-actions">
-                    <a class="button" href="#modelos">Ver vitrine</a>
-                    <a class="button button--ghost" href="#integracao">Como integrar</a>
+            <section class="hero" data-parallax="2">
+                <div class="hero-header-badge">
+                    <span class="tech-badge">01 // VITRINE DE MODELOS NEOEFFEX</span>
                 </div>
-                <ul class="hero-meta">
-                    <li>5 modelos</li>
-                    <li>videos curtos em loop</li>
-                    <li>fallback MP4</li>
+                
+                <h1 class="hero-title">
+                    <span class="hero-line">Seu site não</span>
+                    <span class="hero-line">precisa parecer</span>
+                    <span class="hero-line hero-line--accent">um site.</span>
+                </h1>
+                
+                <p class="hero-copy" data-parallax="3">
+                    Estruturas autorais e de alta performance com carregamento fluido, visual cinematográfico e modelo comercial adaptado para o seu segmento.
+                </p>
+                
+                <div class="hero-actions" data-parallax="4">
+                    <a class="button button--primary button--magnetic" href="#modelos" data-cursor="↗" data-magnetic>
+                        <span>Explorar vitrine</span>
+                        <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                    </a>
+                    <a class="button button--ghost button--magnetic" href="/contato" data-cursor="↗" data-magnetic>
+                        <span>Falar com especialista</span>
+                    </a>
+                </div>
+
+                <ul class="hero-meta" data-parallax="5">
+                    <li><span class="meta-dot"></span> 4 Modelos Interativos</li>
+                    <li><span class="meta-dot"></span> Previews em WebM + MP4</li>
+                    <li><span class="meta-dot"></span> Alta Performance</li>
                 </ul>
             </section>
 
+            <!-- Movimento Tipográfico Intermediário -->
+            <section class="ticker-section" aria-hidden="true">
+                <div class="ticker-track">
+                    <div class="ticker-content">
+                        <span>NÃO UM TEMPLATE</span>
+                        <span class="ticker-dot">•</span>
+                        <span>NÃO UMA CÓPIA</span>
+                        <span class="ticker-dot">•</span>
+                        <span>NÃO MAIS DO MESMO</span>
+                        <span class="ticker-dot">•</span>
+                        <span>EXPERIÊNCIA AUTORAL</span>
+                        <span class="ticker-dot">•</span>
+                    </div>
+                    <div class="ticker-content" aria-hidden="true">
+                        <span>NÃO UM TEMPLATE</span>
+                        <span class="ticker-dot">•</span>
+                        <span>NÃO UMA CÓPIA</span>
+                        <span class="ticker-dot">•</span>
+                        <span>NÃO MAIS DO MESMO</span>
+                        <span class="ticker-dot">•</span>
+                        <span>EXPERIÊNCIA AUTORAL</span>
+                        <span class="ticker-dot">•</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grade de Projetos (4 Projetos Aprovados) -->
             <section class="models-grid" id="modelos">
-                <article class="model-card" id="hamburgueria">
+                <!-- 01: Hamburgueria -->
+                <article class="model-card" id="hamburgueria" data-theme="hamburgueria" data-parallax="4">
                     <div class="model-card__copy">
-                        <p class="model-card__index">01 / food</p>
+                        <div class="model-card__badge-row">
+                            <span class="model-card__index">01 / FOOD &amp; GASTRONOMIA</span>
+                            <span class="model-card__tech">EXP 3D &amp; GSAP</span>
+                        </div>
                         <h2>BrazaBurger</h2>
                         <p>
-                            Preview da landing de hamburgueria com foco em impacto visual, contraste forte e apelo comercial.
+                            Landing de hamburgueria com foco em alto impacto visual, experiência imersiva e conversão de vendas direta.
                         </p>
                         <ul class="tags">
-                            <li>Hero forte</li>
-                            <li>Food showcase</li>
-                            <li>Catálogo</li>
+                            <li>Hero 3D Interativo</li>
+                            <li>Food Showcase</li>
+                            <li>Catálogo Integrado</li>
                         </ul>
                         <div class="model-card__actions">
-                            <a class="button" href="../hamburgueria/">Abrir modelo</a>
-                            <a class="button button--ghost" href="../hamburgueria/#cardapio">Ver cardápio</a>
+                            <a class="button button--primary button--magnetic" href="../hamburgueria/" data-cursor="ABRIR" data-magnetic>
+                                <span>Abrir projeto</span>
+                                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                            </a>
+                            <a class="button button--ghost button--magnetic" href="../hamburgueria/#cardapio" data-cursor="↗" data-magnetic>
+                                <span>Ver cardápio</span>
+                            </a>
                         </div>
                     </div>
-                    <div class="model-card__media">
-                        <video class="preview-video" poster="assets/images/hamburgueria-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
-                            <source src="assets/videos/hamburgueria-preview.webm" type="video/webm" />
-                            <source src="assets/videos/hamburgueria-preview.mp4" type="video/mp4" />
-                        </video>
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="6">
+                        <a href="../hamburgueria/" class="media-link" aria-label="Abrir modelo BrazaBurger">
+                            <video class="preview-video" poster="assets/images/hamburgueria-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                                <source src="assets/videos/hamburgueria-preview.webm" type="video/webm" />
+                                <source src="assets/videos/hamburgueria-preview.mp4" type="video/mp4" />
+                            </video>
+                            <div class="media-overlay">
+                                <span class="media-badge">ABRIR DEMONSTRAÇÃO ↗</span>
+                            </div>
+                        </a>
                     </div>
                 </article>
 
-                <article class="model-card model-card--reverse" id="clinica">
+                <!-- 02: Clínica Odontológica -->
+                <article class="model-card model-card--reverse" id="clinica" data-theme="clinica" data-parallax="4">
                     <div class="model-card__copy">
-                        <p class="model-card__index">02 / health</p>
+                        <div class="model-card__badge-row">
+                            <span class="model-card__index">02 / SAÚDE &amp; ESTÉTICA</span>
+                            <span class="model-card__tech">UI CLEAN &amp; CLEAN MOTION</span>
+                        </div>
                         <h2>Aura Odontologia</h2>
                         <p>
-                            Preview da landing odontológica com visual elegante, hero cinematográfico e navegação mais sóbria.
+                            Landing odontológica com visual elegante, hero cinematográfico em tela cheia e tom institucional sofisticado.
                         </p>
                         <ul class="tags">
-                            <li>Imagem full screen</li>
-                            <li>Tom institucional</li>
-                            <li>UI clean</li>
+                            <li>Imagem Full Screen</li>
+                            <li>Atmosfera Clean</li>
+                            <li>Agendamento Facilitado</li>
                         </ul>
                         <div class="model-card__actions">
-                            <a class="button" href="../clinica-odontologica/">Abrir modelo</a>
-                            <a class="button button--ghost" href="../clinica-odontologica/#tratamentos">Ver tratamentos</a>
+                            <a class="button button--primary button--magnetic" href="../clinica-odontologica/" data-cursor="ABRIR" data-magnetic>
+                                <span>Abrir projeto</span>
+                                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                            </a>
+                            <a class="button button--ghost button--magnetic" href="../clinica-odontologica/#tratamentos" data-cursor="↗" data-magnetic>
+                                <span>Ver tratamentos</span>
+                            </a>
                         </div>
                     </div>
-                    <div class="model-card__media">
-                        <video class="preview-video" poster="assets/images/clinica-odontologica-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
-                            <source src="assets/videos/clinica-odontologica-preview.webm" type="video/webm" />
-                            <source src="assets/videos/clinica-odontologica-preview.mp4" type="video/mp4" />
-                        </video>
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="6">
+                        <a href="../clinica-odontologica/" class="media-link" aria-label="Abrir modelo Aura Odontologia">
+                            <video class="preview-video" poster="assets/images/clinica-odontologica-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                                <source src="assets/videos/clinica-odontologica-preview.webm" type="video/webm" />
+                                <source src="assets/videos/clinica-odontologica-preview.mp4" type="video/mp4" />
+                            </video>
+                            <div class="media-overlay">
+                                <span class="media-badge">ABRIR DEMONSTRAÇÃO ↗</span>
+                            </div>
+                        </a>
                     </div>
                 </article>
 
-                <article class="model-card" id="hortifruti">
+                <!-- 03: Hortifruti -->
+                <article class="model-card" id="hortifruti" data-theme="hortifruti" data-parallax="4">
                     <div class="model-card__copy">
-                        <p class="model-card__index">03 / organic</p>
+                        <div class="model-card__badge-row">
+                            <span class="model-card__index">03 / MERCADO &amp; HORTIFRUTI</span>
+                            <span class="model-card__tech">ORGANIC MOTION</span>
+                        </div>
                         <h2>Verde Viva</h2>
                         <p>
-                            Preview do hortifruti com imagem rica, atmosfera orgânica e foco em frescor, cor e proximidade.
+                            Landing de hortifruti com rica presença de imagem, atmosfera orgânica e foco em frescor e proximidade.
                         </p>
                         <ul class="tags">
-                            <li>Organic motion</li>
-                            <li>Full background</li>
-                            <li>Brand colors</li>
+                            <li>Organic Motion</li>
+                            <li>Full Background</li>
+                            <li>Catálogo Rápido</li>
                         </ul>
                         <div class="model-card__actions">
-                            <a class="button" href="../hortifruti/">Abrir modelo</a>
-                            <a class="button button--ghost" href="../hortifruti/#produtos">Ver produtos</a>
+                            <a class="button button--primary button--magnetic" href="../hortifruti/" data-cursor="ABRIR" data-magnetic>
+                                <span>Abrir projeto</span>
+                                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                            </a>
+                            <a class="button button--ghost button--magnetic" href="../hortifruti/#produtos" data-cursor="↗" data-magnetic>
+                                <span>Ver produtos</span>
+                            </a>
                         </div>
                     </div>
-                    <div class="model-card__media">
-                        <video class="preview-video" poster="assets/images/hortifruti-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
-                            <source src="assets/videos/hortifruti-preview.webm" type="video/webm" />
-                            <source src="assets/videos/hortifruti-preview.mp4" type="video/mp4" />
-                        </video>
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="6">
+                        <a href="../hortifruti/" class="media-link" aria-label="Abrir modelo Verde Viva">
+                            <video class="preview-video" poster="assets/images/hortifruti-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                                <source src="assets/videos/hortifruti-preview.webm" type="video/webm" />
+                                <source src="assets/videos/hortifruti-preview.mp4" type="video/mp4" />
+                            </video>
+                            <div class="media-overlay">
+                                <span class="media-badge">ABRIR DEMONSTRAÇÃO ↗</span>
+                            </div>
+                        </a>
                     </div>
                 </article>
 
-                <article class="model-card model-card--reverse" id="barbearia">
+                <!-- 04: Lu Leve e Saudável -->
+                <article class="model-card model-card--reverse" id="lu" data-theme="luleve" data-parallax="4">
                     <div class="model-card__copy">
-                        <p class="model-card__index">04 / lifestyle</p>
-                        <h2>Ofício 13</h2>
-                        <p>
-                            Preview da barbearia com clima cinematográfico, tipografia expressiva e presença mais premium.
-                        </p>
-                        <ul class="tags">
-                            <li>Cinematic look</li>
-                            <li>Editorial type</li>
-                            <li>Dark aesthetic</li>
-                        </ul>
-                        <div class="model-card__actions">
-                            <a class="button" href="../barbearia1/">Abrir modelo</a>
-                            <a class="button button--ghost" href="../barbearia1/#servicos">Ver serviços</a>
+                        <div class="model-card__badge-row">
+                            <span class="model-card__index">04 / ALIMENTAÇÃO SAUDÁVEL</span>
+                            <span class="model-card__tech">CATÁLOGO SUPABASE</span>
                         </div>
-                    </div>
-                    <div class="model-card__media">
-                        <video class="preview-video" poster="assets/images/barbearia-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
-                            <source src="assets/videos/barbearia-preview.webm" type="video/webm" />
-                            <source src="assets/videos/barbearia-preview.mp4" type="video/mp4" />
-                        </video>
-                    </div>
-                </article>
-
-                <article class="model-card" id="lu">
-                    <div class="model-card__copy">
-                        <p class="model-card__index">05 / catalog</p>
                         <h2>Lu Leve e Saudável</h2>
                         <p>
-                            Preview da landing conectada ao catálogo, com linguagem leve e foco em rotina prática.
+                            Landing conectada ao sistema de catálogo Neoeffex, com linguagem leve, visual prático e pedidos via WhatsApp.
                         </p>
                         <ul class="tags">
-                            <li>Catálogo integrado</li>
-                            <li>Identidade leve</li>
-                            <li>CTA direto</li>
+                            <li>Catálogo Integrado</li>
+                            <li>Identidade Leve</li>
+                            <li>CTA Direto</li>
                         </ul>
                         <div class="model-card__actions">
-                            <a class="button" href="../lu-leve-e-saudavel/">Abrir modelo</a>
-                            <a class="button button--ghost" href="../lu-leve-e-saudavel/#catalogo">Abrir cardápio</a>
+                            <a class="button button--primary button--magnetic" href="/sites/lu-leve-e-saudavel/" data-cursor="ABRIR" data-magnetic>
+                                <span>Abrir projeto</span>
+                                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                            </a>
+                            <a class="button button--ghost button--magnetic" href="/sites/lu-leve-e-saudavel/#catalogo" data-cursor="↗" data-magnetic>
+                                <span>Abrir cardápio</span>
+                            </a>
                         </div>
                     </div>
-                    <div class="model-card__media">
-                        <video class="preview-video" poster="assets/images/lu-leve-e-saudavel-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
-                            <source src="assets/videos/lu-leve-e-saudavel-preview.webm" type="video/webm" />
-                            <source src="assets/videos/lu-leve-e-saudavel-preview.mp4" type="video/mp4" />
-                        </video>
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="6">
+                        <a href="/sites/lu-leve-e-saudavel/" class="media-link" aria-label="Abrir modelo Lu Leve e Saudável">
+                            <video class="preview-video" poster="assets/images/lu-leve-e-saudavel-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                                <source src="assets/videos/lu-leve-e-saudavel-preview.webm" type="video/webm" />
+                                <source src="assets/videos/lu-leve-e-saudavel-preview.mp4" type="video/mp4" />
+                            </video>
+                            <div class="media-overlay">
+                                <span class="media-badge">ABRIR DEMONSTRAÇÃO ↗</span>
+                            </div>
+                        </a>
                     </div>
                 </article>
             </section>
 
-            <section class="integration" id="integracao">
-                <div>
-                    <p class="eyebrow">Como integrar</p>
-                    <h2>Uso pronto para a sua pasta <code>/modelos</code></h2>
+            <!-- Seção de Encerramento -->
+            <section class="cta-closing">
+                <div class="cta-closing__inner" data-parallax="2">
+                    <span class="tech-badge">PROJETO SOB MEDIDA</span>
+                    <h2>QUAL VAI SER O SEU?</h2>
                     <p>
-                        Esta estrutura já deixa os arquivos organizados com imagens WebP, vídeos WebM e fallback MP4.
-                        Basta copiar a pasta <code>preview-vitrine</code> para dentro de <code>modelos/</code> ou reaproveitar apenas os assets.
+                        Seu negócio não precisa entrar em um molde. Desenvolvemos interfaces autorais com a mais avançada tecnologia web.
                     </p>
+                    <div class="cta-closing__actions">
+                        <a class="button button--primary button--magnetic" href="/contato" data-cursor="↗" data-magnetic>
+                            <span>Criar um projeto</span>
+                            <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
                 </div>
-                <pre><code>modelos/
-├── preview-vitrine/
-│   ├── index.html
-│   ├── VERSION
-│   ├── CHANGELOG.md
-│   ├── README.md
-│   └── assets/
-│       ├── css/modelos-preview.css
-│       ├── js/modelos-preview.js
-│       ├── images/*.webp
-│       └── videos/*.{webm,mp4}</code></pre>
             </section>
         </main>
+
+        <footer class="footer">
+            <div class="footer__inner">
+                <p>&copy; 2026 Neoeffex. Todos os direitos reservados.</p>
+            </div>
+        </footer>
     </div>
 
+    <!-- Scripts: Lenis, GSAP, ScrollTrigger & Core JS -->
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.9/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="assets/js/modelos-preview.js"></script>
 </body>
 </html>

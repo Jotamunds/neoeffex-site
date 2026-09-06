@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neoeffex · Preview Vitrine</title>
+    <meta name="description" content="Vitrine de modelos com previews em vídeo e imagem para a página /modelos da Neoeffex." />
+    <link rel="preload" href="assets/css/modelos-preview.css" as="style" />
+    <link rel="stylesheet" href="assets/css/modelos-preview.css" />
+</head>
+<body>
+    <div class="site-shell">
+        <header class="topbar">
+            <a class="brand" href="#inicio" aria-label="Neoeffex">
+                <span class="brand-mark"></span>
+                <span class="brand-text">neoeffex</span>
+            </a>
+
+            <nav class="topnav" aria-label="Modelos">
+                <a href="#hamburgueria">Hamburgueria</a>
+                <a href="#clinica">Clínica</a>
+                <a href="#hortifruti">Hortifruti</a>
+                <a href="#barbearia">Barbearia</a>
+                <a href="#lu">Lu Leve</a>
+            </nav>
+
+            <a class="button button--ghost" href="/contato">Solicitar projeto</a>
+        </header>
+
+        <main id="inicio">
+            <section class="hero">
+                <p class="eyebrow">Preview system / modelos Neoeffex</p>
+                <h1>
+                    Seus modelos<br />
+                    <span>em movimento.</span>
+                </h1>
+                <p class="hero-copy">
+                    Estrutura pronta para usar previews em <strong>WebM + MP4</strong> com poster em <strong>WebP</strong>,
+                    carregamento leve e vitrine em tela cheia para a página <code>/modelos</code>.
+                </p>
+                <div class="hero-actions">
+                    <a class="button" href="#modelos">Ver vitrine</a>
+                    <a class="button button--ghost" href="#integracao">Como integrar</a>
+                </div>
+                <ul class="hero-meta">
+                    <li>5 modelos</li>
+                    <li>videos curtos em loop</li>
+                    <li>fallback MP4</li>
+                </ul>
+            </section>
+
+            <section class="models-grid" id="modelos">
+                <article class="model-card" id="hamburgueria">
+                    <div class="model-card__copy">
+                        <p class="model-card__index">01 / food</p>
+                        <h2>BrazaBurger</h2>
+                        <p>
+                            Preview da landing de hamburgueria com foco em impacto visual, contraste forte e apelo comercial.
+                        </p>
+                        <ul class="tags">
+                            <li>Hero forte</li>
+                            <li>Food showcase</li>
+                            <li>Catálogo</li>
+                        </ul>
+                        <div class="model-card__actions">
+                            <a class="button" href="../hamburgueria/">Abrir modelo</a>
+                            <a class="button button--ghost" href="../hamburgueria/#cardapio">Ver cardápio</a>
+                        </div>
+                    </div>
+                    <div class="model-card__media">
+                        <video class="preview-video" poster="assets/images/hamburgueria-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                            <source src="assets/videos/hamburgueria-preview.webm" type="video/webm" />
+                            <source src="assets/videos/hamburgueria-preview.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+                </article>
+
+                <article class="model-card model-card--reverse" id="clinica">
+                    <div class="model-card__copy">
+                        <p class="model-card__index">02 / health</p>
+                        <h2>Aura Odontologia</h2>
+                        <p>
+                            Preview da landing odontológica com visual elegante, hero cinematográfico e navegação mais sóbria.
+                        </p>
+                        <ul class="tags">
+                            <li>Imagem full screen</li>
+                            <li>Tom institucional</li>
+                            <li>UI clean</li>
+                        </ul>
+                        <div class="model-card__actions">
+                            <a class="button" href="../clinica-odontologica/">Abrir modelo</a>
+                            <a class="button button--ghost" href="../clinica-odontologica/#tratamentos">Ver tratamentos</a>
+                        </div>
+                    </div>
+                    <div class="model-card__media">
+                        <video class="preview-video" poster="assets/images/clinica-odontologica-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                            <source src="assets/videos/clinica-odontologica-preview.webm" type="video/webm" />
+                            <source src="assets/videos/clinica-odontologica-preview.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+                </article>
+
+                <article class="model-card" id="hortifruti">
+                    <div class="model-card__copy">
+                        <p class="model-card__index">03 / organic</p>
+                        <h2>Verde Viva</h2>
+                        <p>
+                            Preview do hortifruti com imagem rica, atmosfera orgânica e foco em frescor, cor e proximidade.
+                        </p>
+                        <ul class="tags">
+                            <li>Organic motion</li>
+                            <li>Full background</li>
+                            <li>Brand colors</li>
+                        </ul>
+                        <div class="model-card__actions">
+                            <a class="button" href="../hortifruti/">Abrir modelo</a>
+                            <a class="button button--ghost" href="../hortifruti/#produtos">Ver produtos</a>
+                        </div>
+                    </div>
+                    <div class="model-card__media">
+                        <video class="preview-video" poster="assets/images/hortifruti-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                            <source src="assets/videos/hortifruti-preview.webm" type="video/webm" />
+                            <source src="assets/videos/hortifruti-preview.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+                </article>
+
+                <article class="model-card model-card--reverse" id="barbearia">
+                    <div class="model-card__copy">
+                        <p class="model-card__index">04 / lifestyle</p>
+                        <h2>Ofício 13</h2>
+                        <p>
+                            Preview da barbearia com clima cinematográfico, tipografia expressiva e presença mais premium.
+                        </p>
+                        <ul class="tags">
+                            <li>Cinematic look</li>
+                            <li>Editorial type</li>
+                            <li>Dark aesthetic</li>
+                        </ul>
+                        <div class="model-card__actions">
+                            <a class="button" href="../barbearia1/">Abrir modelo</a>
+                            <a class="button button--ghost" href="../barbearia1/#servicos">Ver serviços</a>
+                        </div>
+                    </div>
+                    <div class="model-card__media">
+                        <video class="preview-video" poster="assets/images/barbearia-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                            <source src="assets/videos/barbearia-preview.webm" type="video/webm" />
+                            <source src="assets/videos/barbearia-preview.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+                </article>
+
+                <article class="model-card" id="lu">
+                    <div class="model-card__copy">
+                        <p class="model-card__index">05 / catalog</p>
+                        <h2>Lu Leve e Saudável</h2>
+                        <p>
+                            Preview da landing conectada ao catálogo, com linguagem leve e foco em rotina prática.
+                        </p>
+                        <ul class="tags">
+                            <li>Catálogo integrado</li>
+                            <li>Identidade leve</li>
+                            <li>CTA direto</li>
+                        </ul>
+                        <div class="model-card__actions">
+                            <a class="button" href="../lu-leve-e-saudavel/">Abrir modelo</a>
+                            <a class="button button--ghost" href="../lu-leve-e-saudavel/#catalogo">Abrir cardápio</a>
+                        </div>
+                    </div>
+                    <div class="model-card__media">
+                        <video class="preview-video" poster="assets/images/lu-leve-e-saudavel-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                            <source src="assets/videos/lu-leve-e-saudavel-preview.webm" type="video/webm" />
+                            <source src="assets/videos/lu-leve-e-saudavel-preview.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+                </article>
+            </section>
+
+            <section class="integration" id="integracao">
+                <div>
+                    <p class="eyebrow">Como integrar</p>
+                    <h2>Uso pronto para a sua pasta <code>/modelos</code></h2>
+                    <p>
+                        Esta estrutura já deixa os arquivos organizados com imagens WebP, vídeos WebM e fallback MP4.
+                        Basta copiar a pasta <code>preview-vitrine</code> para dentro de <code>modelos/</code> ou reaproveitar apenas os assets.
+                    </p>
+                </div>
+                <pre><code>modelos/
+├── preview-vitrine/
+│   ├── index.html
+│   ├── VERSION
+│   ├── CHANGELOG.md
+│   ├── README.md
+│   └── assets/
+│       ├── css/modelos-preview.css
+│       ├── js/modelos-preview.js
+│       ├── images/*.webp
+│       └── videos/*.{webm,mp4}</code></pre>
+            </section>
+        </main>
+    </div>
+
+    <script src="assets/js/modelos-preview.js"></script>
+</body>
+</html>

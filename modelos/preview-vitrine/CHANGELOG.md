@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.3.0 - 3D WebGL e identidade experimental (Etapa 3)
+- adiciona Three.js com objeto 3D marca Neoeffex (losango metálico + anel torus)
+- integra objeto 3D com ScrollTrigger (escala, opacidade e posição reativa ao scroll)
+- adiciona reação suave do objeto ao mouse via lerp (desktop)
+- iluminação com accent azul Neoeffex e materiais MeshPhysicalMaterial
+- fallback CSS automático caso WebGL não esteja disponível
+- mobile: DPR reduzido, geometria simplificada, sem interação de mouse
+- `prefers-reduced-motion`: render estático sem loop de animação
+- canvas com pause automático fora da viewport (IntersectionObserver)
+- preserva integralmente cursor, parallax, atmosfera e transições da Etapa 2
+
 ## v0.2.0 - interações e atmosfera da vitrine (Etapa 2)
 - adiciona cursor customizado tecnológico com estados dinâmicos (ABRIR, ↗) para desktop
 - implementa parallax leve com controle via movimento do mouse

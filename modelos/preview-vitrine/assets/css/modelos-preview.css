@@ -570,6 +570,78 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
     border: 1px solid var(--theme-border);
 }
 
+/* 3D Canvas Section (Etapa 3) */
+.three-section {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: -20px 0 0;
+}
+
+.three-canvas-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    aspect-ratio: 4 / 3;
+    margin: 0 auto;
+}
+
+.three-canvas-wrap canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* CSS fallback when WebGL unavailable */
+.three-fallback {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.three-fallback.is-active {
+    display: flex;
+}
+
+.three-fallback__shape {
+    width: 120px;
+    height: 170px;
+    position: relative;
+}
+
+.three-fallback__diamond {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a0e1a 0%, #1a2040 50%, #0a0e1a 100%);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    box-shadow: 0 0 60px var(--theme-glow);
+}
+
+.three-fallback__ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 2px solid rgba(45, 125, 255, 0.3);
+    box-shadow: 0 0 20px var(--theme-glow);
+}
+
+@media (max-width: 760px) {
+    .three-canvas-wrap {
+        max-width: 320px;
+        aspect-ratio: 1 / 1;
+    }
+}
+
 /* Closing CTA Section */
 .cta-closing {
     width: var(--content);
@@ -655,4 +727,5 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
     .button, .preview-video, .model-card, .ambient-glow { transition: none !important; }
     .ticker-track { animation: none !important; }
     .custom-cursor { display: none !important; }
+    .three-canvas-wrap canvas { opacity: 0.7; }
 }

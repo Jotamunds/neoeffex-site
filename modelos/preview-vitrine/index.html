@@ -14,6 +14,15 @@
     <!-- Styles -->
     <link rel="preload" href="assets/css/modelos-preview.css" as="style" />
     <link rel="stylesheet" href="assets/css/modelos-preview.css" />
+
+    <!-- Import Map for ES Modules (Three.js - Etapa 3) -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"
+        }
+    }
+    </script>
 </head>
 <body>
     <!-- Custom Cursor -->
@@ -100,6 +109,19 @@
                         <span class="ticker-dot">•</span>
                         <span>EXPERIÊNCIA AUTORAL</span>
                         <span class="ticker-dot">•</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3D Canvas Section (Etapa 3) -->
+            <section class="three-section" id="threeSection">
+                <div class="three-canvas-wrap" id="threeCanvas">
+                    <!-- Three.js canvas will be injected here -->
+                    <div class="three-fallback" id="threeFallback">
+                        <div class="three-fallback__shape">
+                            <div class="three-fallback__diamond"></div>
+                            <div class="three-fallback__ring"></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -293,5 +315,8 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="assets/js/modelos-preview.js"></script>
+    
+    <!-- Three.js Scene (Etapa 3) — carregado após a página estar utilizável -->
+    <script type="module" src="assets/js/three/scene.js"></script>
 </body>
 </html>

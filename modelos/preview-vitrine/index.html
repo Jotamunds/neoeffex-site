@@ -55,36 +55,48 @@
         </header>
 
         <main id="inicio">
-            <section class="hero" data-parallax="2">
-                <div class="hero-header-badge">
-                    <span class="tech-badge">01 // VITRINE DE MODELOS NEOEFFEX</span>
-                </div>
-                
-                <h1 class="hero-title">
-                    <span class="hero-line">Seu site não</span>
-                    <span class="hero-line">precisa parecer</span>
-                    <span class="hero-line hero-line--accent">um site.</span>
-                </h1>
-                
-                <p class="hero-copy" data-parallax="3">
-                    Estruturas autorais e de alta performance com carregamento fluido, visual cinematográfico e modelo comercial adaptado para o seu segmento.
-                </p>
-                
-                <div class="hero-actions" data-parallax="4">
-                    <a class="button button--primary button--magnetic" href="#modelos" data-cursor="↗" data-magnetic>
-                        <span>Explorar vitrine</span>
-                        <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                    </a>
-                    <a class="button button--ghost button--magnetic" href="/contato" data-cursor="↗" data-magnetic>
-                        <span>Falar com especialista</span>
-                    </a>
+            <section class="hero" id="threeSection" data-parallax="2">
+                <div class="hero__copy">
+                    <div class="hero-header-badge">
+                        <span class="tech-badge">01 // VITRINE DE MODELOS NEOEFFEX</span>
+                    </div>
+                    
+                    <h1 class="hero-title">
+                        <span class="hero-line">Seu site não</span>
+                        <span class="hero-line">precisa parecer</span>
+                        <span class="hero-line hero-line--accent">um site.</span>
+                    </h1>
+                    
+                    <p class="hero-copy" data-parallax="3">
+                        Estruturas autorais e de alta performance com carregamento fluido, visual cinematográfico e modelo comercial adaptado para o seu segmento.
+                    </p>
+                    
+                    <div class="hero-actions" data-parallax="4">
+                        <a class="button button--primary button--magnetic" href="#modelos" data-cursor="↗" data-magnetic>
+                            <span>Explorar vitrine</span>
+                            <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        </a>
+                        <a class="button button--ghost button--magnetic" href="/contato" data-cursor="↗" data-magnetic>
+                            <span>Falar com especialista</span>
+                        </a>
+                    </div>
+
+                    <ul class="hero-meta" data-parallax="5">
+                        <li><span class="meta-dot"></span> 4 Modelos Interativos</li>
+                        <li><span class="meta-dot"></span> Previews em WebM + MP4</li>
+                        <li><span class="meta-dot"></span> Alta Performance</li>
+                    </ul>
                 </div>
 
-                <ul class="hero-meta" data-parallax="5">
-                    <li><span class="meta-dot"></span> 4 Modelos Interativos</li>
-                    <li><span class="meta-dot"></span> Previews em WebM + MP4</li>
-                    <li><span class="meta-dot"></span> Alta Performance</li>
-                </ul>
+                <!-- 3D Particle Visual Block (Etapa 3.2 Protagonista Visual) -->
+                <div class="hero__visual" aria-hidden="true">
+                    <div class="three-canvas-wrap" id="threeCanvas">
+                        <!-- Three.js canvas will be injected here -->
+                        <div class="three-fallback" id="threeFallback">
+                            <img src="/img/logos/neoeffex-n-logo-white.svg" alt="Neoeffex Logo" class="three-fallback__svg" />
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- Movimento Tipográfico Intermediário -->
@@ -109,16 +121,6 @@
                         <span class="ticker-dot">•</span>
                         <span>EXPERIÊNCIA AUTORAL</span>
                         <span class="ticker-dot">•</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3D Canvas Section (Etapa 3) -->
-            <section class="three-section" id="threeSection">
-                <div class="three-canvas-wrap" id="threeCanvas">
-                    <!-- Three.js canvas will be injected here -->
-                    <div class="three-fallback" id="threeFallback">
-                        <img src="/img/logos/neoeffex-n-logo-white.svg" alt="Neoeffex Logo" class="three-fallback__svg" />
                     </div>
                 </div>
             </section>

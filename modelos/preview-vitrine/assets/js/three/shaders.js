@@ -1,5 +1,7 @@
 /**
  * Particle Shaders for Neoeffex 3D Logo
+ * Etapa 3.2 — Microscopic point precision, controlled glow,
+ * deep blue color harmony, and dynamic light sweep highlight.
  */
 
 export const vertexShader = `
@@ -14,24 +16,23 @@ attribute float aSize;
 attribute vec3 aColor;
 
 varying vec3 vColor;
+varying vec2 vTargetPos;
+varying float vDepth;
 
 void main() {
-    // 1. Interpolate from start to target (the N shape)
+    // 1. Interpolate from start (dispersed) to target (precise N shape)
     vec3 targetPos = position;
     vec3 currentPos = mix(aStartPosition, targetPos, uProgress);
 
-    // 2. Idle movement (only visible when mostly formed)
-    float idleAmp = 0.02 * uProgress;
-    currentPos.x += sin(uTime * 0.5 + aRandomness.x * 10.0) * idleAmp;
-    currentPos.y += cos(uTime * 0.6 + aRandomness.y * 10.0) * idleAmp;
-    currentPos.z += sin(uTime * 0.4 + aRandomness.z * 10.0) * idleAmp;
+    // 2. Section 18: Micro idle movement (mostly in Z depth to preserve 2D silhouette)
+    float idleZ = sin(uTime * 0.7 + aRandomness.z * 6.28) * 0.015 * uProgress;
+    float idleY = cos(uTime * 0.5 + aRandomness.y * 6.28) * 0.003 * uProgress;
+    currentPos.z += idleZ;
+    currentPos.y += idleY;
 
-    // 3. Mouse interaction (subtle repel/tilt effect on individual particles)
-    // We already rotate the entire group in scene.js, but we can add a tiny local repel
-    // (Optional: if we just want global rotation, we don't strictly need this local offset, 
-    // but a slight local parallax depth based on mouse feels premium)
-    currentPos.x -= (uMouse.x * aRandomness.z * 0.15) * uProgress;
-    currentPos.y -= (uMouse.y * aRandomness.z * 0.15) * uProgress;
+    // 3. Section 19 & 20: Local mouse parallax (minimal offset, shape preserved)
+    currentPos.x -= (uMouse.x * aRandomness.z * 0.012) * uProgress;
+    currentPos.y -= (uMouse.y * aRandomness.z * 0.012) * uProgress;
 
     vec4 modelPosition = modelMatrix * vec4(currentPos, 1.0);
     vec4 viewPosition = viewMatrix * modelPosition;
@@ -39,39 +40,54 @@ void main() {
 
     gl_Position = projectedPosition;
 
-    // Point size calculation (perspective + base size)
-    // The closer to camera, the bigger it is.
-    float pointSize = aSize * uPixelRatio * 1.5;
-    
-    // Scale by depth (attenuation)
-    gl_PointSize = pointSize * (10.0 / -viewPosition.z);
-    
-    // Pass color to fragment
+    // Sections 5 & 14: Point size with gentle perspective attenuation
+    float pointSize = aSize * uPixelRatio;
+    // Scale slightly by depth (closer is slightly larger, farther is smaller)
+    gl_PointSize = pointSize * (5.0 / -viewPosition.z);
+    gl_PointSize = clamp(gl_PointSize, 1.5, 16.0);
+
+    // Pass attributes to fragment shader
     vColor = aColor;
+    vTargetPos = targetPos.xy;
+    vDepth = -viewPosition.z;
 }
 `;
 
 export const fragmentShader = `
-varying vec3 vColor;
+uniform float uTime;
 uniform float uProgress;
 
+varying vec3 vColor;
+varying vec2 vTargetPos;
+varying float vDepth;
+
 void main() {
-    // Create a smooth circular particle
-    // gl_PointCoord is [0,1] from top-left to bottom-right of the point
+    // Section 13: Círculos suaves e precisos via gl_PointCoord
     vec2 coord = gl_PointCoord - vec2(0.5);
     float dist = length(coord);
-    
-    // Smooth circle (alpha drops near the edge)
-    // smoothstep(inner_edge, outer_edge, value)
-    float alpha = 1.0 - smoothstep(0.35, 0.5, dist);
-    
-    // Optional glow core: 
-    // We make the center slightly brighter if needed, but smooth circle is usually enough
-    
-    // Fade out particles when uProgress is 0 (dispersed)
-    // We can just keep them slightly transparent when forming
-    float globalAlpha = mix(0.1, 0.9, uProgress);
-    
-    gl_FragColor = vec4(vColor, alpha * globalAlpha);
+    if (dist > 0.5) discard;
+
+    // Smoothstep crisp circle with subtle anti-aliased border (no fuzzy blobs)
+    float alpha = 1.0 - smoothstep(0.30, 0.49, dist);
+
+    // Microscopic center highlight core
+    float core = 1.0 - smoothstep(0.0, 0.22, dist);
+
+    // Sections 16 & 17: Highlight dinâmico que atravessa diagonalmente o N
+    float diag = vTargetPos.x * 0.65 + vTargetPos.y * 0.75;
+    float sweepCycle = mod(uTime * 0.35, 3.6) - 1.2;
+    float distToSweep = abs(diag - sweepCycle);
+    float sweep = smoothstep(0.22, 0.0, distToSweep) * uProgress;
+
+    // Section 10: Highlight em azul cristalino tecnológico (evita branco puro dominante)
+    vec3 highlightColor = vec3(0.68, 0.88, 1.0);
+    vec3 color = mix(vColor, highlightColor, sweep * 0.58);
+    color += highlightColor * (core * 0.10 * sweep);
+
+    // Alpha geral: partículas nítidas com halo mínimo
+    float baseAlpha = mix(0.60, 0.90, uProgress);
+    float finalAlpha = alpha * mix(baseAlpha, 0.98, sweep);
+
+    gl_FragColor = vec4(color, finalAlpha);
 }
 `;

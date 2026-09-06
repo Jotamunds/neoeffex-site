@@ -268,14 +268,24 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
     transform: translateX(4px);
 }
 
-/* Hero Section */
+/* Hero Section — Etapa 3.2 Protagonista Visual */
 .hero {
     width: var(--content);
     margin: 0 auto;
-    padding: 90px 0 60px;
+    padding: 20px 0 36px;
+    display: grid;
+    grid-template-columns: minmax(0, 44fr) minmax(0, 56fr);
+    align-items: center;
+    gap: 36px;
+    min-height: calc(100vh - 85px);
+    position: relative;
+}
+
+.hero__copy {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    z-index: 2;
 }
 
 .hero-header-badge {
@@ -570,39 +580,54 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
     border: 1px solid var(--theme-border);
 }
 
-/* 3D Canvas Section (Etapa 3) */
-.three-section {
-    width: 100%;
+/* 3D Canvas Visual Block (Etapa 3.2 — N Protagonista) */
+.hero__visual {
     position: relative;
+    width: 100%;
+    height: clamp(400px, 73vh, 760px);
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    margin: -20px 0 0;
+    z-index: 1;
+}
+
+/* Atmospheric subtle blue halo behind the particle N (Section 32 & 33) */
+.hero__visual::before {
+    content: "";
+    position: absolute;
+    width: 75%;
+    height: 75%;
+    background: radial-gradient(circle, rgba(20, 120, 255, 0.12) 0%, transparent 68%);
+    pointer-events: none;
+    filter: blur(50px);
+    z-index: 0;
 }
 
 .three-canvas-wrap {
     position: relative;
     width: 100%;
-    max-width: 700px;
-    aspect-ratio: 4 / 3;
-    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
 }
 
 .three-canvas-wrap canvas {
     display: block;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: auto;
 }
 
-/* CSS fallback when WebGL unavailable */
+/* CSS fallback when WebGL unavailable (Section 38) */
 .three-fallback {
     position: absolute;
     inset: 0;
     display: none;
     align-items: center;
     justify-content: center;
+    z-index: 1;
 }
 
 .three-fallback.is-active {
@@ -610,23 +635,16 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
 }
 
 .three-fallback__svg {
-    width: 60%;
-    max-width: 250px;
+    width: 75%;
+    max-width: 440px;
     height: auto;
-    filter: drop-shadow(0 0 40px rgba(45, 125, 255, 0.4));
+    filter: drop-shadow(0 0 35px rgba(20, 120, 255, 0.35));
     opacity: 0;
     animation: fadeInSVG 1.5s ease forwards;
 }
 
 @keyframes fadeInSVG {
     to { opacity: 0.9; }
-}
-
-@media (max-width: 760px) {
-    .three-canvas-wrap {
-        max-width: 320px;
-        aspect-ratio: 1 / 1;
-    }
 }
 
 /* Closing CTA Section */
@@ -684,6 +702,22 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
         justify-content: center;
     }
 
+    .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding: 40px 0 30px;
+        gap: 32px;
+    }
+
+    .hero__copy {
+        order: 1;
+    }
+
+    .hero__visual {
+        order: 2;
+        height: clamp(380px, 52vh, 520px);
+    }
+
     .model-card {
         grid-template-columns: 1fr;
         gap: 24px;
@@ -701,11 +735,42 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
 }
 
 @media (max-width: 760px) {
-    .hero { padding-top: 50px; }
+    .hero {
+        padding-top: 30px;
+        gap: 24px;
+    }
+    .hero__visual {
+        height: clamp(320px, 48vh, 420px);
+    }
     .topnav { display: none; }
     .hero-meta { flex-direction: column; gap: 8px; }
     .hero-meta li { width: max-content; }
     .ticker-content { font-size: 0.95rem; gap: 16px; }
+}
+
+/* Notebook & 16:9 Screen Optimisation (Section 24: Nunca cortar o N) */
+@media (max-height: 820px) and (min-width: 981px) {
+    .hero {
+        padding: 10px 0 20px;
+        min-height: calc(100vh - 75px);
+    }
+    .hero-title {
+        font-size: clamp(2.6rem, 5.2vw, 4.4rem);
+    }
+    .hero-copy {
+        margin: 16px 0 0;
+        font-size: 1.05rem;
+        line-height: 1.5;
+    }
+    .hero-actions {
+        margin-top: 24px;
+    }
+    .hero-meta {
+        margin-top: 24px;
+    }
+    .hero__visual {
+        height: clamp(360px, 66vh, 580px);
+    }
 }
 
 /* Reduced Motion Override */

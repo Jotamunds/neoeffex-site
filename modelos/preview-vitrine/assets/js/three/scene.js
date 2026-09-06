@@ -1,10 +1,9 @@
 /**
  * Neoeffex 3D Scene — Brand Mark Particles
+ * Etapa 3.2 — Protagonista Visual
  *
- * A self-contained ES module that renders a particle system
- * forming the Neoeffex "N" logo using Three.js and custom shaders.
- * Supports scroll-driven animation, mouse interaction, mobile
- * optimisations, and reduced-motion.
+ * Implements mathematical contain fit, responsive particle density,
+ * calibrated camera frustum, subtle 2.5D depth, and smooth mouse/scroll choreography.
  *
  * @module scene
  */
@@ -22,7 +21,7 @@ let scene = null;
 let camera = null;
 let particlePoints = null;
 let particleMaterial = null;
-let brandGroup = null;      // Group holding the particles
+let brandGroup = null;      // Group holding the particle N
 let animationId = null;
 let isVisible = true;
 let observer = null;
@@ -30,6 +29,10 @@ let observer = null;
 // Options
 let _isMobile = false;
 let _reducedMotion = false;
+
+// Geometry bounds and fit scale
+let nBounds = { width: 0.895, height: 1.0 };
+let baseFitScale = 3.2;
 
 // Mouse interaction targets (normalised –1 … 1)
 let mouseTargetX = 0;
@@ -66,27 +69,59 @@ function mapRange(value, inMin, inMax, outMin, outMax) {
   return lerp(outMin, outMax, t);
 }
 
+/**
+ * Section 6 & 36: Particle count based on viewport width and device class
+ */
+function getParticleCount(isMobile) {
+  const w = window.innerWidth;
+  if (isMobile || w < 768) return 2200;
+  if (w < 1100) return 3600;
+  if (w < 1600) return 4800;
+  return 6200;
+}
+
 // ---------------------------------------------------------------------------
-// Debounced resize
+// Dynamic Contain Fit (Sections 24, 26, 27, 28, 29)
 // ---------------------------------------------------------------------------
+
+function updateFit() {
+  if (!renderer || !camera || !_container || !brandGroup) return;
+
+  const width = _container.clientWidth;
+  const height = _container.clientHeight;
+  if (width <= 0 || height <= 0) return;
+
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(width, height);
+
+  // Compute visible frustum dimensions at z=0 (camera at z=5)
+  const vFovRad = (camera.fov * Math.PI) / 180;
+  const visibleHeight = 2 * Math.tan(vFovRad / 2) * camera.position.z;
+  const visibleWidth = visibleHeight * camera.aspect;
+
+  // Section 25: Safety margin (10% desktop, 12% mobile)
+  const marginFactor = _isMobile ? 0.76 : 0.80;
+
+  // Section 26: Scale calculated for contain (never cover or crop)
+  const scaleH = (visibleWidth * marginFactor) / nBounds.width;
+  const scaleV = (visibleHeight * marginFactor) / nBounds.height;
+  baseFitScale = Math.min(scaleH, scaleV);
+
+  brandGroup.scale.setScalar(baseFitScale);
+  brandGroup.position.set(0, 0, 0);
+
+  if (particleMaterial) {
+    particleMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, _isMobile ? 1.2 : 1.5);
+  }
+}
 
 function onResize() {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
-    if (!renderer || !camera || !_container) return;
-
-    const width = _container.clientWidth;
-    const height = _container.clientHeight;
-
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(width, height);
-    
-    if (particleMaterial) {
-      particleMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, _isMobile ? 1.0 : 1.5);
-    }
-  }, 150);
+    updateFit();
+  }, 100);
 }
 
 // ---------------------------------------------------------------------------
@@ -119,40 +154,40 @@ function setupVisibilityObserver(container) {
 
 async function setupParticles() {
   try {
-    // Particle count logic based on instructions
-    let particleCount = 4000;
-    if (_isMobile) {
-      particleCount = 1800; // Mobile: 1500–2000
-    }
+    const particleCount = getParticleCount(_isMobile);
     
-    // Load SVG and extract pixels
+    // Load SVG and extract pixels with bounding box metadata
     const targetPositions = await loadSVGPixels('/img/logos/neoeffex-n-logo-white.svg', particleCount);
     
-    // Create points and material
+    if (targetPositions.bounds) {
+      nBounds = targetPositions.bounds;
+    }
+    
+    // Create points and shader material
     const result = createParticleLogo(targetPositions, { isMobile: _isMobile, reducedMotion: _reducedMotion });
     particlePoints = result.points;
     particleMaterial = result.material;
     
     brandGroup = new THREE.Group();
     brandGroup.add(particlePoints);
-    
-    // Position group to fit composition (similar to Etapa 3)
-    // The "N" will be slightly on the right
-    brandGroup.position.set(0.5, 0, 0);
     scene.add(brandGroup);
     
-    // Animate uProgress using GSAP if available
+    // Calculate exact dynamic contain fit
+    updateFit();
+    
+    // Animate uProgress (dispersion -> formed N) over 2.0s
     if (!_reducedMotion && window.gsap) {
       window.gsap.to(particleMaterial.uniforms.uProgress, {
         value: 1.0,
-        duration: 2.2,
+        duration: 2.0,
         ease: 'power2.out'
       });
     }
 
   } catch (err) {
     console.error('[Neoeffex 3D] Error generating particles:', err);
-    // If it fails, fallback to CSS will trigger manually or the canvas remains empty.
+    const fallback = document.getElementById('threeFallback');
+    if (fallback) fallback.classList.add('is-active');
   }
 }
 
@@ -170,24 +205,25 @@ function animate() {
 
   const elapsed = performance.now() - startTime;
 
-  if (particleMaterial) {
+  if (particleMaterial && brandGroup) {
     particleMaterial.uniforms.uTime.value = elapsed * 0.001;
     
-    if (!_isMobile) {
-      mouseCurrentX = lerp(mouseCurrentX, mouseTargetX, 0.04);
-      mouseCurrentY = lerp(mouseCurrentY, mouseTargetY, 0.04);
+    // Section 18: Micro idle rotation
+    const idleRotY = _reducedMotion ? 0 : Math.sin(elapsed * 0.0006) * 0.018; // ±1.0°
+    const idleRotX = _reducedMotion ? 0 : Math.cos(elapsed * 0.0005) * 0.012; // ±0.7°
+    
+    if (!_isMobile && !_reducedMotion) {
+      // Section 19: Smooth mouse reaction via lerp (±2.5° max)
+      mouseCurrentX = lerp(mouseCurrentX, mouseTargetX, 0.045);
+      mouseCurrentY = lerp(mouseCurrentY, mouseTargetY, 0.045);
       
       particleMaterial.uniforms.uMouse.value.set(mouseCurrentX, mouseCurrentY);
       
-      // Very subtle base rotation tied to mouse on the group
-      brandGroup.rotation.y = mouseCurrentX * 0.15;
-      brandGroup.rotation.x = mouseCurrentY * 0.08;
-    }
-    
-    // Micro idle rotation on the group
-    if (!_reducedMotion) {
-      brandGroup.rotation.y += Math.sin(elapsed * 0.0005) * 0.0005;
-      brandGroup.rotation.x += Math.cos(elapsed * 0.0004) * 0.0005;
+      brandGroup.rotation.y = mouseCurrentX * 0.045 + idleRotY;
+      brandGroup.rotation.x = -mouseCurrentY * 0.030 + idleRotX;
+    } else {
+      brandGroup.rotation.y = idleRotY;
+      brandGroup.rotation.x = idleRotX;
     }
   }
 
@@ -197,31 +233,24 @@ function animate() {
 }
 
 /**
- * Apply scale / position changes driven by scroll progress.
+ * Section 21: Apply scale / position changes driven by scroll progress.
+ * Preserves N legibility during initial descent, then gently dissolves.
  */
 function applyScrollTransforms() {
   if (!brandGroup || !particleMaterial) return;
   const p = scrollProgress;
 
-  if (p <= 0.3) {
-    // Normal view in hero
-    const scale = mapRange(p, 0, 0.3, 1.0, 1.1);
-    brandGroup.scale.setScalar(scale);
-    brandGroup.position.y = mapRange(p, 0, 0.3, 0, -0.2);
-    brandGroup.rotation.z = mapRange(p, 0, 0.3, 0, -0.05);
-    
-    // Full opacity for the container
-    particleMaterial.opacity = 1.0;
+  if (p <= 0.20) {
+    brandGroup.scale.setScalar(baseFitScale);
+    brandGroup.position.y = 0;
+    brandGroup.rotation.z = 0;
+    particleMaterial.uniforms.uProgress.value = 1.0;
   } else {
-    // Scrolling out - N starts to dissolve/fade
-    const scale = mapRange(p, 0.3, 1.0, 1.1, 0.8);
-    brandGroup.scale.setScalar(scale);
-    brandGroup.position.y = mapRange(p, 0.3, 1.0, -0.2, -1.0);
-    brandGroup.rotation.z = mapRange(p, 0.3, 1.0, -0.05, -0.2);
-    
-    // We can simulate dissolving by affecting uProgress, but fade is safer.
-    // We use a global transparency approach or reduce uProgress slightly:
-    particleMaterial.uniforms.uProgress.value = mapRange(p, 0.3, 1.0, 1.0, 0.5);
+    const scaleFactor = mapRange(p, 0.20, 1.0, 1.0, 0.85);
+    brandGroup.scale.setScalar(baseFitScale * scaleFactor);
+    brandGroup.position.y = mapRange(p, 0.20, 1.0, 0, -0.6);
+    brandGroup.rotation.z = mapRange(p, 0.20, 1.0, 0, -0.05);
+    particleMaterial.uniforms.uProgress.value = mapRange(p, 0.20, 0.90, 1.0, 0.25);
   }
 }
 
@@ -236,27 +265,23 @@ export function init(container, options = {}) {
     _container = container;
 
     // ----- Renderer ---------------------------------------------------------
-    const maxDPR = _isMobile ? 1.0 : 1.5;
+    const maxDPR = _isMobile ? 1.2 : 1.5;
 
     renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true, // MSAA helps smooth particles
+      antialias: true,
+      powerPreference: 'high-performance'
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDPR));
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setSize(container.clientWidth || 600, container.clientHeight || 500);
     renderer.setClearColor(0x000000, 0); // fully transparent background
     container.appendChild(renderer.domElement);
 
     // ----- Scene & camera ---------------------------------------------------
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(
-      45,
-      container.clientWidth / container.clientHeight,
-      0.1,
-      100
-    );
-    // Adjusted camera distance for the new particles scale
+    const aspect = (container.clientWidth || 600) / (container.clientHeight || 500);
+    camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
     camera.position.set(0, 0, 5);
 
     // ----- Particles Async Load ---------------------------------------------
@@ -372,10 +397,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     const threeSection = document.getElementById('threeSection');
-    if (threeSection) {
+    const visualBlock = document.querySelector('.hero__visual');
+    const triggerEl = isMobile ? (visualBlock || threeSection) : threeSection;
+    if (triggerEl) {
       ScrollTrigger.create({
-        trigger: threeSection,
-        start: 'top bottom',
+        trigger: triggerEl,
+        start: isMobile ? 'top 40%' : 'top top',
         end: 'bottom top',
         scrub: true,
         onUpdate: (self) => {
@@ -385,3 +412,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+

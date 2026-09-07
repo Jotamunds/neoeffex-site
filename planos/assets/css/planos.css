@@ -1,6 +1,6 @@
 /* ==========================================================================
    Neoeffex — Página de Planos (/planos/)
-   Etapa 2: Hero comercial, fluxo de contratação e transições
+   Etapa 5: Modal e fluxo de solicitação de orçamento (v0.1.4)
    ========================================================================== */
 
 /* Exibição limpa da barra de navegação sem dependência do loader do hero */
@@ -959,6 +959,347 @@
 }
 
 /* --------------------------------------------------------------------------
+   Etapa 5: Modal e Formulário de Solicitação de Orçamento
+   -------------------------------------------------------------------------- */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: color-mix(in oklch, var(--bg) 84%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 220ms var(--ease), visibility 220ms var(--ease);
+}
+
+.modal.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-card {
+  width: min(100%, 640px);
+  max-height: calc(100vh - 36px);
+  overflow-y: auto;
+  padding: 32px;
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.75);
+  transform: translateY(16px) scale(0.98);
+  transition: transform 250ms var(--ease);
+}
+
+.modal.open .modal-card {
+  transform: none;
+}
+
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.modal-head h2 {
+  margin: 0 0 8px;
+  font-size: clamp(22px, 3.2vw, 28px);
+  letter-spacing: -0.02em;
+}
+
+.modal-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.close-modal {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--panel) 70%, transparent);
+  color: var(--fg);
+  font-size: 24px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: border-color 180ms var(--ease), background 180ms var(--ease), transform 180ms var(--ease);
+}
+
+.close-modal:hover {
+  border-color: var(--accent-bright);
+  background: color-mix(in oklch, var(--accent) 15%, transparent);
+  transform: scale(1.05);
+}
+
+.close-modal:focus-visible {
+  outline: none;
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 25%, transparent);
+}
+
+/* Campos e formulário */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  color: var(--fg-2);
+  font-size: 12.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.req-star {
+  color: var(--accent-bright);
+  font-weight: 600;
+}
+
+.field-optional {
+  font-size: 11px;
+  color: var(--meta);
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+.field-helper {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-top: -2px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklch, var(--bg) 65%, transparent);
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 14px;
+  outline: 0;
+  transition: border-color 180ms, box-shadow 180ms, background 180ms;
+}
+
+.field select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238892b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.field select option {
+  background: var(--surface);
+  color: var(--fg);
+}
+
+.field textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 20%, transparent);
+  background: color-mix(in oklch, var(--bg) 85%, transparent);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--meta);
+}
+
+/* Estado de erro de validação por campo */
+.field-error-msg {
+  font-size: 11.5px;
+  color: var(--danger);
+  min-height: 16px;
+  line-height: 1.3;
+  display: none;
+}
+
+.field.has-error .field-error-msg {
+  display: block;
+}
+
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--danger) 22%, transparent);
+}
+
+/* Ações e status do formulário */
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.form-note {
+  color: var(--meta);
+  font-size: 11.5px;
+  line-height: 1.4;
+  max-width: 320px;
+}
+
+.form-status {
+  min-height: 20px;
+  margin: 14px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 180ms var(--ease), transform 180ms var(--ease);
+}
+
+.form-status.show {
+  opacity: 1;
+  transform: none;
+}
+
+.form-status[data-state="error"] {
+  color: var(--danger);
+}
+
+.form-status[data-state="success"] {
+  color: var(--success);
+}
+
+.btn.is-confirmed {
+  border-color: var(--success);
+  background: var(--success);
+  color: var(--accent-on);
+  animation: confirmButton 260ms var(--ease) 1;
+}
+
+.form-fallback-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 8px;
+  color: var(--accent-pale);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.form-fallback-whatsapp:hover {
+  color: #ffffff;
+}
+
+/* Estado de Sucesso Dedicado do Modal */
+.modal-success-state {
+  text-align: center;
+  padding: 32px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.modal-success-state[hidden] {
+  display: none !important;
+}
+
+.success-icon-wrap {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--success) 18%, transparent);
+  border: 1px solid var(--success);
+  color: var(--success);
+  display: grid;
+  place-items: center;
+  margin-bottom: 4px;
+}
+
+.modal-success-state h3 {
+  margin: 0;
+  font-size: 24px;
+  color: var(--fg);
+  font-family: var(--font-display);
+}
+
+.modal-success-state p {
+  margin: 0;
+  color: var(--fg-2);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+.success-details-box {
+  width: 100%;
+  max-width: 460px;
+  padding: 16px 18px;
+  background: color-mix(in oklch, var(--panel) 60%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  margin-top: 8px;
+}
+
+.success-detail-item {
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.success-detail-item strong {
+  color: var(--fg);
+}
+
+.success-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
    Adaptação Responsiva
    -------------------------------------------------------------------------- */
 @media (max-width: 1080px) {
@@ -1096,6 +1437,42 @@
   .structural-placeholder {
     padding: 18px 14px;
   }
+  .modal {
+    padding: 12px;
+  }
+  .modal-card {
+    padding: 22px 16px;
+    max-height: calc(100vh - 24px);
+    border-radius: var(--radius-md);
+  }
+  .modal-head {
+    margin-bottom: 18px;
+  }
+  .modal-head h2 {
+    font-size: 22px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .field.full {
+    grid-column: auto;
+  }
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .form-actions .btn {
+    width: 100%;
+  }
+  .success-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .success-actions .btn {
+    width: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1111,7 +1488,10 @@
   .hours-guide-panel,
   .cycle-box,
   .hours-pillar-card,
-  .scope-card {
+  .scope-card,
+  .modal,
+  .modal-card,
+  .form-status {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;

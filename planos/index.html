@@ -29,7 +29,7 @@
 
   <!-- Estilos Globais e Específicos -->
   <link rel="stylesheet" href="../assets/css/style.css?v=0.1.15">
-  <link rel="stylesheet" href="assets/css/planos.css?v=0.1.3">
+  <link rel="stylesheet" href="assets/css/planos.css?v=0.1.4">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -47,7 +47,7 @@
         <a class="nav-link" href="#implantacao">Implantação</a>
         <a class="nav-link" href="#mensal">Manutenção</a>
         <a class="nav-link" href="#faq">Dúvidas</a>
-        <a class="btn nav-cta" href="#contato" data-od-id="cta-navbar"><span>Solicitar orçamento</span></a>
+        <button type="button" class="btn nav-cta open-quote-modal" data-od-id="cta-navbar"><span>Solicitar orçamento</span></button>
       </nav>
       <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks" data-od-id="controle-menu">
         <span></span>
@@ -896,21 +896,24 @@
       </div>
     </section>
 
-    <!-- 7. CTA FINAL (Estrutura / Base para Etapa 5) -->
+    <!-- 7. CTA FINAL (Fluxo de Conversão - Etapa 5) -->
     <section class="section cta-section" id="contato" data-od-id="cta-final">
       <div class="container">
         <div class="cta-panel reveal">
           <div class="eyebrow">VAMOS CONVERSAR</div>
           <h2 class="headline-upper">Pronto para dar o próximo passo?</h2>
-          <p>Fale conosco, tire dúvidas sobre os planos e receba uma estimativa detalhada para o projeto da sua empresa.</p>
+          <p>Solicite uma proposta personalizada para sua empresa ou tire dúvidas diretamente com nossa equipe técnica.</p>
           
-          <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 14px;">
-            <a class="btn btn-primary" href="https://wa.me/5511997763958?text=Ol%C3%A1%2C%20gostaria%20de%20conversar%20sobre%20os%20planos%20de%20sites%20da%20Neoeffex." target="_blank" rel="noopener noreferrer" data-od-id="cta-final-whatsapp">
-              <span>Conversar pelo WhatsApp</span>
+          <div class="cta-actions" style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; align-items: center;">
+            <button type="button" class="btn btn-primary open-quote-modal" data-od-id="cta-final-orcamento">
+              <span>Solicitar orçamento</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+            </button>
+            <a class="btn" href="https://wa.me/5511997763958?text=Ol%C3%A1%2C%20gostaria%20de%20conversar%20sobre%20os%20planos%20de%20sites%20da%20Neoeffex." target="_blank" rel="noopener noreferrer" data-od-id="cta-final-whatsapp">
+              <span>Conversar pelo WhatsApp</span>
             </a>
-            <span style="color: var(--meta); font-size: 12px; font-family: var(--font-mono);">[Estrutura preparada para receber o modal de solicitação de orçamento na Etapa 5]</span>
           </div>
+          <p style="margin-top: 18px; color: var(--meta); font-size: 12.5px; margin-bottom: 0;">Atendimento humano · Avaliação prévia sem custo · Proposta comercial transparente</p>
         </div>
       </div>
     </section>
@@ -942,12 +945,137 @@
     </div>
   </footer>
 
+  <!-- Modal de Solicitação de Orçamento (Etapa 5) -->
+  <div class="modal" id="quoteModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true" data-od-id="modal-orcamento">
+    <div class="modal-card" id="quoteModalCard">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">ORÇAMENTO TRANSPARENTE</div>
+          <h2 id="modalTitle">Solicitar orçamento</h2>
+          <p>Conte um pouco sobre seu projeto. A Neoeffex entrará em contato para entender os detalhes e preparar uma proposta.</p>
+        </div>
+        <button class="close-modal" id="closeQuoteModal" type="button" aria-label="Fechar formulário">×</button>
+      </div>
+
+      <!-- Formulário de Orçamento -->
+      <form id="quoteForm" novalidate>
+        <!-- Metadados de Origem e Encaminhamento -->
+        <input type="hidden" name="_origin" value="/planos/">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_subject" id="quoteSubject" value="Solicitação de Orçamento - /planos/">
+
+        <div class="form-grid">
+          <!-- Nome -->
+          <div class="field" id="field-name">
+            <label for="quoteName">Seu nome <span class="req-star" aria-hidden="true">*</span></label>
+            <input id="quoteName" name="nome" type="text" autocomplete="name" placeholder="Como podemos chamar você?" required>
+            <span class="field-error-msg" id="err-name" aria-live="polite"></span>
+          </div>
+
+          <!-- Empresa ou Marca -->
+          <div class="field" id="field-company">
+            <label for="quoteCompany">Empresa ou marca <span class="req-star" aria-hidden="true">*</span></label>
+            <input id="quoteCompany" name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa, consultório ou projeto" required>
+            <span class="field-error-msg" id="err-company" aria-live="polite"></span>
+          </div>
+
+          <!-- E-mail -->
+          <div class="field" id="field-email">
+            <label for="quoteEmail">E-mail <span class="req-star" aria-hidden="true">*</span></label>
+            <input id="quoteEmail" name="email" type="email" autocomplete="email" placeholder="seuemail@empresa.com.br" required>
+            <span class="field-error-msg" id="err-email" aria-live="polite"></span>
+          </div>
+
+          <!-- Telefone / WhatsApp -->
+          <div class="field" id="field-phone">
+            <label for="quotePhone">Telefone / WhatsApp <span class="req-star" aria-hidden="true">*</span></label>
+            <input id="quotePhone" name="telefone" type="tel" autocomplete="tel" placeholder="(11) 99999-9999" required>
+            <span class="field-error-msg" id="err-phone" aria-live="polite"></span>
+          </div>
+
+          <!-- Plano Desejado -->
+          <div class="field" id="field-plan">
+            <label for="quotePlan">Plano desejado <span class="req-star" aria-hidden="true">*</span></label>
+            <select id="quotePlan" name="plano_desejado" required>
+              <option value="">Selecione uma opção</option>
+              <option value="Landing Page">Landing Page</option>
+              <option value="Site Institucional">Site Institucional</option>
+              <option value="Site + Catálogo Neoeffex">Site + Catálogo Neoeffex</option>
+              <option value="Totalmente Personalizado">Totalmente Personalizado</option>
+              <option value="Ainda não sei qual plano escolher">Ainda não sei qual plano escolher</option>
+            </select>
+            <span class="field-error-msg" id="err-plan" aria-live="polite"></span>
+          </div>
+
+          <!-- Plano Mensal de Interesse -->
+          <div class="field" id="field-maintenance">
+            <label for="quoteMaintenance">Plano mensal de interesse <span class="field-optional">(opcional)</span></label>
+            <select id="quoteMaintenance" name="plano_mensal">
+              <option value="Quero conversar primeiro">Quero conversar primeiro</option>
+              <option value="Infraestrutura + Segurança">Infraestrutura + Segurança</option>
+              <option value="Cuidado">Cuidado</option>
+              <option value="Evolução">Evolução</option>
+              <option value="Ainda não sei">Ainda não sei</option>
+            </select>
+          </div>
+
+          <!-- Descrição do Projeto -->
+          <div class="field full" id="field-brief">
+            <label for="quoteBrief">Conte sobre seu projeto <span class="req-star" aria-hidden="true">*</span></label>
+            <span class="field-helper">Conte um pouco sobre sua empresa, o que você precisa e como imagina seu site.</span>
+            <textarea id="quoteBrief" name="descricao" rows="4" placeholder="Conte um pouco sobre sua empresa, o que você precisa e como imagina seu site." required></textarea>
+            <span class="field-error-msg" id="err-brief" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <span class="form-note">Usamos seus dados exclusivamente para responder à sua solicitação e preparar a proposta. Sem cobrança automática ou cadastro de cartão.</span>
+          <button class="btn btn-primary" id="quoteSubmitBtn" type="submit">
+            <span id="quoteSubmitLabel">Enviar solicitação</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+          </button>
+        </div>
+
+        <div class="form-status" id="quoteFormStatus" role="status" aria-live="polite"></div>
+      </form>
+
+      <!-- Estado de Sucesso (após envio aprovado) -->
+      <div class="modal-success-state" id="modalSuccessState" hidden>
+        <div class="success-icon-wrap" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h3 id="successTitle">Solicitação recebida.</h3>
+        <p>A Neoeffex entrará em contato pelos dados informados para entender melhor o projeto e preparar a proposta.</p>
+        
+        <div class="success-details-box">
+          <div class="success-detail-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span><strong>Retorno ágil:</strong> Entraremos em contato via WhatsApp ou e-mail.</span>
+          </div>
+          <div class="success-detail-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <span><strong>Sem compromisso:</strong> Este envio não representa contratação imediata.</span>
+          </div>
+        </div>
+
+        <div class="success-actions">
+          <button type="button" class="btn btn-primary" id="successCloseBtn">
+            <span>Concluir</span>
+          </button>
+          <a class="btn" href="https://wa.me/5511997763958?text=Ol%C3%A1%2C%20acabei%20de%20enviar%20uma%20solicita%C3%A7%C3%A3o%20de%20or%C3%A7amento%20pelo%20site%20da%20Neoeffex." target="_blank" rel="noopener noreferrer">
+            <span>Falar agora no WhatsApp</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Botão Flutuante (FAB) do WhatsApp -->
   <a class="fab-whatsapp" href="https://wa.me/5511997763958?text=Ol%C3%A1%2C%20estou%20na%20p%C3%A1gina%20de%20planos%20da%20Neoeffex%20e%20gostaria%20de%20conversar." target="_blank" rel="noopener noreferrer" aria-label="Conversar pelo WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
 
   <!-- Script da Página de Planos -->
-  <script src="assets/js/planos.js?v=0.1.3"></script>
+  <script src="assets/js/planos.js?v=0.1.4"></script>
 </body>
 </html>

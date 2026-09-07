@@ -39,6 +39,13 @@ let mouseTargetX = 0;
 let mouseTargetY = 0;
 let mouseCurrentX = 0;
 let mouseCurrentY = 0;
+let mouseActiveTarget = 0.0;
+let mouseActiveCurrent = 0.0;
+
+const raycaster = new THREE.Raycaster();
+const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+const intersectionPoint = new THREE.Vector3();
+const localMouse = new THREE.Vector3(999, 999, 0);
 
 // Scroll-driven state
 let scrollProgress = 0;
@@ -101,10 +108,11 @@ function updateFit() {
   const visibleHeight = 2 * Math.tan(vFovRad / 2) * camera.position.z;
   const visibleWidth = visibleHeight * camera.aspect;
 
-  // Section 25: Safety margin (10% desktop, 12% mobile)
+  // Margem base de enquadramento contain (0.80 desktop, 0.76 mobile).
+  // A redução para 92% é isolada no shader via uNScale (0.92), evitando encolher o campo ambiente.
   const marginFactor = _isMobile ? 0.76 : 0.80;
 
-  // Section 26: Scale calculated for contain (never cover or crop)
+  // Scale calculated for contain (never cover or crop)
   const scaleH = (visibleWidth * marginFactor) / nBounds.width;
   const scaleV = (visibleHeight * marginFactor) / nBounds.height;
   baseFitScale = Math.min(scaleH, scaleV);
@@ -115,7 +123,10 @@ function updateFit() {
   if (particleMaterial) {
     particleMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, _isMobile ? 1.2 : 1.5);
     if (particleMaterial.uniforms.uCopyCenter) {
-      particleMaterial.uniforms.uCopyCenter.value.set(_isMobile ? 0.0 : -0.75, _isMobile ? 0.25 : 0.05);
+      particleMaterial.uniforms.uCopyCenter.value.set(0.0, 0.05);
+    }
+    if (particleMaterial.uniforms.uNScale) {
+      particleMaterial.uniforms.uNScale.value = 0.92;
     }
   }
 }
@@ -234,23 +245,43 @@ function animate() {
   if (particleMaterial && brandGroup) {
     particleMaterial.uniforms.uTime.value = elapsed * 0.001;
     
-    // Micro rotação idle — contida e suave (±1.0° Y desktop, ±0.5° mobile; ±0.6° X)
+    // Micro rotação idle — contida e suave (±0.9° Y desktop, ±0.4° mobile; ±0.5° X)
     // Mantém a silhueta do N impecável e reconhecível
-    const idleRotY = _reducedMotion ? 0 : Math.sin(elapsed * 0.0006) * (_isMobile ? 0.008 : 0.016);
-    const idleRotX = _reducedMotion ? 0 : Math.cos(elapsed * 0.0005) * (_isMobile ? 0.005 : 0.010);
+    const idleRotY = _reducedMotion ? 0 : Math.sin(elapsed * 0.0006) * (_isMobile ? 0.007 : 0.015);
+    const idleRotX = _reducedMotion ? 0 : Math.cos(elapsed * 0.0005) * (_isMobile ? 0.004 : 0.009);
     
     if (!_isMobile && !_reducedMotion) {
-      // Reação suave ao mouse com limites estritos (±2.0° max)
-      mouseCurrentX = lerp(mouseCurrentX, mouseTargetX, 0.045);
-      mouseCurrentY = lerp(mouseCurrentY, mouseTargetY, 0.045);
+      // Reação suave ao mouse com limites estritos (±2.5° max)
+      mouseCurrentX = lerp(mouseCurrentX, mouseTargetX, 0.055);
+      mouseCurrentY = lerp(mouseCurrentY, mouseTargetY, 0.055);
+      mouseActiveCurrent = lerp(mouseActiveCurrent, mouseActiveTarget, 0.06);
       
-      particleMaterial.uniforms.uMouse.value.set(mouseCurrentX, mouseCurrentY);
+      // Projeta o mouse no plano Z=0 da cena e converte para o espaço local do N
+      if (camera && mouseActiveCurrent > 0.005) {
+        raycaster.setFromCamera({ x: mouseCurrentX, y: mouseCurrentY }, camera);
+        if (raycaster.ray.intersectPlane(planeZ, intersectionPoint)) {
+          localMouse.copy(intersectionPoint);
+          brandGroup.worldToLocal(localMouse);
+          if (particleMaterial.uniforms.uMouseLocal) {
+            particleMaterial.uniforms.uMouseLocal.value.copy(localMouse);
+          }
+        }
+      }
+      if (particleMaterial.uniforms.uMouseActive) {
+        particleMaterial.uniforms.uMouseActive.value = mouseActiveCurrent;
+      }
       
-      brandGroup.rotation.y = mouseCurrentX * 0.035 + idleRotY;
-      brandGroup.rotation.x = -mouseCurrentY * 0.024 + idleRotX;
+      // Micro inclinação global combinada limitada estritamente a 2.5° (0.043 rad)
+      const rotY = THREE.MathUtils.clamp(mouseCurrentX * 0.032, -0.043, 0.043) + idleRotY;
+      const rotX = THREE.MathUtils.clamp(-mouseCurrentY * 0.022, -0.035, 0.035) + idleRotX;
+      brandGroup.rotation.y = rotY;
+      brandGroup.rotation.x = rotX;
     } else {
       brandGroup.rotation.y = idleRotY;
       brandGroup.rotation.x = idleRotX;
+      if (particleMaterial.uniforms.uMouseActive) {
+        particleMaterial.uniforms.uMouseActive.value = 0.0;
+      }
     }
   }
 
@@ -355,10 +386,11 @@ export function setPageScroll(scrollY, progress) {
   }
 }
 
-export function updateMouse(normalizedX, normalizedY) {
+export function updateMouse(normalizedX, normalizedY, active = true) {
   if (_isMobile || _reducedMotion) return;
   mouseTargetX = clamp(normalizedX, -1, 1);
   mouseTargetY = clamp(normalizedY, -1, 1);
+  mouseActiveTarget = active ? 1.0 : 0.0;
 }
 
 export function getParticleMaterial() {
@@ -431,12 +463,21 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('mousemove', (e) => {
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
-      updateMouse(nx, ny);
+      updateMouse(nx, ny, true);
+    });
+
+    document.addEventListener('mouseleave', () => {
+      mouseActiveTarget = 0.0;
+    });
+
+    document.addEventListener('mouseenter', () => {
+      mouseActiveTarget = 1.0;
     });
   }
 
   window.__neoeffexUpdateScrollProgress = updateScrollProgress;
   window.__neoeffexSetPageScroll = setPageScroll;
+  window.__neoeffexUpdateMouse = updateMouse;
 
   // Pausa/retomada inteligente em background para máxima performance (Etapa 4 / Risk 5)
   document.addEventListener('visibilitychange', () => {
@@ -454,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ScrollTrigger.create({
         trigger: triggerEl,
         start: 'top top',
-        end: isMobile ? '+=100%' : '+=130%',
+        end: () => isMobile ? '+=' + Math.round(window.innerHeight * 1.4) : '+=' + Math.round(window.innerHeight * 2.0),
         pin: !reducedMotion,
         pinSpacing: !reducedMotion,
         scrub: 0.6,

@@ -36,7 +36,7 @@
         <div class="three-canvas-wrap" id="threeCanvas">
             <!-- Three.js canvas will be injected here -->
             <div class="three-fallback" id="threeFallback">
-                <img src="/img/logos/neoeffex-n-logo-white.svg" alt="Neoeffex Logo" class="three-fallback__svg" />
+                <img src="/img/logos/neoeffex-n-logo-white.svg" alt="Neoeffex Logo" class="three-fallback__svg" draggable="false" />
             </div>
         </div>
     </div>
@@ -46,23 +46,25 @@
         <div class="ambient-glow" aria-hidden="true"></div>
 
         <header class="topbar">
-            <a class="brand" href="#inicio" aria-label="Neoeffex" data-cursor="↗">
-                <span class="brand-mark"></span>
-                <span class="brand-text">neoeffex</span>
-            </a>
+            <div class="topbar__inner">
+                <a class="brand" href="#inicio" aria-label="Neoeffex" data-cursor="↗">
+                    <span class="brand-mark"></span>
+                    <span class="brand-text">neoeffex</span>
+                </a>
 
-            <nav class="topnav" aria-label="Navegação">
-                <a href="#demonstracoes">Diferenciais</a>
-                <a href="#hamburgueria">Hamburgueria</a>
-                <a href="#clinica">Clínica</a>
-                <a href="#hortifruti">Hortifruti</a>
-                <a href="#lu">Lu Leve</a>
-            </nav>
+                <nav class="topnav" aria-label="Navegação">
+                    <a href="#demonstracoes">Diferenciais</a>
+                    <a href="#hamburgueria">Hamburgueria</a>
+                    <a href="#clinica">Clínica</a>
+                    <a href="#hortifruti">Hortifruti</a>
+                    <a href="#lu">Lu Leve</a>
+                </nav>
 
-            <a class="button button--ghost button--magnetic" href="/#contato" data-cursor="↗" data-magnetic>
-                <span>Solicitar projeto</span>
-                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+                <a class="button button--ghost button--magnetic" href="/#contato" data-cursor="↗" data-magnetic>
+                    <span>Solicitar projeto</span>
+                    <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
         </header>
 
         <main id="inicio">
@@ -181,11 +183,11 @@
                         <div class="demo-stage demo-stage--photos" data-parallax="4">
                             <div class="photo-composition">
                                 <div class="photo-card photo-card--main" data-parallax="2">
-                                    <img src="../hortifruti/assets/img/banca.webp" alt="Espaço real e produtos frescos" loading="lazy" class="photo-img" />
+                                    <img src="../hortifruti/assets/img/banca.webp" alt="Espaço real e produtos frescos" loading="lazy" class="photo-img" draggable="false" />
                                     <span class="photo-badge">ESPAÇO REAL</span>
                                 </div>
                                 <div class="photo-card photo-card--sub" data-parallax="5">
-                                    <img src="../hortifruti/assets/img/salada.webp" alt="Produto autêntico com preparo cuidadoso" loading="lazy" class="photo-img" />
+                                    <img src="../hortifruti/assets/img/salada.webp" alt="Produto autêntico com preparo cuidadoso" loading="lazy" class="photo-img" draggable="false" />
                                     <span class="photo-badge">PRODUTO AUTORAL</span>
                                 </div>
                             </div>
@@ -383,7 +385,7 @@
 
         <footer class="footer">
             <div class="footer__inner">
-                <p>&copy; 2026 Neoeffex. Todos os direitos reservados.</p>
+                <p>&copy; 2026 <span class="footer-brand">Neoeffex</span>. Todos os direitos reservados.</p>
             </div>
         </footer>
     </div>

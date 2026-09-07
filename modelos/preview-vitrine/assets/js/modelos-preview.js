@@ -252,13 +252,13 @@
             if (heroSection) {
                 window.__neoeffexHeroTriggerActive = true;
 
-                // Distância dedicada para a experiência do N (120% desktop, 95% mobile)
-                const pinDuration = isTouch ? '+=95%' : '+=120%';
+                // Distância dedicada para a transformação do N (180–220vh desktop, 140vh mobile conforme Seção 23 da Etapa 5)
+                const getPinDuration = () => isTouch ? '+=' + Math.round(window.innerHeight * 1.4) : '+=' + Math.round(window.innerHeight * 2.0);
 
                 const heroTrigger = ScrollTrigger.create({
                     trigger: heroSection,
                     start: 'top top',
-                    end: pinDuration,
+                    end: getPinDuration,
                     pin: !prefersReducedMotion,
                     pinSpacing: !prefersReducedMotion,
                     scrub: 0.6,

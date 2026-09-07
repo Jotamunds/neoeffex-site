@@ -41,6 +41,17 @@ Não use este arquivo como changelog.
 - As landing pages devem permanecer responsivas.
 - Integrações de catálogo devem reutilizar o sistema Neoeffex em vez de criar um catálogo paralelo.
 
+## Vitrine de Modelos (/modelos)
+
+- Rota: `/modelos/preview-vitrine` (vitrine principal de demonstração tecnológica e projetos).
+- O header (topbar) deve ocupar 100% da largura visualmente com blur e fundo translúcido, com conteúdo interno limitado por max-width e centralizado.
+- O hero mantém centralização horizontal e camada de partículas atrás dos textos editoriais.
+- O logo N em partículas possui ritmo em 5 fases contínuas com interpolação C1 (w_form e w_disp) e partição da unidade.
+- A calibração da escala do N é isolada via shader (uNScale) para não encolher o campo ambiente circundante.
+- Distância efetiva de transformação calibrada em 180–220vh via ScrollTrigger sem duplicação de pinSpacing.
+- Elementos visuais possuem restrição de arraste/seleção (user-select: none), preservando seleção em textos editáveis, inputs, links, botões e iframes.
+- A palavra "Neoeffex" no footer recebe destaque exclusivo em negrito e sublinhado (.footer-brand).
+
 ## Hamburgueria
 
 - Rota: `/modelos/hamburgueria`.

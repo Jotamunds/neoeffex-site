@@ -49,6 +49,7 @@
 html { 
     scroll-behavior: smooth; 
     background-color: var(--bg);
+    overflow-x: hidden;
 }
 
 body {
@@ -163,21 +164,28 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
     z-index: -1;
 }
 
-/* Topbar */
+/* Topbar (Etapa 5: Full-width visual com conteúdo centralizado limitado) */
 .topbar {
-    width: var(--content);
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    background: rgba(4, 7, 13, 0.72);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.topbar__inner {
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding: 20px 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(18px);
-    background: rgba(4, 7, 13, 0.6);
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    padding: 18px 24px;
+    box-sizing: border-box;
 }
 
 .brand {
@@ -268,14 +276,14 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
     transform: translateX(4px);
 }
 
-/* Hero Section — Etapa 1: Menos texto, tipografia fina, limpa e espaçosa */
+/* Hero Section — Etapa 5: Centralizado horizontalmente sem caixa atrás */
 .hero {
     width: var(--content);
     margin: 0 auto;
-    padding: clamp(80px, 15vh, 150px) 0 clamp(80px, 16vh, 160px);
+    padding: clamp(60px, 12vh, 130px) 0 clamp(60px, 12vh, 140px);
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     min-height: calc(100vh - 85px);
     position: relative;
@@ -286,7 +294,8 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
     max-width: 840px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     z-index: 2;
 }
 
@@ -299,6 +308,8 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
     text-transform: uppercase;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -313,12 +324,13 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
 }
 
 .hero-copy {
-    max-width: 520px;
+    max-width: 540px;
     color: var(--muted);
     font-size: clamp(1.02rem, 1.8vw, 1.16rem);
     line-height: 1.6;
-    margin: 28px 0 0;
+    margin: 28px auto 0;
     font-weight: 400;
+    text-align: center;
 }
 
 .hero-actions {
@@ -326,16 +338,14 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
     flex-wrap: wrap;
     gap: 16px;
     margin-top: 36px;
+    justify-content: center;
 }
 
 /* Movimento Tipográfico (Ticker Horizontal) */
 .ticker-section {
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
     position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
     padding: 30px 0;
     overflow: hidden;
     background: linear-gradient(180deg, rgba(4,7,13,0) 0%, rgba(12,18,31,0.6) 50%, rgba(4,7,13,0) 100%);
@@ -950,8 +960,8 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
 .particles-bg-layer {
     position: fixed;
     inset: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
     z-index: 1;
     overflow: hidden;
@@ -1084,9 +1094,63 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
     margin: 0 auto;
 }
 
+.footer-brand {
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: var(--text);
+}
+
+/* Restrição de Seleção e Arraste em Elementos Visuais (Etapa 5 / Seções 12 e 30) */
+.particles-bg-layer,
+#threeCanvas,
+#threeCanvas canvas,
+.brand-mark,
+.model-card,
+.model-card__kicker,
+.model-card__media,
+.media-badge,
+.demo-stage,
+.spatial-viewport,
+.spatial-prism,
+.prism-face,
+.photo-composition,
+.photo-card,
+.photo-badge,
+.demo-pill,
+.metric-card,
+.metric-val,
+.metric-unit,
+.metric-lbl,
+.magnetic-chip,
+.ticker-section,
+.custom-cursor,
+.ambient-glow,
+.three-fallback {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+img,
+video,
+canvas,
+.photo-img,
+.preview-video {
+    -webkit-user-drag: none;
+    user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Exceção explícita para campos de entrada ou conteúdo editável */
+input, textarea, [contenteditable="true"] {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+
 /* Mobile & Tablet Responsive Adjustments */
 @media (max-width: 980px) {
-    .topbar {
+    .topbar__inner {
         flex-wrap: wrap;
         justify-content: center;
     }

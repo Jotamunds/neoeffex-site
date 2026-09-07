@@ -21,16 +21,16 @@ export function createParticleLogo(targetPositions, options = {}) {
     const sizes = new Float32Array(particleCount);
     const colors = new Float32Array(particleCount * 3);
     
-    // Paleta Neoeffex com 70% azul escuro rico, 20% azul Neoeffex vivo, 8% azul claro, 2% quase branco
-    const colorDeepBlue  = new THREE.Color(0x10489e); // 70%: azul escuro rico e definido
-    const colorPrimary   = new THREE.Color(0x1e86ff); // 20%: azul Neoeffex vivo
-    const colorLight     = new THREE.Color(0x72bcff); // 8%: azul elétrico / claro
-    const colorNearWhite = new THREE.Color(0xeef6ff); // 2%: quase branco para highlights raros
+    // Paleta Neoeffex vibrante: 60% azul Neoeffex vivo (#1e86ff), 25% elétrico (#50afff), 10% azul rico (#125ac2), 5% highlight claro (#a4d7ff)
+    const colorPrimary   = new THREE.Color(0x1e86ff); // 60%: azul Neoeffex institucional vivo
+    const colorCyan      = new THREE.Color(0x50afff); // 25%: azul elétrico / ciano tecnológico
+    const colorDeep      = new THREE.Color(0x125ac2); // 10%: azul profundo luminoso
+    const colorLight     = new THREE.Color(0xa4d7ff); // 5%: highlight cristalino discreto
     
     // Limits for start positions (dispersion spread across viewport field)
-    const dispersionX = options.isMobile ? 1.6 : 3.8;
-    const dispersionY = options.isMobile ? 3.0 : 2.8;
-    const dispersionZ = 1.4;
+    const dispersionX = options.isMobile ? 2.0 : 4.4;
+    const dispersionY = options.isMobile ? 3.2 : 3.2;
+    const dispersionZ = options.isMobile ? 1.2 : 1.8;
     
     for (let i = 0; i < particleCount; i++) {
         const i3 = i * 3;
@@ -44,22 +44,20 @@ export function createParticleLogo(targetPositions, options = {}) {
         let startY = (Math.random() - 0.5) * dispersionY;
         let startZ = (Math.random() - 0.5) * dispersionZ;
 
-        // Etapa 2 — Zona de baixa densidade próxima à copy:
-        // Desvia 85% das partículas que cairiam sobre a headline para a região centro-direita
-        // (onde o N se formará na Etapa 3) ou periferia atmosférica
+        // Etapa 5 — Zona de baixa densidade próxima à copy centralizada:
+        // Desvia 85% das partículas que cairiam sobre a headline e textos centrais
+        // para a periferia atmosférica, garantindo leitura perfeita
         if (!options.isMobile) {
-            // Desktop: headline na metade esquerda (X em [-1.55, -0.15], Y em [-0.45, 0.55])
-            if (startX > -1.55 && startX < -0.15 && startY > -0.45 && startY < 0.55) {
+            if (Math.abs(startX) < 0.85 && startY > -0.35 && startY < 0.50) {
                 if (Math.random() < 0.85) {
-                    startX = 0.15 + Math.random() * (dispersionX * 0.45);
-                    startY += (Math.random() - 0.5) * 0.6;
+                    startX = (Math.random() > 0.5 ? 1.0 : -1.0) * (0.85 + Math.random() * (dispersionX * 0.35));
+                    startY += (Math.random() - 0.5) * 0.5;
                 }
             }
         } else {
-            // Mobile: headline na faixa central superior (X em [-0.45, 0.45], Y em [0.05, 0.45])
-            if (Math.abs(startX) < 0.45 && startY > 0.05 && startY < 0.45) {
-                if (Math.random() < 0.75) {
-                    startY = (Math.random() > 0.5 ? 0.60 : -0.35) + (Math.random() - 0.5) * 0.3;
+            if (Math.abs(startX) < 0.50 && startY > -0.15 && startY < 0.45) {
+                if (Math.random() < 0.80) {
+                    startY = (Math.random() > 0.5 ? 0.55 : -0.40) + (Math.random() - 0.5) * 0.3;
                 }
             }
         }
@@ -71,7 +69,7 @@ export function createParticleLogo(targetPositions, options = {}) {
         // End Position (Etapa 3: Campo ambiente após dispersão do N)
         // Dispersão orgânica suave radial e descendente
         const endAngle = Math.random() * Math.PI * 2;
-        const endRadius = (options.isMobile ? 0.75 : 1.35) + Math.random() * (options.isMobile ? 1.4 : 2.5);
+        const endRadius = (options.isMobile ? 0.85 : 1.50) + Math.random() * (options.isMobile ? 1.5 : 2.8);
         const endSpreadZ = (Math.random() - 0.5) * 1.6;
 
         endPositions[i3 + 0] = targetPositions[i3 + 0] * 0.45 + Math.cos(endAngle) * endRadius;
@@ -95,17 +93,17 @@ export function createParticleLogo(targetPositions, options = {}) {
             sizes[i] = (options.isMobile ? 3.8 : 2.8) + Math.random() * 1.0; // base calibrada
         }
         
-        // Distribuição de cor: 70% azul escuro, 20% vivo, 8% claro, 2% quase branco
+        // Distribuição de cor: 60% institucional (#1e86ff), 25% elétrico (#50afff), 10% profundo (#125ac2), 5% highlight (#a4d7ff)
         const randColor = Math.random();
         let particleColor;
-        if (randColor > 0.98) {
-            particleColor = colorNearWhite;
-        } else if (randColor > 0.90) {
+        if (randColor > 0.95) {
             particleColor = colorLight;
         } else if (randColor > 0.70) {
-            particleColor = colorPrimary;
+            particleColor = colorCyan;
+        } else if (randColor < 0.10) {
+            particleColor = colorDeep;
         } else {
-            particleColor = colorDeepBlue;
+            particleColor = colorPrimary;
         }
         
         colors[i3 + 0] = particleColor.r;
@@ -126,14 +124,16 @@ export function createParticleLogo(targetPositions, options = {}) {
         fragmentShader,
         uniforms: {
             uTime: { value: 0 },
-            uScrollProgress: { value: 0.0 }, // Progresso contínuo de rolagem do hero (Etapa 3)
-            uPageScroll: { value: 0.0 },     // Progresso global de rolagem da página (Etapa 4)
+            uScrollProgress: { value: 0.0 }, // Progresso contínuo de rolagem do hero
+            uPageScroll: { value: 0.0 },     // Progresso global de rolagem da página
             uScrollY: { value: 0.0 },        // Pixel vertical de rolagem para parallax persistente
-            uProgress: { value: 0.0 }, // Compatibilidade
+            uProgress: { value: 0.0 },       // Compatibilidade
             uIntro: { value: options.reducedMotion ? 1.0 : 0.0 },
-            uMouse: { value: new THREE.Vector2(0, 0) },
+            uMouseLocal: { value: new THREE.Vector3(999, 999, 0) },
+            uMouseActive: { value: 0.0 },
+            uNScale: { value: 0.92 },        // Escala calibrada do N (92% da escala original)
             uPixelRatio: { value: Math.min(window.devicePixelRatio, options.isMobile ? 1.2 : 1.5) },
-            uCopyCenter: { value: new THREE.Vector2(options.isMobile ? 0.0 : -0.75, options.isMobile ? 0.25 : 0.05) }
+            uCopyCenter: { value: new THREE.Vector2(0.0, 0.05) } // Centro da copy centralizada
         },
         transparent: true,
         depthWrite: false,

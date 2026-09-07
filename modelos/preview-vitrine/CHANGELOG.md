@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.4.4 - Refinamento de layout, ritmo do N e interações (Etapa 5)
+- Header: expansão visual da topbar por toda a largura disponível da viewport com fundo translúcido (rgba(4, 7, 13, 0.72)) e backdrop-filter: blur(14px), mantendo o conteúdo interno rigorosamente centralizado e limitado por max-width via .topbar__inner, eliminando qualquer risco de overflow horizontal
+- Hero: centralização horizontal precisa de headline, texto de apoio e botões de ação em coluna simétrica, preservando a camada de partículas no fundo e a zona de baixa densidade centrada para garantir contraste e legibilidade impecáveis em todas as resoluções
+- Escala do N: redução proporcional refinada para 92% da escala original (uNScale = 0.92), garantindo enquadramento completo (fit contain com margem segura de 73.6% desktop e 70% mobile) sem encolher o campo ambiental circundante
+- Percurso de rolagem: calibração da distância de transformação do N para 180–220vh (efetivo: +=200vh desktop e +=140vh mobile), diferenciando altura de seção de percurso útil com contabilização única de pinSpacing
+- Ritmo de transformação em 5 fases contínuas com partição da unidade (C1 Hermite sem descontinuidades):
+  - 0–30%: formação perceptivelmente mais rápida (w_form -> 0.85)
+  - 30–45%: aproximação progressivamente desacelerada até a silhueta exata com derivada nula (w_form -> 1.0)
+  - 45–65%: N 100% formado, estável e protagonista visual, com vida interna contínua
+  - 65–80%: início suave da dissolução a partir de velocidade zero (w_disp -> 0.15)
+  - 80–100%: dispersão acelerada em direção ao campo ambiental aberto (w_disp -> 1.0)
+- N vivo e repelência ao mouse: micromovimentos internos 3D mantidos quando a rolagem para no trecho formado; repelência local suave em coordenadas do modelo projetadas via raycaster Z=0, calibrada para 5–15px CSS (~0.040 unidades 3D no raio de 0.58) com retorno elástico; inclinação global combinada estritamente limitada a 2.5° (0.043 rad)
+- Reversibilidade total: interpolação determinística sem deriva de estado em rolagem reversa ou recarregamento no meio do documento
+- Seleção e arraste: restrição de seleção e arraste aplicada exclusivamente aos elementos visuais e decorativos da vitrine (user-select: none; -webkit-user-drag: none;), preservando campos de texto editáveis, links, botões, foco via teclado e interação independente com iframes de preview
+- Footer: destaque com peso 700 e sublinhado aplicado exclusivamente ao nome "Neoeffex" (.footer-brand), mantendo semântica e ano dinâmico
+
 ## v0.4.3 - Demonstrações visuais abertas e partículas persistentes contínuas (Etapa 4)
 - fio condutor de partículas persistentes: reuso global do mesmo canvas Three.js (`.particles-bg-layer`), mantendo partículas ativas em baixa densidade e movimento sutil ao longo de toda a rolagem da página
 - novos uniforms `uPageScroll` e `uScrollY` no ShaderMaterial para criar paralaxe vertical e deriva sutil com base no scroll contínuo do documento

@@ -587,7 +587,7 @@ pre {
     background: rgba(30, 134, 255, 0.16);
 }
 
-/* Demo 1: Interactive Spatial Prism (CSS 3D Zero-Extra-Context) */
+/* Demo 1: Interactive Spatial Prism (WebGL Nativo Three.js) */
 .demo-stage--3d {
     position: relative;
     width: 100%;
@@ -598,7 +598,6 @@ pre {
 }
 
 .spatial-viewport {
-    perspective: 1200px;
     width: 100%;
     height: 420px;
     display: flex;
@@ -616,121 +615,29 @@ pre {
     cursor: grabbing;
 }
 
-.spatial-prism {
-    width: 190px;
-    height: 190px;
-    position: relative;
-    transform-style: preserve-3d;
-    transform: rotateX(-18deg) rotateY(25deg);
-    transition: none; /* Física temporal calculada via RAF em JS; sem interpolação CSS conflitante */
-    will-change: transform;
-    pointer-events: none;
-}
-
-.prism-face {
+.spatial-prism-canvas {
     position: absolute;
-    width: 190px;
-    height: 190px;
-    border: 1px solid rgba(114, 188, 255, 0.45);
-    background: linear-gradient(135deg, rgba(30, 134, 255, 0.14) 0%, rgba(4, 7, 13, 0.72) 100%);
-    backdrop-filter: blur(8px);
-    box-shadow: inset 0 0 35px rgba(30, 134, 255, 0.2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    font-family: monospace;
-    font-size: 0.78rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    user-select: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
     pointer-events: none;
+    z-index: 1;
 }
 
-.prism-core,
-.prism-rings,
-.prism-ring,
 .stage-overlay {
-    pointer-events: none;
-}
-
-.face-mesh-accent {
-    width: 42px;
-    height: 42px;
-    margin-bottom: 12px;
-    border: 1.5px dashed var(--theme-accent-light);
-    border-radius: 50%;
-    animation: rotateMesh 10s linear infinite;
-}
-
-@keyframes rotateMesh {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.prism-face--front {
-    transform: translateZ(95px);
-}
-
-.prism-face--back {
-    transform: rotateY(180deg) translateZ(95px);
-}
-
-.prism-face--left {
-    transform: rotateY(-90deg) translateZ(95px);
-}
-
-.prism-face--right {
-    transform: rotateY(90deg) translateZ(95px);
-}
-
-.prism-face--top {
-    transform: rotateX(90deg) translateZ(95px);
-}
-
-.prism-face--bottom {
-    transform: rotateX(-90deg) translateZ(95px);
-}
-
-.prism-ring {
     position: absolute;
-    border-radius: 50%;
+    inset: 0;
     pointer-events: none;
-    border: 1px dashed rgba(114, 188, 255, 0.28);
-}
-
-.prism-ring--1 {
-    width: 320px;
-    height: 320px;
-    transform: rotateX(68deg) rotateY(18deg);
-    animation: spinRing 22s linear infinite;
-}
-
-.prism-ring--2 {
-    width: 380px;
-    height: 380px;
-    transform: rotateX(-42deg) rotateY(32deg);
-    animation: spinRingRev 28s linear infinite;
-    border-color: rgba(30, 134, 255, 0.2);
-}
-
-@keyframes spinRing {
-    to {
-        transform: rotateX(68deg) rotateY(18deg) rotateZ(360deg);
-    }
-}
-
-@keyframes spinRingRev {
-    to {
-        transform: rotateX(-42deg) rotateY(32deg) rotateZ(-360deg);
-    }
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 14px;
+    z-index: 2;
 }
 
 .spatial-hint {
-    position: absolute;
-    bottom: 12px;
     font-family: monospace;
     font-size: 0.72rem;
     color: rgba(154, 168, 199, 0.7);

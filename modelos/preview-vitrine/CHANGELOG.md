@@ -1,17 +1,20 @@
 # Changelog
 
-## v0.5.0 - Etapa 5: Prisma 3D Interativo e Refinamento Tipográfico Hero
-- Interação 3D com o Prisma Espacial refinada e estabilizada:
-  - Motor de eventos baseado em Pointer Events (`pointerdown`, `pointermove`, `pointerup`, `pointercancel`, `lostpointercapture`, `pointerleave`) com suporte unificado a desktop (mouse) e touch.
-  - Distinção clara entre clique e arraste com limiar de ativação (`DRAG_THRESHOLD = 4px`), garantindo que cliques simples não acionem deslocamento acidental.
-  - Captura de ponteiro robusta via `setPointerCapture` ativada ao iniciar o arraste, assegurando que movimentos rápidos fora dos limites do elemento continuem sendo rastreados sem perder o controle.
-  - Liberação segura de captura em `pointerup`, `pointercancel`, `lostpointercapture` e `window.blur`, impedindo que o estado de arraste fique preso.
-  - Física de inércia angular temporal baseada em `deltaTime`, com desaceleração exponencial contínua ($\exp(-3.4 \cdot \Delta t)$) e velocidade angular rigorosamente limitada a $260^\circ/\text{s}$, eliminando giros infinitos ou saltos bruscos.
-  - Amortecimento progressivo de soltura: se o ponteiro parar antes de ser liberado, a velocidade residual é amortecida proporcionalmente.
-  - Bloqueio de rotação excessiva no eixo vertical ($[-75^\circ, +75^\circ]$), prevenindo inversões anômalas de perspectiva.
-  - Desativação de `transition` CSS conflitante no `.spatial-prism`, eliminando duplicidade de interpolação e conferindo resposta visual direta a 60 FPS.
-  - Definição de `touch-action: pan-y;` no viewport e `pointer-events: none;` nas faces e camadas internas, garantindo que o scroll vertical da página nunca seja sequestrado ou bloqueado em dispositivos móveis.
-  - Pausa e retomada limpa do loop RAF em `visibilitychange`, sem acúmulo de tempo ou saltos de rotação ao alternar de aba.
+## v0.5.0 - Etapa 5: Migração Definitiva do Prisma para WebGL (Three.js) e Refinamento Tipográfico Hero
+- Migração definitiva do Prisma 3D de CSS para WebGL Nativo (Three.js):
+  - Eliminação completa de artefatos visuais de CSS 3D (faces atravessando o cubo, planos esticados, triângulos falsos e glitches de backdrop-filter).
+  - Arquitetura isolada com `THREE.WebGLRenderer`, `THREE.Scene` e `THREE.PerspectiveCamera` dedicados no arquivo `assets/js/three/prism-scene.js`, sem compartilhamento de contexto com o N de partículas.
+  - Transparência em dois passes para solução definitiva de depth sorting:
+    - Back Pass (`side: THREE.BackSide`, `depthWrite: false`, `depthTest: true`, `renderOrder: 1`, opacidade sutil)
+    - Front Pass (`side: THREE.FrontSide`, `depthWrite: false`, `depthTest: true`, `renderOrder: 3`, opacidade com gradiente angular)
+  - Shader customizado de Fresnel: arestas tangenciais discretamente mais azuis e luminosas, com centro translúcido e sensação de volume real.
+  - Arestas nítidas em `THREE.LineSegments` com `THREE.EdgesGeometry` (`renderOrder: 4`) em azul claro.
+  - Núcleo tecnológico tridimensional interno com octaedro wireframe, nodo central e micro-anel equatorial (`renderOrder: 2`), contido seguramente no interior do cubo.
+  - Dois anéis orbitais tridimensionais (`THREE.LineLoop`, `renderOrder: 5`) com inclinações idênticas à referência anterior (68°/18° e -42°/32°) passando continuamente na frente e atrás do prisma.
+  - Física de interação preservada integralmente: `DRAG_THRESHOLD = 4px`, `ROT_SENSITIVITY = 0.38`, `MAX_ANGULAR_VELOCITY = 260°/s`, `INERTIA_DECAY = 3.4`, `rotX` clampado em $[-75°, +75°]$, e normalização periódica de `rotY` sem snap visual.
+  - Autopause com `IntersectionObserver` quando a seção sai do viewport e suspensão limpa em `visibilitychange`.
+  - Modo estático com ângulo calibrado para `prefers-reduced-motion: reduce`.
+  - Limpeza de transform/opacity no GSAP da `.demo-stage` via `onComplete: clearProps: 'transform,opacity'` para evitar composições desnecessárias no ancestral.
 - Refinamento tipográfico do Hero ("SEU SITE / PODE IR ALÉM"):
   - Adoção da família tipográfica `Bebas Neue` (`font-weight: 400`) via Google Fonts, conferindo estética alta, condensada, editorial e tecnológica.
   - Hierarquia visual estrita de ~2x a 2.5x entre as duas linhas:
@@ -20,7 +23,7 @@
   - Entrelinha compacta sem encavalar caracteres e sem criar dois blocos dissociados.
   - Responsividade sem quebras indesejadas em 3 linhas: media queries dedicadas para 760px, 440px e telas notebook (max-height 820px), sem overflow horizontal.
 - Preservação estrita:
-  - Física do N de partículas congelada (Etapa 4.1 intocada, sem alteração de spring, damping, velocidade máxima ou shaders).
+  - `scene.js` e física do N de partículas 100% intocados e congelados funcionalmente.
   - Header fixo, partículas de fundo, seções adjacentes e links 100% preservados.
   - Etapa 6 (Cursor) rigorosamente não iniciada.
 

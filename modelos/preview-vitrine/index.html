@@ -126,19 +126,7 @@
 
                         <div class="demo-stage demo-stage--3d" data-cursor="INTERAGIR" data-parallax="4">
                             <div class="spatial-viewport demo-3d-viewport" id="spatialViewport">
-                                <div class="spatial-prism" id="spatialPrism">
-                                    <div class="prism-face prism-face--front"></div>
-                                    <div class="prism-face prism-face--back"></div>
-                                    <div class="prism-face prism-face--right"></div>
-                                    <div class="prism-face prism-face--left"></div>
-                                    <div class="prism-face prism-face--top"></div>
-                                    <div class="prism-face prism-face--bottom"></div>
-                                    <div class="prism-core"></div>
-                                    <div class="prism-rings">
-                                        <div class="prism-ring prism-ring--1"></div>
-                                        <div class="prism-ring prism-ring--2"></div>
-                                    </div>
-                                </div>
+                                <canvas class="spatial-prism-canvas" id="spatialPrismCanvas" aria-label="Demonstração 3D interativa de prisma"></canvas>
                                 <div class="stage-overlay">
                                     <span class="stage-badge spatial-hint">EXPERIÊNCIA 3D · ARRASTE PARA ROTACIONAR</span>
                                 </div>
@@ -384,5 +372,8 @@
     
     <!-- Three.js Scene (Etapa 3) — carregado após a página estar utilizável -->
     <script type="module" src="assets/js/three/scene.js"></script>
+
+    <!-- WebGL Prism Scene (Etapa 5: Prisma 3D Nativo) -->
+    <script type="module" src="assets/js/three/prism-scene.js"></script>
 </body>
 </html>

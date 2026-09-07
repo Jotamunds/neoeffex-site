@@ -210,23 +210,23 @@
             const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
             // 0. Header entra com extrema leveza e lentidão suave
-            heroTl.fromTo('.topbar', 
-                { y: -18, opacity: 0 }, 
-                { 
-                    y: 0, 
-                    opacity: 1, 
-                    duration: 1.3, 
+            heroTl.fromTo('.topbar',
+                { y: -18, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.3,
                     ease: 'power2.out',
                     onComplete: () => {
                         gsap.set('.topbar', { clearProps: 'transform,opacity' });
                     }
-                }, 
+                },
                 0
             );
 
             // 1. Headline surge suavemente em 2 linhas
-            heroTl.fromTo('.hero-title .hero-line', 
-                { y: 35, opacity: 0 }, 
+            heroTl.fromTo('.hero-title .hero-line',
+                { y: 35, opacity: 0 },
                 { y: 0, opacity: 1, duration: 0.9, stagger: 0.14 },
                 0.15
             );
@@ -409,49 +409,243 @@
         // Chamada inicial
         updatePageScrollTracking();
 
-        // --- 8. Interação 3D com o Prisma Espacial (Etapa 4) ---
-        const spatialViewport = document.getElementById('spatialViewport');
+        // --- 8. Interação 3D com o Prisma Espacial (Etapa 5) ---
+        const spatialViewport = document.getElementById('spatialViewport') || document.getElementById('interactive3dViewport');
         const spatialPrism = document.getElementById('spatialPrism');
         if (spatialViewport && spatialPrism && !prefersReducedMotion) {
-            let targetRotX = -18;
-            let targetRotY = 25;
-            let currentRotX = -18;
-            let currentRotY = 25;
+            // Constantes de calibração física
+            const DRAG_THRESHOLD = 4; // pixels mínimos para distinguir clique de arraste
+            const ROT_SENSITIVITY = 0.38; // graus por pixel arrastado
+            const MAX_ANGULAR_VELOCITY = 260; // graus/segundo - limite estrito de segurança contra velocidades absurdas
+            const INERTIA_DECAY = 3.4; // taxa exponencial de desaceleração (fricção)
+
+            // Estado de rotação e velocidades
+            let rotX = -18;
+            let rotY = 25;
+            let velX = 0; // graus/segundo no eixo X
+            let velY = 0; // graus/segundo no eixo Y
+            let dragRestRotX = -18;
+            let dragRestRotY = 25;
+
+            // Estado de interação do ponteiro
+            let isPointerDown = false;
+            let isDragging = false;
+            let activePointerId = null;
+            let dragStartX = 0;
+            let dragStartY = 0;
+            let lastClientX = 0;
+            let lastClientY = 0;
+            let lastMoveTime = performance.now();
+
+            // Estado de hover sutil (apenas quando não estiver arrastando)
             let isHovered = false;
+            let hoverNormX = 0;
+            let hoverNormY = 0;
+
+            // Loop de animação
             let prismRafId = null;
+            let lastRafTime = performance.now();
 
-            spatialViewport.addEventListener('mousemove', (e) => {
-                isHovered = true;
-                const rect = spatialViewport.getBoundingClientRect();
-                const normX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-                const normY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-                targetRotY = normX * 42;
-                targetRotX = -normY * 42;
+            function onPointerDown(e) {
+                // Apenas botão primário para mouse (ou toque / caneta)
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+                isPointerDown = true;
+                isDragging = false;
+                activePointerId = e.pointerId;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                lastClientX = e.clientX;
+                lastClientY = e.clientY;
+                lastMoveTime = performance.now();
+
+                // Interrompe inércia prévia ao tocar novamente
+                velX = 0;
+                velY = 0;
+            }
+
+            function onPointerMove(e) {
+                if (!isPointerDown) {
+                    // Rastreamento de hover sutil apenas para mouse/cursor
+                    if (e.pointerType !== 'touch') {
+                        isHovered = true;
+                        const rect = spatialViewport.getBoundingClientRect();
+                        hoverNormX = Math.max(-1, Math.min(1, ((e.clientX - rect.left) / rect.width - 0.5) * 2));
+                        hoverNormY = Math.max(-1, Math.min(1, ((e.clientY - rect.top) / rect.height - 0.5) * 2));
+                    }
+                    return;
+                }
+
+                if (e.pointerId !== activePointerId) return;
+
+                const dist = Math.hypot(e.clientX - dragStartX, e.clientY - dragStartY);
+
+                // Inicia o estado de arraste apenas após ultrapassar o limiar de movimento
+                if (!isDragging && dist >= DRAG_THRESHOLD) {
+                    isDragging = true;
+                    spatialViewport.classList.add('is-dragging');
+
+                    // Captura o ponteiro para que o arraste continue mesmo fora do elemento
+                    try {
+                        if (spatialViewport.setPointerCapture) {
+                            spatialViewport.setPointerCapture(e.pointerId);
+                        }
+                    } catch (err) {
+                        // Fallback silencioso caso não suportado no contexto
+                    }
+                }
+
+                if (isDragging) {
+                    const now = performance.now();
+                    const dt = Math.max(0.001, Math.min(0.1, (now - lastMoveTime) / 1000));
+                    const dx = e.clientX - lastClientX;
+                    const dy = e.clientY - lastClientY;
+
+                    // Atualiza rotação diretamente com sensibilidade controlada
+                    rotY += dx * ROT_SENSITIVITY;
+                    rotX = Math.max(-75, Math.min(75, rotX - dy * ROT_SENSITIVITY));
+
+                    // Calcula velocidade angular instantânea com filtro de suavização
+                    const instVelX = (-dy * ROT_SENSITIVITY) / dt;
+                    const instVelY = (dx * ROT_SENSITIVITY) / dt;
+                    velX = velX * 0.3 + instVelX * 0.7;
+                    velY = velY * 0.3 + instVelY * 0.7;
+
+                    // Clampa velocidade máxima para evitar qualquer salto
+                    velX = Math.max(-MAX_ANGULAR_VELOCITY, Math.min(MAX_ANGULAR_VELOCITY, velX));
+                    velY = Math.max(-MAX_ANGULAR_VELOCITY, Math.min(MAX_ANGULAR_VELOCITY, velY));
+
+                    lastClientX = e.clientX;
+                    lastClientY = e.clientY;
+                    lastMoveTime = now;
+                }
+            }
+
+            function endDrag(e) {
+                if (activePointerId !== null && e.pointerId === activePointerId) {
+                    if (isDragging) {
+                        // Se o ponteiro ficou parado antes de soltar, reduz a inércia proporcionalmente
+                        const timeSinceLastMove = (performance.now() - lastMoveTime) / 1000;
+                        if (timeSinceLastMove > 0.08) {
+                            const dampFactor = Math.max(0, 1 - (timeSinceLastMove - 0.08) * 8);
+                            velX *= dampFactor;
+                            velY *= dampFactor;
+                        }
+
+                        // Clampa a velocidade residual final
+                        velX = Math.max(-MAX_ANGULAR_VELOCITY, Math.min(MAX_ANGULAR_VELOCITY, velX));
+                        velY = Math.max(-MAX_ANGULAR_VELOCITY, Math.min(MAX_ANGULAR_VELOCITY, velY));
+
+                        // Libera pointer capture com segurança
+                        try {
+                            if (spatialViewport.hasPointerCapture && spatialViewport.hasPointerCapture(e.pointerId)) {
+                                spatialViewport.releasePointerCapture(e.pointerId);
+                            }
+                        } catch (err) { }
+                    }
+
+                    isPointerDown = false;
+                    isDragging = false;
+                    activePointerId = null;
+                    spatialViewport.classList.remove('is-dragging');
+
+                    // Registra o repouso final do arraste para transição suave de retorno
+                    dragRestRotX = rotX;
+                    dragRestRotY = rotY;
+                }
+            }
+
+            function onPointerLeave(e) {
+                if (!isDragging && !isPointerDown) {
+                    isHovered = false;
+                    hoverNormX = 0;
+                    hoverNormY = 0;
+                }
+            }
+
+            // Registra listeners com Pointer Events padronizados
+            spatialViewport.addEventListener('pointerdown', onPointerDown);
+            spatialViewport.addEventListener('pointermove', onPointerMove);
+            spatialViewport.addEventListener('pointerup', endDrag);
+            spatialViewport.addEventListener('pointercancel', endDrag);
+            spatialViewport.addEventListener('lostpointercapture', endDrag);
+            spatialViewport.addEventListener('pointerleave', onPointerLeave);
+
+            // Prevenção de arraste preso caso a janela perca foco
+            window.addEventListener('blur', () => {
+                if (isPointerDown || isDragging) {
+                    isPointerDown = false;
+                    isDragging = false;
+                    activePointerId = null;
+                    spatialViewport.classList.remove('is-dragging');
+                    velX = 0;
+                    velY = 0;
+                }
             });
 
-            spatialViewport.addEventListener('mouseleave', () => {
-                isHovered = false;
-                targetRotX = -18;
-                targetRotY = 25;
-            });
+            // Loop de física temporal independente (Etapa 5)
+            function renderPrism(now) {
+                const dt = Math.max(0.001, Math.min(0.08, (now - lastRafTime) / 1000));
+                lastRafTime = now;
 
-            function renderPrism() {
-                const lerpFactor = isHovered ? 0.09 : 0.04;
-                currentRotX += (targetRotX - currentRotX) * lerpFactor;
-                currentRotY += (targetRotY - currentRotY) * lerpFactor;
+                if (!isDragging) {
+                    const speed = Math.hypot(velX, velY);
 
-                spatialPrism.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
+                    if (speed > 0.15) {
+                        // 1. Aplicação de inércia pós-arraste com desaceleração exponencial contínua
+                        rotX += velX * dt;
+                        rotY += velY * dt;
+
+                        // Limite do eixo vertical para manter perspectiva estável
+                        if (rotX > 75) {
+                            rotX = 75;
+                            velX = 0;
+                        } else if (rotX < -75) {
+                            rotX = -75;
+                            velX = 0;
+                        }
+
+                        const decay = Math.exp(-INERTIA_DECAY * dt);
+                        velX *= decay;
+                        velY *= decay;
+
+                        if (Math.hypot(velX, velY) <= 0.15) {
+                            velX = 0;
+                            velY = 0;
+                            dragRestRotX = rotX;
+                            dragRestRotY = rotY;
+                        }
+                    } else {
+                        // 2. Comportamento em repouso: leve inclinação em hover ou acomodação estável
+                        if (isHovered) {
+                            const targetHoverX = Math.max(-75, Math.min(75, dragRestRotX - hoverNormY * 12));
+                            const targetHoverY = dragRestRotY + hoverNormX * 14;
+                            const factor = 1 - Math.exp(-4.5 * dt);
+                            rotX += (targetHoverX - rotX) * factor;
+                            rotY += (targetHoverY - rotY) * factor;
+                        } else {
+                            const factor = 1 - Math.exp(-3.5 * dt);
+                            rotX += (dragRestRotX - rotX) * factor;
+                            rotY += (dragRestRotY - rotY) * factor;
+                        }
+                    }
+                }
+
+                // Aplica transform 3D no elemento DOM
+                spatialPrism.style.transform = `rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
                 prismRafId = requestAnimationFrame(renderPrism);
             }
 
             prismRafId = requestAnimationFrame(renderPrism);
 
-            // Pausa animação quando a aba não estiver visível
+            // Pausa o render loop quando a aba estiver em background e reinicia com dt limpo ao retornar
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden && prismRafId) {
                     cancelAnimationFrame(prismRafId);
                     prismRafId = null;
                 } else if (!document.hidden && !prismRafId) {
+                    lastRafTime = performance.now();
+                    lastMoveTime = performance.now();
                     prismRafId = requestAnimationFrame(renderPrism);
                 }
             });
@@ -490,14 +684,14 @@
     if (!prefersReducedMotion) {
         if (!('IntersectionObserver' in window) || videos.length === 0) {
             videos.forEach((video) => {
-                video.play().catch(() => {});
+                video.play().catch(() => { });
             });
         } else {
             const videoObserver = new IntersectionObserver((entries) => {
                 entries.forEach((entry) => {
                     const video = entry.target;
                     if (entry.isIntersecting && entry.intersectionRatio >= 0.4 && !document.hidden) {
-                        video.play().catch(() => {});
+                        video.play().catch(() => { });
                     } else {
                         video.pause();
                     }
@@ -517,7 +711,7 @@
                         const rect = video.getBoundingClientRect();
                         const inView = rect.top < window.innerHeight && rect.bottom > 0;
                         if (inView) {
-                            video.play().catch(() => {});
+                            video.play().catch(() => { });
                         }
                     });
                 }

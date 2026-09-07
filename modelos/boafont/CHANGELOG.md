@@ -1,5 +1,12 @@
 # Changelog — Boafont
 
+## 0.1.1 — 2026-09-07
+
+- adiciona os quatro assets fotográficos reais enviados para a Boafont;
+- preenche `assets/img/hero.png`, `assets/img/van.png`, `assets/img/stock.png` e `assets/img/facade.png`;
+- elimina a pendência visual do export Open Design;
+- deixa a landing pronta para teste em `/modelos/boafont/` com as animações já ampliadas na etapa anterior.
+
 ## 0.1.0 — 2026-09-07
 
 - adapta o export do Open Design para `/modelos/boafont/`;

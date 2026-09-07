@@ -1,14 +1,12 @@
-# Assets fotográficos necessários
+# Assets fotográficos da Boafont
 
-O export do Open Design referenciava arquivos externos que não vieram no ZIP.
-
-Coloque nesta pasta:
+Arquivos presentes nesta pasta:
 
 ```text
-hero.png    <- image.png
-van.png     <- image-1.png
-stock.png   <- image-2.png
-facade.png  <- image-3.png
+hero.png    -> foto principal do hero
+van.png     -> veículo Boafont
+stock.png   -> estoque de galões
+facade.png  -> fachada da distribuidora
 ```
 
-A landing funciona sem erro de JavaScript enquanto esses arquivos não existem, mas as fotografias ficam ausentes.
+Esses arquivos já foram integrados à landing.

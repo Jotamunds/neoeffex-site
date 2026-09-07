@@ -12,16 +12,14 @@ Landing page adaptada do export do Open Design para publicação em:
 - `assets/img/`: imagens exclusivas da Boafont;
 - `VERSION` / `CHANGELOG.md`: versionamento local do modelo.
 
-## Pendência do export Open Design
+## Assets fotográficos adicionados
 
-O ZIP original não incluiu os quatro assets fotográficos usados pelo HTML. Para manter a fidelidade visual, adicione:
+Foram integrados os quatro arquivos reais enviados para a Boafont:
 
-- `assets/img/hero.png` — corresponde a `../../image.png`;
-- `assets/img/van.png` — corresponde a `../../image-1.png`;
-- `assets/img/stock.png` — corresponde a `../../image-2.png`;
-- `assets/img/facade.png` — corresponde a `../../image-3.png`.
-
-Não substituir por crops das screenshots de referência: isso reduz qualidade e pode duplicar textos/overlays.
+- `assets/img/hero.png` — foto principal usada no hero;
+- `assets/img/van.png` — veículo identificado da Boafont;
+- `assets/img/stock.png` — estoque de galões;
+- `assets/img/facade.png` — fachada ampla da unidade.
 
 ## Configuração dos CTAs
 

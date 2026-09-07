@@ -2,6 +2,14 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.2.1] - 2026-09-07
+
+### Corrigido
+- Corrige condição de corrida na entrada das partículas do N em dispositivos lentos/mobile.
+- Desacopla a entrada do Hero (texto/topo) da entrada das partículas, utilizando estados independentes (`heroEntranceStarted` e `particleEntranceStarted`).
+- Garante que o evento `neoeffex:scene-ready` tardio inicialize suavemente o `uIntro` (0 -> 1 via GSAP) mesmo após disparo do timeout de segurança de 550ms.
+- Preserva física, shader, scroll, prisma, cursor e interação visual do N sem qualquer alteração gráfica.
+
 ## [0.2.0] - 2026-09-07
 
 ### Adicionado

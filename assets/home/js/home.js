@@ -289,80 +289,123 @@
     // --- 6. Entrada Sincronizada do Hero com Partículas (Etapa 2) ---
     if (typeof gsap !== 'undefined') {
         let heroEntranceStarted = false;
+        let particleEntranceStarted = false;
 
-        function startSynchronizedEntrance(particleMat) {
-            if (heroEntranceStarted) return;
-            heroEntranceStarted = true;
-
-            const mat = particleMat || window.__neoeffexParticleMaterial;
-
-            if (prefersReducedMotion || (window.scrollY && window.scrollY > 80) || (window.__neoeffexCurrentScrollProgress && window.__neoeffexCurrentScrollProgress > 0.02)) {
-                // Modo reduzido ou recarga no meio da página: garante exibição direta sem atraso
-                gsap.set('.topbar, .hero-title .hero-line', { opacity: 1, y: 0 });
-                if (mat && mat.uniforms && mat.uniforms.uIntro) {
-                    mat.uniforms.uIntro.value = 1.0;
-                }
+        function startParticleEntrance(mat) {
+            const targetMat = mat || window.__neoeffexParticleMaterial;
+            if (
+                particleEntranceStarted ||
+                !targetMat ||
+                !targetMat.uniforms ||
+                !targetMat.uniforms.uIntro
+            ) {
                 return;
             }
 
-            const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+            particleEntranceStarted = true;
 
-            // 0. Header entra com extrema leveza e lentidão suave
-            heroTl.fromTo('.topbar',
-                { y: -18, opacity: 0 },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1.3,
-                    ease: 'power2.out',
-                    onComplete: () => {
-                        gsap.set('.topbar', { clearProps: 'transform,opacity' });
-                    }
-                },
-                0
-            );
+            if (prefersReducedMotion || (window.scrollY && window.scrollY > 80) || (window.__neoeffexCurrentScrollProgress && window.__neoeffexCurrentScrollProgress > 0.02)) {
+                targetMat.uniforms.uIntro.value = 1.0;
+                return;
+            }
 
-            // 1. Headline surge suavemente em 2 linhas
-            heroTl.fromTo('.hero-title .hero-line',
-                { y: 35, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.9, stagger: 0.14 },
-                0.15
-            );
-
-            // 2. Partículas surgem junto com a headline e ganham presença suavemente
-            if (mat && mat.uniforms && mat.uniforms.uIntro) {
-                heroTl.to(mat.uniforms.uIntro, {
+            if (typeof gsap !== 'undefined') {
+                gsap.to(targetMat.uniforms.uIntro, {
                     value: 1.0,
                     duration: 1.4,
                     ease: 'power2.out'
-                }, 0.2); // surge em sincronia com o texto
+                });
+            } else {
+                targetMat.uniforms.uIntro.value = 1.0;
+            }
+        }
+
+        function startSynchronizedEntrance(particleMat) {
+            const mat = particleMat || window.__neoeffexParticleMaterial;
+
+            if (!heroEntranceStarted) {
+                heroEntranceStarted = true;
+
+                if (prefersReducedMotion || (window.scrollY && window.scrollY > 80) || (window.__neoeffexCurrentScrollProgress && window.__neoeffexCurrentScrollProgress > 0.02)) {
+                    // Modo reduzido ou recarga no meio da página: garante exibição direta sem atraso
+                    gsap.set('.topbar, .hero-title .hero-line', { opacity: 1, y: 0 });
+                    if (mat) {
+                        startParticleEntrance(mat);
+                    }
+                    return;
+                }
+
+                const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+                // 0. Header entra com extrema leveza e lentidão suave
+                heroTl.fromTo('.topbar',
+                    { y: -18, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1.3,
+                        ease: 'power2.out',
+                        onComplete: () => {
+                            gsap.set('.topbar', { clearProps: 'transform,opacity' });
+                        }
+                    },
+                    0
+                );
+
+                // 1. Headline surge suavemente em 2 linhas
+                heroTl.fromTo('.hero-title .hero-line',
+                    { y: 35, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.9, stagger: 0.14 },
+                    0.15
+                );
+
+                // 2. Partículas entram chamando a função dedicada se material for válido
+                if (mat) {
+                    startParticleEntrance(mat);
+                }
+            } else if (mat) {
+                // Se o Hero já entrou (ex: timeout de segurança disparou antes da cena),
+                // aciona a entrada suave das partículas agora que o material está disponível
+                startParticleEntrance(mat);
             }
         }
 
         // Coordenação da entrada: aguarda cena 3D, evento ou timeout de segurança (550ms)
         if (window.__neoeffexSceneReady) {
-            startSynchronizedEntrance(window.__neoeffexParticleMaterial);
+            const mat = window.__neoeffexParticleMaterial;
+            startSynchronizedEntrance(mat);
+            startParticleEntrance(mat);
         } else {
+            let safetyTimer = null;
+
             const onReady = (e) => {
                 window.removeEventListener('neoeffex:scene-ready', onReady);
                 window.removeEventListener('neoeffex:scene-failed', onFailed);
-                clearTimeout(safetyTimer);
-                startSynchronizedEntrance(e.detail && e.detail.particleMaterial);
+                if (safetyTimer) {
+                    clearTimeout(safetyTimer);
+                    safetyTimer = null;
+                }
+                const mat = (e && e.detail && e.detail.particleMaterial) || window.__neoeffexParticleMaterial;
+                startSynchronizedEntrance(mat);
+                startParticleEntrance(mat);
             };
 
             const onFailed = () => {
                 window.removeEventListener('neoeffex:scene-ready', onReady);
                 window.removeEventListener('neoeffex:scene-failed', onFailed);
-                clearTimeout(safetyTimer);
+                if (safetyTimer) {
+                    clearTimeout(safetyTimer);
+                    safetyTimer = null;
+                }
                 startSynchronizedEntrance(null);
             };
 
             window.addEventListener('neoeffex:scene-ready', onReady);
             window.addEventListener('neoeffex:scene-failed', onFailed);
 
-            const safetyTimer = setTimeout(() => {
-                window.removeEventListener('neoeffex:scene-ready', onReady);
-                window.removeEventListener('neoeffex:scene-failed', onFailed);
+            safetyTimer = setTimeout(() => {
+                // Timeout de segurança: garante a entrada do Hero (texto/topo) sem travar a página se a cena demorar.
+                // IMPORTANTE: NÃO remove o listener de neoeffex:scene-ready para que a cena tardia ainda consiga inicializar uIntro.
                 startSynchronizedEntrance(window.__neoeffexParticleMaterial);
             }, 550);
         }

@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.6.2
+
+- Corrige condição de corrida na entrada das partículas do N em dispositivos lentos/mobile.
+- Desacopla a entrada do Hero (texto/topo) da entrada das partículas com estados independentes (`heroEntranceStarted` e `particleEntranceStarted`).
+- Garante que `neoeffex:scene-ready` tardio inicialize `uIntro` (0 -> 1 via GSAP) sem bloquear a página.
+- Preserva física, shader, scroll, prisma e cursor da vitrine.
+
 ## v0.6.1
 
 - Substitui navegação específica de modelos por header institucional da Neoeffex (Diferenciais, Modelos, Planos, Como funciona).

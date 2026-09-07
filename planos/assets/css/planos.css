@@ -1,0 +1,181 @@
+/* ==========================================================================
+   Neoeffex — Página de Planos (/planos/)
+   Etapa 1: Base estrutural, rota e identidade visual
+   ========================================================================== */
+
+/* Exibição limpa da barra de navegação sem dependência do loader do hero */
+.nav-shell {
+  opacity: 1;
+  transform: none;
+}
+
+/* Espaçamento vertical da seção de topo para compensar a navbar fixa */
+.planos-hero {
+  padding-top: 156px;
+  padding-bottom: 84px;
+}
+
+.planos-hero h1 {
+  max-width: 820px;
+}
+
+.planos-hero .lead {
+  max-width: 680px;
+  margin-bottom: 32px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Placeholders estruturais discretos para as seções das próximas etapas */
+.structural-placeholder {
+  position: relative;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  background: color-mix(in oklch, var(--panel) 35%, transparent);
+}
+
+.placeholder-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--meta);
+  background: color-mix(in oklch, var(--surface) 80%, transparent);
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.placeholder-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-bright);
+}
+
+.placeholder-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.placeholder-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.placeholder-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.placeholder-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.placeholder-card {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklch, var(--surface) 60%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 200ms ease;
+}
+
+.placeholder-card:hover {
+  border-color: var(--border-hover);
+}
+
+.placeholder-card-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-soft);
+  font-weight: 500;
+}
+
+.placeholder-card-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.placeholder-card-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Destaque de marca no rodapé conforme DECISIONS.md */
+.footer-brand {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Adaptação responsiva estrutural */
+@media (max-width: 920px) {
+  .nav-links {
+    background: #070d16 !important;
+    border: 1px solid var(--border-hover);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+  }
+  .nav-link {
+    color: var(--fg-2);
+  }
+  .nav-link:hover {
+    color: var(--fg);
+  }
+  .planos-hero {
+    padding-top: 130px;
+    padding-bottom: 64px;
+  }
+  .placeholder-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .placeholder-grid-3,
+  .placeholder-grid-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .planos-hero {
+    padding-top: 112px;
+    padding-bottom: 50px;
+  }
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-actions .btn {
+    width: 100%;
+  }
+  .placeholder-grid-4,
+  .placeholder-grid-3,
+  .placeholder-grid-2,
+  .placeholder-grid-6 {
+    grid-template-columns: 1fr;
+  }
+  .structural-placeholder {
+    padding: 18px 14px;
+  }
+}

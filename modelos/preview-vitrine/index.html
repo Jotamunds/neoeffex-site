@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-active-theme="hamburgueria">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Neoeffex · Vitrine de Modelos</title>
-    <meta name="description" content="Seu site não precisa parecer um site. Vitrine de modelos interativos Neoeffex." />
+    <meta name="description" content="Seu site pode ir além. Vitrine de modelos interativos Neoeffex." />
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
     <!-- Styles -->
     <link rel="preload" href="assets/css/modelos-preview.css" as="style" />
     <link rel="stylesheet" href="assets/css/modelos-preview.css" />
 
-    <!-- Import Map for ES Modules (Three.js - Etapa 3) -->
+    <!-- Import Map for ES Modules (Three.js) -->
     <script type="importmap">
     {
         "imports": {
@@ -31,6 +31,16 @@
         <span class="cursor-label"></span>
     </div>
 
+    <!-- Definitive 3D Particle Viewport Layer (Etapa 1: camada fixa contínua) -->
+    <div class="particles-bg-layer" id="threeCanvasWrap" aria-hidden="true">
+        <div class="three-canvas-wrap" id="threeCanvas">
+            <!-- Three.js canvas will be injected here -->
+            <div class="three-fallback" id="threeFallback">
+                <img src="/img/logos/neoeffex-n-logo-white.svg" alt="Neoeffex Logo" class="three-fallback__svg" />
+            </div>
+        </div>
+    </div>
+
     <div class="site-shell">
         <!-- Dynamic Glow Layer -->
         <div class="ambient-glow" aria-hidden="true"></div>
@@ -41,60 +51,40 @@
                 <span class="brand-text">neoeffex</span>
             </a>
 
-            <nav class="topnav" aria-label="Modelos">
+            <nav class="topnav" aria-label="Navegação">
+                <a href="#demonstracoes">Diferenciais</a>
                 <a href="#hamburgueria">Hamburgueria</a>
                 <a href="#clinica">Clínica</a>
                 <a href="#hortifruti">Hortifruti</a>
                 <a href="#lu">Lu Leve</a>
             </nav>
 
-            <a class="button button--ghost button--magnetic" href="/contato" data-cursor="↗" data-magnetic>
+            <a class="button button--ghost button--magnetic" href="/#contato" data-cursor="↗" data-magnetic>
                 <span>Solicitar projeto</span>
                 <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
         </header>
 
         <main id="inicio">
-            <section class="hero" id="threeSection" data-parallax="2">
+            <section class="hero" id="threeSection">
                 <div class="hero__copy">
-                    <div class="hero-header-badge">
-                        <span class="tech-badge">01 // VITRINE DE MODELOS NEOEFFEX</span>
-                    </div>
-                    
                     <h1 class="hero-title">
-                        <span class="hero-line">Seu site não</span>
-                        <span class="hero-line">precisa parecer</span>
-                        <span class="hero-line hero-line--accent">um site.</span>
+                        <span class="hero-line">SEU SITE</span>
+                        <span class="hero-line hero-line--accent">PODE IR ALÉM</span>
                     </h1>
                     
-                    <p class="hero-copy" data-parallax="3">
-                        Estruturas autorais e de alta performance com carregamento fluido, visual cinematográfico e modelo comercial adaptado para o seu segmento.
+                    <p class="hero-copy">
+                        Design, tecnologia e movimento para transformar presença em experiência.
                     </p>
                     
-                    <div class="hero-actions" data-parallax="4">
+                    <div class="hero-actions">
                         <a class="button button--primary button--magnetic" href="#modelos" data-cursor="↗" data-magnetic>
-                            <span>Explorar vitrine</span>
+                            <span>Explorar projetos</span>
                             <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
                         </a>
-                        <a class="button button--ghost button--magnetic" href="/contato" data-cursor="↗" data-magnetic>
+                        <a class="button button--ghost button--magnetic" href="/#contato" data-cursor="↗" data-magnetic>
                             <span>Falar com especialista</span>
                         </a>
-                    </div>
-
-                    <ul class="hero-meta" data-parallax="5">
-                        <li><span class="meta-dot"></span> 4 Modelos Interativos</li>
-                        <li><span class="meta-dot"></span> Previews em WebM + MP4</li>
-                        <li><span class="meta-dot"></span> Alta Performance</li>
-                    </ul>
-                </div>
-
-                <!-- 3D Particle Visual Block (Etapa 3.2 Protagonista Visual) -->
-                <div class="hero__visual" aria-hidden="true">
-                    <div class="three-canvas-wrap" id="threeCanvas">
-                        <!-- Three.js canvas will be injected here -->
-                        <div class="three-fallback" id="threeFallback">
-                            <img src="/img/logos/neoeffex-n-logo-white.svg" alt="Neoeffex Logo" class="three-fallback__svg" />
-                        </div>
                     </div>
                 </div>
             </section>
@@ -125,24 +115,141 @@
                 </div>
             </section>
 
-            <!-- Grade de Projetos (4 Projetos Aprovados) -->
+            <!-- Seções de Demonstrações Visuais (Etapa 4: Menos texto, mais demonstração) -->
+            <div class="capabilities-showcase" id="demonstracoes">
+                <!-- Demo 1: Elementos 3D -->
+                <section class="demo-section demo-section--3d" id="demo-3d">
+                    <div class="demo-container">
+                        <div class="demo-narrative" data-parallax="2">
+                            <span class="demo-kicker">01 · PROFUNDIDADE ESPACIAL</span>
+                            <h2 class="demo-title">
+                                <span>SEU SITE PODE TER</span>
+                                <span class="demo-title--accent">ELEMENTOS 3D</span>
+                            </h2>
+                            <p class="demo-desc">
+                                Objetos tridimensionais que respondem ao visitante em tempo real. Iluminação dinâmica calculada na GPU sem pesar no carregamento.
+                            </p>
+                            <div class="demo-specs">
+                                <span class="demo-pill">WebGL Nativo</span>
+                                <span class="demo-pill">60 FPS Fluido</span>
+                                <span class="demo-pill">Interativo</span>
+                            </div>
+                        </div>
+
+                        <div class="demo-stage demo-stage--3d" data-cursor="INTERAGIR" data-parallax="4">
+                            <div class="demo-3d-viewport" id="interactive3dViewport">
+                                <div class="spatial-prism" id="spatialPrism">
+                                    <div class="prism-face prism-face--front"></div>
+                                    <div class="prism-face prism-face--back"></div>
+                                    <div class="prism-face prism-face--right"></div>
+                                    <div class="prism-face prism-face--left"></div>
+                                    <div class="prism-face prism-face--top"></div>
+                                    <div class="prism-face prism-face--bottom"></div>
+                                    <div class="prism-core"></div>
+                                    <div class="prism-rings">
+                                        <div class="prism-ring prism-ring--1"></div>
+                                        <div class="prism-ring prism-ring--2"></div>
+                                    </div>
+                                </div>
+                                <div class="stage-overlay">
+                                    <span class="stage-badge">EXPERIÊNCIA 3D · MOVA O CURSOR</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Demo 2: Fotos Reais do Seu Negócio -->
+                <section class="demo-section demo-section--photos" id="demo-photos">
+                    <div class="demo-container demo-container--reverse">
+                        <div class="demo-narrative" data-parallax="2">
+                            <span class="demo-kicker">02 · AUTENTICIDADE VISUAL</span>
+                            <h2 class="demo-title">
+                                <span>PODE TER FOTOS</span>
+                                <span class="demo-title--accent">REAIS DO SEU NEGÓCIO</span>
+                            </h2>
+                            <p class="demo-desc">
+                                Chega de templates genéricos de banco de imagens. Direção de arte autoral que valoriza seu produto, seu espaço e sua equipe.
+                            </p>
+                            <div class="demo-specs">
+                                <span class="demo-pill">Direção Fotográfica</span>
+                                <span class="demo-pill">Zero Clichês</span>
+                                <span class="demo-pill">Alta Fidelidade</span>
+                            </div>
+                        </div>
+
+                        <div class="demo-stage demo-stage--photos" data-parallax="4">
+                            <div class="photo-composition">
+                                <div class="photo-card photo-card--main" data-parallax="2">
+                                    <img src="../hortifruti/assets/img/banca.webp" alt="Espaço real e produtos frescos" loading="lazy" class="photo-img" />
+                                    <span class="photo-badge">ESPAÇO REAL</span>
+                                </div>
+                                <div class="photo-card photo-card--sub" data-parallax="5">
+                                    <img src="../hortifruti/assets/img/salada.webp" alt="Produto autêntico com preparo cuidadoso" loading="lazy" class="photo-img" />
+                                    <span class="photo-badge">PRODUTO AUTORAL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Demo 3: Motion / Interação / Performance -->
+                <section class="demo-section demo-section--motion" id="demo-motion">
+                    <div class="demo-container">
+                        <div class="demo-narrative" data-parallax="2">
+                            <span class="demo-kicker">03 · RESPOSTA TÁTIL</span>
+                            <h2 class="demo-title">
+                                <span>MOTION · INTERAÇÃO</span>
+                                <span class="demo-title--accent">PERFORMANCE</span>
+                            </h2>
+                            <p class="demo-desc">
+                                Animações com propósito, microinterações magnéticas e resposta imediata. Cada milissegundo é lapidado para reter o olhar.
+                            </p>
+                            <div class="demo-specs">
+                                <span class="demo-pill">GSAP Core</span>
+                                <span class="demo-pill">Micro-interações</span>
+                                <span class="demo-pill">Core Web Vitals</span>
+                            </div>
+                        </div>
+
+                        <div class="demo-stage demo-stage--motion" data-cursor="TESTAR" data-parallax="4">
+                            <div class="interactive-lab" id="interactiveLab">
+                                <div class="lab-metrics">
+                                    <div class="metric-card" data-magnetic>
+                                        <span class="metric-val">60</span>
+                                        <span class="metric-unit">FPS</span>
+                                        <span class="metric-lbl">FLUIDEZ CONSTANTE</span>
+                                    </div>
+                                    <div class="metric-card" data-magnetic>
+                                        <span class="metric-val">&lt; 1s</span>
+                                        <span class="metric-unit">FCP</span>
+                                        <span class="metric-lbl">CARREGAMENTO RÁPIDO</span>
+                                    </div>
+                                    <div class="metric-card" data-magnetic>
+                                        <span class="metric-val">100%</span>
+                                        <span class="metric-unit">RESPONSIVO</span>
+                                        <span class="metric-lbl">QUALQUER TELA</span>
+                                    </div>
+                                </div>
+                                <div class="lab-playground">
+                                    <button type="button" class="magnetic-chip" data-magnetic data-cursor="PUXAR">Arrasto Magnético</button>
+                                    <button type="button" class="magnetic-chip" data-magnetic data-cursor="PUXAR">Micro-animações</button>
+                                    <button type="button" class="magnetic-chip magnetic-chip--accent" data-magnetic data-cursor="SENTIR">Resposta Imediata</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Vitrine de Projetos (4 Projetos Principais com Linguagem Curta) -->
             <section class="models-grid" id="modelos">
                 <!-- 01: Hamburgueria -->
-                <article class="model-card" id="hamburgueria" data-theme="hamburgueria" data-parallax="4">
+                <article class="model-card" id="hamburgueria" data-theme="hamburgueria" data-parallax="3">
                     <div class="model-card__copy">
-                        <div class="model-card__badge-row">
-                            <span class="model-card__index">01 / FOOD &amp; GASTRONOMIA</span>
-                            <span class="model-card__tech">EXP 3D &amp; GSAP</span>
-                        </div>
-                        <h2>BrazaBurger</h2>
-                        <p>
-                            Landing de hamburgueria com foco em alto impacto visual, experiência imersiva e conversão de vendas direta.
-                        </p>
-                        <ul class="tags">
-                            <li>Hero 3D Interativo</li>
-                            <li>Food Showcase</li>
-                            <li>Catálogo Integrado</li>
-                        </ul>
+                        <span class="model-card__kicker">01 · FOOD &amp; GASTRONOMIA</span>
+                        <h2 class="model-card__title">HAMBURGUERIA</h2>
+                        <p class="model-card__desc">Produto em movimento.</p>
                         <div class="model-card__actions">
                             <a class="button button--primary button--magnetic" href="../hamburgueria/" data-cursor="ABRIR" data-magnetic>
                                 <span>Abrir projeto</span>
@@ -153,8 +260,8 @@
                             </a>
                         </div>
                     </div>
-                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="6">
-                        <a href="../hamburgueria/" class="media-link" aria-label="Abrir modelo BrazaBurger">
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="5">
+                        <a href="../hamburgueria/" class="media-link" aria-label="Abrir modelo Hamburgueria">
                             <video class="preview-video" poster="assets/images/hamburgueria-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
                                 <source src="assets/videos/hamburgueria-preview.webm" type="video/webm" />
                                 <source src="assets/videos/hamburgueria-preview.mp4" type="video/mp4" />
@@ -167,21 +274,11 @@
                 </article>
 
                 <!-- 02: Clínica Odontológica -->
-                <article class="model-card model-card--reverse" id="clinica" data-theme="clinica" data-parallax="4">
+                <article class="model-card model-card--reverse" id="clinica" data-theme="clinica" data-parallax="3">
                     <div class="model-card__copy">
-                        <div class="model-card__badge-row">
-                            <span class="model-card__index">02 / SAÚDE &amp; ESTÉTICA</span>
-                            <span class="model-card__tech">UI CLEAN &amp; CLEAN MOTION</span>
-                        </div>
-                        <h2>Aura Odontologia</h2>
-                        <p>
-                            Landing odontológica com visual elegante, hero cinematográfico em tela cheia e tom institucional sofisticado.
-                        </p>
-                        <ul class="tags">
-                            <li>Imagem Full Screen</li>
-                            <li>Atmosfera Clean</li>
-                            <li>Agendamento Facilitado</li>
-                        </ul>
+                        <span class="model-card__kicker">02 · SAÚDE &amp; ESTÉTICA</span>
+                        <h2 class="model-card__title">CLÍNICA</h2>
+                        <p class="model-card__desc">Presença sofisticada.</p>
                         <div class="model-card__actions">
                             <a class="button button--primary button--magnetic" href="../clinica-odontologica/" data-cursor="ABRIR" data-magnetic>
                                 <span>Abrir projeto</span>
@@ -192,8 +289,8 @@
                             </a>
                         </div>
                     </div>
-                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="6">
-                        <a href="../clinica-odontologica/" class="media-link" aria-label="Abrir modelo Aura Odontologia">
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="5">
+                        <a href="../clinica-odontologica/" class="media-link" aria-label="Abrir modelo Clínica">
                             <video class="preview-video" poster="assets/images/clinica-odontologica-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
                                 <source src="assets/videos/clinica-odontologica-preview.webm" type="video/webm" />
                                 <source src="assets/videos/clinica-odontologica-preview.mp4" type="video/mp4" />
@@ -206,21 +303,11 @@
                 </article>
 
                 <!-- 03: Hortifruti -->
-                <article class="model-card" id="hortifruti" data-theme="hortifruti" data-parallax="4">
+                <article class="model-card" id="hortifruti" data-theme="hortifruti" data-parallax="3">
                     <div class="model-card__copy">
-                        <div class="model-card__badge-row">
-                            <span class="model-card__index">03 / MERCADO &amp; HORTIFRUTI</span>
-                            <span class="model-card__tech">ORGANIC MOTION</span>
-                        </div>
-                        <h2>Verde Viva</h2>
-                        <p>
-                            Landing de hortifruti com rica presença de imagem, atmosfera orgânica e foco em frescor e proximidade.
-                        </p>
-                        <ul class="tags">
-                            <li>Organic Motion</li>
-                            <li>Full Background</li>
-                            <li>Catálogo Rápido</li>
-                        </ul>
+                        <span class="model-card__kicker">03 · MERCADO &amp; HORTIFRUTI</span>
+                        <h2 class="model-card__title">HORTIFRUTI</h2>
+                        <p class="model-card__desc">Frescor visual.</p>
                         <div class="model-card__actions">
                             <a class="button button--primary button--magnetic" href="../hortifruti/" data-cursor="ABRIR" data-magnetic>
                                 <span>Abrir projeto</span>
@@ -231,8 +318,8 @@
                             </a>
                         </div>
                     </div>
-                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="6">
-                        <a href="../hortifruti/" class="media-link" aria-label="Abrir modelo Verde Viva">
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="5">
+                        <a href="../hortifruti/" class="media-link" aria-label="Abrir modelo Hortifruti">
                             <video class="preview-video" poster="assets/images/hortifruti-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
                                 <source src="assets/videos/hortifruti-preview.webm" type="video/webm" />
                                 <source src="assets/videos/hortifruti-preview.mp4" type="video/mp4" />
@@ -245,21 +332,11 @@
                 </article>
 
                 <!-- 04: Lu Leve e Saudável -->
-                <article class="model-card model-card--reverse" id="lu" data-theme="luleve" data-parallax="4">
+                <article class="model-card model-card--reverse" id="lu" data-theme="luleve" data-parallax="3">
                     <div class="model-card__copy">
-                        <div class="model-card__badge-row">
-                            <span class="model-card__index">04 / ALIMENTAÇÃO SAUDÁVEL</span>
-                            <span class="model-card__tech">CATÁLOGO SUPABASE</span>
-                        </div>
-                        <h2>Lu Leve e Saudável</h2>
-                        <p>
-                            Landing conectada ao sistema de catálogo Neoeffex, com linguagem leve, visual prático e pedidos via WhatsApp.
-                        </p>
-                        <ul class="tags">
-                            <li>Catálogo Integrado</li>
-                            <li>Identidade Leve</li>
-                            <li>CTA Direto</li>
-                        </ul>
+                        <span class="model-card__kicker">04 · ALIMENTAÇÃO SAUDÁVEL</span>
+                        <h2 class="model-card__title">LU LEVE</h2>
+                        <p class="model-card__desc">Pedido simplificado.</p>
                         <div class="model-card__actions">
                             <a class="button button--primary button--magnetic" href="/sites/lu-leve-e-saudavel/" data-cursor="ABRIR" data-magnetic>
                                 <span>Abrir projeto</span>
@@ -270,7 +347,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="6">
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="5">
                         <a href="/sites/lu-leve-e-saudavel/" class="media-link" aria-label="Abrir modelo Lu Leve e Saudável">
                             <video class="preview-video" poster="assets/images/lu-leve-e-saudavel-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
                                 <source src="assets/videos/lu-leve-e-saudavel-preview.webm" type="video/webm" />
@@ -284,17 +361,19 @@
                 </article>
             </section>
 
-            <!-- Seção de Encerramento -->
+            <!-- Seção de Encerramento (CTA Limpo e Autoral) -->
             <section class="cta-closing">
                 <div class="cta-closing__inner" data-parallax="2">
-                    <span class="tech-badge">PROJETO SOB MEDIDA</span>
-                    <h2>QUAL VAI SER O SEU?</h2>
-                    <p>
-                        Seu negócio não precisa entrar em um molde. Desenvolvemos interfaces autorais com a mais avançada tecnologia web.
+                    <h2 class="cta-title">
+                        <span>VAMOS CRIAR ALGO</span>
+                        <span class="cta-title--accent">QUE VÁ ALÉM?</span>
+                    </h2>
+                    <p class="cta-desc">
+                        Transformamos presença digital em experiência através de design, tecnologia e movimento.
                     </p>
                     <div class="cta-closing__actions">
-                        <a class="button button--primary button--magnetic" href="/contato" data-cursor="↗" data-magnetic>
-                            <span>Criar um projeto</span>
+                        <a class="button button--primary button--magnetic" href="/#contato" data-cursor="↗" data-magnetic>
+                            <span>Falar sobre seu projeto</span>
                             <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </a>
                     </div>

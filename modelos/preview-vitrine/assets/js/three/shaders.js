@@ -1,16 +1,26 @@
 /**
  * Particle Shaders for Neoeffex 3D Logo
- * Etapa 3.2 — Microscopic point precision, controlled glow,
- * deep blue color harmony, and dynamic light sweep highlight.
+ * Etapa 3 — Formação e dispersão narrativa do N orientada por scroll.
+ * 
+ * Interpolação contínua e reversível:
+ * - 0.00 a 0.18: Disperso no hero com proteção de densidade na copy
+ * - 0.18 a 0.55: Convergência suave e progressiva para o N
+ * - 0.55 a 0.72: N completamente formado, protagonista visual com micro-movimento vivo e highlight
+ * - 0.72 a 1.00: Dispersão suave para o campo de partículas ambiente
  */
 
 export const vertexShader = `
 uniform float uTime;
-uniform float uProgress;
+uniform float uScrollProgress;
+uniform float uPageScroll;
+uniform float uScrollY;
+uniform float uIntro;
 uniform vec2 uMouse;
 uniform float uPixelRatio;
+uniform vec2 uCopyCenter;
 
 attribute vec3 aStartPosition;
+attribute vec3 aEndPosition;
 attribute vec3 aRandomness;
 attribute float aSize;
 attribute vec3 aColor;
@@ -18,21 +28,58 @@ attribute vec3 aColor;
 varying vec3 vColor;
 varying vec2 vTargetPos;
 varying float vDepth;
+varying float vCopyDamp;
+varying float vFormedWeight;
+varying float vDispersal;
 
 void main() {
-    // 1. Interpolate from start (dispersed) to target (precise N shape)
+    // 1. Individualidade orgânica sutil no tempo de transição (sem saltos)
+    float pOffset = (aRandomness.x - 0.5) * 0.08;
+
+    // Fase 1: Convergência para o N (0.18 a 0.55)
+    float formProgress = clamp((uScrollProgress - (0.18 + pOffset)) / 0.35, 0.0, 1.0);
+    float formEase = smoothstep(0.0, 1.0, formProgress);
+
+    // Fase 2: Dispersão para o campo ambiente (0.72 a 1.00)
+    float dispProgress = clamp((uScrollProgress - (0.72 + pOffset)) / 0.26, 0.0, 1.0);
+    float dispEase = smoothstep(0.0, 1.0, dispProgress);
+
+    // Peso da forma N: 1.0 quando completamente formado, decaindo nas dispersões
+    float formedWeight = formEase * (1.0 - dispEase);
+    vFormedWeight = formedWeight;
+    vDispersal = dispEase;
+
+    // Interpolação contínua de posições:
+    // aStartPosition (hero disperso) -> position (N preciso) -> aEndPosition (campo ambiente)
     vec3 targetPos = position;
-    vec3 currentPos = mix(aStartPosition, targetPos, uProgress);
+    vec3 formedPos = mix(aStartPosition, targetPos, formEase);
+    vec3 currentPos = mix(formedPos, aEndPosition, dispEase);
 
-    // 2. Section 18: Micro idle movement (mostly in Z depth to preserve 2D silhouette)
-    float idleZ = sin(uTime * 0.7 + aRandomness.z * 6.28) * 0.015 * uProgress;
-    float idleY = cos(uTime * 0.5 + aRandomness.y * 6.28) * 0.003 * uProgress;
-    currentPos.z += idleZ;
-    currentPos.y += idleY;
+    // Parallax persistente ao longo de todas as seções inferiores da página (Etapa 4)
+    // As partículas acompanham suavemente a descida da página com profundidade diferencial
+    float pageParallax = uScrollY * 0.00035 * (0.3 + aRandomness.z * 0.7);
+    currentPos.y += pageParallax * dispEase;
+    currentPos.x += sin(uTime * 0.18 + aRandomness.y * 6.28) * 0.020 * dispEase;
 
-    // 3. Section 19 & 20: Local mouse parallax (minimal offset, shape preserved)
-    currentPos.x -= (uMouse.x * aRandomness.z * 0.012) * uProgress;
-    currentPos.y -= (uMouse.y * aRandomness.z * 0.012) * uProgress;
+    // 2. Movimentos ambiente e micro-oscilações vivas
+    // A. Drift ambiente quando disperso (no hero ou pós-N)
+    float ambientFactor = 1.0 - formedWeight * 0.82;
+    float ambientX = sin(uTime * 0.28 + aRandomness.x * 6.28) * 0.035 * ambientFactor;
+    float ambientY = cos(uTime * 0.32 + aRandomness.y * 6.28) * 0.035 * ambientFactor;
+    float ambientZ = sin(uTime * 0.38 + aRandomness.z * 6.28) * 0.055 * ambientFactor;
+
+    // B. Movimento vivo interno quando o N está formado:
+    // Micro variação em Z (profundidade 2.5D viva) e micro pulso sem alterar a silhueta
+    float idleZ = sin(uTime * 0.85 + aRandomness.z * 6.28) * 0.022 * formedWeight;
+    float internalX = sin(uTime * 0.45 + aRandomness.x * 6.28) * 0.0035 * formedWeight;
+    float internalY = cos(uTime * 0.45 + aRandomness.y * 6.28) * 0.0035 * formedWeight;
+
+    currentPos += vec3(ambientX + internalX, ambientY + internalY, ambientZ + idleZ);
+
+    // 3. Reação suave ao mouse
+    float mouseStrength = mix(0.015, 0.025, formedWeight);
+    currentPos.x -= (uMouse.x * aRandomness.z * mouseStrength);
+    currentPos.y -= (uMouse.y * aRandomness.z * mouseStrength);
 
     vec4 modelPosition = modelMatrix * vec4(currentPos, 1.0);
     vec4 viewPosition = viewMatrix * modelPosition;
@@ -40,13 +87,18 @@ void main() {
 
     gl_Position = projectedPosition;
 
-    // Sections 5 & 14: Point size with gentle perspective attenuation
-    float pointSize = aSize * uPixelRatio;
-    // Scale slightly by depth (closer is slightly larger, farther is smaller)
+    // 4. Tamanho dos pontos controlado e calibrado
+    float introScale = smoothstep(0.0, 1.0, uIntro);
+    float sizeMultiplier = mix(1.0, 1.10, formedWeight);
+    float pointSize = aSize * uPixelRatio * mix(0.40, 1.0, introScale) * sizeMultiplier;
     gl_PointSize = pointSize * (5.0 / -viewPosition.z);
-    gl_PointSize = clamp(gl_PointSize, 1.5, 16.0);
+    gl_PointSize = clamp(gl_PointSize, 2.0, 10.5);
 
-    // Pass attributes to fragment shader
+    // 5. Zona de baixa densidade (ativa no hero quando a copy está visível)
+    float distToCopy = length((currentPos.xy - uCopyCenter) * vec2(1.0, 1.3));
+    float copyZoneDamp = smoothstep(0.18, 0.52, distToCopy);
+    vCopyDamp = mix(mix(0.35, 1.0, copyZoneDamp), 1.0, formEase);
+
     vColor = aColor;
     vTargetPos = targetPos.xy;
     vDepth = -viewPosition.z;
@@ -55,38 +107,43 @@ void main() {
 
 export const fragmentShader = `
 uniform float uTime;
-uniform float uProgress;
+uniform float uScrollProgress;
+uniform float uIntro;
 
 varying vec3 vColor;
 varying vec2 vTargetPos;
 varying float vDepth;
+varying float vCopyDamp;
+varying float vFormedWeight;
+varying float vDispersal;
 
 void main() {
-    // Section 13: Círculos suaves e precisos via gl_PointCoord
+    // Círculos nítidos e suaves via gl_PointCoord
     vec2 coord = gl_PointCoord - vec2(0.5);
     float dist = length(coord);
     if (dist > 0.5) discard;
 
-    // Smoothstep crisp circle with subtle anti-aliased border (no fuzzy blobs)
-    float alpha = 1.0 - smoothstep(0.30, 0.49, dist);
+    float circleAlpha = 1.0 - smoothstep(0.32, 0.49, dist);
+    float core = 1.0 - smoothstep(0.0, 0.20, dist);
 
-    // Microscopic center highlight core
-    float core = 1.0 - smoothstep(0.0, 0.22, dist);
-
-    // Sections 16 & 17: Highlight dinâmico que atravessa diagonalmente o N
+    // Highlight discreto que atravessa o N diagonalmente quando formado
     float diag = vTargetPos.x * 0.65 + vTargetPos.y * 0.75;
-    float sweepCycle = mod(uTime * 0.35, 3.6) - 1.2;
+    float sweepCycle = mod(uTime * 0.32, 3.8) - 1.3;
     float distToSweep = abs(diag - sweepCycle);
-    float sweep = smoothstep(0.22, 0.0, distToSweep) * uProgress;
+    float sweep = smoothstep(0.22, 0.0, distToSweep) * vFormedWeight;
 
-    // Section 10: Highlight em azul cristalino tecnológico (evita branco puro dominante)
-    vec3 highlightColor = vec3(0.68, 0.88, 1.0);
-    vec3 color = mix(vColor, highlightColor, sweep * 0.58);
-    color += highlightColor * (core * 0.10 * sweep);
+    // Highlight em azul tecnológico ciano (predominantemente azul, sem branco estourado)
+    vec3 highlightColor = vec3(0.65, 0.86, 1.0);
+    vec3 color = mix(vColor, highlightColor, sweep * 0.55);
+    color += highlightColor * (core * 0.07 * sweep);
 
-    // Alpha geral: partículas nítidas com halo mínimo
-    float baseAlpha = mix(0.60, 0.90, uProgress);
-    float finalAlpha = alpha * mix(baseAlpha, 0.98, sweep);
+    // Alpha equilibrado:
+    // Hero: ~0.55, N formado: ~0.92 (alta definição), Campo ambiente pós-N persistente: ~0.38
+    float introAlpha = smoothstep(0.0, 1.0, uIntro);
+    float baseAlpha = mix(0.55, 0.92, vFormedWeight);
+    baseAlpha = mix(baseAlpha, 0.38, vDispersal);
+
+    float finalAlpha = circleAlpha * mix(baseAlpha * introAlpha * vCopyDamp, 0.95, sweep);
 
     gl_FragColor = vec4(color, finalAlpha);
 }

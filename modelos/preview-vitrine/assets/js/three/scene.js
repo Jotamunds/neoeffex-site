@@ -74,10 +74,10 @@ function mapRange(value, inMin, inMax, outMin, outMax) {
  */
 function getParticleCount(isMobile) {
   const w = window.innerWidth;
-  if (isMobile || w < 768) return 2200;
-  if (w < 1100) return 3600;
-  if (w < 1600) return 4800;
-  return 6200;
+  if (isMobile || w < 768) return 1400;
+  if (w < 1100) return 2200;
+  if (w < 1600) return 3200;
+  return 4000;
 }
 
 // ---------------------------------------------------------------------------
@@ -85,10 +85,10 @@ function getParticleCount(isMobile) {
 // ---------------------------------------------------------------------------
 
 function updateFit() {
-  if (!renderer || !camera || !_container || !brandGroup) return;
+  if (!renderer || !camera || !brandGroup) return;
 
-  const width = _container.clientWidth;
-  const height = _container.clientHeight;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
   if (width <= 0 || height <= 0) return;
 
   camera.aspect = width / height;
@@ -114,6 +114,9 @@ function updateFit() {
 
   if (particleMaterial) {
     particleMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, _isMobile ? 1.2 : 1.5);
+    if (particleMaterial.uniforms.uCopyCenter) {
+      particleMaterial.uniforms.uCopyCenter.value.set(_isMobile ? 0.0 : -0.75, _isMobile ? 0.25 : 0.05);
+    }
   }
 }
 
@@ -175,17 +178,40 @@ async function setupParticles() {
     // Calculate exact dynamic contain fit
     updateFit();
     
-    // Animate uProgress (dispersion -> formed N) over 2.0s
-    if (!_reducedMotion && window.gsap) {
-      window.gsap.to(particleMaterial.uniforms.uProgress, {
-        value: 1.0,
-        duration: 2.0,
-        ease: 'power2.out'
-      });
+    // Expor função de atualização para o coordenador de scroll
+    window.__neoeffexUpdateScrollProgress = updateScrollProgress;
+
+    // Verificar se já existe progresso de scroll ativo (ex: recarga no meio da página)
+    if (typeof window.__neoeffexCurrentScrollProgress === 'number') {
+      scrollProgress = window.__neoeffexCurrentScrollProgress;
+    } else if (window.__neoeffexHeroScrollTrigger) {
+      scrollProgress = window.__neoeffexHeroScrollTrigger.progress;
+    } else {
+      scrollProgress = 0.0;
     }
+
+    if (particleMaterial) {
+      particleMaterial.uniforms.uScrollProgress.value = scrollProgress;
+      particleMaterial.uniforms.uProgress.value = scrollProgress;
+      if (_reducedMotion) {
+        particleMaterial.uniforms.uIntro.value = 1.0;
+        renderer.render(scene, camera);
+      } else {
+        particleMaterial.uniforms.uIntro.value = 0.0;
+      }
+    }
+
+    // Notifica o coordenador de entrada do Hero
+    window.__neoeffexSceneReady = true;
+    window.__neoeffexParticleMaterial = particleMaterial;
+    window.dispatchEvent(new CustomEvent('neoeffex:scene-ready', { 
+      detail: { particleMaterial } 
+    }));
 
   } catch (err) {
     console.error('[Neoeffex 3D] Error generating particles:', err);
+    window.__neoeffexSceneFailed = true;
+    window.dispatchEvent(new CustomEvent('neoeffex:scene-failed', { detail: { error: err } }));
     const fallback = document.getElementById('threeFallback');
     if (fallback) fallback.classList.add('is-active');
   }
@@ -208,19 +234,20 @@ function animate() {
   if (particleMaterial && brandGroup) {
     particleMaterial.uniforms.uTime.value = elapsed * 0.001;
     
-    // Section 18: Micro idle rotation
-    const idleRotY = _reducedMotion ? 0 : Math.sin(elapsed * 0.0006) * 0.018; // ±1.0°
-    const idleRotX = _reducedMotion ? 0 : Math.cos(elapsed * 0.0005) * 0.012; // ±0.7°
+    // Micro rotação idle — contida e suave (±1.0° Y desktop, ±0.5° mobile; ±0.6° X)
+    // Mantém a silhueta do N impecável e reconhecível
+    const idleRotY = _reducedMotion ? 0 : Math.sin(elapsed * 0.0006) * (_isMobile ? 0.008 : 0.016);
+    const idleRotX = _reducedMotion ? 0 : Math.cos(elapsed * 0.0005) * (_isMobile ? 0.005 : 0.010);
     
     if (!_isMobile && !_reducedMotion) {
-      // Section 19: Smooth mouse reaction via lerp (±2.5° max)
+      // Reação suave ao mouse com limites estritos (±2.0° max)
       mouseCurrentX = lerp(mouseCurrentX, mouseTargetX, 0.045);
       mouseCurrentY = lerp(mouseCurrentY, mouseTargetY, 0.045);
       
       particleMaterial.uniforms.uMouse.value.set(mouseCurrentX, mouseCurrentY);
       
-      brandGroup.rotation.y = mouseCurrentX * 0.045 + idleRotY;
-      brandGroup.rotation.x = -mouseCurrentY * 0.030 + idleRotX;
+      brandGroup.rotation.y = mouseCurrentX * 0.035 + idleRotY;
+      brandGroup.rotation.x = -mouseCurrentY * 0.024 + idleRotX;
     } else {
       brandGroup.rotation.y = idleRotY;
       brandGroup.rotation.x = idleRotX;
@@ -233,25 +260,12 @@ function animate() {
 }
 
 /**
- * Section 21: Apply scale / position changes driven by scroll progress.
- * Preserves N legibility during initial descent, then gently dissolves.
+ * Aplica o progresso de rolagem nos uniforms do shader de forma contínua e reversível.
  */
 function applyScrollTransforms() {
   if (!brandGroup || !particleMaterial) return;
-  const p = scrollProgress;
-
-  if (p <= 0.20) {
-    brandGroup.scale.setScalar(baseFitScale);
-    brandGroup.position.y = 0;
-    brandGroup.rotation.z = 0;
-    particleMaterial.uniforms.uProgress.value = 1.0;
-  } else {
-    const scaleFactor = mapRange(p, 0.20, 1.0, 1.0, 0.85);
-    brandGroup.scale.setScalar(baseFitScale * scaleFactor);
-    brandGroup.position.y = mapRange(p, 0.20, 1.0, 0, -0.6);
-    brandGroup.rotation.z = mapRange(p, 0.20, 1.0, 0, -0.05);
-    particleMaterial.uniforms.uProgress.value = mapRange(p, 0.20, 0.90, 1.0, 0.25);
-  }
+  particleMaterial.uniforms.uScrollProgress.value = scrollProgress;
+  particleMaterial.uniforms.uProgress.value = scrollProgress;
 }
 
 // ---------------------------------------------------------------------------
@@ -273,14 +287,16 @@ export function init(container, options = {}) {
       powerPreference: 'high-performance'
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDPR));
-    renderer.setSize(container.clientWidth || 600, container.clientHeight || 500);
+    const width = window.innerWidth || 1200;
+    const height = window.innerHeight || 800;
+    renderer.setSize(width, height);
     renderer.setClearColor(0x000000, 0); // fully transparent background
     container.appendChild(renderer.domElement);
 
     // ----- Scene & camera ---------------------------------------------------
     scene = new THREE.Scene();
 
-    const aspect = (container.clientWidth || 600) / (container.clientHeight || 500);
+    const aspect = width / height;
     camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
     camera.position.set(0, 0, 5);
 
@@ -313,9 +329,29 @@ export function init(container, options = {}) {
 
 export function updateScrollProgress(progress) {
   scrollProgress = clamp(progress, 0, 1);
+  window.__neoeffexCurrentScrollProgress = scrollProgress;
+  if (particleMaterial && particleMaterial.uniforms) {
+    if (particleMaterial.uniforms.uScrollProgress) {
+      particleMaterial.uniforms.uScrollProgress.value = scrollProgress;
+    }
+    if (particleMaterial.uniforms.uProgress) {
+      particleMaterial.uniforms.uProgress.value = scrollProgress;
+    }
+  }
   if (_reducedMotion && renderer && scene && camera) {
     applyScrollTransforms();
     renderer.render(scene, camera);
+  }
+}
+
+export function setPageScroll(scrollY, progress) {
+  if (particleMaterial && particleMaterial.uniforms) {
+    if (particleMaterial.uniforms.uScrollY) {
+      particleMaterial.uniforms.uScrollY.value = scrollY;
+    }
+    if (particleMaterial.uniforms.uPageScroll) {
+      particleMaterial.uniforms.uPageScroll.value = progress;
+    }
   }
 }
 
@@ -323,6 +359,10 @@ export function updateMouse(normalizedX, normalizedY) {
   if (_isMobile || _reducedMotion) return;
   mouseTargetX = clamp(normalizedX, -1, 1);
   mouseTargetY = clamp(normalizedY, -1, 1);
+}
+
+export function getParticleMaterial() {
+  return particleMaterial;
 }
 
 export function destroy() {
@@ -395,16 +435,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-    const threeSection = document.getElementById('threeSection');
-    const visualBlock = document.querySelector('.hero__visual');
-    const triggerEl = isMobile ? (visualBlock || threeSection) : threeSection;
+  window.__neoeffexUpdateScrollProgress = updateScrollProgress;
+  window.__neoeffexSetPageScroll = setPageScroll;
+
+  // Pausa/retomada inteligente em background para máxima performance (Etapa 4 / Risk 5)
+  document.addEventListener('visibilitychange', () => {
+    isVisible = !document.hidden;
+    if (isVisible && !reducedMotion && animationId === null) {
+      startTime = performance.now();
+      animationId = requestAnimationFrame(animate);
+    }
+  });
+
+  // Só cria ScrollTrigger local de fallback se modelos-preview.js não tiver criado o trigger coordenado
+  if (!window.__neoeffexHeroTriggerActive && typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    const triggerEl = document.getElementById('threeSection') || document.body;
     if (triggerEl) {
       ScrollTrigger.create({
         trigger: triggerEl,
-        start: isMobile ? 'top 40%' : 'top top',
-        end: 'bottom top',
-        scrub: true,
+        start: 'top top',
+        end: isMobile ? '+=100%' : '+=130%',
+        pin: !reducedMotion,
+        pinSpacing: !reducedMotion,
+        scrub: 0.6,
         onUpdate: (self) => {
           updateScrollProgress(self.progress);
         }

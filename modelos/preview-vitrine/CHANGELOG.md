@@ -1,5 +1,62 @@
 # Changelog
 
+## v0.4.3 - Demonstrações visuais abertas e partículas persistentes contínuas (Etapa 4)
+- fio condutor de partículas persistentes: reuso global do mesmo canvas Three.js (`.particles-bg-layer`), mantendo partículas ativas em baixa densidade e movimento sutil ao longo de toda a rolagem da página
+- novos uniforms `uPageScroll` e `uScrollY` no ShaderMaterial para criar paralaxe vertical e deriva sutil com base no scroll contínuo do documento
+- calibração de alpha base (0.38) das partículas dispersas, garantindo que acompanhem a página sem competir com textos ou mídia
+- transição da landing para "menos texto, mais demonstração": eliminação do padrão comum de IA (caixas com borda fina, glassmorphism genérico, repetição de feature cards em grade)
+- inclusão de 3 seções demonstrativas abertas e assimétricas com grande respiro visual:
+  - 01 · 3D Espacial (`SEU SITE PODE TER / ELEMENTOS 3D`): prisma tridimensional interativo renderizado via CSS 3D Transforms com anéis orbitais e rastreamento de ponteiro suave, sem segundo canvas WebGL
+  - 02 · Direção Autoral (`PODE TER FOTOS / REAIS DO SEU NEGÓCIO`): composição editorial assimétrica de fotografia autêntica com paralaxe diferencial (usando ativos reais existentes do Hortifruti)
+  - 03 · Resposta Tátil (`MOTION · INTERAÇÃO / PERFORMANCE`): laboratório interativo com métricas de desempenho em tempo real e chips magnéticos com física elástica
+- vitrine de projetos refinada: remoção de caixas e bordas pesadas nos cards, aumento de área dedicada aos previews de vídeo (proporção 1:1.55 desktop), eliminação de badges/tags redundantes e adoção de copy ultra-concisa:
+  - Hamburgueria: "Produto em movimento."
+  - Clínica: "Presença sofisticada."
+  - Hortifruti: "Frescor visual."
+  - Lu Leve: "Pedido simplificado."
+- fechamento CTA simplificado e de alto impacto: "VAMOS CRIAR ALGO / QUE VÁ ALÉM?", com call-to-action direto para WhatsApp e navegação reversa para projetos
+- economia de recursos e performance: pausa de RAF e de reprodução de vídeos HTML5 em background tabs via listener de `visibilitychange`
+- conformidade estrita com acessibilidade e `prefers-reduced-motion` em todas as novas seções
+
+## v0.4.2 - Formação e dispersão narrativa do N orientada por scroll (Etapa 3)
+- implementação da formação contínua, progressiva e reversível do N da Neoeffex através de `uScrollProgress` no ShaderMaterial
+- interpolação dual-phase no Vertex Shader: `aStartPosition` (hero disperso) → `position` (N preciso) → `aEndPosition` (campo ambiente pós-N)
+- scroll progress com fases calibradas:
+  - 0.00 a 0.18: partículas dispersas no hero em baixa densidade, headline 100% legível
+  - 0.18 a 0.55: convergência progressiva e orgânica das partículas formando o N
+  - 0.55 a 0.72: N completamente formado, protagonista visual com fit contain (78% viewport), sem cortes em qualquer resolução
+  - 0.72 a 1.00: dispersão suave em direção ao campo de partículas ambiente, preparando a continuidade visual da página
+- reversibilidade completa: ao rolar para cima, o fluxo inverte matematicamente (campo ambiente → N formado → hero disperso)
+- vida interna contínua quando formado: micro oscilações em Z (profundidade 2.5D viva), micro drift interno sem prejudicar a silhueta
+- micro rotação contida (±1.0° Y desktop, ±0.5° mobile) e reação suave ao mouse (±2.0° max)
+- highlight dinâmico diagonal em azul tecnológico ciano atravessando o N a cada ciclo quando formado
+- resolução de conflito de RAF do Lenis (Risk 5): remoção do loop redundante de `requestAnimationFrame` em favor do controle exclusivo pelo ticker do GSAP
+- fixação controlada do hero (`pin: true`, 120% desktop, 95% mobile) com esmaecimento suave e reversível da copy (0.0 a 0.22)
+- sincronização estrita em recarregamento no meio da página e salto por âncoras (Risk 6)
+- compatibilidade total com `prefers-reduced-motion` e suporte responsivo desktop/mobile
+
+## v0.4.1 - Entrada sincronizada do hero com partículas (Etapa 2)
+- orquestração e sincronização da entrada: hero surge praticamente limpo, headline aparece e partículas emergem simultaneamente via uniform `uIntro` (0.0 -> 1.0)
+- criação de zona de baixa densidade (exclusão inteligente da copy) que afasta 85% das partículas do traçado da headline, preservando 100% da legibilidade
+- atenuação de brilho/alpha em shaders (`vCopyDamp`) para qualquer partícula que transite pela área do texto
+- remoção de qualquer container ou borda visível: canvas ocupa toda a viewport em camada de fundo contínua e transparente
+- ajuste de densidade responsiva e contagem de partículas (4000 telas grandes, 3200 desktop, 2200 tablet, 1400 mobile)
+- escala controlada de pontos (2.8 a 3.8 base, máximo 6.2 em highlights raros), eliminando efeito de plasma, fumaça ou bolhas
+- movimento ambiente sutil e sofisticado em 3D nos eixos X, Y e Z
+- suporte estrito a `prefers-reduced-motion` com exibição estática imediata sem necessidade de rolagem
+- coordenação resiliente com timeout de segurança (550ms) e fallback SVG garantindo que o conteúdo nunca fique bloqueado
+
+## v0.4.0 - Novo Hero, tipografia e camada contínua de partículas (Etapa 1)
+- nova headline do hero em maiúsculas: "SEU SITE / PODE IR ALÉM", em 2 linhas intencionais
+- tipografia refinada e mais fina (Inter, font-weight: 600, fluid clamp, line-height 1.12, letter-spacing -0.015em)
+- texto de apoio conciso: "Design, tecnologia e movimento para transformar presença em experiência."
+- redução para 2 CTAs essenciais com links corretos ("Explorar projetos" -> #modelos, "Falar com especialista" -> /#contato)
+- remoção de badges, pílulas redundantes e bordas genéricas no hero
+- identidade Azul Neoeffex (#1e86ff) garantida como dominante global, sem contaminação por temas locais de cards
+- instalação da camada definitiva de partículas fixa na viewport (`.particles-bg-layer`), desacoplada de transforms
+- partículas dispersas no fundo com drift ambiente tridimensional suave; N mantido sem formação automática nesta etapa
+- layout espaçoso com amplo respiro visual no hero, testado em desktop, notebook e mobile
+
 ## v0.3.2 - Refinamento do N em partículas 3D (Etapa 3.2)
 - N como protagonista visual integrado no Hero (56% largura desktop, altura proporcional 73vh)
 - eliminação de estouro branco com distribuição calibrada: 70% azul escuro rico (#10489e), 20% azul Neoeffex vivo (#1e86ff), 8% azul claro (#72bcff), 2% glints quase branco (#eef6ff)

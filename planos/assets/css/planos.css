@@ -1,6 +1,6 @@
 /* ==========================================================================
    Neoeffex — Página de Planos (/planos/)
-   Etapa 5: Modal e fluxo de solicitação de orçamento (v0.1.4)
+   Etapa 6: Explicações comerciais, garantia e FAQ (v0.1.5)
    ========================================================================== */
 
 /* Exibição limpa da barra de navegação sem dependência do loader do hero */
@@ -864,91 +864,370 @@
 }
 
 /* --------------------------------------------------------------------------
-   Placeholders estruturais para as etapas futuras (Etapas 5 e 6)
+   Etapa 6: Seção de Explicações Comerciais & Garantia
    -------------------------------------------------------------------------- */
-.structural-placeholder {
-  position: relative;
-  border: 1px dashed var(--border);
-  border-radius: var(--radius-lg);
-  padding: 28px;
-  background: color-mix(in oklch, var(--panel) 35%, transparent);
-}
-
-.placeholder-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 14px;
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--meta);
-  background: color-mix(in oklch, var(--surface) 80%, transparent);
-  border: 1px solid var(--border);
-  margin-bottom: 20px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.placeholder-badge .dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent-bright);
-}
-
-.placeholder-grid-2 {
+.rules-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 24px;
 }
 
-.placeholder-grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.placeholder-grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.placeholder-card {
-  padding: 24px;
+.rule-card {
+  padding: 32px 28px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: color-mix(in oklch, var(--surface) 60%, transparent);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklch, var(--panel) 75%, transparent);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  transition: border-color 200ms ease;
+  transition: border-color 200ms var(--ease), transform 200ms var(--ease);
 }
 
-.placeholder-card:hover {
+.rule-card:hover {
   border-color: var(--border-hover);
+  transform: translateY(-2px);
 }
 
-.placeholder-card-num {
-  font-family: var(--font-mono);
-  font-size: 11px;
+.rule-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.rule-card-badge {
+  font: 500 11px/1 var(--font-mono);
   color: var(--accent-soft);
-  font-weight: 500;
+  letter-spacing: 0.06em;
 }
 
-.placeholder-card-title {
+.rule-card-tag {
+  font: 600 10.5px/1 var(--font-mono);
+  color: var(--meta);
+  text-transform: uppercase;
+  background: color-mix(in oklch, var(--surface) 60%, transparent);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.rule-card-title {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--fg);
+  margin-bottom: 10px;
+  line-height: 1.3;
 }
 
-.placeholder-card-desc {
+.rule-card-intro {
+  font-size: 13.5px;
+  color: var(--fg-2);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.rule-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rule-list li {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: color-mix(in oklch, var(--surface) 40%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rule-list li p {
   font-size: 13px;
   color: var(--muted);
   line-height: 1.5;
   margin: 0;
+}
+
+.rule-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rule-type-badge {
+  font: 600 11.5px/1.2 var(--font-mono);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.rule-type-badge.type-simple {
+  background: color-mix(in oklch, var(--accent) 15%, transparent);
+  color: var(--accent-bright);
+  border: 1px solid color-mix(in oklch, var(--accent) 30%, transparent);
+}
+
+.rule-type-badge.type-evolution {
+  background: color-mix(in oklch, var(--accent-soft) 18%, transparent);
+  color: #a8d5ba;
+  border: 1px solid color-mix(in oklch, var(--accent-soft) 35%, transparent);
+}
+
+.rule-type-badge.type-newscope {
+  background: color-mix(in oklch, #f59e0b 16%, transparent);
+  color: #fcd34d;
+  border: 1px solid color-mix(in oklch, #f59e0b 35%, transparent);
+}
+
+.rule-plan-ref {
+  font-size: 11px;
+  color: var(--meta);
+  font-family: var(--font-mono);
+}
+
+.rule-boxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.rule-box {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: color-mix(in oklch, var(--surface) 50%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rule-box-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-bright);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.rule-box p {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.rule-example-note {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklch, var(--surface) 30%, transparent);
+  border: 1px dashed var(--border);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--fg-2);
+}
+
+.rule-example-note strong {
+  color: var(--accent-bright);
+}
+
+.rule-list-simple {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rule-list-simple li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.rule-list-simple strong {
+  color: var(--fg);
+}
+
+.rule-bullet-icon {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--accent) 15%, transparent);
+  border: 1px solid color-mix(in oklch, var(--accent) 30%, transparent);
+  color: var(--accent-bright);
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Etapa 6: FAQ Accordion Interativo e Acessível
+   -------------------------------------------------------------------------- */
+.faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklch, var(--surface) 60%, transparent);
+  transition: border-color 200ms var(--ease), background 200ms var(--ease), box-shadow 200ms var(--ease);
+  overflow: hidden;
+}
+
+.faq-item:hover {
+  border-color: var(--border-hover);
+}
+
+.faq-item.open {
+  border-color: var(--accent-bright);
+  background: color-mix(in oklch, var(--surface) 85%, transparent);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.faq-item h3 {
+  margin: 0;
+  padding: 0;
+}
+
+.faq-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px;
+  background: transparent;
+  border: 0;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 550;
+  text-align: left;
+  cursor: pointer;
+  transition: color 180ms var(--ease);
+}
+
+.faq-trigger:hover {
+  color: #ffffff;
+}
+
+.faq-trigger:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--accent-bright);
+}
+
+.faq-icon {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: color-mix(in oklch, var(--panel) 70%, transparent);
+  position: relative;
+  display: grid;
+  place-items: center;
+  transition: transform 250ms var(--ease), border-color 200ms, background 200ms;
+  flex-shrink: 0;
+}
+
+.faq-icon::before,
+.faq-icon::after {
+  content: '';
+  position: absolute;
+  background: var(--fg-2);
+  border-radius: 1px;
+  transition: transform 250ms var(--ease), background 200ms;
+}
+
+.faq-icon::before {
+  width: 10px;
+  height: 2px;
+}
+
+.faq-icon::after {
+  width: 2px;
+  height: 10px;
+}
+
+.faq-item.open .faq-icon {
+  border-color: var(--accent-bright);
+  background: color-mix(in oklch, var(--accent) 20%, transparent);
+  transform: rotate(45deg);
+}
+
+.faq-item.open .faq-icon::before,
+.faq-item.open .faq-icon::after {
+  background: var(--accent-bright);
+}
+
+.faq-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms var(--ease), visibility 250ms var(--ease);
+  visibility: hidden;
+}
+
+.faq-item.open .faq-content {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.faq-content-inner {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 22px 0;
+  color: var(--fg-2);
+  font-size: 14.5px;
+  line-height: 1.65;
+  transition: padding 250ms var(--ease);
+}
+
+.faq-item.open .faq-content-inner {
+  padding-bottom: 22px;
+}
+
+.faq-content-inner p {
+  margin: 0 0 12px;
+}
+
+.faq-content-inner p:last-child {
+  margin-bottom: 0;
+}
+
+.faq-content-inner ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faq-content-inner li {
+  line-height: 1.55;
+}
+
+.faq-content-inner strong {
+  color: var(--fg);
 }
 
 /* Destaque de marca no rodapé conforme DECISIONS.md */
@@ -1367,11 +1646,8 @@
   .hours-guide-panel {
     padding: 28px 20px;
   }
-  .placeholder-grid-4 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .placeholder-grid-3 {
-    grid-template-columns: repeat(2, 1fr);
+  .rules-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1429,13 +1705,22 @@
     align-items: flex-start;
     padding: 12px 14px;
   }
-  .placeholder-grid-4,
-  .placeholder-grid-3,
-  .placeholder-grid-2 {
+  .rule-card {
+    padding: 22px 18px;
+  }
+  .rule-boxes {
     grid-template-columns: 1fr;
   }
-  .structural-placeholder {
-    padding: 18px 14px;
+  .faq-trigger {
+    padding: 16px 18px;
+    font-size: 15px;
+  }
+  .faq-content-inner {
+    padding: 0 18px 0;
+    font-size: 13.5px;
+  }
+  .faq-item.open .faq-content-inner {
+    padding-bottom: 18px;
   }
   .modal {
     padding: 12px;
@@ -1489,6 +1774,10 @@
   .cycle-box,
   .hours-pillar-card,
   .scope-card,
+  .rule-card,
+  .faq-item,
+  .faq-content,
+  .faq-icon,
   .modal,
   .modal-card,
   .form-status {

@@ -1,7 +1,7 @@
 /**
  * Neoeffex — Página de Planos (/planos/)
- * Versão: v0.1.4
- * Etapa 5: Modal e fluxo de solicitação de orçamento, pré-seleção inteligente e validação
+ * Versão: v0.1.5
+ * Etapa 6: Explicações comerciais, garantia técnica e FAQ acessível
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -76,6 +76,25 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     document.querySelectorAll('.section').forEach(sec => sec.classList.add('section-in-view'));
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+  }
+
+  // --------------------------------------------------------------------------
+  // ETAPA 6: FAQ Accordion Acessível
+  // --------------------------------------------------------------------------
+  const faqAccordion = document.querySelector('#faq .faq-accordion');
+  if (faqAccordion) {
+    const triggers = faqAccordion.querySelectorAll('.faq-trigger');
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const item = trigger.closest('.faq-item');
+        if (!item) return;
+        const isCurrentlyOpen = item.classList.contains('open');
+        const nextState = !isCurrentlyOpen;
+        
+        item.classList.toggle('open', nextState);
+        trigger.setAttribute('aria-expanded', String(nextState));
+      });
+    });
   }
 
   // --------------------------------------------------------------------------

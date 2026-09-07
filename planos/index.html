@@ -29,7 +29,7 @@
 
   <!-- Estilos Globais e Específicos -->
   <link rel="stylesheet" href="../assets/css/style.css?v=0.1.15">
-  <link rel="stylesheet" href="assets/css/planos.css?v=0.1.4">
+  <link rel="stylesheet" href="assets/css/planos.css?v=0.1.5">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -844,65 +844,364 @@
       </div>
     </section>
 
-    <!-- 5. EXPLICAÇÕES & REGRAS (Estrutura / Base para Etapas 4 e 6) -->
+    <!-- 5. EXPLICAÇÕES & REGRAS COMERCIAIS (Etapa 6: Transparência, Garantia e Diretrizes) -->
     <section class="section" id="explicacoes" data-od-id="explicacoes-regras">
       <div class="container">
         <div class="section-head reveal">
-          <div class="eyebrow">TRANSPARÊNCIA E GARANTIA</div>
+          <div class="eyebrow">TRANSPARÊNCIA E GARANTIA / DIRETRIZES</div>
           <h2 class="headline-upper">Regras claras, sem surpresas</h2>
-          <p class="lead">Informações transparentes sobre como funcionam as horas técnicas, revisões de entrega e serviços complementares.</p>
+          <p class="lead">Entenda como funcionam as revisões de entrega, a garantia técnica pós-lançamento, a responsabilidade de materiais e a distinção entre manutenção e novo escopo.</p>
         </div>
 
-        <div class="structural-placeholder">
-          <div class="placeholder-badge"><span class="dot"></span> Base Estrutural — Etapa 6: Condições Comerciais e Garantia</div>
-          <div class="placeholder-grid-3">
-            <div class="placeholder-card">
-              <span class="placeholder-card-num">DIRETRIZ 01</span>
-              <span class="placeholder-card-title">Garantia & Revisões</span>
-              <p class="placeholder-card-desc">2 ciclos formais de revisão durante o desenvolvimento e 30 dias de garantia técnica após o lançamento.</p>
+        <div class="rules-grid">
+          <!-- Card 1: Implantação vs Manutenção vs Novo Escopo -->
+          <article class="rule-card reveal" data-od-id="regra-escopo">
+            <div class="rule-card-header">
+              <span class="rule-card-badge">DIRETRIZ 01</span>
+              <span class="rule-card-tag">ESCOPO & EVOLUÇÃO</span>
             </div>
-            <div class="placeholder-card">
-              <span class="placeholder-card-num">DIRETRIZ 02</span>
-              <span class="placeholder-card-title">Franquia de Horas Técnicas</span>
-              <p class="placeholder-card-desc">Utilizadas para manutenções pontuais dentro do mês vigente; demandas extras sempre combinadas previamente.</p>
+            <h3 class="rule-card-title">Implantação x Manutenção x Novo Escopo</h3>
+            <p class="rule-card-intro">Para garantir clareza no dia a dia, cada solicitação é classificada de acordo com seu impacto técnico no projeto:</p>
+            
+            <ul class="rule-list">
+              <li>
+                <div class="rule-item-head">
+                  <span class="rule-type-badge type-simple">Alteração Simples</span>
+                  <span class="rule-plan-ref">Inclusa em Cuidado e Evolução</span>
+                </div>
+                <p>Troca de telefones, imagens, fotos de produtos, endereço ou pequenas modificações em textos e links já publicados.</p>
+              </li>
+              <li>
+                <div class="rule-item-head">
+                  <span class="rule-type-badge type-evolution">Pequena Evolução</span>
+                  <span class="rule-plan-ref">Inclusa em Evolução</span>
+                </div>
+                <p>Criação de um novo bloco simples, ajuste refinado de layout, melhoria de contraste ou inserção de um novo banner promocional.</p>
+              </li>
+              <li>
+                <div class="rule-item-head">
+                  <span class="rule-type-badge type-newscope">Novo Escopo</span>
+                  <span class="rule-plan-ref">Orçamento Separado</span>
+                </div>
+                <p>Desenvolvimento de áreas de membros com login, sistemas de agendamento interativos, dashboards ou integrações complexas de API. Possuir horas técnicas não inclui automaticamente novos sistemas.</p>
+              </li>
+            </ul>
+          </article>
+
+          <!-- Card 2: Revisões e Garantia Técnica -->
+          <article class="rule-card reveal" data-od-id="regra-garantia">
+            <div class="rule-card-header">
+              <span class="rule-card-badge">DIRETRIZ 02</span>
+              <span class="rule-card-tag">SEGURANÇA DA ENTREGA</span>
             </div>
-            <div class="placeholder-card">
-              <span class="placeholder-card-num">DIRETRIZ 03</span>
-              <span class="placeholder-card-title">Domínio e Serviços Externos</span>
-              <p class="placeholder-card-desc">Orientação completa sobre titularidade do domínio, serviços de terceiros e liberdade de migração.</p>
+            <h3 class="rule-card-title">Revisões de Criação & Garantia Técnica</h3>
+            <p class="rule-card-intro">Processo estruturado para que você participe ativamente da construção com total segurança antes e depois da publicação:</p>
+            
+            <div class="rule-boxes">
+              <div class="rule-box">
+                <div class="rule-box-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                  <span>2 Ciclos Formais de Revisão</span>
+                </div>
+                <p>Durante o desenvolvimento, você tem até 2 ciclos formais para solicitar ajustes visuais e textuais dentro do escopo aprovado. Correções de falhas técnicas não contam como ciclo de revisão.</p>
+              </div>
+
+              <div class="rule-box">
+                <div class="rule-box-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  <span>30 Dias de Garantia Técnica</span>
+                </div>
+                <p>Após o site ir ao ar, cobrimos qualquer correção referente ao que foi entregue (ex: um botão de WhatsApp que parou de responder). Não cobre novos conteúdos, mudanças de ideia ou redesign.</p>
+              </div>
             </div>
-          </div>
+            <div class="rule-example-note">
+              <strong>Exemplo prático:</strong> Se um formulário entregue falhar, a garantia corrige imediatamente sem custo. Se você desejar substituir o formulário por um sistema de agendamento ou login, trata-se de novo escopo.
+            </div>
+          </article>
+
+          <!-- Card 3: Domínio, Hospedagem e Migração -->
+          <article class="rule-card reveal" data-od-id="regra-infraestrutura">
+            <div class="rule-card-header">
+              <span class="rule-card-badge">DIRETRIZ 03</span>
+              <span class="rule-card-tag">INFRAESTRUTURA & CONTROLE</span>
+            </div>
+            <h3 class="rule-card-title">Domínio, Infraestrutura & Liberdade</h3>
+            <p class="rule-card-intro">Transparência técnica absoluta sobre a posse dos seus ativos digitais e a operação da hospedagem:</p>
+
+            <ul class="rule-list-simple">
+              <li>
+                <div class="rule-bullet-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </div>
+                <div>
+                  <strong>Seu domínio continua 100% seu:</strong> O registro oficial (ex: Registro.br) fica sempre vinculado à sua empresa. A Neoeffex realiza todas as configurações técnicas de apontamento e DNS.
+                </div>
+              </li>
+              <li>
+                <div class="rule-bullet-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                </div>
+                <div>
+                  <strong>Infraestrutura Gerenciada:</strong> Cuidamos de servidores rápidos, SSL automático, monitoramento e backups. Não prometemos "armazenamento ilimitado" ou "100% de disponibilidade", mas entregamos alta estabilidade.
+                </div>
+              </li>
+              <li>
+                <div class="rule-bullet-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"></path><path d="M18 8l4 4-4 4"></path><path d="M8 12h14"></path></svg>
+                </div>
+                <div>
+                  <strong>Liberdade de Migração:</strong> Se no futuro você optar por gerenciar seus servidores internamente, organizamos a transição técnica do projeto de forma transparente, conforme as condições técnicas necessárias.
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <!-- Card 4: Materiais, Serviços de Terceiros e SEO -->
+          <article class="rule-card reveal" data-od-id="regra-servicos-seo">
+            <div class="rule-card-header">
+              <span class="rule-card-badge">DIRETRIZ 04</span>
+              <span class="rule-card-tag">PRAZOS & INTEGRAÇÕES</span>
+            </div>
+            <h3 class="rule-card-title">Materiais, Serviços Externos & SEO</h3>
+            <p class="rule-card-intro">Diretrizes sobre dependências externas, fornecimento de informações e mecanismos de busca:</p>
+
+            <ul class="rule-list-simple">
+              <li>
+                <div class="rule-bullet-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+                <div>
+                  <strong>Materiais do Cliente e Prazos:</strong> O andamento do projeto depende do envio de logos, imagens, textos e informações institucionais. O cronograma de entrega é diretamente proporcional à agilidade desses envios.
+                </div>
+              </li>
+              <li>
+                <div class="rule-bullet-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </div>
+                <div>
+                  <strong>E-mail Profissional e Terceiros:</strong> Plataformas externas como Google Workspace, gateways de pagamento ou APIs possuem cobranças e contratos próprios, não embutidos nas mensalidades Neoeffex.
+                </div>
+              </li>
+              <li>
+                <div class="rule-bullet-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                </div>
+                <div>
+                  <strong>SEO Técnico Sem Promessas Falsas:</strong> Construímos páginas com marcação semântica limpa e Open Graph. Não prometemos primeiro lugar no Google, pois ranqueamento depende de concorrência e autoridade contínua.
+                </div>
+              </li>
+            </ul>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- 6. FAQ (Estrutura / Base para Etapa 6) -->
+    <!-- 6. FAQ (Etapa 6: 12 Perguntas e Respostas Frequentes em Accordion Acessível) -->
     <section class="section" id="faq" data-od-id="faq">
       <div class="container">
         <div class="section-head reveal">
-          <div class="eyebrow">DÚVIDAS FREQUENTES</div>
+          <div class="eyebrow">DÚVIDAS FREQUENTES / FAQ</div>
           <h2 class="headline-upper">Perguntas comuns</h2>
-          <p class="lead">Respostas diretas para as perguntas mais comuns antes de iniciar seu projeto conosco.</p>
+          <p class="lead">Tire suas dúvidas antes de iniciar seu projeto. Respostas diretas e transparentes sobre contratação, pagamentos e manutenção.</p>
         </div>
 
-        <div class="structural-placeholder">
-          <div class="placeholder-badge"><span class="dot"></span> Base Estrutural — Etapa 6: FAQ Accordion</div>
-          <div class="placeholder-card">
-            <span class="placeholder-card-num">ACCORDION INTERATIVO</span>
-            <span class="placeholder-card-title">Estrutura preparada para o FAQ</span>
-            <p class="placeholder-card-desc">Área configurada para abrigar as 11 perguntas frequentes com respostas expansíveis na Etapa 6.</p>
+        <div class="faq-accordion" data-od-id="faq-accordion">
+          <!-- Pergunta 01 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-1" id="faq-btn-1">
+                <span>1. Qual plano é melhor para mim?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-1" role="region" aria-labelledby="faq-btn-1">
+              <div class="faq-content-inner">
+                <p>Depende do estágio e do canal comercial prioritário da sua empresa:</p>
+                <ul>
+                  <li><strong>Landing Page:</strong> Ideal para campanhas pontuais de anúncios, lançamento de produtos ou captação direta de leads em página única com foco total em conversão.</li>
+                  <li><strong>Site Institucional:</strong> Perfeito para clínicas, escritórios e empresas consolidadas que precisam apresentar serviços detalhados, equipe, credenciais e múltiplos canais de contato.</li>
+                  <li><strong>Site + Catálogo Neoeffex:</strong> A escolha certa para quem comercializa produtos físicos, refeições ou itens sob encomenda e quer um catálogo interativo com carrinho e envio de pedidos direto no WhatsApp.</li>
+                  <li><strong>Totalmente Personalizado:</strong> Indicado para negócios com regras de cálculo específicas, integração com bancos de dados próprios ou experiências visuais complexas.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 02 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-2" id="faq-btn-2">
+                <span>2. Posso solicitar um orçamento sem saber qual plano escolher?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-2" role="region" aria-labelledby="faq-btn-2">
+              <div class="faq-content-inner">
+                <p>Com certeza. No formulário de orçamento, basta selecionar a opção <em>"Ainda não sei qual plano escolher"</em>. Nossa equipe conversará com você para entender os objetivos do seu negócio e indicar a solução técnica mais adequada e econômica, sem custo ou compromisso prévio.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 03 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-3" id="faq-btn-3">
+                <span>3. O domínio fica em meu nome?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-3" role="region" aria-labelledby="faq-btn-3">
+              <div class="faq-content-inner">
+                <p>Sim, sempre. O domínio permanece registrado sob sua titularidade e controle direto (por exemplo, na sua conta do Registro.br). A Neoeffex realiza todas as configurações técnicas de apontamento de DNS e certificado SSL. O valor de registro e renovação anual é pago diretamente ao órgão registrador.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 04 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-4" id="faq-btn-4">
+                <span>4. Preciso contratar um plano mensal?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-4" role="region" aria-labelledby="faq-btn-4">
+              <div class="faq-content-inner">
+                <p>Não há contratação automática ou obrigatória de planos com horas de evolução. Para manter seu site no ar na infraestrutura gerenciada da Neoeffex com SSL, backups e monitoramento, você pode contar com o plano <strong>Infraestrutura + Segurança</strong> (R$ 79,90/mês). Se também desejar uma franquia mensal para pequenas alterações de conteúdo (textos, imagens e ajustes), os planos <strong>Cuidado</strong> ou <strong>Evolução</strong> são as opções indicadas. Caso opte por hospedar em infraestrutura própria, as condições são avaliadas separadamente.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 05 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-5" id="faq-btn-5">
+                <span>5. O que acontece depois que o site é publicado?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-5" role="region" aria-labelledby="faq-btn-5">
+              <div class="faq-content-inner">
+                <p>Seu site entra no período de <strong>30 dias de garantia técnica</strong> para assegurar que tudo o que foi aprovado funcione corretamente no ar. A partir da publicação, a Neoeffex pode continuar cuidando da infraestrutura, estabilidade e pequenas melhorias através do plano de manutenção mensal contratado.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 06 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-6" id="faq-btn-6">
+                <span>6. As horas do Cuidado e Evolução acumulam?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-6" role="region" aria-labelledby="faq-btn-6">
+              <div class="faq-content-inner">
+                <p>Não acumulam. As franquias de horas técnicas (até 2 horas no Cuidado e até 5 horas no Evolução) são válidas exclusivamente dentro do ciclo mensal vigente e se renovam a cada mês. Essa regra nos permite planejar a capacidade da equipe e garantir agilidade e prioridade de atendimento a todos os clientes ativos.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 07 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-7" id="faq-btn-7">
+                <span>7. Posso pedir novas páginas usando as horas de manutenção?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-7" role="region" aria-labelledby="faq-btn-7">
+              <div class="faq-content-inner">
+                <p>As horas de manutenção são dimensionadas para alterações pontuais em conteúdo existente (troca de textos, fotos, banners, contatos e pequenos ajustes). No plano <strong>Evolução</strong>, é possível criar pequenas seções dentro da franquia. A criação de páginas completas adicionais ou ferramentas inéditas é avaliada como novo escopo com orçamento prévio alinhado.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 08 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-8" id="faq-btn-8">
+                <span>8. O que os 30 dias de garantia cobrem?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-8" role="region" aria-labelledby="faq-btn-8">
+              <div class="faq-content-inner">
+                <p>A garantia técnica cobre exclusivamente a correção de eventuais falhas operacionais relacionadas ao que foi desenvolvido e aprovado para a entrega original (por exemplo, um formulário que parou de enviar e-mails ou um botão que quebrou após a publicação). Não inclui alterações de layout após a aprovação final, novas páginas, troca geral de identidade visual ou inclusão de recursos inéditos.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 09 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-9" id="faq-btn-9">
+                <span>9. Posso migrar meu site futuramente?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-9" role="region" aria-labelledby="faq-btn-9">
+              <div class="faq-content-inner">
+                <p>Sim. Se no futuro sua empresa decidir utilizar outro servidor ou gerenciar a infraestrutura por conta própria, podemos organizar a exportação dos arquivos e a migração técnica. O processo é avaliado conforme a viabilidade técnica da nova hospedagem e pode envolver custos específicos de configuração e transferência.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 10 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-10" id="faq-btn-10">
+                <span>10. Domínio e e-mail estão incluídos?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-10" role="region" aria-labelledby="faq-btn-10">
+              <div class="faq-content-inner">
+                <p>Não estão embutidos nos custos iniciais de implantação. O domínio (anual) e as caixas de e-mail profissional (como Google Workspace ou serviços dedicados) são produtos de provedores externos com preços próprios. A Neoeffex realiza toda a integração técnica e o apontamento quando esses serviços são contratados.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 11 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-11" id="faq-btn-11">
+                <span>11. O que acontece se eu precisar de uma funcionalidade nova?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-11" role="region" aria-labelledby="faq-btn-11">
+              <div class="faq-content-inner">
+                <p>Funcionalidades que expandem substancialmente o escopo do site (como sistemas de login, área de membros, agendamentos complexos ou novos módulos) são analisadas pela nossa equipe técnica e orçadas de maneira transparente como um novo projeto ou complemento, garantindo que o cronograma e o valor fiquem perfeitamente alinhados antes de qualquer cobrança.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pergunta 12 -->
+          <div class="faq-item reveal">
+            <h3>
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-12" id="faq-btn-12">
+                <span>12. Quanto tempo leva para desenvolver o site?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-content" id="faq-ans-12" role="region" aria-labelledby="faq-btn-12">
+              <div class="faq-content-inner">
+                <p>O tempo de desenvolvimento varia conforme a complexidade do projeto e, principalmente, a rapidez no envio dos materiais (textos, logos, fotos e dados da empresa) e no retorno das rodadas de revisão. Um cronograma claro, realista e sob medida é sempre apresentado e acordado na proposta comercial inicial.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 7. CTA FINAL (Fluxo de Conversão - Etapa 5) -->
+    <!-- 7. CTA FINAL (Fluxo de Conversão Unificado - Etapa 6) -->
     <section class="section cta-section" id="contato" data-od-id="cta-final">
       <div class="container">
         <div class="cta-panel reveal">
-          <div class="eyebrow">VAMOS CONVERSAR</div>
-          <h2 class="headline-upper">Pronto para dar o próximo passo?</h2>
-          <p>Solicite uma proposta personalizada para sua empresa ou tire dúvidas diretamente com nossa equipe técnica.</p>
+          <div class="eyebrow">VAMOS CONVERSAR / PROPOSTA SOB MEDIDA</div>
+          <h2 class="headline-upper">Vamos colocar seu projeto no ar?</h2>
+          <p>Conte o que sua empresa precisa e receba uma proposta personalizada, transparente e sem nenhum compromisso financeiro inicial.</p>
           
           <div class="cta-actions" style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; align-items: center;">
             <button type="button" class="btn btn-primary open-quote-modal" data-od-id="cta-final-orcamento">
@@ -913,7 +1212,7 @@
               <span>Conversar pelo WhatsApp</span>
             </a>
           </div>
-          <p style="margin-top: 18px; color: var(--meta); font-size: 12.5px; margin-bottom: 0;">Atendimento humano · Avaliação prévia sem custo · Proposta comercial transparente</p>
+          <p style="margin-top: 18px; color: var(--meta); font-size: 12.5px; margin-bottom: 0;">Atendimento humano direto · Proposta sob medida · Sem contratação automática</p>
         </div>
       </div>
     </section>
@@ -1076,6 +1375,6 @@
   </a>
 
   <!-- Script da Página de Planos -->
-  <script src="assets/js/planos.js?v=0.1.4"></script>
+  <script src="assets/js/planos.js?v=0.1.5"></script>
 </body>
 </html>

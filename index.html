@@ -1,447 +1,471 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Landing pages personalizadas, do conceito ao deploy. Estrategia, design, desenvolvimento, integracoes e publicacao pela Neoeffex.">
-  <title>Neoeffex — Landing pages sob medida</title>
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://neoeffex.com.br/">
-  <meta property="og:title" content="Neoeffex — Landing pages sob medida">
-  <meta property="og:description" content="Estratégia, design e código. Do conceito ao deploy. Landing pages personalizadas pela Neoeffex.">
-  <meta property="og:image" content="https://neoeffex.com.br/assets/img/og-neoeffex.jpg">
-  <meta property="og:locale" content="pt_BR">
-  <link rel="canonical" href="https://neoeffex.com.br/">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
-  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=0.1.15">
-  <noscript>
-    <style>
-      .loader { display: none !important; }
-    </style>
-  </noscript>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neoeffex — Landing pages e experiências digitais sob medida</title>
+    <meta name="description" content="Seu site pode ir além. Criação de landing pages e sites institucionais exclusivos com design autoral, alta velocidade e experiências digitais interativas." />
+    
+    <link rel="canonical" href="https://neoeffex.com.br/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://neoeffex.com.br/" />
+    <meta property="og:title" content="Neoeffex — Landing pages e experiências digitais sob medida" />
+    <meta property="og:description" content="Seu site pode ir além. Estratégia, design autoral e desenvolvimento de alta performance pela Neoeffex." />
+    <meta property="og:image" content="https://neoeffex.com.br/assets/img/og-neoeffex.jpg" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <!-- Google Fonts: Bebas Neue & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Styles -->
+    <link rel="preload" href="/assets/home/css/home.css" as="style" />
+    <link rel="stylesheet" href="/assets/home/css/home.css" />
+
+    <!-- Import Map for ES Modules (Three.js) -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"
+        }
+    }
+    </script>
 </head>
 <body>
-  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
-  <div class="loader" id="loader" aria-hidden="true">
-    <div class="loader-mark"><div class="loader-logo">neoeffex</div><div class="loader-track"><div class="loader-line"></div></div><div class="loader-code">SYSTEM_INITIALIZING</div></div>
-  </div>
-
-  <header class="nav-shell" id="navbar" data-od-id="navegacao-principal">
-    <div class="container navbar">
-      <a class="brand" href="#inicio" aria-label="Neoeffex, início" data-od-id="logo-neoeffex"><span class="brand-mark" aria-hidden="true"></span><span>neoeffex</span></a>
-      <nav class="nav-links" id="navLinks" aria-label="Navegação principal">
-        <a class="nav-link" href="#servicos">Serviços</a><a class="nav-link" href="#projetos">Projetos</a><a class="nav-link" href="#processo">Processo</a><a class="nav-link" href="#catalogo">Catálogo</a><a class="nav-link" href="#sobre">Sobre</a><a class="nav-link" href="#contato">Contato</a>
-        <button class="btn nav-cta open-contact" type="button" data-od-id="cta-navbar"><span>Solicitar projeto</span></button>
-      </nav>
-      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks" data-od-id="controle-menu"><span></span></button>
+    <!-- Custom Cursor -->
+    <div id="customCursor" class="custom-cursor" aria-hidden="true">
+        <span class="cursor-dot"></span>
+        <span class="cursor-label"></span>
     </div>
-  </header>
 
-  <main id="conteudo">
-    <section class="hero section" id="inicio" data-od-id="hero">
-      <div class="container hero-centered">
-        <div class="hero-copy hero-copy-centered">
-          <div class="eyebrow" data-od-id="label-hero">Páginas de Alta Conversão / Neoeffex</div>
-          <h1 class="headline-upper hero-title-lg" data-od-id="titulo-hero">Landing pages que transformam <span class="accent-text">visitantes</span> em clientes.</h1>
-          <p class="lead hero-lead-centered">Estrutura persuasiva, visual exclusivo e velocidade máxima para fazer a sua empresa vender mais na internet.</p>
-          <div class="hero-actions hero-actions-centered">
-            <button class="btn btn-primary open-contact" type="button" data-od-id="cta-hero">
-              <span>Solicitar projeto</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
-            </button>
-            <a class="btn" href="#projetos" data-od-id="cta-projetos">
-              <span>Ver projetos</span>
-            </a>
-          </div>
-          <div class="build-note build-note-centered">
-            <span class="status-dot"></span>Planejada para vender · Rápida no celular · Pronta para anúncios
-          </div>
+    <!-- Definitive 3D Particle Viewport Layer -->
+    <div class="particles-bg-layer" id="threeCanvasWrap" aria-hidden="true">
+        <div class="three-canvas-wrap" id="threeCanvas">
+            <!-- Three.js canvas will be injected here -->
+            <div class="three-fallback" id="threeFallback">
+                <img src="/img/logos/neoeffex-n-logo-white.svg" alt="Neoeffex Logo" class="three-fallback__svg" draggable="false" />
+            </div>
         </div>
-
-        <!-- Widescreen Panorâmico com Fade Inferior -->
-        <div class="hero-widescreen-frame" data-od-id="hero-widescreen" aria-label="Vitrine visual de alta conversão Neoeffex">
-          <div class="widescreen-ambient-glow"></div>
-          
-          <div class="widescreen-browser">
-            <div class="widescreen-header">
-              <div class="window-dots">
-                <span class="dot-close"></span>
-                <span class="dot-min"></span>
-                <span class="dot-max"></span>
-              </div>
-              <div class="widescreen-url">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                <span>neoeffex.com.br</span>
-              </div>
-              <div class="widescreen-status">
-                <span class="status-beacon"></span>
-                <span>Alta Conversão</span>
-              </div>
-            </div>
-
-            <div class="widescreen-viewport">
-              <div class="mock-canvas">
-                <div class="mock-nav">
-                  <div class="mock-logo"><span></span>neoeffex</div>
-                  <div class="mock-menu">
-                    <span></span><span></span><span></span>
-                  </div>
-                  <div class="mock-cta">Falar com Consultor</div>
-                </div>
-
-                <div class="mock-hero-content">
-                  <div class="mock-pill">DESIGN SOB MEDIDA & ALTA CONVERSÃO</div>
-                  <div class="mock-headline">Sua Empresa Vendendo 24h por Dia</div>
-                  <div class="mock-subline">Estrutura pensada estrategicamente para transformar tráfego em vendas reais.</div>
-                  <div class="mock-btn-row">
-                    <span class="mock-main-btn">Quero Minha Landing Page</span>
-                    <span class="mock-ghost-btn">Ver Portfólio</span>
-                  </div>
-                </div>
-
-                <!-- Floating Glass Cards (Widgets de Conversão & Performance) -->
-                <div class="glass-float float-left">
-                  <div class="glass-icon-circle green">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                  </div>
-                  <div class="glass-info">
-                    <strong>+340% Conversão</strong>
-                    <small>Leads qualificados gerados</small>
-                  </div>
-                </div>
-
-                <div class="glass-float float-right">
-                  <div class="glass-icon-circle blue">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                  </div>
-                  <div class="glass-info">
-                    <strong>Score 99 no Celular</strong>
-                    <small>0.6s de abertura instantânea</small>
-                  </div>
-                </div>
-
-                <div class="glass-float float-chat">
-                  <div class="glass-whatsapp-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                  </div>
-                  <div class="glass-info">
-                    <strong>Novo Lead WhatsApp</strong>
-                    <small>“Gostaria de fechar o projeto hoje”</small>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Fade inferior cinematográfico que dissolve para o fundo da página -->
-              <div class="widescreen-fade-bottom"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Faixa Horizontal de Pilares / Jornada Estratégica -->
-        <div class="hero-pillars-bar" data-od-id="hero-pilares" aria-label="Nossos pilares de entrega">
-          <div class="pillar-item">
-            <span class="pillar-num">01</span>
-            <span class="pillar-title">Entendimento</span>
-          </div>
-          <div class="pillar-sep" aria-hidden="true"></div>
-          <div class="pillar-item">
-            <span class="pillar-num">02</span>
-            <span class="pillar-title">Roteiro de Vendas</span>
-          </div>
-          <div class="pillar-sep" aria-hidden="true"></div>
-          <div class="pillar-item">
-            <span class="pillar-num">03</span>
-            <span class="pillar-title">Design Exclusivo</span>
-          </div>
-          <div class="pillar-sep" aria-hidden="true"></div>
-          <div class="pillar-item">
-            <span class="pillar-num">04</span>
-            <span class="pillar-title">Velocidade Máxima</span>
-          </div>
-          <div class="pillar-sep" aria-hidden="true"></div>
-          <div class="pillar-item">
-            <span class="pillar-num">05</span>
-            <span class="pillar-title">Lançamento</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section positioning" id="sobre" data-od-id="posicionamento">
-      <div class="container statement reveal">
-        <div class="eyebrow">Foco em Vendas</div>
-        <h2 class="headline-upper" data-od-id="titulo-posicionamento">Não criamos apenas sites bonitos. Criamos ferramentas de venda.</h2>
-        <p class="lead">Sua empresa precisa de uma página que gere confiança imediata, responda às dúvidas do cliente e o incentive a entrar em contato com você.</p>
-        <div class="principles" aria-label="Diferenciais de entrega"><span class="principle">Autoridade Imediata</span><span class="principle">Roteiro Persuasivo</span><span class="principle">Carregamento Instantâneo</span><span class="principle">100% no Celular</span><span class="principle">WhatsApp Direto</span><span class="principle">Pronta para Anúncios</span></div>
-      </div>
-    </section>
-
-    <section class="section" id="servicos" data-od-id="servicos">
-      <div class="container">
-        <div class="section-head reveal"><div class="eyebrow">Solução completa</div><h2 class="headline-upper" data-od-id="titulo-servicos">Tudo incluso. Do zero ao ar.</h2><p class="lead">Cuidamos de cada detalhe estratégico e visual para você não se preocupar com tecnologia.</p></div>
-        <div class="services-grid">
-          <article class="service-card reveal" data-od-id="servico-estrategia"><div class="service-top"><span class="service-num">01 / ESTRATÉGIA</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span></div><h3>Roteiro de Vendas</h3><p>Organizamos a ordem certa dos argumentos para quebrar objeções e despertar o desejo de compra.</p></article>
-          <article class="service-card reveal" data-od-id="servico-design"><div class="service-top"><span class="service-num">02 / DESIGN</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 9v11"/></svg></span></div><h3>Visual Único e Profissional</h3><p>Nada de páginas genéricas. Criamos uma identidade sob medida que transmite autoridade imediata.</p></article>
-          <article class="service-card reveal" data-od-id="servico-desenvolvimento"><div class="service-top"><span class="service-num">03 / MOBILE</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span></div><h3>Perfeita no Celular</h3><p>A grande maioria dos acessos acontece pelo smartphone. Sua página é projetada prioritariamente para abrir rápido e ser fácil de navegar no celular.</p></article>
-          <article class="service-card reveal" data-od-id="servico-movimento"><div class="service-top"><span class="service-num">04 / EXPERIÊNCIA</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M15 8l4 4-4 4"/><circle cx="5" cy="12" r="2"/></svg></span></div><h3>Interações que Valorizam</h3><p>Movimentos e detalhes elegantes que destacam seu produto e mantêm o cliente atento.</p></article>
-          <article class="service-card reveal" data-od-id="servico-integracoes"><div class="service-top"><span class="service-num">05 / CONVERSÃO</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 8h8v8H8zM3 12h5M16 12h5M12 3v5M12 16v5"/></svg></span></div><h3>Conexão Direta com Vendas</h3><p>Botão de WhatsApp sempre visível, formulários inteligentes e rastreamento para seus anúncios.</p></article>
-          <article class="service-card reveal" data-od-id="servico-publicacao"><div class="service-top"><span class="service-num">06 / SUPORTE</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 19V5M7 10l5-5 5 5M5 19h14"/></svg></span></div><h3>Publicação e Domínio</h3><p>Cuidamos de tudo: configuração do endereço, hospedagem rápida e segurança com cadeado SSL.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="projetos" data-od-id="projetos">
-      <div class="container">
-        <div class="section-head reveal"><div class="eyebrow">Demonstrações reais</div><h2 class="headline-upper" data-od-id="titulo-projetos">Modelos prontos para inspirar seu projeto.</h2><p class="lead">Veja exemplos práticos em funcionamento criados para diferentes tipos de negócio.</p></div>
-        <div class="projects-grid">
-          <!-- DESTAQUE 1: Lu Leve e Saudável (Case Real em Operação) -->
-          <article class="project-card featured reveal" data-od-id="projeto-lu-leve">
-            <div class="project-browser">
-              <div class="browser-header">
-                <span class="browser-dots"><i></i><i></i><i></i></span>
-                <span class="browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>neoeffex.com.br/sites/lu-leve-e-saudavel/</span>
-                <a class="browser-action" href="sites/lu-leve-e-saudavel/" target="_blank" rel="noopener" title="Abrir página completa em nova aba">
-                  <span>Abrir tela cheia</span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-                </a>
-              </div>
-              <div class="embed-viewport">
-                <iframe class="project-iframe" src="sites/lu-leve-e-saudavel/" loading="lazy" title="Demonstração interativa Lu Leve e Saudável"></iframe>
-                <div class="embed-overlay">
-                  <button class="btn-interact" type="button">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                    <span>Navegar no site aqui</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="project-info">
-              <div class="project-meta"><span>Alimentação / Delivery</span><span class="project-badge-live"><span class="pulse-dot"></span>Case em Operação</span></div>
-              <h3>Lu Leve e Saudável — Cardápio Digital & Delivery</h3>
-              <p>Site comercial com catálogo digital completo, montagem automática de pedidos e envio instantâneo para o WhatsApp do restaurante.</p>
-              <div class="project-footer-actions">
-                <a class="project-live" href="sites/lu-leve-e-saudavel/" target="_blank" rel="noopener">Abrir site completo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M14 7l5 5-5 5"/></svg></a>
-              </div>
-            </div>
-          </article>
-
-          <!-- CARD 2: Hamburgueria 3D -->
-          <article class="project-card reveal" data-od-id="projeto-hamburgueria">
-            <div class="project-browser">
-              <div class="browser-header">
-                <span class="browser-dots"><i></i><i></i><i></i></span>
-                <span class="browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>modelos/hamburgueria/</span>
-                <a class="browser-action" href="modelos/hamburgueria/" target="_blank" rel="noopener" title="Abrir página completa">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-                </a>
-              </div>
-              <div class="embed-viewport">
-                <iframe class="project-iframe" src="modelos/hamburgueria/" loading="lazy" title="Demonstração interativa Hamburgueria 3D"></iframe>
-                <div class="embed-overlay">
-                  <button class="btn-interact" type="button">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                    <span>Testar 3D aqui</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="project-info">
-              <div class="project-meta"><span>Gastronomia</span><span class="project-badge-live"><span class="pulse-dot"></span>3D Interativo</span></div>
-              <h3>Hamburgueria Artesanal</h3>
-              <p>Experiência de alto impacto com hambúrguer 3D realista que se move na tela e cardápio interativo.</p>
-              <div class="project-footer-actions">
-                <a class="project-live" href="modelos/hamburgueria/" target="_blank" rel="noopener">Ver demonstração <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M14 7l5 5-5 5"/></svg></a>
-              </div>
-            </div>
-          </article>
-
-          <!-- CARD 3: Barbearia Premium -->
-          <article class="project-card reveal" data-od-id="projeto-barbearia">
-            <div class="project-browser">
-              <div class="browser-header">
-                <span class="browser-dots"><i></i><i></i><i></i></span>
-                <span class="browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>modelos/barbearia/</span>
-                <a class="browser-action" href="modelos/barbearia/" target="_blank" rel="noopener" title="Abrir página completa">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-                </a>
-              </div>
-              <div class="embed-viewport">
-                <iframe class="project-iframe" src="modelos/barbearia/" loading="lazy" title="Demonstração interativa Barbearia"></iframe>
-                <div class="embed-overlay">
-                  <button class="btn-interact" type="button">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                    <span>Navegar no site aqui</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="project-info">
-              <div class="project-meta"><span>Serviços / Barbearia</span><span class="project-badge-live"><span class="pulse-dot"></span>Ao Vivo</span></div>
-              <h3>Barbearia Premium</h3>
-              <p>Design sofisticado, galeria de cortes e botão direto para agendamento de horários no WhatsApp.</p>
-              <div class="project-footer-actions">
-                <a class="project-live" href="modelos/barbearia/" target="_blank" rel="noopener">Ver demonstração <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M14 7l5 5-5 5"/></svg></a>
-              </div>
-            </div>
-          </article>
-
-          <!-- DESTAQUE 2: Clínica Odontológica (Saúde e Consultórios) -->
-          <article class="project-card featured reveal" data-od-id="projeto-clinica">
-            <div class="project-browser">
-              <div class="browser-header">
-                <span class="browser-dots"><i></i><i></i><i></i></span>
-                <span class="browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>modelos/clinica-odontologica/</span>
-                <a class="browser-action" href="modelos/clinica-odontologica/" target="_blank" rel="noopener" title="Abrir página completa em nova aba">
-                  <span>Abrir tela cheia</span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-                </a>
-              </div>
-              <div class="embed-viewport">
-                <iframe class="project-iframe" src="modelos/clinica-odontologica/" loading="lazy" title="Demonstração interativa Clínica Odontológica"></iframe>
-                <div class="embed-overlay">
-                  <button class="btn-interact" type="button">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                    <span>Navegar no site aqui</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="project-info">
-              <div class="project-meta"><span>Saúde / Consultório</span><span class="project-badge-live"><span class="pulse-dot"></span>Ao Vivo</span></div>
-              <h3>Clínica Odontológica & Consultórios</h3>
-              <p>Visual limpo e profissional que transmite segurança aos pacientes, apresentação dos tratamentos e canal rápido para marcação de consultas.</p>
-              <div class="project-footer-actions">
-                <a class="project-live" href="modelos/clinica-odontologica/" target="_blank" rel="noopener">Abrir site completo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M14 7l5 5-5 5"/></svg></a>
-              </div>
-            </div>
-          </article>
-
-          <!-- CARD 5: Hortifruti & Mercados -->
-          <article class="project-card full-width reveal" data-od-id="projeto-hortifruti">
-            <div class="project-browser">
-              <div class="browser-header">
-                <span class="browser-dots"><i></i><i></i><i></i></span>
-                <span class="browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>modelos/hortifruti/</span>
-                <a class="browser-action" href="modelos/hortifruti/" target="_blank" rel="noopener" title="Abrir página completa">
-                  <span>Abrir tela cheia</span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-                </a>
-              </div>
-              <div class="embed-viewport">
-                <iframe class="project-iframe" src="modelos/hortifruti/" loading="lazy" title="Demonstração interativa Hortifruti"></iframe>
-                <div class="embed-overlay">
-                  <button class="btn-interact" type="button">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                    <span>Navegar no catálogo aqui</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="project-info">
-              <div class="project-meta"><span>Comércio Local</span><span class="project-badge-live"><span class="pulse-dot"></span>Ao Vivo</span></div>
-              <h3>Hortifruti & Mercados de Bairro</h3>
-              <p>Catálogo simples de produtos frescos com carrinho para envio de pedidos pelo WhatsApp, ideal para comércios locais venderem pelo celular.</p>
-              <div class="project-footer-actions">
-                <a class="project-live" href="modelos/hortifruti/" target="_blank" rel="noopener">Ver demonstração <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M14 7l5 5-5 5"/></svg></a>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section custom-section" data-od-id="personalizacao">
-      <div class="container split">
-        <div class="custom-copy reveal from-left"><div class="eyebrow">Feita Sob Medida</div><h2 class="headline-upper" data-od-id="titulo-personalizacao">Sem cara de template pronto.</h2><p class="lead">Seu negócio é único. Sua página deve refletir sua autoridade em cada detalhe.</p><ul><li>Identidade da sua empresa</li><li>Foco no seu cliente ideal</li><li>Apresentação do seu produto</li><li>Chamadas claras para ação</li><li>Visual moderno e refinado</li><li>Preparada para crescer</li></ul></div>
-        <div class="interface-stack reveal" data-od-id="visual-personalizacao" aria-label="Três composições de interface diferentes">
-          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-copy"><i class="mini-line"></i><i class="mini-line short"></i><i class="mini-cta"></i></div><div class="mini-art"></div></div></div>
-          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-art"></div><div class="mini-copy"><i class="mini-line"></i><i class="mini-line short"></i><i class="mini-cta"></i></div></div></div>
-          <div class="interface-card"><div class="mini-nav"></div><div class="mini-layout"><div class="mini-copy"><i class="mini-line short"></i><i class="mini-line"></i><i class="mini-cta"></i></div><div class="mini-art"></div></div></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="processo" data-od-id="processo">
-      <div class="container">
-        <div class="section-head reveal"><div class="eyebrow">Passo a passo simples</div><h2 class="headline-upper" data-od-id="titulo-processo">Como funciona na prática.</h2><p class="lead">Sem termos difíceis. Você acompanha cada etapa de forma transparente.</p></div>
-        <div class="process-wrap reveal" data-od-id="linha-processo"><div class="process-line"><div class="process-progress"></div></div><div class="process-grid">
-          <article class="step"><span class="step-dot"></span><small>01 / INÍCIO</small><h3>Alinhamento</h3><p>Ouvimos seu objetivo e público.</p></article><article class="step"><span class="step-dot"></span><small>02 / ROTEIRO</small><h3>Estrutura</h3><p>Montamos o texto de vendas.</p></article><article class="step"><span class="step-dot"></span><small>03 / VISUAL</small><h3>Design</h3><p>Desenhamos sua página exclusiva.</p></article><article class="step"><span class="step-dot"></span><small>04 / PROGRAMAÇÃO</small><h3>Construção</h3><p>Programamos com alta velocidade.</p></article><article class="step"><span class="step-dot"></span><small>05 / REVISÃO</small><h3>Ajustes</h3><p>Você confere e refinamos juntos.</p></article><article class="step"><span class="step-dot"></span><small>06 / LANÇAMENTO</small><h3>No Ar</h3><p>Publicada e pronta para vender.</p></article>
-        </div></div>
-      </div>
-    </section>
-
-    <section class="section compare" data-od-id="comparacao">
-      <div class="container">
-        <div class="section-head reveal"><div class="eyebrow">Por que escolher a Neoeffex</div><h2 class="headline-upper" data-od-id="titulo-comparacao">A diferença entre um site comum e uma página que vende.</h2></div>
-        <div class="compare-grid">
-          <article class="compare-panel reveal" data-od-id="painel-landing-generica"><div class="compare-label"><span>Site comum da internet</span><span>PADRÃO</span></div><ul class="compare-list"><li><span>Base</span><strong>Template pronto baixado</strong></li><li><span>Estrutura</span><strong>Layout genérico e confuso</strong></li><li><span>Velocidade</span><strong>Pesado e lento no celular</strong></li><li><span>Adaptação</span><strong>Seu texto espremido em caixas</strong></li><li><span>Resultado</span><strong>O cliente entra e vai embora</strong></li></ul></article>
-          <article class="compare-panel featured reveal" data-od-id="painel-landing-neoeffex"><div class="compare-label"><span>Landing Page Neoeffex</span><span>SOB MEDIDA</span></div><ul class="compare-list"><li><span>Base</span><strong>Design sob medida para seu negócio</strong></li><li><span>Estrutura</span><strong>Roteiro pensado para converter</strong></li><li><span>Velocidade</span><strong>Carregamento ágil no celular</strong></li><li><span>Adaptação</span><strong>Criada em volta do seu produto</strong></li><li><span>Resultado</span><strong>Mais contatos no seu WhatsApp</strong></li></ul></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section quality-band" data-od-id="qualidade">
-      <div class="container"><div class="quality-panel reveal"><div><div class="eyebrow">Garantia de qualidade</div><h2 class="headline-upper" data-od-id="titulo-qualidade">Impecável no visual. Imbatível na velocidade.</h2><p class="lead">Cada detalhe é verificado antes do lançamento para que seu cliente tenha a melhor experiência possível.</p></div><div class="checks" aria-label="Itens verificados na entrega"><div class="check"><span class="check-mark">✓</span><span>100% Otimizada para celular</span><code>GARANTIDO</code></div><div class="check"><span class="check-mark">✓</span><span>Navegação leve e fluida</span><code>GARANTIDO</code></div><div class="check"><span class="check-mark">✓</span><span>Botões de WhatsApp testados</span><code>GARANTIDO</code></div><div class="check"><span class="check-mark">✓</span><span>Velocidade máxima no Google</span><code>GARANTIDO</code></div></div></div></div>
-    </section>
-
-    <section class="section" id="catalogo" data-od-id="catalogo-digital">
-      <div class="container">
-        <div class="section-head reveal"><div class="eyebrow">Catálogo digital</div><h2 class="headline-upper" data-od-id="titulo-catalogo">Seu comércio no celular do cliente.</h2><p class="lead">Catálogo digital com carrinho e envio de pedido direto pelo WhatsApp. Sem app para baixar, sem taxa por venda, sem complicação.</p></div>
-        <div class="services-grid catalog-services-grid">
-          <article class="service-card reveal">
-            <div class="service-top"><span class="service-num">01 / PAINEL</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 13h4"/></svg></span></div>
-            <h3>Cadastre seus produtos</h3>
-            <p>Painel simples e fácil para organizar categorias, fotos, preços e promoções.</p>
-          </article>
-          <article class="service-card reveal">
-            <div class="service-top"><span class="service-num">02 / ACESSO</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1"/></svg></span></div>
-            <h3>Compartilhe com um link</h3>
-            <p>Seu cliente abre no navegador do celular, sem precisar instalar nenhum aplicativo.</p>
-          </article>
-          <article class="service-card reveal">
-            <div class="service-top"><span class="service-num">03 / PEDIDO</span><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></span></div>
-            <h3>Receba no WhatsApp</h3>
-            <p>O cliente escolhe os itens e o pedido chega pronto e formatado na sua conversa.</p>
-          </article>
-        </div>
-        <div style="text-align: center; margin-top: 48px;" class="reveal">
-          <a class="btn btn-primary" href="catalogo/?catalogo=lu-leve-e-saudavel" target="_blank" rel="noopener"><span>Testar catálogo em ação</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" data-od-id="faq">
-      <div class="container faq-grid"><div class="reveal"><div class="eyebrow">Dúvidas comuns</div><h2 class="headline-upper" data-od-id="titulo-faq">Perguntas frequentes.</h2><p class="muted">Tudo o que você precisa saber antes de iniciar.</p></div><div class="accordion reveal">
-        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Eu não entendo de tecnologia. Vou conseguir acompanhar o projeto?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Com certeza! Cuidamos de 100% da parte técnica (design, programação, hospedagem e segurança). Nosso contato é direto, simples e sem jargões complicados.</p></div></div></article>
-        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>A página funciona bem em qualquer celular?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim. A maioria dos clientes navega pelo smartphone. Por isso, projetamos pensando primeiro na experiência mobile, com abertura rápida e botões confortáveis.</p></div></div></article>
-        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Os clientes entram em contato direto pelo meu WhatsApp?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim! Ao clicar no botão da página, a conversa é aberta no seu WhatsApp com uma mensagem personalizada para você saber de onde o cliente veio.</p></div></div></article>
-        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Vocês também ajudam a colocar o site no ar?</span><i aria-hidden="true"></i></button><div class="faq-answer"><div><p>Sim. Auxiliamos na escolha ou configuração do seu domínio próprio (ex: suaempresa.com.br) e cuidamos de toda a publicação, hospedagem rápida e segurança com certificado SSL.</p></div></div></article>
-      </div></div>
-    </section>
-
-    <section class="section cta-section" id="contato" data-od-id="contato">
-      <div class="container"><div class="cta-panel reveal"><div class="eyebrow">Próximo passo</div><h2 class="headline-upper" data-od-id="titulo-contato">Pronto para destacar sua empresa na internet?</h2><p>Conte-nos sobre o seu negócio. A Neoeffex cria a presença digital que atrai clientes e gera resultados para sua marca.</p><button class="btn btn-primary open-contact" type="button" data-od-id="cta-final"><span>Solicitar proposta para meu negócio</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button></div></div>
-    </section>
-  </main>
-
-  <footer data-od-id="rodape"><div class="container"><div class="footer-top"><a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"></span><span>neoeffex</span></a><div class="footer-links"><a href="#servicos">Serviços</a><a href="#projetos">Projetos</a><a href="#processo">Processo</a><a href="#catalogo">Catálogo</a><a href="#contato">Contato</a><a href="privacidade.html">Privacidade</a><a href="admin/">Área do Lojista</a></div></div><div class="footer-bottom"><span>Desenvolvimento digital sob medida.</span><span>© <span id="year"></span> NEOEFFEX</span></div></div></footer>
-
-  <div class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true" data-od-id="modal-contato">
-    <div class="modal-card"><div class="modal-head"><div><div class="eyebrow">VAMOS CONVERSAR</div><h2 id="modalTitle">Conte-nos sobre o seu projeto.</h2><p>Preencha os pontos essenciais e entraremos em contato rapidamente.</p></div><button class="close-modal" type="button" aria-label="Fechar formulário">×</button></div>
-      <form id="contactForm" novalidate><div class="form-grid"><div class="field"><label for="name">Seu nome</label><input id="name" name="name" autocomplete="name" placeholder="Como podemos chamar você?" required></div><div class="field"><label for="business">Nome da sua empresa ou marca</label><input id="business" name="business" autocomplete="organization" placeholder="Ex: Barbearia Silva, Dra. Ana..."></div><div class="field full"><label for="email">Seu melhor e-mail</label><input id="email" name="email" type="email" autocomplete="email" placeholder="contato@suaempresa.com.br" required></div><div class="field full"><label for="brief">O que você gostaria de alcançar com a página?</label><textarea id="brief" name="brief" placeholder="Conte sobre seu produto ou serviço, seu público e o que você precisa."></textarea></div></div><div class="form-actions"><span class="form-note">Usamos os dados informados apenas para responder à sua solicitação. Saiba mais em nosso <a href="privacidade.html" target="_blank" rel="noopener" style="text-decoration: underline; color: inherit;">aviso de privacidade</a>.</span><button class="btn btn-primary" type="submit"><span>Enviar e receber contato</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg></button></div><p class="form-status" id="formStatus" role="status"></p></form>
     </div>
-  </div>
 
-  <a class="fab-whatsapp" href="https://wa.me/5511997763958?text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20Neoeffex%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os." target="_blank" rel="noopener noreferrer" aria-label="Conversar pelo WhatsApp">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-  </a>
+    <div class="site-shell">
+        <!-- Dynamic Glow Layer -->
+        <div class="ambient-glow" aria-hidden="true"></div>
 
-  <script src="assets/js/script.js?v=0.1.13"></script>
+        <header class="topbar">
+            <div class="topbar__inner">
+                <a class="brand" href="#inicio" aria-label="Neoeffex" data-cursor="↗">
+                    <span class="brand-mark"></span>
+                    <span class="brand-text">neoeffex</span>
+                </a>
+
+                <nav class="topnav" id="topNav" aria-label="Navegação">
+                    <a href="#diferenciais">Diferenciais</a>
+                    <a href="#modelos">Modelos</a>
+                    <a href="/planos/">Planos</a>
+                    <a href="#como-funciona">Como funciona</a>
+                </nav>
+
+                <div class="topbar__actions">
+                    <a class="button button--ghost button--magnetic topbar-cta" href="/planos/" data-cursor="↗" data-magnetic>
+                        <span>Pedir orçamento</span>
+                        <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                    <button class="topbar__toggle" id="menuToggle" type="button" aria-label="Abrir navegação" aria-expanded="false" aria-controls="mobileMenu">
+                        <span class="toggle-bar"></span>
+                        <span class="toggle-bar"></span>
+                        <span class="toggle-bar"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Dropdown -->
+            <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+                <nav class="mobile-menu__nav" aria-label="Navegação mobile">
+                    <a href="#diferenciais" class="mobile-menu__link">Diferenciais</a>
+                    <a href="#modelos" class="mobile-menu__link">Modelos</a>
+                    <a href="/planos/" class="mobile-menu__link">Planos</a>
+                    <a href="#como-funciona" class="mobile-menu__link">Como funciona</a>
+                    <a href="/planos/" class="button button--primary mobile-menu__cta">
+                        <span>Pedir orçamento</span>
+                        <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <main id="inicio">
+            <section class="hero" id="threeSection">
+                <div class="hero__copy">
+                    <h1 class="hero-title">
+                        <span class="hero-line">SEU SITE</span>
+                        <span class="hero-line hero-line--accent">PODE IR ALÉM</span>
+                    </h1>
+                </div>
+            </section>
+
+            <!-- Movimento Tipográfico Intermediário -->
+            <section class="ticker-section" aria-hidden="true">
+                <div class="ticker-track">
+                    <div class="ticker-content">
+                        <span>NÃO UM TEMPLATE</span>
+                        <span class="ticker-dot">•</span>
+                        <span>NÃO UMA CÓPIA</span>
+                        <span class="ticker-dot">•</span>
+                        <span>NÃO MAIS DO MESMO</span>
+                        <span class="ticker-dot">•</span>
+                        <span>EXPERIÊNCIA AUTORAL</span>
+                        <span class="ticker-dot">•</span>
+                    </div>
+                    <div class="ticker-content" aria-hidden="true">
+                        <span>NÃO UM TEMPLATE</span>
+                        <span class="ticker-dot">•</span>
+                        <span>NÃO UMA CÓPIA</span>
+                        <span class="ticker-dot">•</span>
+                        <span>NÃO MAIS DO MESMO</span>
+                        <span class="ticker-dot">•</span>
+                        <span>EXPERIÊNCIA AUTORAL</span>
+                        <span class="ticker-dot">•</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seções de Demonstrações Visuais (Diferenciais) -->
+            <div class="capabilities-showcase" id="diferenciais">
+                <!-- Demo 1: Elementos 3D -->
+                <section class="demo-section demo-section--3d" id="demo-3d">
+                    <div class="demo-container">
+                        <div class="demo-narrative" data-parallax="2">
+                            <span class="demo-kicker">01 · PROFUNDIDADE ESPACIAL</span>
+                            <h2 class="demo-title">
+                                <span>SEU SITE PODE TER</span>
+                                <span class="demo-title--accent">ELEMENTOS 3D</span>
+                            </h2>
+                            <p class="demo-desc">
+                                Objetos tridimensionais que respondem ao visitante em tempo real. Iluminação dinâmica calculada na GPU sem pesar no carregamento.
+                            </p>
+                            <div class="demo-specs">
+                                <span class="demo-pill">WebGL Nativo</span>
+                                <span class="demo-pill">60 FPS Fluido</span>
+                                <span class="demo-pill">Interativo</span>
+                            </div>
+                        </div>
+
+                        <div class="demo-stage demo-stage--3d" data-cursor="INTERAGIR" data-parallax="4">
+                            <div class="spatial-viewport demo-3d-viewport" id="spatialViewport">
+                                <canvas class="spatial-prism-canvas" id="spatialPrismCanvas" aria-label="Demonstração 3D interativa de prisma"></canvas>
+                                <div class="stage-overlay">
+                                    <span class="stage-badge spatial-hint">EXPERIÊNCIA 3D · ARRASTE PARA ROTACIONAR</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Demo 2: Fotos Reais do Seu Negócio -->
+                <section class="demo-section demo-section--photos" id="demo-photos">
+                    <div class="demo-container demo-container--reverse">
+                        <div class="demo-narrative" data-parallax="2">
+                            <span class="demo-kicker">02 · AUTENTICIDADE VISUAL</span>
+                            <h2 class="demo-title">
+                                <span>PODE TER FOTOS</span>
+                                <span class="demo-title--accent">REAIS DO SEU NEGÓCIO</span>
+                            </h2>
+                            <p class="demo-desc">
+                                Chega de templates genéricos de banco de imagens. Direção de arte autoral que valoriza seu produto, seu espaço e sua equipe.
+                            </p>
+                            <div class="demo-specs">
+                                <span class="demo-pill">Direção Fotográfica</span>
+                                <span class="demo-pill">Zero Clichês</span>
+                                <span class="demo-pill">Alta Fidelidade</span>
+                            </div>
+                        </div>
+
+                        <div class="demo-stage demo-stage--photos" data-parallax="4">
+                            <div class="photo-composition">
+                                <div class="photo-card photo-card--main" data-parallax="2">
+                                    <img src="/modelos/hortifruti/assets/img/banca.webp" alt="Espaço real e produtos frescos" loading="lazy" class="photo-img" draggable="false" />
+                                    <span class="photo-badge">ESPAÇO REAL</span>
+                                </div>
+                                <div class="photo-card photo-card--sub" data-parallax="5">
+                                    <img src="/modelos/hortifruti/assets/img/salada.webp" alt="Produto autêntico com preparo cuidadoso" loading="lazy" class="photo-img" draggable="false" />
+                                    <span class="photo-badge">PRODUTO AUTORAL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Demo 3: Motion / Interação / Performance -->
+                <section class="demo-section demo-section--motion" id="demo-motion">
+                    <div class="demo-container">
+                        <div class="demo-narrative" data-parallax="2">
+                            <span class="demo-kicker">03 · RESPOSTA TÁTIL</span>
+                            <h2 class="demo-title">
+                                <span>MOTION · INTERAÇÃO</span>
+                                <span class="demo-title--accent">PERFORMANCE</span>
+                            </h2>
+                            <p class="demo-desc">
+                                Animações com propósito, microinterações magnéticas e resposta imediata. Cada milissegundo é lapidado para reter o olhar.
+                            </p>
+                            <div class="demo-specs">
+                                <span class="demo-pill">GSAP Core</span>
+                                <span class="demo-pill">Micro-interações</span>
+                                <span class="demo-pill">Core Web Vitals</span>
+                            </div>
+                        </div>
+
+                        <div class="demo-stage demo-stage--motion" data-cursor="TESTAR" data-parallax="4">
+                            <div class="interactive-lab" id="interactiveLab">
+                                <div class="lab-metrics">
+                                    <div class="metric-card" data-magnetic>
+                                        <span class="metric-val">60</span>
+                                        <span class="metric-unit">FPS</span>
+                                        <span class="metric-lbl">FLUIDEZ CONSTANTE</span>
+                                    </div>
+                                    <div class="metric-card" data-magnetic>
+                                        <span class="metric-val">&lt; 1s</span>
+                                        <span class="metric-unit">FCP</span>
+                                        <span class="metric-lbl">CARREGAMENTO RÁPIDO</span>
+                                    </div>
+                                    <div class="metric-card" data-magnetic>
+                                        <span class="metric-val">100%</span>
+                                        <span class="metric-unit">RESPONSIVO</span>
+                                        <span class="metric-lbl">QUALQUER TELA</span>
+                                    </div>
+                                </div>
+                                <div class="lab-playground">
+                                    <button type="button" class="magnetic-chip" data-magnetic data-cursor="PUXAR">Arrasto Magnético</button>
+                                    <button type="button" class="magnetic-chip" data-magnetic data-cursor="PUXAR">Micro-animações</button>
+                                    <button type="button" class="magnetic-chip magnetic-chip--accent" data-magnetic data-cursor="SENTIR">Resposta Imediata</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Vitrine de Projetos (Modelos) -->
+            <section class="models-grid" id="modelos">
+                <!-- 01: Hamburgueria -->
+                <article class="model-card" id="hamburgueria" data-theme="hamburgueria" data-parallax="3">
+                    <div class="model-card__copy">
+                        <span class="model-card__kicker">01 · FOOD &amp; GASTRONOMIA</span>
+                        <h2 class="model-card__title">HAMBURGUERIA</h2>
+                        <p class="model-card__desc">Produto em movimento.</p>
+                        <div class="model-card__actions">
+                            <a class="button button--primary button--magnetic" href="/modelos/hamburgueria/" data-cursor="ABRIR" data-magnetic>
+                                <span>Abrir projeto</span>
+                                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                            </a>
+                            <a class="button button--ghost button--magnetic" href="/modelos/hamburgueria/#cardapio" data-cursor="↗" data-magnetic>
+                                <span>Ver cardápio</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="5">
+                        <a href="/modelos/hamburgueria/" class="media-link" aria-label="Abrir modelo Hamburgueria">
+                            <video class="preview-video" poster="/assets/home/images/hamburgueria-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                                <source src="/assets/home/videos/hamburgueria-preview.webm" type="video/webm" />
+                                <source src="/assets/home/videos/hamburgueria-preview.mp4" type="video/mp4" />
+                            </video>
+                            <div class="media-overlay">
+                                <span class="media-badge">ABRIR DEMONSTRAÇÃO ↗</span>
+                            </div>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- 02: Clínica Odontológica -->
+                <article class="model-card model-card--reverse" id="clinica" data-theme="clinica" data-parallax="3">
+                    <div class="model-card__copy">
+                        <span class="model-card__kicker">02 · SAÚDE &amp; ESTÉTICA</span>
+                        <h2 class="model-card__title">CLÍNICA</h2>
+                        <p class="model-card__desc">Presença sofisticada.</p>
+                        <div class="model-card__actions">
+                            <a class="button button--primary button--magnetic" href="/modelos/clinica-odontologica/" data-cursor="ABRIR" data-magnetic>
+                                <span>Abrir projeto</span>
+                                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                            </a>
+                            <a class="button button--ghost button--magnetic" href="/modelos/clinica-odontologica/#tratamentos" data-cursor="↗" data-magnetic>
+                                <span>Ver tratamentos</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="5">
+                        <a href="/modelos/clinica-odontologica/" class="media-link" aria-label="Abrir modelo Clínica">
+                            <video class="preview-video" poster="/assets/home/images/clinica-odontologica-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                                <source src="/assets/home/videos/clinica-odontologica-preview.webm" type="video/webm" />
+                                <source src="/assets/home/videos/clinica-odontologica-preview.mp4" type="video/mp4" />
+                            </video>
+                            <div class="media-overlay">
+                                <span class="media-badge">ABRIR DEMONSTRAÇÃO ↗</span>
+                            </div>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- 03: Hortifruti -->
+                <article class="model-card" id="hortifruti" data-theme="hortifruti" data-parallax="3">
+                    <div class="model-card__copy">
+                        <span class="model-card__kicker">03 · MERCADO &amp; HORTIFRUTI</span>
+                        <h2 class="model-card__title">HORTIFRUTI</h2>
+                        <p class="model-card__desc">Frescor visual.</p>
+                        <div class="model-card__actions">
+                            <a class="button button--primary button--magnetic" href="/modelos/hortifruti/" data-cursor="ABRIR" data-magnetic>
+                                <span>Abrir projeto</span>
+                                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                            </a>
+                            <a class="button button--ghost button--magnetic" href="/modelos/hortifruti/#produtos" data-cursor="↗" data-magnetic>
+                                <span>Ver produtos</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="5">
+                        <a href="/modelos/hortifruti/" class="media-link" aria-label="Abrir modelo Hortifruti">
+                            <video class="preview-video" poster="/assets/home/images/hortifruti-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                                <source src="/assets/home/videos/hortifruti-preview.webm" type="video/webm" />
+                                <source src="/assets/home/videos/hortifruti-preview.mp4" type="video/mp4" />
+                            </video>
+                            <div class="media-overlay">
+                                <span class="media-badge">ABRIR DEMONSTRAÇÃO ↗</span>
+                            </div>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- 04: Lu Leve e Saudável -->
+                <article class="model-card model-card--reverse" id="lu" data-theme="luleve" data-parallax="3">
+                    <div class="model-card__copy">
+                        <span class="model-card__kicker">04 · ALIMENTAÇÃO SAUDÁVEL</span>
+                        <h2 class="model-card__title">LU LEVE</h2>
+                        <p class="model-card__desc">Pedido simplificado.</p>
+                        <div class="model-card__actions">
+                            <a class="button button--primary button--magnetic" href="/sites/lu-leve-e-saudavel/" data-cursor="ABRIR" data-magnetic>
+                                <span>Abrir projeto</span>
+                                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                            </a>
+                            <a class="button button--ghost button--magnetic" href="/sites/lu-leve-e-saudavel/#catalogo" data-cursor="↗" data-magnetic>
+                                <span>Abrir cardápio</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="model-card__media" data-cursor="ABRIR" data-parallax="5">
+                        <a href="/sites/lu-leve-e-saudavel/" class="media-link" aria-label="Abrir modelo Lu Leve e Saudável">
+                            <video class="preview-video" poster="/assets/home/images/lu-leve-e-saudavel-preview.webp" muted loop playsinline preload="metadata" data-autopause="true">
+                                <source src="/assets/home/videos/lu-leve-e-saudavel-preview.webm" type="video/webm" />
+                                <source src="/assets/home/videos/lu-leve-e-saudavel-preview.mp4" type="video/mp4" />
+                            </video>
+                            <div class="media-overlay">
+                                <span class="media-badge">ABRIR DEMONSTRAÇÃO ↗</span>
+                            </div>
+                        </a>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Seção Como Funciona (Etapa Institucional) -->
+            <section class="how-it-works" id="como-funciona">
+                <div class="how-it-works__inner">
+                    <div class="how-it-works__header">
+                        <span class="demo-kicker">PROCESSO TRANSPARENTE</span>
+                        <h2 class="how-it-works__title">
+                            <span>COMO</span>
+                            <span class="how-it-works__title--accent">FUNCIONA</span>
+                        </h2>
+                        <p class="how-it-works__desc">
+                            Sem termos complicados. Do conceito ao lançamento, você acompanha cada decisão com clareza.
+                        </p>
+                    </div>
+
+                    <div class="process-steps">
+                        <div class="process-step" data-parallax="2">
+                            <div class="step-num">01</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Você explica o projeto</h3>
+                                <p class="step-text">Compartilhe suas ideias, objetivos e referências de mercado que fazem sentido para sua marca.</p>
+                            </div>
+                        </div>
+
+                        <div class="process-step" data-parallax="2">
+                            <div class="step-num">02</div>
+                            <div class="step-content">
+                                <h3 class="step-title">A Neoeffex entende a necessidade</h3>
+                                <p class="step-text">Mapeamos a melhor estratégia de conversão, linguagem visual e narrativa para o seu público.</p>
+                            </div>
+                        </div>
+
+                        <div class="process-step" data-parallax="2">
+                            <div class="step-num">03</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Definimos escopo e orçamento</h3>
+                                <p class="step-text">Alinhamos proposta sob medida, prazos e investimento detalhado sem custos ocultos.</p>
+                            </div>
+                        </div>
+
+                        <div class="process-step" data-parallax="2">
+                            <div class="step-num">04</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Desenvolvemos e refinamos</h3>
+                                <p class="step-text">Design autoral e engenharia de alto desempenho, com validação contínua até o resultado ideal.</p>
+                            </div>
+                        </div>
+
+                        <div class="process-step" data-parallax="2">
+                            <div class="step-num">05</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Publicamos e acompanhamos</h3>
+                                <p class="step-text">Deploy com domínio próprio, segurança SSL e monitoramento de velocidade e estabilidade.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção de Encerramento (CTA Limpo e Autoral) -->
+            <section class="cta-closing">
+                <div class="cta-closing__inner" data-parallax="2">
+                    <h2 class="cta-title">
+                        <span>VAMOS CRIAR ALGO</span>
+                        <span class="cta-title--accent">QUE VÁ ALÉM?</span>
+                    </h2>
+                    <p class="cta-desc">
+                        Transformamos presença digital em experiência através de design, tecnologia e movimento.
+                    </p>
+                    <div class="cta-closing__actions">
+                        <a class="button button--primary button--magnetic" href="/planos/" data-cursor="↗" data-magnetic>
+                            <span>Pedir orçamento</span>
+                            <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer__inner">
+                <p>&copy; 2026 <span class="footer-brand">Neoeffex</span>. Todos os direitos reservados.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts: Lenis, GSAP, ScrollTrigger & Core JS -->
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.9/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="/assets/home/js/home.js"></script>
+    
+    <!-- Three.js Scene — N de partículas -->
+    <script type="module" src="/assets/home/js/three/scene.js"></script>
+
+    <!-- WebGL Prism Scene — Prisma 3D Nativo -->
+    <script type="module" src="/assets/home/js/three/prism-scene.js"></script>
 </body>
 </html>

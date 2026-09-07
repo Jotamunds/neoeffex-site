@@ -2,6 +2,20 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.2.0] - 2026-09-07
+
+### Adicionado
+- Promoção da experiência `modelos/preview-vitrine` como nova home principal da Neoeffex na raiz (`/`).
+- Isolamento completo dos assets da nova home em `/assets/home/` (`css/`, `js/`, `images/`, `videos/`, `js/three/`).
+- Header institucional unificado com Diferenciais, Modelos, Planos, Como funciona e CTA "Pedir orçamento".
+- Nova seção institucional "Como funciona" (`#como-funciona`) com o fluxo transparente de 5 etapas da Neoeffex.
+- Suporte a menu mobile expansível responsivo com fechamento automático por navegação.
+
+### Alterado
+- Preservação e arquivamento da home anterior `0.1.15` em `/archive/home-v0.1.15/` com snapshot autocontido e histórico.
+- Atualização da `modelos/preview-vitrine` para a versão `v0.6.1` mantida como referência e demonstração isolada.
+- Preservação integral da física do N de partículas WebGL, do Prisma 3D em Three.js nativo, do cursor personalizado e do scroll suave (Lenis + GSAP ScrollTrigger).
+
 ## [0.1.15] - 2026-09-05
 
 ### Alterado

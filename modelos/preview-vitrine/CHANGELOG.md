@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.6.1
+
+- Substitui navegação específica de modelos por header institucional da Neoeffex (Diferenciais, Modelos, Planos, Como funciona).
+- Altera CTA principal do header para "Pedir orçamento" apontando para /planos/.
+- Implementa suporte a navegação mobile fluida com menu responsivo e fechamento automático.
+- Adiciona seção institucional "Como funciona" (#como-funciona) apresentando o fluxo transparente de 5 etapas da Neoeffex.
+- Prepara a preview-vitrine para promoção como nova home principal.
+- Preserva N WebGL, cursor personalizado, prisma Three.js e comportamento de scroll aprovados na v0.6.0.
+
 ## v0.6.0 - Etapa 6: Cursor Personalizado + Pointer Único + Integração Final
 - Fonte Central de Pointer (`pointerState`):
   - Criação de coordenador central de ponteiro único em `assets/js/modelos-preview.js`, consolidando `clientX`, `clientY`, `ndcX`, `ndcY`, `normX`, `normY`, `active` e `hasValidPosition`.

@@ -41,6 +41,15 @@ Não use este arquivo como changelog.
 - As landing pages devem permanecer responsivas.
 - Integrações de catálogo devem reutilizar o sistema Neoeffex em vez de criar um catálogo paralelo.
 
+## Home Principal (/) — v0.2.0
+
+- A raiz `/` é a representação oficial de `https://neoeffex.com.br/` (sem subpasta `/home/` e sem redirects).
+- Arquitetura de isolamento (Opção 2): assets específicos da home residem em `/assets/home/` (`css/`, `js/`, `images/`, `videos/`, `js/three/`).
+- Não carregar conjuntamente arquivos legados como `/assets/css/style.css` na home nova para evitar colisões.
+- Header institucional limpo com marca, navegação (Diferenciais, Modelos, Planos, Como funciona) e CTA "Pedir orçamento" direcionando a `/planos/`.
+- Snapshot da home anterior preservado em `/archive/home-v0.1.15/` com VERSION 0.1.15.
+- A `modelos/preview-vitrine` continua preservada na versão `v0.6.1` como referência técnica e vitrine de demonstrações.
+
 ## Vitrine de Modelos (/modelos)
 
 - Rota: `/modelos/preview-vitrine` (vitrine principal de demonstração tecnológica e projetos).

@@ -52,18 +52,38 @@
                     <span class="brand-text">neoeffex</span>
                 </a>
 
-                <nav class="topnav" aria-label="Navegação">
-                    <a href="#demonstracoes">Diferenciais</a>
-                    <a href="#hamburgueria">Hamburgueria</a>
-                    <a href="#clinica">Clínica</a>
-                    <a href="#hortifruti">Hortifruti</a>
-                    <a href="#lu">Lu Leve</a>
+                <nav class="topnav" id="topNav" aria-label="Navegação">
+                    <a href="#diferenciais">Diferenciais</a>
+                    <a href="#modelos">Modelos</a>
+                    <a href="/planos/">Planos</a>
+                    <a href="#como-funciona">Como funciona</a>
                 </nav>
 
-                <a class="button button--ghost button--magnetic" href="/#contato" data-cursor="↗" data-magnetic>
-                    <span>Solicitar projeto</span>
-                    <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
+                <div class="topbar__actions">
+                    <a class="button button--ghost button--magnetic topbar-cta" href="/planos/" data-cursor="↗" data-magnetic>
+                        <span>Pedir orçamento</span>
+                        <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                    <button class="topbar__toggle" id="menuToggle" type="button" aria-label="Abrir navegação" aria-expanded="false" aria-controls="mobileMenu">
+                        <span class="toggle-bar"></span>
+                        <span class="toggle-bar"></span>
+                        <span class="toggle-bar"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Dropdown -->
+            <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+                <nav class="mobile-menu__nav" aria-label="Navegação mobile">
+                    <a href="#diferenciais" class="mobile-menu__link">Diferenciais</a>
+                    <a href="#modelos" class="mobile-menu__link">Modelos</a>
+                    <a href="/planos/" class="mobile-menu__link">Planos</a>
+                    <a href="#como-funciona" class="mobile-menu__link">Como funciona</a>
+                    <a href="/planos/" class="button button--primary mobile-menu__cta">
+                        <span>Pedir orçamento</span>
+                        <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </nav>
             </div>
         </header>
 
@@ -104,7 +124,7 @@
             </section>
 
             <!-- Seções de Demonstrações Visuais (Etapa 4: Menos texto, mais demonstração) -->
-            <div class="capabilities-showcase" id="demonstracoes">
+            <div class="capabilities-showcase" id="diferenciais">
                 <!-- Demo 1: Elementos 3D -->
                 <section class="demo-section demo-section--3d" id="demo-3d">
                     <div class="demo-container">
@@ -337,6 +357,64 @@
                 </article>
             </section>
 
+            <!-- Seção Como Funciona (Etapa Institucional) -->
+            <section class="how-it-works" id="como-funciona">
+                <div class="how-it-works__inner">
+                    <div class="how-it-works__header">
+                        <span class="demo-kicker">PROCESSO TRANSPARENTE</span>
+                        <h2 class="how-it-works__title">
+                            <span>COMO</span>
+                            <span class="how-it-works__title--accent">FUNCIONA</span>
+                        </h2>
+                        <p class="how-it-works__desc">
+                            Sem termos complicados. Do conceito ao lançamento, você acompanha cada decisão com clareza.
+                        </p>
+                    </div>
+
+                    <div class="process-steps">
+                        <div class="process-step" data-parallax="2">
+                            <div class="step-num">01</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Você explica o projeto</h3>
+                                <p class="step-text">Compartilhe suas ideias, objetivos e referências de mercado que fazem sentido para sua marca.</p>
+                            </div>
+                        </div>
+
+                        <div class="process-step" data-parallax="2">
+                            <div class="step-num">02</div>
+                            <div class="step-content">
+                                <h3 class="step-title">A Neoeffex entende a necessidade</h3>
+                                <p class="step-text">Mapeamos a melhor estratégia de conversão, linguagem visual e narrativa para o seu público.</p>
+                            </div>
+                        </div>
+
+                        <div class="process-step" data-parallax="2">
+                            <div class="step-num">03</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Definimos escopo e orçamento</h3>
+                                <p class="step-text">Alinhamos proposta sob medida, prazos e investimento detalhado sem custos ocultos.</p>
+                            </div>
+                        </div>
+
+                        <div class="process-step" data-parallax="2">
+                            <div class="step-num">04</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Desenvolvemos e refinamos</h3>
+                                <p class="step-text">Design autoral e engenharia de alto desempenho, com validação contínua até o resultado ideal.</p>
+                            </div>
+                        </div>
+
+                        <div class="process-step" data-parallax="2">
+                            <div class="step-num">05</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Publicamos e acompanhamos</h3>
+                                <p class="step-text">Deploy com domínio próprio, segurança SSL e monitoramento de velocidade e estabilidade.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Seção de Encerramento (CTA Limpo e Autoral) -->
             <section class="cta-closing">
                 <div class="cta-closing__inner" data-parallax="2">
@@ -348,8 +426,8 @@
                         Transformamos presença digital em experiência através de design, tecnologia e movimento.
                     </p>
                     <div class="cta-closing__actions">
-                        <a class="button button--primary button--magnetic" href="/#contato" data-cursor="↗" data-magnetic>
-                            <span>Falar sobre seu projeto</span>
+                        <a class="button button--primary button--magnetic" href="/planos/" data-cursor="↗" data-magnetic>
+                            <span>Pedir orçamento</span>
                             <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </a>
                     </div>

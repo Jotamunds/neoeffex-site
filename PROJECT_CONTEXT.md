@@ -12,6 +12,17 @@ O projeto deve permitir a criação de soluções reutilizáveis para diferentes
 
 ## Estrutura principal
 
+### `/` (Home Principal — v0.2.0)
+
+A home principal da Neoeffex (`https://neoeffex.com.br/`) apresenta a experiência imersiva promovida a partir da `modelos/preview-vitrine`:
+
+- `index.html` na raiz;
+- Assets dedicados e isolados em `/assets/home/` (`css/`, `js/`, `js/three/`, `images/`, `videos/`);
+- Three.js nativo para o N de partículas interativo e para o Prisma Espacial 3D;
+- Header institucional com links para Diferenciais, Modelos, Planos, Como funciona e CTA "Pedir orçamento" apontando para `/planos/`;
+- A home anterior (0.1.15) está preservada em `/archive/home-v0.1.15/`;
+- A `modelos/preview-vitrine` (v0.6.1) permanece preservada e funcional como referência técnica.
+
 ### `/admin`
 
 Painel administrativo do sistema de catálogo.

@@ -14,6 +14,24 @@
     --theme-accent-light: #72bcff;
     --theme-glow: rgba(30, 134, 255, 0.22);
     --theme-border: rgba(30, 134, 255, 0.35);
+
+    /* Header e Compensação de Âncoras (Etapa 1) */
+    --header-height: 76px;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--header-height);
+}
+
+#demonstracoes,
+#hamburgueria,
+#clinica,
+#hortifruti,
+#lu,
+.demo-section,
+.model-card {
+    scroll-margin-top: var(--header-height);
 }
 
 /* Scoped Theme Variations for Project Cards (Never contaminates global hero, particles or header) */
@@ -176,7 +194,7 @@ pre {
     z-index: -1;
 }
 
-/* Topbar (Etapa 5: Full-width visual com conteúdo centralizado limitado) */
+/* Topbar (Etapa 1: Fixo, sempre visível de ponta a ponta com conteúdo centralizado) */
 .topbar {
     width: 100%;
     position: fixed;
@@ -190,25 +208,20 @@ pre {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transform: translateY(0);
     opacity: 1;
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-        opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-        background 0.4s ease;
-    will-change: transform, opacity;
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    will-change: background, border-color;
 }
 
-/* Saída e entrada com leveza e lentidão suave no scroll */
-.topbar--hidden {
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-        opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+/* Fundo discreto e contraste reforçado ao rolar a página */
+.topbar--scrolled {
+    background: rgba(4, 7, 13, 0.88);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 @media (prefers-reduced-motion: reduce) {
 
-    .topbar,
-    .topbar--hidden {
+    .topbar {
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
@@ -1066,6 +1079,7 @@ pre {
     align-items: center;
     justify-content: center;
     z-index: 1;
+    transform: translateY(24px);
 }
 
 .three-fallback.is-active {
@@ -1227,14 +1241,19 @@ textarea,
 
 /* Mobile & Tablet Responsive Adjustments */
 @media (max-width: 980px) {
+    :root {
+        --header-height: 68px;
+    }
+
     .topbar__inner {
-        flex-wrap: wrap;
-        justify-content: center;
+        padding: 14px 20px;
+        flex-wrap: nowrap;
+        justify-content: space-between;
     }
 
     .hero {
         min-height: auto;
-        padding: 60px 0 40px;
+        padding: clamp(84px, 14vh, 110px) 0 40px;
     }
 
     .capabilities-showcase {
@@ -1285,9 +1304,21 @@ textarea,
 }
 
 @media (max-width: 760px) {
+    :root {
+        --header-height: 64px;
+    }
+
+    .topbar__inner {
+        padding: 12px 16px;
+    }
+
+    .three-fallback {
+        transform: translateY(14px);
+    }
+
     .hero {
-        padding: clamp(50px, 12vh, 80px) 0 40px;
-        min-height: calc(100vh - 75px);
+        padding: clamp(80px, 14vh, 100px) 0 40px;
+        min-height: calc(100vh - var(--header-height));
     }
 
     .hero-title {

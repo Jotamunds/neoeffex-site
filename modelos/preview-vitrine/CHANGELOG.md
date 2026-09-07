@@ -1,6 +1,20 @@
 # Changelog
 
-## v0.4.5 - Hero minimalista e header com entrada/saída suave e leve
+## v0.4.6 - Etapa 1: Header fixo e enquadramento do N
+- Header fixo e sempre visível: remoção completa da lógica de ocultação durante a rolagem (`topbar--hidden`), garantindo que o header permaneça afixado ao topo em qualquer posição da página, em rolagens lentas, rápidas ou reversas
+- Transição de fundo no scroll: adição da classe `.topbar--scrolled` quando `scrollY > 20px`, aumentando discretamente o contraste e o amortecimento de fundo (`rgba(4, 7, 13, 0.88)` com sombra difusa) sobre o conteúdo rolado
+- Compensação de âncoras e altura do header:
+  - Criação da variável CSS `--header-height` (76px desktop, 68px/64px mobile)
+  - Aplicação de `scroll-padding-top` no elemento raiz `html` e `scroll-margin-top` em todas as seções-alvo (`#demonstracoes`, `#hamburgueria`, `#clinica`, `#hortifruti`, `#lu`, `.demo-section`, `.model-card`)
+  - Compensação dinâmica da altura real do header (`topbar.offsetHeight`) no listener de cliques de âncoras gerenciado pelo Lenis, mantendo offset 0 para o topo (`#inicio`)
+  - Calibração do padding superior do `.hero` em breakpoints mobile (`clamp(84px, 14vh, 110px)` e `clamp(80px, 14vh, 100px)`), eliminando qualquer sobreposição entre a headline e o header
+- Enquadramento do N em Three.js:
+  - Deslocamento discreto para baixo do centro de formação das partículas do N (`brandGroup.position.set(0, nOffsetY, 0)`), calculado matematicamente a partir de pixels visuais no plano Z=0 (`targetShiftPx = 24px` no desktop; `14px` no mobile)
+  - Preservação rigorosa do tamanho, proporção e enquadramento dinâmico contain (`baseFitScale` e `uNScale`) sem recortes ou ampliação de áreas vazias
+  - Geometria exposta via `window.__neoeffexSceneGeometry` e função exportada `getSceneGeometry()` para integração perfeita com o cálculo de coordenadas do mouse na Etapa 2
+  - Ajuste equivalente no `.three-fallback` para coerência visual quando WebGL não estiver ativo
+- Preservação estrita: configurações atuais de mouse, formação/desformação, micro-movimentos do N, prisma demonstrativo, cursor personalizado e vídeos/sites incorporados mantidos intactos para suas respectivas etapas subsequentes
+
 - Hero: remoção do texto de apoio ("Design, tecnologia e movimento para transformar presença em experiência.") e dos dois botões de ação ("Explorar projetos" e "Falar com especialista") exclusivamente do Hero, transformando a abertura em uma composição editorial pura com a headline "SEU SITE / PODE IR ALÉM" sobre o canvas 3D
 - Header Smart Reveal: adicionada leveza e lentidão suave na entrada e saída do header da página (topbar):
   - Entrada inicial com float sutil e desaceleração suave (1.3s com `power2.out`), limpando estilos inline na conclusão para integração natural com o CSS

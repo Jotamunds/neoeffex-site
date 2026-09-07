@@ -35,56 +35,23 @@
         }
     }
 
-    // --- 1.1 Header Smart Reveal com Leveza e Lentidão Suave ---
+    // --- 1.1 Header Fixo e Sempre Visível (Etapa 1) ---
     const topbar = document.querySelector('.topbar');
-    if (topbar && !prefersReducedMotion) {
-        let lastScrollY = window.pageYOffset || window.scrollY || 0;
-        let isHeaderHidden = false;
-        const scrollThreshold = 10;
-        const minScrollToHide = 100;
-
-        const handleHeaderScroll = (currentY) => {
-            const y = typeof currentY === 'number' ? currentY : (window.pageYOffset || window.scrollY || 0);
-            const delta = y - lastScrollY;
-
-            // Se o usuário rolou e o GSAP ainda estivesse tweenando a entrada, libera inline styles
-            if (typeof gsap !== 'undefined' && gsap.isTweening(topbar)) {
-                gsap.killTweensOf(topbar);
-                gsap.set(topbar, { clearProps: 'transform,opacity' });
+    if (topbar) {
+        const updateHeaderState = () => {
+            const y = window.pageYOffset || window.scrollY || 0;
+            if (y > 20) {
+                topbar.classList.add('topbar--scrolled');
+            } else {
+                topbar.classList.remove('topbar--scrolled');
             }
-
-            // Próximo ao topo da página: sempre visível
-            if (y <= 60) {
-                if (isHeaderHidden) {
-                    topbar.classList.remove('topbar--hidden');
-                    isHeaderHidden = false;
-                }
-                lastScrollY = y;
-                return;
-            }
-
-            // Descendo: saída suave e leve
-            if (delta > scrollThreshold && y > minScrollToHide) {
-                if (!isHeaderHidden) {
-                    topbar.classList.add('topbar--hidden');
-                    isHeaderHidden = true;
-                }
-            } 
-            // Subindo: entrada suave e leve
-            else if (delta < -scrollThreshold) {
-                if (isHeaderHidden) {
-                    topbar.classList.remove('topbar--hidden');
-                    isHeaderHidden = false;
-                }
-            }
-
-            lastScrollY = y;
         };
 
         if (lenis) {
-            lenis.on('scroll', (e) => handleHeaderScroll(e.scroll));
+            lenis.on('scroll', updateHeaderState);
         }
-        window.addEventListener('scroll', () => handleHeaderScroll(), { passive: true });
+        window.addEventListener('scroll', updateHeaderState, { passive: true });
+        updateHeaderState();
     }
 
     // --- 2. Custom Cursor Engine ---
@@ -490,7 +457,7 @@
             });
         }
 
-        // Navegação suave por âncoras internas usando Lenis (evita conflitos de rolagem)
+        // Navegação suave por âncoras internas usando Lenis com compensação do header fixo (Etapa 1)
         if (lenis) {
             document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
                 anchor.addEventListener('click', (e) => {
@@ -499,7 +466,10 @@
                         const targetEl = document.querySelector(href);
                         if (targetEl) {
                             e.preventDefault();
-                            lenis.scrollTo(targetEl, { offset: 0, duration: 1.2 });
+                            const topbarEl = document.querySelector('.topbar');
+                            const topbarHeight = topbarEl ? topbarEl.offsetHeight : 76;
+                            const offset = href === '#inicio' ? 0 : -topbarHeight;
+                            lenis.scrollTo(targetEl, { offset: offset, duration: 1.2 });
                         }
                     }
                 });

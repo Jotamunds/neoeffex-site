@@ -33,6 +33,8 @@ let _reducedMotion = false;
 // Geometry bounds and fit scale
 let nBounds = { width: 0.895, height: 1.0 };
 let baseFitScale = 3.2;
+let targetShiftPx = 24; // Referência visual inicial de deslocamento em pixels CSS (Etapa 1)
+let nOffsetY = 0;       // Deslocamento correspondente em unidades de mundo no plano Z=0
 
 // Mouse interaction targets (normalised –1 … 1)
 let mouseTargetX = 0;
@@ -118,7 +120,23 @@ function updateFit() {
   baseFitScale = Math.min(scaleH, scaleV);
 
   brandGroup.scale.setScalar(baseFitScale);
-  brandGroup.position.set(0, 0, 0);
+
+  // Etapa 1: Deslocamento discreto para baixo do centro de formação do N.
+  // Converte pixels visuais para unidades de mundo da cena no plano z=0.
+  // 24px no desktop como referência visual inicial; ~14px calibrado no mobile para respeitar a altura do header.
+  targetShiftPx = _isMobile ? 14 : 24;
+  nOffsetY = - (targetShiftPx / height) * visibleHeight;
+  brandGroup.position.set(0, nOffsetY, 0);
+
+  // Expor parâmetros geométricos para etapas posteriores (Etapa 2: coordenadas do mouse)
+  window.__neoeffexSceneGeometry = {
+    baseFitScale,
+    targetShiftPx,
+    nOffsetY,
+    visibleWidth,
+    visibleHeight,
+    cameraZ: camera.position.z
+  };
 
   if (particleMaterial) {
     particleMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, _isMobile ? 1.2 : 1.5);
@@ -395,6 +413,15 @@ export function updateMouse(normalizedX, normalizedY, active = true) {
 
 export function getParticleMaterial() {
   return particleMaterial;
+}
+
+export function getSceneGeometry() {
+  return window.__neoeffexSceneGeometry || {
+    baseFitScale,
+    targetShiftPx,
+    nOffsetY,
+    nBounds
+  };
 }
 
 export function destroy() {

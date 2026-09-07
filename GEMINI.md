@@ -260,6 +260,126 @@ informe isso separadamente.
 
 Não esconda pendências.
 
+# AUTONOMIA DO AGENTE
+
+O agente possui autorização para trabalhar de forma autônoma neste projeto.
+
+## REGRA PRINCIPAL
+
+Ao receber uma tarefa, execute-a do início ao fim sem pedir confirmação
+para decisões técnicas rotineiras.
+
+Não interrompa o trabalho para perguntar:
+
+- se deve continuar;
+- se pode editar um arquivo;
+- se pode criar um arquivo;
+- se pode excluir código obsoleto relacionado à tarefa;
+- qual implementação técnica deve escolher;
+- se deve executar testes;
+- se deve corrigir erros encontrados durante a implementação;
+- se deve instalar uma dependência necessária;
+- se deve executar npm, git, build, lint ou testes;
+- se deve prosseguir para a próxima etapa já descrita;
+- se pode fazer pequenos ajustes necessários para concluir a tarefa.
+
+Quando existirem várias soluções tecnicamente válidas, escolha a solução
+que melhor preserve:
+
+1. estabilidade;
+2. compatibilidade;
+3. manutenção;
+4. desempenho;
+5. experiência do usuário;
+6. arquitetura existente do projeto.
+
+## CONTINUIDADE
+
+Se uma tarefa possuir várias subtarefas, continue automaticamente até
+concluir todas elas.
+
+Não encerre uma resposta apenas informando o próximo passo.
+
+Execute o próximo passo.
+
+Não use frases como:
+
+- "Quer que eu continue?"
+- "Posso implementar?"
+- "Deseja que eu faça isso?"
+- "Qual opção você prefere?"
+- "Posso prosseguir para a próxima etapa?"
+
+quando a resposta puder ser determinada tecnicamente pelo próprio agente.
+
+## CORREÇÃO DE PROBLEMAS
+
+Se durante uma implementação forem encontrados:
+
+- bugs;
+- erros de build;
+- imports quebrados;
+- erros de lint;
+- problemas de tipagem;
+- referências inexistentes;
+- inconsistências diretamente relacionadas à tarefa;
+
+o agente deve tentar corrigi-los automaticamente antes de encerrar.
+
+Após alterações relevantes, valide o resultado quando possível.
+
+## DECISÕES
+
+Não transfira decisões técnicas triviais para o usuário.
+
+Faça uma escolha fundamentada e registre brevemente a decisão tomada.
+
+## QUANDO PERGUNTAR
+
+Pergunte ao usuário somente quando existir uma decisão que:
+
+1. altere significativamente o objetivo ou produto;
+2. possa causar perda irreversível de dados;
+3. envolva credenciais ou informações que o agente não possui;
+4. envolva publicação, cobrança ou ação externa irreversível;
+5. tenha duas interpretações de produto substancialmente diferentes e
+   não seja possível inferir a intenção a partir do projeto.
+
+Fora desses casos, prossiga autonomamente.
+
+## GIT
+
+O agente pode:
+
+- verificar status;
+- criar e editar arquivos;
+- executar builds;
+- executar testes;
+- executar lint;
+- usar git diff;
+- usar git status;
+- preparar alterações.
+
+Não realizar ações destrutivas sobre o histórico do Git sem necessidade.
+
+Evitar:
+
+- git reset --hard;
+- force push;
+- apagar branches;
+- sobrescrever trabalho não relacionado à tarefa.
+
+## ESCOPO
+
+Antes de alterar código, examine os arquivos relevantes e as instruções
+GEMINI.md existentes.
+
+Preserve funcionalidades existentes que não façam parte da tarefa.
+
+Faça todas as alterações necessárias para entregar uma implementação
+completa, e não apenas uma implementação parcial que dependa de nova
+confirmação do usuário.
+
 ## VERSION E CHANGELOG
 
 Se a área modificada possuir:

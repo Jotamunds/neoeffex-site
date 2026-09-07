@@ -1,7 +1,7 @@
 /**
  * Neoeffex — Página de Planos (/planos/)
- * Versão: v0.1.5
- * Etapa 6: Explicações comerciais, garantia técnica e FAQ acessível
+ * Versão: v0.1.6
+ * Etapa 7: Refinamento, responsividade e acessibilidade final
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -274,6 +274,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!focusable.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
+      if (!modal.contains(document.activeElement)) {
+        event.preventDefault();
+        first.focus();
+        return;
+      }
       if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();

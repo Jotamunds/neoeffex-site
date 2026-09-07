@@ -1,6 +1,6 @@
 /* ==========================================================================
    Neoeffex — Página de Planos (/planos/)
-   Etapa 6: Explicações comerciais, garantia e FAQ (v0.1.5)
+   Etapa 7: Refinamento, responsividade e acessibilidade final (v0.1.6)
    ========================================================================== */
 
 /* Exibição limpa da barra de navegação sem dependência do loader do hero */
@@ -18,6 +18,17 @@
   overflow: hidden;
   position: absolute;
   white-space: nowrap;
+}
+
+/* Compensação de scroll para âncoras sob cabeçalho fixo */
+#como-funciona,
+#implantacao,
+#mensal,
+#horas-tecnicas,
+#explicacoes,
+#faq,
+#contato {
+  scroll-margin-top: calc(var(--nav-height, 74px) + 24px);
 }
 
 /* --------------------------------------------------------------------------
@@ -1652,6 +1663,16 @@
 }
 
 @media (max-width: 640px) {
+  #como-funciona,
+  #implantacao,
+  #mensal,
+  #horas-tecnicas,
+  #explicacoes,
+  #faq,
+  #contato {
+    scroll-margin-top: calc(var(--nav-height, 64px) + 16px);
+  }
+
   .planos-hero {
     padding-top: 112px;
     padding-bottom: 50px;

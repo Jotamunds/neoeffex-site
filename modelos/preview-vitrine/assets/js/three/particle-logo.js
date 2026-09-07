@@ -128,6 +128,7 @@ export function createParticleLogo(targetPositions, options = {}) {
             uPageScroll: { value: 0.0 },     // Progresso global de rolagem da página
             uScrollY: { value: 0.0 },        // Pixel vertical de rolagem para parallax persistente
             uProgress: { value: 0.0 },       // Compatibilidade
+            uVisualVelocity: { value: 0.0 }, // Velocidade visual do N (Etapa 4.1)
             uIntro: { value: options.reducedMotion ? 1.0 : 0.0 },
             uMouseLocal: { value: new THREE.Vector3(999, 999, 0) },
             uMouseActive: { value: 0.0 },

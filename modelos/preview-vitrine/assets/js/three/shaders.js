@@ -15,6 +15,7 @@ uniform float uTime;
 uniform float uScrollProgress;
 uniform float uPageScroll;
 uniform float uScrollY;
+uniform float uVisualVelocity;
 uniform float uIntro;
 uniform vec3 uMouseLocal;
 uniform float uMouseActive;
@@ -39,7 +40,7 @@ void main() {
     float p = clamp(uScrollProgress, 0.0, 1.0);
 
     // =========================================================================
-    // 1. Ciclo de 5 Estados de Formação, Assentamento, Hold e Dispersão (Etapa 4)
+    // 1. Ciclo de 5 Estados de Formação, Assentamento, Hold e Dispersão (Etapa 4.1)
     //    - 0%–28%:  Formação principal rápida (velocidade ~8/10)
     //    - 28%–42%: Aproximação final desacelerada e assentamento suave (4/10 -> 0)
     //    - 42%–62%: N formado / Hold (Plateau 100% estável e nítido)
@@ -47,9 +48,18 @@ void main() {
     //    - 76%–100%: Dispersão principal aberta (aceleração progressiva para 8/10)
     // =========================================================================
 
+    // Stagger determinístico por partícula (Seção 18 da Etapa 4.1):
+    // Micro-variação de 80-250ms equivalentes (~0.026 em progresso) que se anula
+    // suavemente conforme as partículas pousam e o N entra na zona formada estável
+    float particleStagger = (aRandomness.z - 0.5) * 0.026;
+
     // Micro-variação determinística por partícula para assentamento orgânico (0.40 a 0.42)
     float pFormEnd = 0.40 + aRandomness.x * 0.02;
-    float s = clamp(p / pFormEnd, 0.0, 1.0);
+
+    // Na formação, o stagger diminui suavemente até zero ao se aproximar de 0.38
+    float formStaggerEnvelope = clamp(1.0 - (p / 0.38), 0.0, 1.0);
+    float pFormEffective = clamp(p + particleStagger * formStaggerEnvelope, 0.0, 1.0);
+    float s = clamp(pFormEffective / pFormEnd, 0.0, 1.0);
 
     float wForm = 0.0;
     float sSplit = 0.683; // Transição exata em ~28% do scroll (0.28 / 0.41)
@@ -67,10 +77,13 @@ void main() {
     }
 
     // Dispersão com saída lenta partindo estritamente após o platô de 62%
+    // Stagger sutil que aumenta gradualmente conforme as partículas se desprendem
+    float dispStaggerEnvelope = clamp((p - 0.62) / 0.22, 0.0, 1.0);
+    float pDispEffective = clamp(p + particleStagger * dispStaggerEnvelope, 0.0, 1.0);
     float pDispStart = 0.62 + aRandomness.y * 0.02;
     float wDisp = 0.0;
-    if (p > pDispStart) {
-        float v = clamp((p - pDispStart) / (1.0 - pDispStart), 0.0, 1.0);
+    if (pDispEffective > pDispStart) {
+        float v = clamp((pDispEffective - pDispStart) / (1.0 - pDispStart), 0.0, 1.0);
         float vSplit = 0.351; // Transição exata em ~76% do scroll ((0.76 - 0.63) / 0.37)
 
         if (v < vSplit) {

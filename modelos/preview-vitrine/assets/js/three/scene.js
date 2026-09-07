@@ -49,8 +49,13 @@ const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 const intersectionPoint = new THREE.Vector3();
 const localMouse = new THREE.Vector3(999, 999, 0);
 
-// Scroll-driven state
-let scrollProgress = 0;
+// Scroll-driven state — Etapa 4.1: Desacoplamento estrito entre scroll real e visual
+let targetProgress = 0.0;       // Destino solicitado pelo scroll
+let visualProgress = 0.0;       // Posição visual real atual da animação do N
+let visualVelocity = 0.0;       // Velocidade instantânea do progresso visual (unidades/s)
+let prevTargetProgress = 0.0;   // Para medição contínua da velocidade de scroll
+let targetVelocity = 0.0;       // Velocidade suavizada da intenção do usuário
+let scrollDirection = 0;        // +1: avançando, -1: retrocedendo, 0: repouso
 
 // Timing (Delta time e tempo acumulado contínuo com proteção contra saltos de aba)
 let startTime = 0;
@@ -214,23 +219,35 @@ async function setupParticles() {
     // Expor função de atualização para o coordenador de scroll
     window.__neoeffexUpdateScrollProgress = updateScrollProgress;
 
-    // Verificar se já existe progresso de scroll ativo (ex: recarga no meio da página)
+    // Etapa 4.1: Inicialização coerente em recarga no meio da página (Seção 29)
+    let initialProg = 0.0;
     if (typeof window.__neoeffexCurrentScrollProgress === 'number') {
-      scrollProgress = window.__neoeffexCurrentScrollProgress;
+      initialProg = window.__neoeffexCurrentScrollProgress;
     } else if (window.__neoeffexHeroScrollTrigger) {
-      scrollProgress = window.__neoeffexHeroScrollTrigger.progress;
+      initialProg = window.__neoeffexHeroScrollTrigger.progress;
     } else if (window.scrollY > 40) {
       const heroEl = document.getElementById('threeSection');
       const maxScroll = heroEl ? heroEl.offsetHeight : window.innerHeight * 2;
-      scrollProgress = clamp(window.scrollY / maxScroll, 0, 1);
-    } else {
-      scrollProgress = 0.0;
+      initialProg = clamp(window.scrollY / maxScroll, 0, 1);
     }
 
+    targetProgress = clamp(initialProg, 0, 1);
+    visualProgress = targetProgress; // Inicializa sincronizado sem salto
+    prevTargetProgress = targetProgress;
+    visualVelocity = 0.0;
+    targetVelocity = 0.0;
+
+    window.__neoeffexCurrentScrollProgress = targetProgress;
+    window.__neoeffexVisualProgress = visualProgress;
+    window.__neoeffexTargetProgress = targetProgress;
+
     if (particleMaterial) {
-      particleMaterial.uniforms.uScrollProgress.value = scrollProgress;
-      particleMaterial.uniforms.uProgress.value = scrollProgress;
-      if (_reducedMotion || scrollProgress > 0.02 || (window.scrollY && window.scrollY > 80)) {
+      particleMaterial.uniforms.uScrollProgress.value = visualProgress;
+      particleMaterial.uniforms.uProgress.value = visualProgress;
+      if (particleMaterial.uniforms.uVisualVelocity) {
+        particleMaterial.uniforms.uVisualVelocity.value = 0.0;
+      }
+      if (_reducedMotion || visualProgress > 0.02 || (window.scrollY && window.scrollY > 80)) {
         particleMaterial.uniforms.uIntro.value = 1.0;
         renderer.render(scene, camera);
       } else {
@@ -258,6 +275,89 @@ async function setupParticles() {
 // Animation loop
 // ---------------------------------------------------------------------------
 
+/**
+ * Etapa 4.1 — Controlador Centralizado de Movimento do N
+ * Desacopla o scroll real (targetProgress) da posição visual das partículas (visualProgress).
+ * Integra um sistema de amortecimento adaptativo tipo spring próximo de critical damping,
+ * limite estrito de velocidade visual, proteção ativa contra inversão brusca de direção
+ * e estabilidade numérica via delta time protegido e substeps dinâmicos.
+ *
+ * @param {number} delta - Delta time em segundos (já sanitizado e limitado a <= 0.033)
+ */
+function updateMotionController(delta) {
+  if (_reducedMotion) {
+    visualProgress = targetProgress;
+    visualVelocity = 0.0;
+    window.__neoeffexVisualProgress = visualProgress;
+    applyScrollTransforms();
+    return;
+  }
+
+  // 1. Estimação e suavização da velocidade e direção do scroll de entrada
+  const targetDelta = targetProgress - prevTargetProgress;
+  const instantTargetVel = delta > 0 ? targetDelta / delta : 0;
+  targetVelocity = THREE.MathUtils.damp(targetVelocity, instantTargetVel, 8.0, delta);
+  prevTargetProgress = targetProgress;
+
+  if (Math.abs(targetVelocity) > 0.01) {
+    scrollDirection = Math.sign(targetVelocity);
+  } else {
+    scrollDirection = 0;
+  }
+
+  // 2. Substeps dinâmicos (Seção 14): 2 substeps para delta > 18ms garantem estabilidade absoluta
+  const steps = delta > 0.018 ? 2 : 1;
+  const dtSub = delta / steps;
+
+  for (let s = 0; s < steps; s++) {
+    const diff = targetProgress - visualProgress;
+    const absDiff = Math.abs(diff);
+
+    // Seção 12: Tratamento de inversão rápida de scroll
+    // Se a direção do target inverteu contra a velocidade visual atual, dissipa a inércia contra-direcional
+    if (diff * visualVelocity < 0 && absDiff > 0.006 && Math.abs(visualVelocity) > 0.015) {
+      visualVelocity *= Math.exp(-14.0 * dtSub);
+    }
+
+    // Seção 10: Damping adaptativo e frequência natural da mola
+    // - Scroll lento (pequeno diff, velocidade baixa): altíssima precisão e resposta imediata (~90ms)
+    // - Scroll rápido (grande salto de target): maior amortecimento, sensação de massa e peso
+    const speedIntensity = clamp(Math.max(absDiff * 3.5, Math.abs(targetVelocity) * 0.75), 0.0, 1.0);
+    const omega = lerp(10.5, 6.2, speedIntensity); // rad/s (frequência natural da mola)
+    const zeta = lerp(1.0, 1.18, speedIntensity);  // razão de amortecimento (critical damping para leve sobre-amortecido)
+
+    // Forças do sistema massa-mola-amortecedor
+    const springForce = omega * omega * diff;
+    const dampingForce = 2.0 * zeta * omega * visualVelocity;
+    let acceleration = springForce - dampingForce;
+
+    // Limite máximo de aceleração (suaviza impulsos bruscos de target)
+    const maxAccel = 6.2; // unidades/s²
+    acceleration = clamp(acceleration, -maxAccel, maxAccel);
+
+    visualVelocity += acceleration * dtSub;
+
+    // Seção 9: Limite estrito de velocidade visual máxima
+    // Impede que mesmo uma scrollada ultra-rápida faça o N saltar entre estados
+    const maxVisualSpeed = 0.88; // unidades/s
+    visualVelocity = clamp(visualVelocity, -maxVisualSpeed, maxVisualSpeed);
+
+    visualProgress += visualVelocity * dtSub;
+    visualProgress = clamp(visualProgress, 0.0, 1.0);
+
+    // Assentamento perfeito quando em repouso próximo
+    if (absDiff < 0.0003 && Math.abs(visualVelocity) < 0.0008) {
+      visualProgress = targetProgress;
+      visualVelocity = 0.0;
+    }
+  }
+
+  window.__neoeffexVisualProgress = visualProgress;
+  window.__neoeffexVisualVelocity = visualVelocity;
+
+  applyScrollTransforms();
+}
+
 function animate() {
   if (!isVisible) {
     animationId = null;
@@ -267,10 +367,18 @@ function animate() {
   animationId = requestAnimationFrame(animate);
 
   const now = performance.now();
-  // Limita delta por frame a no máximo 100ms para evitar saltos bruscos em variações de taxa de quadros
-  const delta = Math.min(Math.max((now - lastFrameTime) * 0.001, 0), 0.1);
+  // Proteção contra saltos anormais de deltaTime (aba oculta, travamento, breakpoint)
+  let rawDelta = (now - lastFrameTime) * 0.001;
   lastFrameTime = now;
+  if (!Number.isFinite(rawDelta) || rawDelta <= 0) {
+    rawDelta = 0.016;
+  }
+  // Seção 13: dt limitado a no máximo 33ms (~30fps min step) para evitar explosões e instabilidade
+  const delta = Math.min(rawDelta, 0.033);
   accumulatedTime += delta;
+
+  // Etapa 4.1: Atualiza o Motion Controller desacoplado antes da renderização
+  updateMotionController(delta);
 
   if (particleMaterial && brandGroup) {
     particleMaterial.uniforms.uTime.value = accumulatedTime;
@@ -313,18 +421,19 @@ function animate() {
     }
   }
 
-  applyScrollTransforms();
-
   renderer.render(scene, camera);
 }
 
 /**
- * Aplica o progresso de rolagem nos uniforms do shader de forma contínua e reversível.
+ * Aplica o progresso visual nos uniforms do shader de forma contínua e reversível.
  */
 function applyScrollTransforms() {
-  if (!brandGroup || !particleMaterial) return;
-  particleMaterial.uniforms.uScrollProgress.value = scrollProgress;
-  particleMaterial.uniforms.uProgress.value = scrollProgress;
+  if (!brandGroup || !particleMaterial || !particleMaterial.uniforms) return;
+  particleMaterial.uniforms.uScrollProgress.value = visualProgress;
+  particleMaterial.uniforms.uProgress.value = visualProgress;
+  if (particleMaterial.uniforms.uVisualVelocity) {
+    particleMaterial.uniforms.uVisualVelocity.value = visualVelocity;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -389,20 +498,37 @@ export function init(container, options = {}) {
 }
 
 export function updateScrollProgress(progress) {
-  scrollProgress = clamp(progress, 0, 1);
-  window.__neoeffexCurrentScrollProgress = scrollProgress;
-  if (particleMaterial && particleMaterial.uniforms) {
-    if (particleMaterial.uniforms.uScrollProgress) {
-      particleMaterial.uniforms.uScrollProgress.value = scrollProgress;
+  targetProgress = clamp(progress, 0, 1);
+  window.__neoeffexTargetProgress = targetProgress;
+  window.__neoeffexCurrentScrollProgress = targetProgress;
+
+  if (_reducedMotion) {
+    visualProgress = targetProgress;
+    visualVelocity = 0.0;
+    window.__neoeffexVisualProgress = visualProgress;
+    if (particleMaterial && particleMaterial.uniforms) {
+      particleMaterial.uniforms.uScrollProgress.value = visualProgress;
+      particleMaterial.uniforms.uProgress.value = visualProgress;
+      if (particleMaterial.uniforms.uVisualVelocity) {
+        particleMaterial.uniforms.uVisualVelocity.value = 0.0;
+      }
     }
-    if (particleMaterial.uniforms.uProgress) {
-      particleMaterial.uniforms.uProgress.value = scrollProgress;
+    if (renderer && scene && camera) {
+      renderer.render(scene, camera);
     }
   }
-  if (_reducedMotion && renderer && scene && camera) {
-    applyScrollTransforms();
-    renderer.render(scene, camera);
-  }
+}
+
+export function getVisualProgress() {
+  return visualProgress;
+}
+
+export function getTargetProgress() {
+  return targetProgress;
+}
+
+export function getVisualVelocity() {
+  return visualVelocity;
 }
 
 export function setPageScroll(scrollY, progress) {
@@ -541,12 +667,16 @@ document.addEventListener('DOMContentLoaded', () => {
   window.__neoeffexUpdateScrollProgress = updateScrollProgress;
   window.__neoeffexSetPageScroll = setPageScroll;
   window.__neoeffexUpdateMouse = updateMouse;
+  window.__neoeffexGetVisualProgress = getVisualProgress;
+  window.__neoeffexGetTargetProgress = getTargetProgress;
+  window.__neoeffexGetVisualVelocity = getVisualVelocity;
 
-  // Pausa/retomada inteligente em background para máxima performance (Etapa 4 / Risk 5)
+  // Pausa/retomada inteligente em background para máxima performance (Seção 28)
   document.addEventListener('visibilitychange', () => {
     isVisible = !document.hidden;
     if (isVisible) {
       lastFrameTime = performance.now();
+      visualVelocity = 0.0; // Dissipa qualquer velocidade residual acumulada ao retomar
       if (!_reducedMotion && animationId === null) {
         animationId = requestAnimationFrame(animate);
       }

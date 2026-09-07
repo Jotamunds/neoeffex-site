@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.4.10 - Etapa 4.1: Refinamento avançado da física e suavidade do N
+- Desacoplamento estrito entre o scroll real e a posição visual das partículas:
+  - Separação conceitual e programática entre `targetProgress` (destino solicitado pelo scroll) e `visualProgress` (posição física e visual real atual da animação do N).
+  - O scroll real deixa de controlar diretamente os uniforms e posições das partículas; o progresso é governado exclusivamente pelo Motion Controller centralizado em `scene.js`.
+- Motion Controller com amortecimento adaptativo (Spring-Damper):
+  - Integração de sistema massa-mola-amortecedor com critical damping ($\zeta \in [1.0, 1.18]$) e frequência natural adaptativa ($\omega \in [6.2, 10.5]\text{ rad/s}$).
+  - Em scroll lento: acompanhamento de altíssima precisão com tempo de resposta imediato (~90ms).
+  - Em scroll rápido: amortecimento adaptativo aumentado, conferindo sensação de massa, inércia física e movimento contínuo sem saltos.
+- Limite estrito de velocidade visual máxima:
+  - Velocidade visual rigorosamente limitada a $v_{\text{max}} = 0.88\text{ unidades/s}$ e aceleração máxima a $a_{\text{max}} = 6.2\text{ unidades/s}^2$. Mesmo rolagens extremamente rápidas do wheel ou touchpad são transpostas pelo N em velocidade suave e controlada.
+- Tratamento ativo e contínuo de reversão de scroll:
+  - Detecção imediata de inversão de comando ($\text{diff} \cdot v < 0$) com freio de dissipação exponencial ($\exp(-14.0 \cdot \Delta t)$), redirecionando a animação com velocidade contínua sem tranco, snap ou persistência contra a intenção do usuário.
+- DeltaTime protegido e substeps dinâmicos:
+  - Limite estrito de $\Delta t \le 33\text{ms}$ com 2 substeps de integração numérica para $\Delta t > 18\text{ms}$, eliminando instabilidades e dependência de framerate.
+  - Reset temporal e dissipação de velocidade residual em eventos de `visibilitychange`, protegendo contra saltos após alternar abas.
+- Stagger determinístico por partícula no shader (`shaders.js`):
+  - Micro-variação temporal determinística individual (~80-250ms equivalentes) baseada em `aRandomness.z`, que se contrai suavemente para zero na aproximação final, garantindo 100% de nitidez, estabilidade e legibilidade do N na zona formada (Hold 42%–62%).
+- Preservação estrita:
+  - Header fixo, enquadramento vertical com `nOffsetY`, coordenadas e repulsão ao mouse, layout do Hero e demais seções preservados sem regressões.
+  - Etapas 5 (Prisma) e 6 (Cursor) rigorosamente intocadas.
+
 ## v0.4.9 - Etapa 4: Suavidade, permanência e N vivo com repulsão amortecida
 - Ciclo de 5 estados com transições $C^1$ contínuas:
   - 0%–28% (Formação Principal): deslocamento inicial ágil com velocidade percebida ~8/10, iniciando a convergência fluida das partículas a partir do início da rolagem

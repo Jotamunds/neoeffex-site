@@ -1,7 +1,7 @@
 /**
  * Neoeffex — Página de Planos (/planos/)
- * Versão: v0.1.2
- * Interações de base, navegação, observer reveal e apoio aos cards de planos
+ * Versão: v0.1.3
+ * Interações de base, navegação, observer reveal e apoio aos planos mensais e horas técnicas
  */
 
 document.addEventListener('DOMContentLoaded', () => {

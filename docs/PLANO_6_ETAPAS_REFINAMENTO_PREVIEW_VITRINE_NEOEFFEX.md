@@ -357,7 +357,7 @@ Ao finalizar cada etapa, responder no modelo do projeto:
 Manter um registro breve de progresso neste plano ou no mecanismo já utilizado pelo projeto, sem duplicar sistemas de acompanhamento:
 
 - [x] Etapa 1 — header e enquadramento.
-- [ ] Etapa 2 — coordenadas do mouse.
+- [x] Etapa 2 — coordenadas do mouse.
 - [ ] Etapa 3 — formação e desformação.
 - [ ] Etapa 4 — oscilação e repulsão.
 - [ ] Etapa 5 — prisma.

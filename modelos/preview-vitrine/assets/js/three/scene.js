@@ -60,6 +60,7 @@ let resizeTimer = null;
 
 // Container reference for resize / cleanup
 let _container = null;
+let _mouseMoveHandler = null;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -273,8 +274,15 @@ function animate() {
       mouseCurrentX = lerp(mouseCurrentX, mouseTargetX, 0.055);
       mouseCurrentY = lerp(mouseCurrentY, mouseTargetY, 0.055);
       mouseActiveCurrent = lerp(mouseActiveCurrent, mouseActiveTarget, 0.06);
-      
-      // Projeta o mouse no plano Z=0 da cena e converte para o espaço local do N
+
+      // Micro inclinação global combinada limitada estritamente a 2.5° (0.043 rad)
+      const rotY = THREE.MathUtils.clamp(mouseCurrentX * 0.032, -0.043, 0.043) + idleRotY;
+      const rotX = THREE.MathUtils.clamp(-mouseCurrentY * 0.022, -0.035, 0.035) + idleRotX;
+      brandGroup.rotation.y = rotY;
+      brandGroup.rotation.x = rotX;
+      brandGroup.updateMatrixWorld();
+
+      // Projeta o mouse no plano Z=0 da cena e converte para o espaço local do N (considerando escala e nOffsetY)
       if (camera && mouseActiveCurrent > 0.005) {
         raycaster.setFromCamera({ x: mouseCurrentX, y: mouseCurrentY }, camera);
         if (raycaster.ray.intersectPlane(planeZ, intersectionPoint)) {
@@ -288,15 +296,10 @@ function animate() {
       if (particleMaterial.uniforms.uMouseActive) {
         particleMaterial.uniforms.uMouseActive.value = mouseActiveCurrent;
       }
-      
-      // Micro inclinação global combinada limitada estritamente a 2.5° (0.043 rad)
-      const rotY = THREE.MathUtils.clamp(mouseCurrentX * 0.032, -0.043, 0.043) + idleRotY;
-      const rotX = THREE.MathUtils.clamp(-mouseCurrentY * 0.022, -0.035, 0.035) + idleRotX;
-      brandGroup.rotation.y = rotY;
-      brandGroup.rotation.x = rotX;
     } else {
       brandGroup.rotation.y = idleRotY;
       brandGroup.rotation.x = idleRotX;
+      brandGroup.updateMatrixWorld();
       if (particleMaterial.uniforms.uMouseActive) {
         particleMaterial.uniforms.uMouseActive.value = 0.0;
       }
@@ -438,6 +441,11 @@ export function destroy() {
   window.removeEventListener('resize', onResize);
   clearTimeout(resizeTimer);
 
+  if (_mouseMoveHandler) {
+    window.removeEventListener('mousemove', _mouseMoveHandler);
+    _mouseMoveHandler = null;
+  }
+
   if (scene) {
     scene.traverse((obj) => {
       if (obj.geometry) obj.geometry.dispose();
@@ -487,11 +495,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (!isMobile && !reducedMotion) {
-    window.addEventListener('mousemove', (e) => {
-      const nx = (e.clientX / window.innerWidth) * 2 - 1;
-      const ny = (e.clientY / window.innerHeight) * 2 - 1;
+    // Etapa 2: Conversão precisa de coordenadas tela -> NDC (Normalized Device Coordinates)
+    // O eixo Y no Three.js NDC vai de -1 (inferior) a +1 (superior), exigindo a inversão do clientY.
+    const onMouseMove = (e) => {
+      const canvas = renderer ? renderer.domElement : null;
+      let nx = 0;
+      let ny = 0;
+      if (canvas) {
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+          ny = 1 - ((e.clientY - rect.top) / rect.height) * 2;
+        } else {
+          nx = (e.clientX / window.innerWidth) * 2 - 1;
+          ny = 1 - (e.clientY / window.innerHeight) * 2;
+        }
+      } else {
+        nx = (e.clientX / window.innerWidth) * 2 - 1;
+        ny = 1 - (e.clientY / window.innerHeight) * 2;
+      }
       updateMouse(nx, ny, true);
-    });
+    };
+
+    _mouseMoveHandler = onMouseMove;
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
 
     document.addEventListener('mouseleave', () => {
       mouseActiveTarget = 0.0;

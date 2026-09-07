@@ -1,6 +1,21 @@
 # Changelog
 
-## v0.4.6 - Etapa 1: Header fixo e enquadramento do N
+## v0.4.7 - Etapa 2: Correção de coordenadas e correspondência do mouse
+- Correção da orientação do eixo Y:
+  - Identificada a causa-raiz do espelhamento vertical: a conversão anterior utilizava `(e.clientY / innerHeight) * 2 - 1`, associando o topo da tela (`clientY = 0`) a `-1` e a base da tela a `+1`, o inverso exato da convenção NDC (Normalized Device Coordinates) do Three.js onde $+1$ é o topo e $-1$ é a base
+  - Implementada a conversão normalizada correta: `ny = 1 - ((e.clientY - rect.top) / rect.height) * 2` e `nx = ((e.clientX - rect.left) / rect.width) * 2 - 1`, referenciando o retângulo real do canvas via `getBoundingClientRect()` com suporte a zoom e redimensionamento
+- Correspondência precisa de espaço entre mouse e partículas:
+  - Projeção via Raycaster calibrada no plano $Z=0$ com conversão para o espaço local de coordenadas do `brandGroup` através de `worldToLocal()`
+  - O deslocamento vertical `nOffsetY` aplicado na Etapa 1 é absorvido naturalmente pela matriz de transformação do grupo (`matrixWorld`), sem necessidade de compensação manual dupla
+  - Atualização síncrona de `brandGroup.updateMatrixWorld()` antes de projetar o cursor, garantindo zero latência entre a micro-rotação do N e o ponto de repulsão
+- Validação nos 4 quadrantes e centro:
+  - Superior Direito (+X, +Y): repulsão confirmada nas partículas superiores direitas
+  - Superior Esquerdo (-X, +Y): repulsão confirmada nas partículas superiores esquerdas
+  - Inferior Direito (+X, -Y): repulsão confirmada nas partículas inferiores direitas (corrigindo a falha relatada)
+  - Inferior Esquerdo (-X, -Y): repulsão confirmada nas partículas inferiores esquerdas
+  - Centro do N (0, 0): alinhamento exato no centro deslocado do N
+- Preservação estrita: parâmetros de força de repulsão (`maxRepel`), raio (`mouseRadius`), amortecimento lerp, oscilações idle e curvas de formação do N rigorosamente mantidos sem alterações
+
 - Header fixo e sempre visível: remoção completa da lógica de ocultação durante a rolagem (`topbar--hidden`), garantindo que o header permaneça afixado ao topo em qualquer posição da página, em rolagens lentas, rápidas ou reversas
 - Transição de fundo no scroll: adição da classe `.topbar--scrolled` quando `scrollY > 20px`, aumentando discretamente o contraste e o amortecimento de fundo (`rgba(4, 7, 13, 0.88)` com sombra difusa) sobre o conteúdo rolado
 - Compensação de âncoras e altura do header:

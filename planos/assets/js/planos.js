@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     yearEl.textContent = new Date().getFullYear();
   }
 
-  // Ativação suave das seções ao entrar no viewport
+  // Ativação suave das seções e elementos com reveal ao entrar no viewport
   if ('IntersectionObserver' in window) {
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -53,7 +53,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
 
     document.querySelectorAll('.section').forEach(sec => sectionObserver.observe(sec));
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.04, rootMargin: '0px 0px 60px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   } else {
     document.querySelectorAll('.section').forEach(sec => sec.classList.add('section-in-view'));
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
   }
 });

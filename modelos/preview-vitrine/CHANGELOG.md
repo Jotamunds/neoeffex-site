@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.4.5 - Hero minimalista e header com entrada/saída suave e leve
+- Hero: remoção do texto de apoio ("Design, tecnologia e movimento para transformar presença em experiência.") e dos dois botões de ação ("Explorar projetos" e "Falar com especialista") exclusivamente do Hero, transformando a abertura em uma composição editorial pura com a headline "SEU SITE / PODE IR ALÉM" sobre o canvas 3D
+- Header Smart Reveal: adicionada leveza e lentidão suave na entrada e saída do header da página (topbar):
+  - Entrada inicial com float sutil e desaceleração suave (1.3s com `power2.out`), limpando estilos inline na conclusão para integração natural com o CSS
+  - Saída elegante para cima (`translateY(-100%)` e `opacity: 0`) ao rolar a página para baixo com curva de amortecimento fluida (0.85s `cubic-bezier(0.16, 1, 0.3, 1)`)
+  - Reentrada suave (`translateY(0)` e `opacity: 1`) ao iniciar rolagem para cima em qualquer ponto da página ou retornar ao topo
+  - Fixação em `position: fixed` de largura total para garantir sincronização perfeita em viewports desktop e mobile com `overflow-x: hidden`
+  - Respeito integral a `prefers-reduced-motion` com desativação de transições dinâmicas
+- Preservação: botões e chamadas para ação de todas as demais seções (topbar, cards e CTA de encerramento) permanecem intactos
+
 ## v0.4.4 - Refinamento de layout, ritmo do N e interações (Etapa 5)
 - Header: expansão visual da topbar por toda a largura disponível da viewport com fundo translúcido (rgba(4, 7, 13, 0.72)) e backdrop-filter: blur(14px), mantendo o conteúdo interno rigorosamente centralizado e limitado por max-width via .topbar__inner, eliminando qualquer risco de overflow horizontal
 - Hero: centralização horizontal precisa de headline, texto de apoio e botões de ação em coluna simétrica, preservando a camada de partículas no fundo e a zona de baixa densidade centrada para garantir contraste e legibilidade impecáveis em todas as resoluções

@@ -12,6 +12,7 @@
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             smoothWheel: true
         });
+        window.lenis = lenis;
 
         // Loop de RAF fallback somente se GSAP não estiver disponível
         // Quando GSAP está ativo, o ticker do GSAP assume o controle exclusivo abaixo (Risk 5)
@@ -32,6 +33,58 @@
             gsap.ticker.add((time) => lenis.raf(time * 1000));
             gsap.ticker.lagSmoothing(0);
         }
+    }
+
+    // --- 1.1 Header Smart Reveal com Leveza e Lentidão Suave ---
+    const topbar = document.querySelector('.topbar');
+    if (topbar && !prefersReducedMotion) {
+        let lastScrollY = window.pageYOffset || window.scrollY || 0;
+        let isHeaderHidden = false;
+        const scrollThreshold = 10;
+        const minScrollToHide = 100;
+
+        const handleHeaderScroll = (currentY) => {
+            const y = typeof currentY === 'number' ? currentY : (window.pageYOffset || window.scrollY || 0);
+            const delta = y - lastScrollY;
+
+            // Se o usuário rolou e o GSAP ainda estivesse tweenando a entrada, libera inline styles
+            if (typeof gsap !== 'undefined' && gsap.isTweening(topbar)) {
+                gsap.killTweensOf(topbar);
+                gsap.set(topbar, { clearProps: 'transform,opacity' });
+            }
+
+            // Próximo ao topo da página: sempre visível
+            if (y <= 60) {
+                if (isHeaderHidden) {
+                    topbar.classList.remove('topbar--hidden');
+                    isHeaderHidden = false;
+                }
+                lastScrollY = y;
+                return;
+            }
+
+            // Descendo: saída suave e leve
+            if (delta > scrollThreshold && y > minScrollToHide) {
+                if (!isHeaderHidden) {
+                    topbar.classList.add('topbar--hidden');
+                    isHeaderHidden = true;
+                }
+            } 
+            // Subindo: entrada suave e leve
+            else if (delta < -scrollThreshold) {
+                if (isHeaderHidden) {
+                    topbar.classList.remove('topbar--hidden');
+                    isHeaderHidden = false;
+                }
+            }
+
+            lastScrollY = y;
+        };
+
+        if (lenis) {
+            lenis.on('scroll', (e) => handleHeaderScroll(e.scroll));
+        }
+        window.addEventListener('scroll', () => handleHeaderScroll(), { passive: true });
     }
 
     // --- 2. Custom Cursor Engine ---
@@ -180,7 +233,7 @@
 
             if (prefersReducedMotion) {
                 // Modo reduzido: garante exibição estática sem animação
-                gsap.set('.hero-title .hero-line, .hero-copy, .hero-actions', { opacity: 1, y: 0 });
+                gsap.set('.topbar, .hero-title .hero-line', { opacity: 1, y: 0 });
                 if (mat && mat.uniforms && mat.uniforms.uIntro) {
                     mat.uniforms.uIntro.value = 1.0;
                 }
@@ -189,10 +242,26 @@
 
             const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
+            // 0. Header entra com extrema leveza e lentidão suave
+            heroTl.fromTo('.topbar', 
+                { y: -18, opacity: 0 }, 
+                { 
+                    y: 0, 
+                    opacity: 1, 
+                    duration: 1.3, 
+                    ease: 'power2.out',
+                    onComplete: () => {
+                        gsap.set('.topbar', { clearProps: 'transform,opacity' });
+                    }
+                }, 
+                0
+            );
+
             // 1. Headline surge suavemente em 2 linhas
             heroTl.fromTo('.hero-title .hero-line', 
                 { y: 35, opacity: 0 }, 
-                { y: 0, opacity: 1, duration: 0.9, stagger: 0.14 }
+                { y: 0, opacity: 1, duration: 0.9, stagger: 0.14 },
+                0.15
             );
 
             // 2. Partículas surgem junto com a headline e ganham presença suavemente
@@ -201,21 +270,8 @@
                     value: 1.0,
                     duration: 1.4,
                     ease: 'power2.out'
-                }, 0.08); // surge em sincronia com o texto
+                }, 0.2); // surge em sincronia com o texto
             }
-
-            // 3. Texto de apoio entra harmoniosamente
-            heroTl.fromTo('.hero-copy', 
-                { y: 20, opacity: 0 }, 
-                { y: 0, opacity: 1, duration: 0.7 }, 
-                '-=0.5'
-            )
-            // 4. CTAs completam a apresentação
-            .fromTo('.hero-actions', 
-                { y: 20, opacity: 0 }, 
-                { y: 0, opacity: 1, duration: 0.6 }, 
-                '-=0.4'
-            );
         }
 
         // Coordenação da entrada: aguarda cena 3D, evento ou timeout de segurança (550ms)

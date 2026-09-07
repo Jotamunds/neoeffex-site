@@ -167,13 +167,40 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
 /* Topbar (Etapa 5: Full-width visual com conteúdo centralizado limitado) */
 .topbar {
     width: 100%;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     background: rgba(4, 7, 13, 0.72);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.4s ease;
+    will-change: transform, opacity;
+}
+
+/* Saída e entrada com leveza e lentidão suave no scroll */
+.topbar--hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .topbar,
+    .topbar--hidden {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
 }
 
 .topbar__inner {
@@ -280,12 +307,12 @@ code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, m
 .hero {
     width: var(--content);
     margin: 0 auto;
-    padding: clamp(60px, 12vh, 130px) 0 clamp(60px, 12vh, 140px);
+    padding: clamp(90px, 14vh, 150px) 0 clamp(60px, 12vh, 140px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: calc(100vh - 85px);
+    min-height: 100vh;
     position: relative;
     z-index: 2;
 }

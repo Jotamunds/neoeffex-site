@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.6.0 - Etapa 6: Cursor Personalizado + Pointer Único + Integração Final
+- Fonte Central de Pointer (`pointerState`):
+  - Criação de coordenador central de ponteiro único em `assets/js/modelos-preview.js`, consolidando `clientX`, `clientY`, `ndcX`, `ndcY`, `normX`, `normY`, `active` e `hasValidPosition`.
+  - Eliminação de listeners redundantes de `mousemove` espalhados pelo código (cursor, parallax e magnetic buttons unificados sob um único listener passivo de `pointermove`).
+  - Remoção segura de listener global duplicado em `scene.js` quando `window.__neoeffexCentralPointer` está ativo, evitando trabalho duplicado e discrepâncias de coordenadas.
+  - O N de partículas recebe imediatamente as coordenadas FÍSICAS REAIS normalizadas (`ndcX`, `ndcY`), garantindo que o smoothing visual do cursor NÃO atrase ou degrade a física das partículas.
+  - Suporte ao evento `neoeffex:scene-ready`: se o usuário mover o mouse antes da inicialização da cena 3D, a última posição conhecida é enviada imediatamente assim que a cena fica pronta.
+- Finalização e Polimento do Cursor Personalizado:
+  - Eliminação do smoothing duplo: removido `transform` da transição CSS do `.custom-cursor`, deixando o lerp de posição exclusivamente sob responsabilidade do `gsap.quickTo` (`duration: 0.15s, ease: power2.out`).
+  - Centralização geométrica rigorosa: remoção de `margin-top` e `margin-left` negativos; posicionamento via `xPercent: -50, yPercent: -50` garantindo que o centro visual do cursor permaneça cravado nas coordenadas reais mesmo durante a expansão de 22px para 68px (zero snap ou salto de layout).
+  - Primeiro movimento suave: o cursor inicia invisível e no primeiro movimento posiciona-se instantaneamente nas coordenadas reais antes de exibir-se, sem cruzar a tela a partir do centro.
+  - Ocultação condicional do cursor nativo: classe `has-custom-cursor` adicionada ao `<html>` estritamente após a inicialização bem-sucedida em desktop compatível (`@media (hover: hover) and (pointer: fine)`). Em caso de falha de script ou ausência de GSAP, o cursor nativo permanece intacto.
+  - Tratamento de `mouseleave`, `mouseenter`, `blur` e `visibilitychange`: o cursor esmaece e reaparece limpo ao transitar para fora da janela ou trocar de aba.
+  - Delegação robusta para `[data-cursor]`: labels como "INTERAGIR", "ABRIR", "↗", "PUXAR", "SENTIR" exibidas com precisão e limpas imediatamente ao sair de targets interativos.
+- Preservação Integral de Física e Componentes Anteriores:
+  - Eventos de ponteiro locais do Prisma WebGL (`assets/js/three/prism-scene.js`) preservados integralmente com `pointerdown`, `pointermove`, `pointerup`, `pointercancel` e `lostpointercapture` dedicados na viewport; `pointer-events: none` mantido no custom cursor para zero interferência no drag ou inércia.
+  - Física do N (`scene.js`) 100% preservada (spring, damping, visualProgress, shader e partículas intocados).
+  - Fallback completo para touch/mobile e `prefers-reduced-motion: reduce`: o cursor customizado é desativado e o cursor nativo permanece ativo e acessível.
+  - Navegação por teclado (`Tab`, `:focus-visible`) 100% preservada.
+
 ## v0.5.0 - Etapa 5: Migração Definitiva do Prisma para WebGL (Three.js) e Refinamento Tipográfico Hero
 - Migração definitiva do Prisma 3D de CSS para WebGL Nativo (Three.js):
   - Eliminação completa de artefatos visuais de CSS 3D (faces atravessando o cubo, planos esticados, triângulos falsos e glitches de backdrop-filter).

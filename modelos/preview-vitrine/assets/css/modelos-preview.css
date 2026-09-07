@@ -98,15 +98,14 @@ pre {
     left: 0;
     width: 22px;
     height: 22px;
-    margin-top: -11px;
-    margin-left: -11px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 99999;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.15s ease-out, width 0.25s ease-out, height 0.25s ease-out, background 0.25s ease-out, border-color 0.25s ease-out;
+    /* Elimina transform da transition para não concorrer com GSAP quickTo (evita double-smoothing) */
+    transition: width 0.25s ease-out, height 0.25s ease-out, background 0.25s ease-out, border-color 0.25s ease-out, opacity 0.2s ease-out;
     opacity: 0;
 }
 
@@ -122,6 +121,7 @@ pre {
     background: rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 12px var(--theme-glow);
     transition: all 0.25s ease;
+    pointer-events: none;
 }
 
 .cursor-label {
@@ -134,13 +134,13 @@ pre {
     transform: scale(0.6);
     transition: opacity 0.2s ease, transform 0.2s ease;
     white-space: nowrap;
+    pointer-events: none;
 }
 
 .custom-cursor.is-hovering {
     width: 68px;
     height: 68px;
-    margin-top: -34px;
-    margin-left: -34px;
+    /* Margins removidas: o centro geométrico exato é garantido por xPercent/yPercent: -50 via GSAP */
 }
 
 .custom-cursor.is-hovering .cursor-dot {
@@ -152,6 +152,14 @@ pre {
 .custom-cursor.is-hovering .cursor-label {
     opacity: 1;
     transform: scale(1);
+}
+
+/* Ocultação do cursor nativo somente quando custom cursor estiver ativo e funcional em desktop */
+@media (hover: hover) and (pointer: fine) {
+    .has-custom-cursor,
+    .has-custom-cursor * {
+        cursor: none !important;
+    }
 }
 
 @media (pointer: coarse) {

@@ -630,38 +630,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (!isMobile && !reducedMotion) {
-    // Etapa 2: Conversão precisa de coordenadas tela -> NDC (Normalized Device Coordinates)
-    // O eixo Y no Three.js NDC vai de -1 (inferior) a +1 (superior), exigindo a inversão do clientY.
-    const onMouseMove = (e) => {
-      const canvas = renderer ? renderer.domElement : null;
-      let nx = 0;
-      let ny = 0;
-      if (canvas) {
-        const rect = canvas.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-          ny = 1 - ((e.clientY - rect.top) / rect.height) * 2;
+    // Etapa 6: Se o coordenador central (modelos-preview.js) já fornece o pointerState
+    // unificado diretamente para updateMouse, evita o registro de listener duplicado.
+    if (!window.__neoeffexCentralPointer) {
+      const onMouseMove = (e) => {
+        const canvas = renderer ? renderer.domElement : null;
+        let nx = 0;
+        let ny = 0;
+        if (canvas) {
+          const rect = canvas.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) {
+            nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            ny = 1 - ((e.clientY - rect.top) / rect.height) * 2;
+          } else {
+            nx = (e.clientX / window.innerWidth) * 2 - 1;
+            ny = 1 - (e.clientY / window.innerHeight) * 2;
+          }
         } else {
           nx = (e.clientX / window.innerWidth) * 2 - 1;
           ny = 1 - (e.clientY / window.innerHeight) * 2;
         }
-      } else {
-        nx = (e.clientX / window.innerWidth) * 2 - 1;
-        ny = 1 - (e.clientY / window.innerHeight) * 2;
-      }
-      updateMouse(nx, ny, true);
-    };
+        updateMouse(nx, ny, true);
+      };
 
-    _mouseMoveHandler = onMouseMove;
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
+      _mouseMoveHandler = onMouseMove;
+      window.addEventListener('mousemove', onMouseMove, { passive: true });
 
-    document.addEventListener('mouseleave', () => {
-      mouseActiveTarget = 0.0;
-    });
+      document.addEventListener('mouseleave', () => {
+        mouseActiveTarget = 0.0;
+      });
 
-    document.addEventListener('mouseenter', () => {
-      mouseActiveTarget = 1.0;
-    });
+      document.addEventListener('mouseenter', () => {
+        mouseActiveTarget = 1.0;
+      });
+    }
   }
 
   window.__neoeffexUpdateScrollProgress = updateScrollProgress;

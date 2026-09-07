@@ -326,7 +326,254 @@
 }
 
 /* --------------------------------------------------------------------------
-   Placeholders estruturais para as etapas futuras (Etapas 3, 4, 5, 6)
+   Seção "Planos de Implantação" (#implantacao) - Etapa 3
+   -------------------------------------------------------------------------- */
+.plans-note-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: -12px;
+  margin-bottom: 40px;
+  color: var(--meta);
+  font: 500 12px/1.4 var(--font-mono);
+  background: color-mix(in oklch, var(--panel) 80%, transparent);
+  border: 1px solid var(--border);
+  padding: 8px 18px;
+  border-radius: 999px;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.plan-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklch, var(--surface) 55%, transparent);
+  transition: transform 260ms var(--ease), border-color 260ms ease, box-shadow 260ms ease, opacity 650ms var(--ease);
+}
+
+.plan-card.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 650ms var(--ease), transform 650ms var(--ease), border-color 260ms ease, box-shadow 260ms ease, background 260ms ease;
+}
+
+.plan-card.reveal.in-view {
+  opacity: 1;
+  transform: none;
+  transition: transform 260ms var(--ease), border-color 260ms ease, box-shadow 260ms ease, background 260ms ease;
+}
+
+.plan-card:hover,
+.plan-card.in-view:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  background: color-mix(in oklch, var(--surface-elevated) 65%, transparent);
+}
+
+/* Stagger discreto na entrada dos cards */
+.plan-card:nth-child(1) { transition-delay: 40ms; }
+.plan-card:nth-child(2) { transition-delay: 100ms; }
+.plan-card:nth-child(3) { transition-delay: 160ms; }
+.plan-card:nth-child(4) { transition-delay: 220ms; }
+
+/* Card com destaque diferenciado (Site + Catálogo Neoeffex) */
+.plan-card.plan-featured {
+  border-color: color-mix(in oklch, var(--accent) 45%, transparent);
+  background: color-mix(in oklch, var(--surface-elevated) 82%, transparent);
+  box-shadow: 0 16px 45px rgba(20, 120, 255, 0.12), 0 0 0 1px color-mix(in oklch, var(--accent) 30%, transparent);
+}
+
+.plan-card.plan-featured:hover {
+  border-color: var(--accent-bright);
+  box-shadow: 0 20px 55px rgba(20, 120, 255, 0.22), 0 0 0 1px var(--accent-bright);
+}
+
+.plan-featured-tag {
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-on);
+  font: 600 10.5px var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px color-mix(in oklch, var(--accent) 35%, transparent);
+}
+
+/* Cabeçalho do Card */
+.plan-header {
+  margin-bottom: 22px;
+}
+
+.plan-category {
+  display: inline-block;
+  font: 500 10.5px var(--font-mono);
+  color: var(--accent-soft);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.plan-title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.plan-objective {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0;
+  min-height: 42px;
+}
+
+/* Bloco de Preço */
+.plan-price-block {
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 22px;
+}
+
+.plan-price-prefix {
+  display: block;
+  font: 500 11px var(--font-mono);
+  color: var(--meta);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+.plan-price-prefix.plan-price-from {
+  color: var(--accent-bright);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+}
+
+.plan-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.plan-price-currency {
+  font: 500 16px var(--font-mono);
+  color: var(--fg-2);
+}
+
+.plan-price-val {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--fg);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.plan-price-period {
+  display: block;
+  font: 500 11px var(--font-mono);
+  color: var(--meta);
+  margin-top: 5px;
+}
+
+.plan-installment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklch, var(--panel) 75%, transparent);
+  border: 1px solid var(--border);
+  font: 600 11.5px var(--font-mono);
+  color: var(--accent-bright);
+}
+
+/* Lista de Recursos / Inclusões */
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--fg-2);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.plan-check {
+  color: var(--accent-bright);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.plan-feature-note {
+  font-size: 11.5px !important;
+  color: var(--meta) !important;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* Botão de Ação do Card */
+.plan-actions {
+  margin-top: auto;
+}
+
+.plan-cta {
+  width: 100%;
+  text-align: center;
+}
+
+/* Barra de aviso geral sobre parcelamento */
+.plans-disclaimer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 14px 22px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: color-mix(in oklch, var(--panel) 55%, transparent);
+  color: var(--meta);
+  font: 500 12px var(--font-mono);
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Placeholders estruturais para as etapas futuras (Etapas 4, 5, 6)
    -------------------------------------------------------------------------- */
 .structural-placeholder {
   position: relative;
@@ -423,6 +670,12 @@
 /* --------------------------------------------------------------------------
    Adaptação Responsiva
    -------------------------------------------------------------------------- */
+@media (max-width: 1080px) {
+  .plans-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 920px) {
   .nav-links {
     background: #070d16 !important;
@@ -487,6 +740,21 @@
     padding: 16px 18px;
     gap: 12px;
   }
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+  .plans-note-bar {
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    font-size: 11.5px;
+  }
+  .plans-disclaimer {
+    flex-direction: column;
+    text-align: left;
+    align-items: flex-start;
+    padding: 14px 16px;
+    font-size: 11.5px;
+  }
   .placeholder-grid-4,
   .placeholder-grid-3,
   .placeholder-grid-2 {
@@ -505,7 +773,8 @@
   .planos-hero .build-note,
   .planos-hero .hero-dual-preview,
   .reveal,
-  .flow-step {
+  .flow-step,
+  .plan-card {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;

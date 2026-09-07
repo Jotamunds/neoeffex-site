@@ -1,6 +1,7 @@
 /**
  * Neoeffex — Página de Planos (/planos/)
- * Etapa 1: Interações de base (navbar, menu mobile, ano no rodapé, reveal)
+ * Versão: v0.1.2
+ * Interações de base, navegação, observer reveal e apoio aos cards de planos
  */
 
 document.addEventListener('DOMContentLoaded', () => {

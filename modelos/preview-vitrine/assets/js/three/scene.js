@@ -52,8 +52,10 @@ const localMouse = new THREE.Vector3(999, 999, 0);
 // Scroll-driven state
 let scrollProgress = 0;
 
-// Timing
+// Timing (Delta time e tempo acumulado contínuo com proteção contra saltos de aba)
 let startTime = 0;
+let lastFrameTime = 0;
+let accumulatedTime = 0;
 
 // Resize debounce handle
 let resizeTimer = null;
@@ -171,6 +173,7 @@ function setupVisibilityObserver(container) {
 
         // Resume the loop if we became visible and it had stopped
         if (isVisible && !_reducedMotion && animationId === null) {
+          lastFrameTime = performance.now();
           animationId = requestAnimationFrame(animate);
         }
       });
@@ -216,6 +219,10 @@ async function setupParticles() {
       scrollProgress = window.__neoeffexCurrentScrollProgress;
     } else if (window.__neoeffexHeroScrollTrigger) {
       scrollProgress = window.__neoeffexHeroScrollTrigger.progress;
+    } else if (window.scrollY > 40) {
+      const heroEl = document.getElementById('threeSection');
+      const maxScroll = heroEl ? heroEl.offsetHeight : window.innerHeight * 2;
+      scrollProgress = clamp(window.scrollY / maxScroll, 0, 1);
     } else {
       scrollProgress = 0.0;
     }
@@ -223,7 +230,7 @@ async function setupParticles() {
     if (particleMaterial) {
       particleMaterial.uniforms.uScrollProgress.value = scrollProgress;
       particleMaterial.uniforms.uProgress.value = scrollProgress;
-      if (_reducedMotion) {
+      if (_reducedMotion || scrollProgress > 0.02 || (window.scrollY && window.scrollY > 80)) {
         particleMaterial.uniforms.uIntro.value = 1.0;
         renderer.render(scene, camera);
       } else {
@@ -259,25 +266,24 @@ function animate() {
 
   animationId = requestAnimationFrame(animate);
 
-  const elapsed = performance.now() - startTime;
+  const now = performance.now();
+  // Limita delta por frame a no máximo 100ms para evitar saltos bruscos em variações de taxa de quadros
+  const delta = Math.min(Math.max((now - lastFrameTime) * 0.001, 0), 0.1);
+  lastFrameTime = now;
+  accumulatedTime += delta;
 
   if (particleMaterial && brandGroup) {
-    particleMaterial.uniforms.uTime.value = elapsed * 0.001;
-    
-    // Micro rotação idle — contida e suave (±0.9° Y desktop, ±0.4° mobile; ±0.5° X)
-    // Mantém a silhueta do N impecável e reconhecível
-    const idleRotY = _reducedMotion ? 0 : Math.sin(elapsed * 0.0006) * (_isMobile ? 0.007 : 0.015);
-    const idleRotX = _reducedMotion ? 0 : Math.cos(elapsed * 0.0005) * (_isMobile ? 0.004 : 0.009);
+    particleMaterial.uniforms.uTime.value = accumulatedTime;
     
     if (!_isMobile && !_reducedMotion) {
-      // Reação suave ao mouse com limites estritos (±2.5° max)
-      mouseCurrentX = lerp(mouseCurrentX, mouseTargetX, 0.055);
-      mouseCurrentY = lerp(mouseCurrentY, mouseTargetY, 0.055);
-      mouseActiveCurrent = lerp(mouseActiveCurrent, mouseActiveTarget, 0.06);
+      // Amortecimento rigorosamente desacoplado do framerate via deltaTime (60Hz, 75Hz, 120Hz, 144Hz)
+      mouseCurrentX = THREE.MathUtils.damp(mouseCurrentX, mouseTargetX, 3.8, delta);
+      mouseCurrentY = THREE.MathUtils.damp(mouseCurrentY, mouseTargetY, 3.8, delta);
+      mouseActiveCurrent = THREE.MathUtils.damp(mouseActiveCurrent, mouseActiveTarget, 3.0, delta);
 
-      // Micro inclinação global combinada limitada estritamente a 2.5° (0.043 rad)
-      const rotY = THREE.MathUtils.clamp(mouseCurrentX * 0.032, -0.043, 0.043) + idleRotY;
-      const rotX = THREE.MathUtils.clamp(-mouseCurrentY * 0.022, -0.035, 0.035) + idleRotX;
+      // Micro inclinação suave interativa ao mouse (sem oscilação rígida global do N quando idle)
+      const rotY = THREE.MathUtils.clamp(mouseCurrentX * 0.018, -0.026, 0.026);
+      const rotX = THREE.MathUtils.clamp(-mouseCurrentY * 0.014, -0.020, 0.020);
       brandGroup.rotation.y = rotY;
       brandGroup.rotation.x = rotX;
       brandGroup.updateMatrixWorld();
@@ -297,11 +303,12 @@ function animate() {
         particleMaterial.uniforms.uMouseActive.value = mouseActiveCurrent;
       }
     } else {
-      brandGroup.rotation.y = idleRotY;
-      brandGroup.rotation.x = idleRotX;
+      mouseActiveCurrent = THREE.MathUtils.damp(mouseActiveCurrent, 0.0, 3.0, delta);
+      brandGroup.rotation.y = THREE.MathUtils.damp(brandGroup.rotation.y, 0.0, 3.0, delta);
+      brandGroup.rotation.x = THREE.MathUtils.damp(brandGroup.rotation.x, 0.0, 3.0, delta);
       brandGroup.updateMatrixWorld();
       if (particleMaterial.uniforms.uMouseActive) {
-        particleMaterial.uniforms.uMouseActive.value = 0.0;
+        particleMaterial.uniforms.uMouseActive.value = mouseActiveCurrent;
       }
     }
   }
@@ -357,6 +364,8 @@ export function init(container, options = {}) {
 
     // ----- Start time -------------------------------------------------------
     startTime = performance.now();
+    lastFrameTime = startTime;
+    accumulatedTime = 0;
 
     // ----- Visibility observer ----------------------------------------------
     setupVisibilityObserver(container);
@@ -536,9 +545,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pausa/retomada inteligente em background para máxima performance (Etapa 4 / Risk 5)
   document.addEventListener('visibilitychange', () => {
     isVisible = !document.hidden;
-    if (isVisible && !reducedMotion && animationId === null) {
-      startTime = performance.now();
-      animationId = requestAnimationFrame(animate);
+    if (isVisible) {
+      lastFrameTime = performance.now();
+      if (!_reducedMotion && animationId === null) {
+        animationId = requestAnimationFrame(animate);
+      }
     }
   });
 
@@ -549,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ScrollTrigger.create({
         trigger: triggerEl,
         start: 'top top',
-        end: () => isMobile ? '+=' + Math.round(window.innerHeight * 1.4) : '+=' + Math.round(window.innerHeight * 2.0),
+        end: () => isMobile ? '+=' + Math.round(window.innerHeight * 1.7) : '+=' + Math.round(window.innerHeight * 2.5),
         pin: !reducedMotion,
         pinSpacing: !reducedMotion,
         scrub: 0.6,

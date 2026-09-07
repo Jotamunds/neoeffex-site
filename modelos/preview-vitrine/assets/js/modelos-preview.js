@@ -198,8 +198,8 @@
 
             const mat = particleMat || window.__neoeffexParticleMaterial;
 
-            if (prefersReducedMotion) {
-                // Modo reduzido: garante exibição estática sem animação
+            if (prefersReducedMotion || (window.scrollY && window.scrollY > 80) || (window.__neoeffexCurrentScrollProgress && window.__neoeffexCurrentScrollProgress > 0.02)) {
+                // Modo reduzido ou recarga no meio da página: garante exibição direta sem atraso
                 gsap.set('.topbar, .hero-title .hero-line', { opacity: 1, y: 0 });
                 if (mat && mat.uniforms && mat.uniforms.uIntro) {
                     mat.uniforms.uIntro.value = 1.0;
@@ -275,8 +275,8 @@
             if (heroSection) {
                 window.__neoeffexHeroTriggerActive = true;
 
-                // Distância dedicada para a transformação do N (180–220vh desktop, 140vh mobile conforme Seção 23 da Etapa 5)
-                const getPinDuration = () => isTouch ? '+=' + Math.round(window.innerHeight * 1.4) : '+=' + Math.round(window.innerHeight * 2.0);
+                // Distância dedicada para a transformação do N (250vh desktop, 170vh mobile para permanência visual ampla do N formado)
+                const getPinDuration = () => isTouch ? '+=' + Math.round(window.innerHeight * 1.7) : '+=' + Math.round(window.innerHeight * 2.5);
 
                 const heroTrigger = ScrollTrigger.create({
                     trigger: heroSection,
@@ -294,11 +294,11 @@
                             window.__neoeffexUpdateScrollProgress(progress);
                         }
 
-                        // Esmaecimento suave e reversível da copy do hero na fase inicial da rolagem (0.0 -> 0.22)
+                        // Esmaecimento suave e reversível da copy do hero na fase inicial da rolagem (0.0 -> 0.20)
                         // Limpa o palco para que o N surja como protagonista no centro da viewport
                         if (!prefersReducedMotion) {
                             if (progress > 0.001) {
-                                const copyProgress = Math.min(progress / 0.22, 1.0);
+                                const copyProgress = Math.min(progress / 0.20, 1.0);
                                 gsap.set('.hero__copy', {
                                     opacity: 1 - copyProgress,
                                     y: -26 * copyProgress,

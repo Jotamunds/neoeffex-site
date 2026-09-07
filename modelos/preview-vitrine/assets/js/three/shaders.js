@@ -39,36 +39,52 @@ void main() {
     float p = clamp(uScrollProgress, 0.0, 1.0);
 
     // =========================================================================
-    // 1. Curva contínua de 5 fases com partição exata da unidade (C1-contínua)
+    // 1. Ciclo de 5 Estados de Formação, Assentamento, Hold e Dispersão (Etapa 4)
+    //    - 0%–28%:  Formação principal rápida (velocidade ~8/10)
+    //    - 28%–42%: Aproximação final desacelerada e assentamento suave (4/10 -> 0)
+    //    - 42%–62%: N formado / Hold (Plateau 100% estável e nítido)
+    //    - 62%–76%: Preparação para saída (liberação lenta e gradual, 0 -> 4/10)
+    //    - 76%–100%: Dispersão principal aberta (aceleração progressiva para 8/10)
     // =========================================================================
+
+    // Micro-variação determinística por partícula para assentamento orgânico (0.40 a 0.42)
+    float pFormEnd = 0.40 + aRandomness.x * 0.02;
+    float s = clamp(p / pFormEnd, 0.0, 1.0);
+
     float wForm = 0.0;
-    if (p < 0.30) {
-        float t = p / 0.30;
-        // Fase 1: Formação perceptivelmente rápida (8/10) atingindo 0.85 em p=0.30
-        wForm = 0.85 * (1.30 * t - 0.30 * t * t);
-    } else if (p < 0.45) {
-        float u = (p - 0.30) / 0.15;
-        // Fase 2: Aproximação desacelerada (4/10) com chegada a 1.0 e tangente zero
-        wForm = 0.85 + 0.15 * (2.0 * u - u * u);
+    float sSplit = 0.683; // Transição exata em ~28% do scroll (0.28 / 0.41)
+    if (s < sSplit) {
+        float t = s / sSplit;
+        // Fase 1 (0%–28%): Formação principal ágil (8/10)
+        wForm = 0.80 * (1.25 * t - 0.25 * t * t);
+    } else if (s < 1.0) {
+        float u = (s - sSplit) / (1.0 - sSplit);
+        // Fase 2 (28%–42%): Aproximação final e assentamento amortecido (4/10 -> 0)
+        wForm = 0.80 + 0.278 * u + 0.044 * (u * u) - 0.122 * (u * u * u);
     } else {
+        // Fase 3 (42%–62%): N 100% formado e estável (Plateau Hold)
         wForm = 1.0;
     }
 
+    // Dispersão com saída lenta partindo estritamente após o platô de 62%
+    float pDispStart = 0.62 + aRandomness.y * 0.02;
     float wDisp = 0.0;
-    if (p <= 0.65) {
-        // Fase 3: N completamente formado e estável (45% a 65%)
-        wDisp = 0.0;
-    } else if (p < 0.80) {
-        float u = (p - 0.65) / 0.15;
-        // Fase 4: Início suave da dissolução (4/10) partindo de tangente zero até 0.15
-        wDisp = 0.15 * (u * u);
-    } else {
-        float t = clamp((p - 0.80) / 0.20, 0.0, 1.0);
-        // Fase 5: Dispersão acelerada (8/10) de 0.15 até 1.0
-        wDisp = 0.15 + 0.40 * t + 0.45 * (t * t);
+    if (p > pDispStart) {
+        float v = clamp((p - pDispStart) / (1.0 - pDispStart), 0.0, 1.0);
+        float vSplit = 0.351; // Transição exata em ~76% do scroll ((0.76 - 0.63) / 0.37)
+
+        if (v < vSplit) {
+            float t = v / vSplit;
+            // Fase 4 (62%–76%): Preparação para saída (tangente zero -> 4/10)
+            wDisp = 0.16 * (t * t);
+        } else {
+            float u = (v - vSplit) / (1.0 - vSplit);
+            // Fase 5 (76%–100%): Dispersão principal acelerada para o campo aberto (8/10)
+            wDisp = 0.16 + 0.592 * u + 0.248 * (u * u);
+        }
     }
 
-    // Pesos estáveis e reversíveis que somam identicamente 1.0 em qualquer ponto de scroll
+    // Pesos estáveis e reversíveis com partição exata da unidade (soma identicamente 1.0)
     float pesoInicial = 1.0 - wForm;
     float pesoN = wForm * (1.0 - wDisp);
     float pesoFinal = wDisp;
@@ -83,13 +99,23 @@ void main() {
     // Interpolação estável da forma-base derivada diretamente do progresso atual
     vec3 basePos = pesoInicial * aStartPosition + pesoN * nTarget + pesoFinal * aEndPosition;
 
+    // Assentamento amortecido das partículas: micro-curvatura que se anula com derivada nula ao pousar no N
+    float settleProgress = clamp((s - 0.65) / 0.35, 0.0, 1.0);
+    float settleEnvelope = sin(settleProgress * 3.14159) * (1.0 - wForm);
+    vec3 settleOffset = vec3(
+        sin(settleProgress * 3.14159 + aRandomness.x * 6.28) * 0.030,
+        cos(settleProgress * 3.14159 + aRandomness.y * 6.28) * 0.030,
+        sin(settleProgress * 6.28318 + aRandomness.z * 6.28) * 0.045
+    ) * settleEnvelope;
+    basePos += settleOffset;
+
     // Paralaxe vertical persistente ao longo de toda a página (Etapa 4)
     float pageParallax = uScrollY * 0.00035 * (0.3 + aRandomness.z * 0.7);
     basePos.y += pageParallax * wDisp;
     basePos.x += sin(uTime * 0.18 + aRandomness.y * 6.28) * 0.020 * wDisp;
 
     // =========================================================================
-    // 2. Movimentos ambiente e micro-oscilações vivas (N vivo contido)
+    // 2. Micro-vida individual das partículas (N vivo orgânico, sem balançar o bloco todo)
     // =========================================================================
     // A. Drift ambiente sutil quando disperso
     float ambientFactor = 1.0 - formedWeight * 0.85;
@@ -97,24 +123,36 @@ void main() {
     float ambientY = cos(uTime * 0.28 + aRandomness.y * 6.28) * 0.032 * ambientFactor;
     float ambientZ = sin(uTime * 0.32 + aRandomness.z * 6.28) * 0.048 * ambientFactor;
 
-    // B. Micro-movimento interno do N formado (independe do scroll avançar — tempo ativo)
-    float idleZ = sin(uTime * 0.90 + aRandomness.z * 6.28) * 0.020 * formedWeight;
-    float internalX = sin(uTime * 0.40 + aRandomness.x * 6.28) * 0.0030 * formedWeight;
-    float internalY = cos(uTime * 0.40 + aRandomness.y * 6.28) * 0.0030 * formedWeight;
+    // B. Micro-respiração viva e individual de cada partícula no N formado (Hold 42%–62%)
+    // Movimento individual descorrelacionado sem oscilar o N como um bloco rígido
+    // Mantém a silhueta da letra N 100% nítida e reconhecível (amplitude em XY <= 0.0045)
+    float lifeX = (sin(uTime * 0.70 + aRandomness.x * 6.28) * 0.0035 +
+                   cos(uTime * 1.30 + aRandomness.y * 6.28) * 0.0018) * formedWeight;
+    float lifeY = (cos(uTime * 0.75 + aRandomness.y * 6.28) * 0.0035 +
+                   sin(uTime * 1.25 + aRandomness.z * 6.28) * 0.0018) * formedWeight;
+    float lifeZ = (sin(uTime * 1.10 + aRandomness.z * 6.28) * 0.022 +
+                   cos(uTime * 0.60 + aRandomness.x * 6.28) * 0.012) * formedWeight;
 
-    vec3 currentPos = basePos + vec3(ambientX + internalX, ambientY + internalY, ambientZ + idleZ);
+    vec3 currentPos = basePos + vec3(ambientX + lifeX, ambientY + lifeY, ambientZ + lifeZ);
 
     // =========================================================================
-    // 3. Reação suave e local ao mouse (Seções 6 e 28: 5px a 15px CSS de repulsão)
+    // 3. Reação suave e local ao mouse no N formado
+    //    - Repulsão sutil (~7.5px CSS) sem abrir buracos grandes no N
+    //    - Transição cúbica smootherstep com derivadas nulas na fronteira do raio
+    //    - Retorno amortecido via deltaTime
     // =========================================================================
     if (uMouseActive > 0.001 && formedWeight > 0.15) {
         vec2 dMouse = currentPos.xy - uMouseLocal.xy;
         float distMouse = length(dMouse);
-        float mouseRadius = 0.58; // Raio de influência local (~150px CSS)
+        float mouseRadius = 0.52; // Raio local de influência (~130px CSS)
         if (distMouse < mouseRadius && distMouse > 0.0005) {
-            float falloff = smoothstep(mouseRadius, 0.0, distMouse);
+            float normDist = distMouse / mouseRadius;
+            // Smootherstep (Ken Perlin): derivadas 1ª e 2ª estritamente nulas na borda
+            float tFalloff = 1.0 - normDist;
+            float falloff = tFalloff * tFalloff * tFalloff * (tFalloff * (tFalloff * 6.0 - 15.0) + 10.0);
+            
             vec2 dir = normalize(dMouse);
-            float maxRepel = 0.040; // Deslocamento visual correspondente a ~11px CSS
+            float maxRepel = 0.028; // Repulsão suave (~7.5px CSS) preservando a integridade da letra
             vec2 repel = dir * falloff * maxRepel * formedWeight * uMouseActive;
             currentPos.xy += repel;
         }

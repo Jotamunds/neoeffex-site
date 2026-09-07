@@ -358,8 +358,8 @@ Manter um registro breve de progresso neste plano ou no mecanismo já utilizado 
 
 - [x] Etapa 1 — header e enquadramento.
 - [x] Etapa 2 — coordenadas do mouse.
-- [ ] Etapa 3 — formação e desformação.
-- [ ] Etapa 4 — oscilação e repulsão.
+- [x] Etapa 3 — formação e desformação.
+- [x] Etapa 4 — oscilação e repulsão.
 - [ ] Etapa 5 — prisma.
 - [ ] Etapa 6 — cursor e integração final.
 

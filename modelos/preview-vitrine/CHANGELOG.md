@@ -1,5 +1,47 @@
 # Changelog
 
+## v0.4.9 - Etapa 4: Suavidade, permanência e N vivo com repulsão amortecida
+- Ciclo de 5 estados com transições $C^1$ contínuas:
+  - 0%–28% (Formação Principal): deslocamento inicial ágil com velocidade percebida ~8/10, iniciando a convergência fluida das partículas a partir do início da rolagem
+  - 28%–42% (Aproximação Final e Assentamento): desaceleração progressiva contínua (4/10 -> 0), eliminando paradas bruscas com derivada nula exata ao pousar
+  - 42%–62% (N Formado / Hold Plateau): zona de permanência visual ampla (20% do scroll útil) onde o N permanece 100% formado, firme, legível e responsivo, sem início de dispersão prematura
+  - 62%–76% (Preparação para Saída): liberação extremamente lenta e sutil das partículas a partir de tangente zero (0 -> 4/10)
+  - 76%–100% (Dispersão Principal): aceleração suave e progressiva para dispersão aberta (8/10) integrando-se ao fundo contínuo da página
+- Assentamento amortecido das partículas:
+  - Implementação de micro-curvatura amortecida tridimensional (`settleOffset`) na aproximação final ($s \in [0.65, 1.0]$), garantindo que as partículas pousem como um enxame suave na silhueta do N com amortecimento quadrático/cúbico
+- N vivo orgânico sem balanço de bloco rígido:
+  - Eliminação da oscilação rígida global do `brandGroup` quando idle, evitando que o N balance como um bloco sólido
+  - Micro-respiração e vida interna independentes calculadas por partícula no shader (`lifeX`, `lifeY`, `lifeZ`) com fases descorrelacionadas via `aRandomness`, mantendo a forma da letra N 100% nítida e reconhecível com variação sutil de profundidade
+- Repulsão ao mouse amortecida e natural:
+  - Falloff cúbico smootherstep (Ken Perlin) com derivadas 1ª e 2ª estritamente nulas na borda do raio de influência (~130px CSS)
+  - Limite de repulsão calibrado para ~7.5px CSS (`maxRepel = 0.028`), preservando a legibilidade sem abrir buracos grandes nem deformar o centro da letra
+- Amortecimento rigorosamente desacoplado do framerate (DeltaTime):
+  - Substituição de lerp com taxa fixa por `THREE.MathUtils.damp(..., delta)` para coordenadas do mouse e fator de ativação, garantindo comportamento perfeitamente idêntico em telas de 60Hz, 75Hz, 120Hz e 144Hz
+  - Retorno elástico suave à posição de repouso sem sobressaltos ou snaps quando o cursor deixa a tela
+- Ampliação do percurso de rolagem (Pinning):
+  - Calibração de `getPinDuration` para `250vh` desktop e `170vh` mobile, proporcionando tempo e espaço visual generosos para que o visitante contemple o N formado e interaja com o mouse antes de prosseguir para as demonstrações visuais
+- Preservação estrita: header fixo, enquadramento vertical com `nOffsetY`, mapeamento NDC do mouse, prisma e cursor customizado mantidos intactos
+
+## v0.4.8 - Etapa 3: Suavização da formação e desformação do N
+- Eliminação de parada abrupta e pouso tangencial suave ($C^1$ contínuo):
+  - Identificada a causa da parada repentina: a curva anterior concentrava 85% do deslocamento em $p \in [0, 0.30]$ e os 15% finais eram comprimidos até $p=0.45$, onde todas as partículas atingiam $wForm=1.0$ simultaneamente em um limite abrupto
+  - Implementada nova curva de aproximação desacelerada com pouso suave $C^1$: a desaceleração progressiva (referência 4/10) é antecipada para começar aos 60% do percurso de formação ($s=0.60$), convergindo suavemente para $wForm=1.0$ com derivada nula ($\frac{dwForm}{ds} \to 0$), eliminando qualquer sensação de tranco ou freio repentino
+  - Formação inicial e intermediária ágil (referência visual 8/10) preservada para manter dinamismo e resposta imediata ao início da rolagem
+- Micro-variação determinística por partícula:
+  - Adicionada dispersão sutil e determinística de chegada ($pEnd \in [0.44, 0.48]$) utilizando o atributo existente `aRandomness.x`, gerando uma constelação orgânica onde as partículas chegam em micro-tempos ligeiramente distintos, garantindo que 100% estejam perfeitamente acomodadas no N em $p=0.48$
+- Platô nítido e estável:
+  - Intervalo de $p \in [0.48, 0.64]$ com $wForm \equiv 1.0$ e $wDisp \equiv 0.0$ ($pesoN = 1.0$), garantindo estabilidade absoluta, nitidez da silhueta da marca e interação plena com o mouse sem risco de dispersão precoce
+- Desformação com saída lenta e dispersão progressiva:
+  - Início da desformação com saída sutil partindo de tangente zero ($\frac{dwDisp}{dp} = 0$, referência 4/10) a partir de $pStart \in [0.64, 0.68]$ (via `aRandomness.y`)
+  - Aceleração suave e progressiva para dispersão aberta (referência 8/10) à medida que o scroll avança até $p=1.0$
+- Partição estável da unidade:
+  - Preservação estrita de $pesoInicial + pesoN + pesoFinal \equiv 1.00000$ em todos os pontos do percurso de scroll, sem compressão ou expansão volumétrica
+- Continuidade temporal e proteção contra saltos de aba/recarga:
+  - Substituição do `elapsed = performance.now() - startTime` por delta time acumulado contínuo no loop `animate()`, com limitação estrita de $\Delta t \le 100\text{ms}$ por frame
+  - Reinicialização do âncora de tempo (`lastFrameTime`) no listener de `visibilitychange` e no `IntersectionObserver`, garantindo retorno limpo e sem saltos após alternar ou ocultar abas
+  - Inicialização adequada do estado ao recarregar a página com scroll ativo ou via âncora intermediária, aplicando o progresso atual imediatamente e exibindo o conteúdo sem atrasos de animação de entrada
+- Preservação estrita: header fixo, enquadramento vertical com `nOffsetY`, coordenadas e correspondência do mouse da Etapa 2, efeitos de prisma e cursor mantidos intactos
+
 ## v0.4.7 - Etapa 2: Correção de coordenadas e correspondência do mouse
 - Correção da orientação do eixo Y:
   - Identificada a causa-raiz do espelhamento vertical: a conversão anterior utilizava `(e.clientY / innerHeight) * 2 - 1`, associando o topo da tela (`clientY = 0`) a `-1` e a base da tela a `+1`, o inverso exato da convenção NDC (Normalized Device Coordinates) do Three.js onde $+1$ é o topo e $-1$ é a base
@@ -15,6 +57,8 @@
   - Inferior Esquerdo (-X, -Y): repulsão confirmada nas partículas inferiores esquerdas
   - Centro do N (0, 0): alinhamento exato no centro deslocado do N
 - Preservação estrita: parâmetros de força de repulsão (`maxRepel`), raio (`mouseRadius`), amortecimento lerp, oscilações idle e curvas de formação do N rigorosamente mantidos sem alterações
+
+## v0.4.6 - Etapa 1: Header fixo e enquadramento vertical do N
 
 - Header fixo e sempre visível: remoção completa da lógica de ocultação durante a rolagem (`topbar--hidden`), garantindo que o header permaneça afixado ao topo em qualquer posição da página, em rolagens lentas, rápidas ou reversas
 - Transição de fundo no scroll: adição da classe `.topbar--scrolled` quando `scrollY > 20px`, aumentando discretamente o contraste e o amortecimento de fundo (`rgba(4, 7, 13, 0.88)` com sombra difusa) sobre o conteúdo rolado

@@ -76,14 +76,33 @@
     hero.classList.add("is-active");
   }
 
+  const aboutSection = document.querySelector(".about");
+  const photoComposition = document.querySelector(".photo-composition");
+
   let ticking = false;
   const updateScrollMotion = () => {
     const scrollY = window.scrollY || 0;
     topbar.classList.toggle("is-scrolled", scrollY > 20);
 
-    if (!reducedMotion.matches && scrollY < window.innerHeight * 1.15) {
-      const parallax = Math.min(scrollY * .075, 38);
-      hero.style.setProperty("--hero-parallax-y", `${parallax}px`);
+    if (!reducedMotion.matches) {
+      if (scrollY < window.innerHeight * 1.15) {
+        const parallax = Math.min(scrollY * .075, 38);
+        hero.style.setProperty("--hero-parallax-y", `${parallax}px`);
+      }
+
+      if (aboutSection && photoComposition && window.innerWidth > 760) {
+        const rect = aboutSection.getBoundingClientRect();
+        const vh = window.innerHeight;
+        if (rect.top < vh && rect.bottom > 0) {
+          const progress = (vh - rect.top) / (vh + rect.height) - 0.5;
+          const pFacade = (progress * 12).toFixed(1);
+          const pVan = (progress * -24).toFixed(1);
+          const pStock = (progress * 18).toFixed(1);
+          photoComposition.style.setProperty("--p-facade-y", `${pFacade}px`);
+          photoComposition.style.setProperty("--p-van-y", `${pVan}px`);
+          photoComposition.style.setProperty("--p-stock-y", `${pStock}px`);
+        }
+      }
     }
 
     ticking = false;
@@ -99,7 +118,50 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   updateScrollMotion();
 
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  if (photoComposition && finePointer.matches) {
+    let mouseRaf = 0;
+    let targetX = 0;
+    let targetY = 0;
+
+    const applyMouseDepth = () => {
+      photoComposition.style.setProperty("--mouse-x", targetX.toFixed(3));
+      photoComposition.style.setProperty("--mouse-y", targetY.toFixed(3));
+      mouseRaf = 0;
+    };
+
+    photoComposition.addEventListener("mousemove", (event) => {
+      if (reducedMotion.matches || window.innerWidth <= 760) return;
+      const rect = photoComposition.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      targetX = x * 2;
+      targetY = y * 2;
+      if (!mouseRaf) {
+        mouseRaf = window.requestAnimationFrame(applyMouseDepth);
+      }
+    }, { passive: true });
+
+    photoComposition.addEventListener("mouseleave", () => {
+      targetX = 0;
+      targetY = 0;
+      if (!mouseRaf) {
+        mouseRaf = window.requestAnimationFrame(applyMouseDepth);
+      }
+    });
+  }
+
   reducedMotion.addEventListener?.("change", () => {
-    if (reducedMotion.matches) hero.style.removeProperty("--hero-parallax-y");
+    if (reducedMotion.matches) {
+      hero.style.removeProperty("--hero-parallax-y");
+      if (photoComposition) {
+        photoComposition.style.removeProperty("--p-facade-y");
+        photoComposition.style.removeProperty("--p-van-y");
+        photoComposition.style.removeProperty("--p-stock-y");
+        photoComposition.style.removeProperty("--mouse-x");
+        photoComposition.style.removeProperty("--mouse-y");
+      }
+    }
   });
 })();
+

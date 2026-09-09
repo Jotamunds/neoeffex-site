@@ -59,17 +59,23 @@ No SQL Editor, aplique as migrations nesta ordem:
 011_remove_single_catalog_per_owner.sql
 012_enforce_paused_catalog_delete_policy.sql
 ../../supabase/migrations/20260907235435_store_catalog_organization.sql
+../../supabase/migrations/20260909194500_catalog_product_types_groups.sql
 ```
 
 *(Nota: em instalações novas, a migration 009 foi superada pela 011 e não deve ser aplicada).*
 
 Depois:
 
-1. execute `audits/production_security_audit.sql`;
-2. confirme os resultados esperados da auditoria;
-3. execute os testes de `PRODUCTION-CHECKLIST.md`;
-4. teste identidade, logo e exclusão de catálogo pausado;
-5. somente então inicie o onboarding de um cliente.
+1. execute `verify_catalog_types_and_groups.sql`;
+2. execute `audits/production_security_audit.sql`;
+3. confirme os resultados esperados da auditoria;
+4. execute os testes de `PRODUCTION-CHECKLIST.md`;
+5. teste identidade, logo e exclusão de catálogo pausado;
+6. somente então inicie o onboarding de um cliente.
+
+> **Importante sobre Tipos e Grupos (Etapa 3A):**
+> - `product_types` e `product_groups` representam classificações configuráveis do catálogo e não grupos de adicionais.
+> - `products.product_type` e `products.product_groups` permanecem temporariamente como campos legados durante a transição.
 
 ---
 

@@ -31,6 +31,8 @@ Não use este arquivo como changelog.
 - A exclusão definitiva de loja/catálogo foi retirada da interface do lojista para evitar perda acidental de acesso ou deixar contas sem loja provisionada.
 - A organização estrutural do catálogo fica centralizada na seção "Configurações" (em substituição ao antigo modal simples de categorias).
 - Nesta etapa, "Configurações" gerencia funcionalmente Categorias e Subcategorias com regra estrita de dois níveis e exclusões seguras explicadas ao usuário; Tipos e Grupos serão migrados para configuração persistente em etapa posterior.
+- `product_types` e `product_groups` são tabelas persistentes no banco de dados vinculadas por `catalog_id`, com unicidade case-insensitive por catálogo. Elas representam classificações configuráveis do catálogo e não grupos de adicionais ou opções de montagem.
+- Durante a transição (Etapa 3A), `products.product_type` e `products.product_groups` permanecem temporariamente como campos legados, mantendo compatibilidade total com o catálogo público e o formulário de produtos até a interface de gerenciamento e seleção ser implementada.
 - O estado de autenticação deve ser consistente entre abas quando o mecanismo atual permitir sincronização.
 - Modais/painéis não devem fechar por interações iniciadas dentro do conteúdo e finalizadas fora de maneira acidental.
 - Exclusão de dados deve exigir confirmação quando houver risco de perda.

@@ -76,6 +76,8 @@ const cb = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
  await sql(`set request.jwt.claim.sub=${q(b)}; insert into categories(id,catalog_id,name) values ('${other}',${q(cb)},'Other'); set request.jwt.claim.sub=${q(a)};`);
  await denied('parent from another store',`insert into categories(catalog_id,name,parent_id) values (${q(ca)},'Cross store','${other}')`,'23503');
  await ok('product with type and groups',`insert into products(catalog_id,category_id,name,price,product_type,product_groups) values (${q(ca)},'${child}','Combo 10',150,'Tradicional',array['Combo','Mais pedido']);`);
+ await ok('second product with mixed case and groups',`insert into products(catalog_id,category_id,name,price,product_type,product_groups) values (${q(ca)},'${child}','Marmita Fit',25,'tradicional',array['mais pedido','Promoção']);`);
+ await sql(`set request.jwt.claim.sub=${q(b)}; insert into products(catalog_id,category_id,name,price,product_type,product_groups) values (${q(cb)},'${other}','Suco',5,'Tradicional',array['Mais pedido']); set request.jwt.claim.sub=${q(a)};`);
  await denied('duplicate groups',`update products set product_groups=array['Combo','combo'] where catalog_id=${q(ca)}`,'23514');
  await denied('invalid group separator',`update products set product_groups=array['A, B'] where catalog_id=${q(ca)}`,'23514');
  await denied('null group entry',`update products set product_groups=array[null]::text[] where catalog_id=${q(ca)}`,'23514');
@@ -89,15 +91,82 @@ const cb = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
  await denied('anon stores private',`select * from stores`,'42501');
  await denied('anon owner private',`select owner_id from catalogs`,'42501');
  await denied('anon writes denied',`insert into categories(catalog_id,name) values (${q(ca)},'Anon')`,'42501');
+
+ // ETAPA 3A — Aplicação da migração de product_types e product_groups
+ await sql('reset role');
+ const migrationTypesGroups = fs.readFileSync(root + 'supabase/migrations/20260909194500_catalog_product_types_groups.sql', 'utf8');
+ await ok('migration types and groups', migrationTypesGroups);
+
+ // Verificação pós-migration via script SQL
+ const verifiedTypes = JSON.parse((await one(fs.readFileSync(root + 'admin/setup/verify_catalog_types_and_groups.sql', 'utf8'))).verificacao);
+ assert(Object.values(verifiedTypes.verificacoes).every(v => v === true), 'Todas as verificações de types e groups devem passar');
+ checks++; console.log('PASS verify_catalog_types_and_groups read-only SQL');
+
+ // Conferir totais e deduplicação do backfill
+ // ca: 1 tipo único ('Tradicional') e 3 grupos únicos ('Combo', 'Mais pedido', 'Promoção')
+ // cb: 1 tipo único ('Tradicional') e 1 grupo único ('Mais pedido')
+ assert.equal(verifiedTypes.totais.product_types, 2);
+ assert.equal(verifiedTypes.totais.product_groups, 4);
+ checks++; console.log('PASS backfill counts and case deduplication');
+
+ // Testes com papéis reais
+ await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)};`);
+
+ // Mesmo nome permitido em catálogo diferente
+ await ok('same name allowed in different catalog', `insert into product_types(catalog_id, name) values (${q(ca)}, 'Bebida');`);
+ await sql(`set request.jwt.claim.sub=${q(b)}; insert into product_types(catalog_id, name) values (${q(cb)}, 'Bebida'); set request.jwt.claim.sub=${q(a)};`);
+ checks++; console.log('PASS same name in different catalog');
+
+ // Duplicidade case-insensitive negada no mesmo catálogo
+ await denied('duplicate type same case', `insert into product_types(catalog_id, name) values (${q(ca)}, 'Bebida')`, '23505');
+ await denied('duplicate type different case', `insert into product_types(catalog_id, name) values (${q(ca)}, 'bebida')`, '23505');
+ await denied('duplicate group same case', `insert into product_groups(catalog_id, name) values (${q(ca)}, 'Combo')`, '23505');
+ await denied('duplicate group different case', `insert into product_groups(catalog_id, name) values (${q(ca)}, 'combo')`, '23505');
+
+ // Validação de nomes e campos
+ await denied('empty type name', `insert into product_types(catalog_id, name) values (${q(ca)}, '')`, '23514');
+ await denied('whitespace only type name', `insert into product_types(catalog_id, name) values (${q(ca)}, '   ')`, '23514');
+ await denied('type name over 60 chars', `insert into product_types(catalog_id, name) values (${q(ca)}, '${'A'.repeat(61)}')`, '23514');
+ await denied('group name with comma', `insert into product_groups(catalog_id, name) values (${q(ca)}, 'A, B')`, '23514');
+ await denied('negative sort order', `insert into product_types(catalog_id, name, sort_order) values (${q(ca)}, 'Valido', -1)`, '23514');
+ await denied('nonexistent catalog_id under rls', `insert into product_types(catalog_id, name) values ('00000000-0000-0000-0000-000000000000', 'Valido')`, '42501');
+ await sql('reset role');
+ await denied('nonexistent catalog_id fk violation', `insert into product_types(catalog_id, name) values ('00000000-0000-0000-0000-000000000000', 'Valido')`, '23503');
+ await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)};`);
+
+ // Segurança RLS
+ await denied('cross-account insert type', `insert into product_types(catalog_id, name) values (${q(cb)}, 'Hacker')`, '42501');
+ await denied('cross-account insert group', `insert into product_groups(catalog_id, name) values (${q(cb)}, 'Hacker')`, '42501');
+ await sql(`set request.jwt.claim.sub=${q(b)};`);
+ assert.equal((await one(`select count(*)::int n from product_types where catalog_id=${q(ca)}`)).n, 0); checks++;
+ assert.equal((await db.query(`update product_types set name='Hacked' where catalog_id=${q(ca)} returning id`)).rows.length, 0); checks++;
+ assert.equal((await db.query(`delete from product_types where catalog_id=${q(ca)} returning id`)).rows.length, 0); checks++;
+ await sql(`set request.jwt.claim.sub=${q(a)};`);
+
+ // Anon negado em product_types e product_groups
+ await sql(`set role anon; reset request.jwt.claim.sub;`);
+ await denied('anon select product_types denied', `select * from product_types`, '42501');
+ await denied('anon select product_groups denied', `select * from product_groups`, '42501');
+ await denied('anon insert product_types denied', `insert into product_types(catalog_id, name) values (${q(ca)}, 'Anon')`, '42501');
+ await denied('anon insert product_groups denied', `insert into product_groups(catalog_id, name) values (${q(ca)}, 'Anon')`, '42501');
+ await denied('anon update product_types denied', `update product_types set name='Anon'`, '42501');
+ await denied('anon delete product_types denied', `delete from product_types`, '42501');
+
  await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)}; update products set status='paused' where catalog_id=${q(ca)}; set role anon;`);
- assert.equal((await one('select count(id)::int n from products')).n,0);checks++;
+ assert.equal((await one(`select count(id)::int n from products where catalog_id=${q(ca)}`)).n,0);checks++;
  await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)}; update catalogs set is_active=false where id=${q(ca)}; set role anon;`);
  assert.equal((await one(`select count(id)::int n from categories where catalog_id=${q(ca)}`)).n,0);checks++;
  await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)};`);
  await ok('delete populated hierarchy via old RPC',`select delete_own_paused_catalog(${q(ca)});`);
+ // Confirma que exclusão do catálogo removeu types e groups vinculados em cascata
+ assert.equal((await one(`select count(*)::int n from product_types where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades product_types');
+ assert.equal((await one(`select count(*)::int n from product_groups where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades product_groups');
  await sql('reset role');
+
  // A reaplicação deve falhar antes de tocar em dados.
  try {await sql(migration); assert.fail('repeat should fail');} catch(e){assert.match(e.message,/stores já existe/);await sql('rollback');checks++;}
+ try {await sql(migrationTypesGroups); assert.fail('repeat types_groups should fail');} catch(e){assert.match(e.message,/product_types ou product_groups já existem/);await sql('rollback');checks++;}
+
  console.log(`DATABASE: ${checks} checks passed (PGlite PostgreSQL 18.3; fixture from supplied diagnostic).`);
  await db.close();
 })().catch(e=>{console.error(e.message,e.code);process.exit(1);});

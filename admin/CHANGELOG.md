@@ -1,5 +1,16 @@
 # Changelog — Painel administrativo
 
+## [0.3.3] - 2026-09-09
+
+### Estrutura persistente de Tipos e Grupos (Etapa 3A)
+- Criadas as tabelas persistentes `product_types` e `product_groups` vinculadas a catálogos (`catalog_id`) com integridade referencial `ON DELETE CASCADE`.
+- Restrição de unicidade lógica por catálogo case-insensitive através de índices únicos em `(catalog_id, lower(name))`.
+- Validações em banco: limite de 1 a 60 caracteres sem espaços nas pontas (`btrim`), sem vírgulas nos grupos e ordenação (`sort_order`) inteira não negativa.
+- RLS configurado com isolamento multi-tenant estrito para usuários autenticados via `catalog.owner_id = auth.uid()` e negação total de acesso para o papel `anon`.
+- Backfill transacional automático: migra e deduplica case-insensitively todos os valores existentes em `products.product_type` e `products.product_groups[]`, mantendo a caixa original mais antiga.
+- Criado o script de verificação pós-migração `admin/setup/verify_catalog_types_and_groups.sql`.
+- **Transição**: `product_types` e `product_groups` representam classificações configuráveis do catálogo e não grupos de adicionais. Os campos `products.product_type` e `products.product_groups` permanecem temporariamente como campos legados durante a transição até a integração definitiva de interface.
+
 ## [0.3.2] - 2026-09-09
 
 ### Configurações e organização do catálogo

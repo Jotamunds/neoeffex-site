@@ -16,7 +16,7 @@ Não execute migrations apenas porque existe um novo release de frontend.
 A migration mais recente (caminho a partir da raiz) é:
 
 ```text
-supabase/migrations/20260907235435_store_catalog_organization.sql
+supabase/migrations/20260909194500_catalog_product_types_groups.sql
 ```
 
 Para uma instalação nova:
@@ -34,7 +34,12 @@ Para uma instalação nova:
 011_remove_single_catalog_per_owner.sql
 012_enforce_paused_catalog_delete_policy.sql
 supabase/migrations/20260907235435_store_catalog_organization.sql
+supabase/migrations/20260909194500_catalog_product_types_groups.sql
 ```
+
+> **Classificações do Catálogo (Etapa 3A):**
+> `product_types` e `product_groups` representam classificações configuráveis do catálogo e não grupos de adicionais.
+> `products.product_type` e `products.product_groups` permanecem temporariamente como campos legados durante a transição. Execute `verify_catalog_types_and_groups.sql` para confirmar a integridade pós-migração.
 
 ### Regra 007 → 008
 

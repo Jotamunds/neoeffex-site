@@ -27,8 +27,8 @@ function client(db,legacy,requests){return {
   };return query;
  }
 };}
-async function setup(area,legacy=false){
- const errors=[],requests=[],db=fixture();
+async function setup(area,legacy=false,customDb=null){
+ const errors=[],requests=[],db=customDb?structuredClone(customDb):fixture();
  const vc=new VirtualConsole();vc.on('jsdomError',e=>{if(!/navigation/.test(e.message))errors.push(e.message);});vc.on('error',(...e)=>errors.push(e.join(' ')));
  const dom=new JSDOM(fs.readFileSync(root+area+'/index.html','utf8'),{url:'https://test.invalid/'+area+'/?catalogo=loja-teste',runScripts:'outside-only',pretendToBeVisual:true,virtualConsole:vc});
  const w=dom.window;w.matchMedia=()=>({matches:false,addEventListener(){}});
@@ -56,7 +56,55 @@ async function setup(area,legacy=false){
  x.d.querySelector('#catalogSearch').value='mais pedido';x.d.querySelector('#catalogSearch').dispatchEvent(new x.w.Event('input'));assert.equal(x.d.querySelectorAll('.product-card').length,1);checks++;
  assert.deepEqual(x.errors,[]);x.dom.window.close();
  x=await setup('catalogo',true);assert(!x.d.querySelector('#catalogContent').hidden);assert(x.d.querySelector('#organizationFilters').hidden);assert.equal(x.d.querySelectorAll('.product-card').length,2);assert.deepEqual(x.errors,[]);checks++;x.dom.window.close();
- x=await setup('admin');assert(x.d.body.classList.contains('is-authenticated'));assert.equal(x.d.querySelector('#newCatalogButton').textContent,'Nova loja');checks++;
+
+ // Cenário 1: Zero lojas vinculadas
+ x=await setup('admin',false,{catalogs:[],categories:[],products:[]});
+ assert(x.d.body.classList.contains('is-authenticated'));
+ assert.equal(x.d.querySelector('#newCatalogButton'),null);
+ assert.equal(x.d.querySelector('#deleteCatalogButton'),null);
+ assert(x.d.querySelector('#newProductButton').disabled);
+ assert(x.d.querySelector('#editCatalogButton').disabled);
+ assert(x.d.querySelector('#manageCategoriesButton').disabled);
+ assert(x.d.querySelector('#configureOrdersButton').disabled);
+ assert(x.d.querySelector('#catalogSelect').closest('.catalog-select-field').hidden);
+ assert(x.d.querySelector('#activeCatalogName').textContent.includes('Entre em contato com a Neoeffex'));
+ assert.deepEqual(x.errors,[]);checks++;x.dom.window.close();
+
+ // Cenário 2: Uma loja existente
+ x=await setup('admin');
+ assert(x.d.body.classList.contains('is-authenticated'));
+ assert.equal(x.d.querySelector('#newCatalogButton'),null);
+ assert.equal(x.d.querySelector('#deleteCatalogButton'),null);
+ assert(x.d.querySelector('#catalogSelect').closest('.catalog-select-field').hidden);
+ assert.equal(x.d.querySelector('#editCatalogButton').disabled,false);
+ assert.equal(x.d.querySelector('#newProductButton').disabled,false);
+ assert.equal(x.d.querySelector('#configureOrdersButton').disabled,false);
+ assert(x.d.querySelector('#activeCatalogName').textContent.includes('Loja teste'));checks++;
+
+ // Edição de loja existente
+ x.d.querySelector('#editCatalogButton').click();
+ assert(!x.d.querySelector('#catalogModal').hidden);
+ assert.equal(x.d.querySelector('#catalogModalTitle').textContent,'Editar loja');
+ assert.equal(x.d.querySelector('#catalogId').value,'cat');
+ assert.equal(x.d.querySelector('#catalogName').value,'Loja teste');
+ assert.equal(x.d.querySelector('#deleteCatalogButton'),null);checks++;
+
+ // Salvar via UPDATE
+ x.d.querySelector('#catalogName').value='Loja Atualizada';
+ x.d.querySelector('#catalogForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+ const catalogUpdate=x.requests.find(r=>r.op==='update' && r.table==='catalogs');
+ assert(catalogUpdate);assert.equal(catalogUpdate.payload.name,'Loja Atualizada');
+ assert(!x.requests.some(r=>r.op==='insert' && r.table==='catalogs'));checks++;
+
+ // Ausência de catalogId aborta e não faz INSERT
+ x.d.querySelector('#editCatalogButton').click();
+ x.d.querySelector('#catalogId').value='';
+ x.d.querySelector('#catalogForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+ assert(!x.requests.some(r=>r.op==='insert' && r.table==='catalogs'));
+ assert(x.d.querySelector('#catalogFeedback').textContent.includes('nenhuma loja'));checks++;
+ x.d.querySelector('#closeCatalogModal').click();
+
+ // Produtos e categorias funcionam na loja ativa
  x.d.querySelector('#newProductButton').click();assert(!x.d.querySelector('#productModal').hidden);assert(!x.d.querySelector('#productType').disabled);checks++;
  for(const [id,value] of Object.entries({productName:'Produto novo',productPrice:'12.50',productType:'Combo',productGroups:'Novo, novo, Oferta',productCategory:'child'}))x.d.getElementById(id).value=value;
  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
@@ -66,6 +114,40 @@ async function setup(area,legacy=false){
  const category=x.db.categories.find(c=>c.name==='Fitness');assert(category);assert.equal(category.parent_id,'main');assert.equal(category.sort_order,4);checks++;
  assert(x.d.querySelector('#categoryList .category-action--danger').disabled);checks++;
  assert.deepEqual(x.errors,[]);x.dom.window.close();
+
+ // Cenário 3: Múltiplas lojas existentes
+ const multiDb={
+  catalogs:[
+   {id:'c1',name:'Loja 1',slug:'loja-1',is_active:true,orders_enabled:true,whatsapp_number:'5511111111111',created_at:'2026-01-01'},
+   {id:'c2',name:'Loja 2',slug:'loja-2',is_active:true,orders_enabled:true,whatsapp_number:'5522222222222',created_at:'2026-01-02'}
+  ],
+  categories:[
+   {id:'cat1',catalog_id:'c1',name:'Cat Loja 1',sort_order:0},
+   {id:'cat2',catalog_id:'c2',name:'Cat Loja 2',sort_order:0}
+  ],
+  products:[
+   {id:'p1',catalog_id:'c1',category_id:'cat1',name:'Produto Loja 1',price:10,status:'active',sort_order:0},
+   {id:'p2',catalog_id:'c2',category_id:'cat2',name:'Produto Loja 2',price:20,status:'active',sort_order:0}
+  ]
+ };
+ x=await setup('admin',false,multiDb);
+ assert(!x.d.querySelector('#catalogSelect').closest('.catalog-select-field').hidden);
+ assert.equal(x.d.querySelectorAll('#catalogSelect option').length,2);
+ assert.equal(x.d.querySelector('#newCatalogButton'),null);
+ assert.equal(x.d.querySelector('#deleteCatalogButton'),null);
+ assert.equal(x.d.querySelectorAll('.product-row').length,1);
+ assert(x.d.querySelector('.product-row').textContent.includes('Produto Loja 1'));checks++;
+
+ // Alternar entre lojas isola os produtos
+ x.d.querySelector('#catalogSelect').value='c2';
+ x.d.querySelector('#catalogSelect').dispatchEvent(new x.w.Event('change'));
+ await wait();
+ assert.equal(x.d.querySelectorAll('.product-row').length,1);
+ assert(x.d.querySelector('.product-row').textContent.includes('Produto Loja 2'));
+ assert(!x.d.querySelector('.product-row').textContent.includes('Produto Loja 1'));checks++;
+ assert.deepEqual(x.errors,[]);x.dom.window.close();
+
+ // Modo legado
  x=await setup('admin',true);x.d.querySelector('#newProductButton').click();assert(x.d.querySelector('#productType').disabled);assert(!x.d.querySelector('#organizationNotice').hidden);checks++;
  for(const [id,value] of Object.entries({productName:'Legado',productPrice:'5',productCategory:'other'}))x.d.getElementById(id).value=value;
  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();

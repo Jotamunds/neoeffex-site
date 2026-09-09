@@ -1,5 +1,19 @@
 # Changelog — Painel administrativo
 
+## [0.3.1] - 2026-09-09
+
+### Lojas e provisionamento
+- Removido o fluxo de criação de novas lojas e catálogos pelo painel do lojista (`#newCatalogButton` removido da interface e dos scripts).
+- `saveCatalog` passa a operar estritamente via `UPDATE` de loja existente; ausência de identificador aborta o salvamento sem executar `INSERT`.
+- `openCatalogModal` opera exclusivamente para edição de loja existente e não abre sem catálogo válido.
+- Ação destrutiva de exclusão definitiva de loja/catálogo retirada da interface do lojista para evitar perda acidental de acesso ou deixar contas sem loja provisionada.
+- Tratamento explícito por quantidade de lojas:
+  - **0 lojas**: exibe estado orientando contato com a Neoeffex para provisionamento e desabilita ações dependentes de loja sem gerar erro JS.
+  - **1 loja**: seleciona automaticamente a loja existente e oculta o seletor.
+  - **2 ou mais lojas**: exibe o seletor apenas para alternância entre lojas existentes com preservação de isolamento e proteção `loadSequence`.
+- Preservadas edições de dados de loja, slug, WhatsApp, status (ativo/pausado), pedidos, produtos, categorias e proteções contra concorrência assíncrona.
+- Atualizado versionamento de assets do Admin para renovação de cache.
+
 ## [0.2.0] - 2026-09-08
 
 - Loja com exatamente um catálogo; conta pode administrar várias lojas.

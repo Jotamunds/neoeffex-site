@@ -131,7 +131,6 @@
                     </div>
                     <div class="page-heading__actions">
                         <a class="secondary-button secondary-link is-disabled" id="viewCatalogLink" href="#" aria-disabled="true" tabindex="-1" target="_blank" rel="noopener noreferrer">Ver catálogo</a>
-                        <button class="secondary-button" id="newCatalogButton" type="button">Nova loja</button>
                         <button class="primary-button" id="newProductButton" type="button">
                             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
                             Novo produto
@@ -236,7 +235,7 @@
                         </div>
                         <div>
                             <span class="orders-summary__label">Instrução ao cliente</span>
-                            <p id="ordersMessage">Selecione ou crie um catálogo para configurar.</p>
+                            <p id="ordersMessage">Nenhuma loja selecionada.</p>
                         </div>
                     </div>
                 </section>
@@ -329,9 +328,9 @@
         <div class="modal__card modal__card--medium">
             <div class="modal__head">
                 <div>
-                    <span class="eyebrow">CATÁLOGO</span>
-                    <h2 id="catalogModalTitle">Nova loja</h2>
-                    <p id="catalogModalDescription">Cada loja tem um catálogo. Separe os produtos com categorias, tipos e grupos.</p>
+                    <span class="eyebrow">LOJA</span>
+                    <h2 id="catalogModalTitle">Editar loja</h2>
+                    <p id="catalogModalDescription">Atualize os dados de identificação e o status deste catálogo.</p>
                 </div>
                 <button class="icon-button" id="closeCatalogModal" type="button" aria-label="Fechar formulário">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
@@ -376,9 +375,6 @@
                 </div>
                 <p class="form-feedback" id="catalogFeedback" role="status" aria-live="polite"></p>
                 <div class="modal__actions">
-                    <div class="modal__danger-actions" id="catalogDangerActions" hidden>
-                        <button class="danger-button" id="deleteCatalogButton" type="button">Excluir catálogo pausado</button>
-                    </div>
                     <button class="primary-button" id="saveCatalogButton" type="submit">Salvar loja</button>
                 </div>
             </form>
@@ -439,9 +435,9 @@
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
-    <script src="config.js?v=0.2.0" defer></script>
-    <script src="../assets/catalog/organization.js?v=0.2.0" defer></script>
-    <script src="assets/js/admin.js?v=0.2.0" defer></script>
+    <script src="config.js?v=0.3.1" defer></script>
+    <script src="../assets/catalog/organization.js?v=0.3.1" defer></script>
+    <script src="assets/js/admin.js?v=0.3.1" defer></script>
 </body>
 </html>
 

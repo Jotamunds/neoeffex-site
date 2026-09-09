@@ -29,7 +29,6 @@
     const themeButton = document.getElementById("themeButton");
     const accountEmail = document.getElementById("accountEmail");
     const newProductButton = document.getElementById("newProductButton");
-    const newCatalogButton = document.getElementById("newCatalogButton");
     const editCatalogButton = document.getElementById("editCatalogButton");
     const viewCatalogLink = document.getElementById("viewCatalogLink");
     const catalogSelect = document.getElementById("catalogSelect");
@@ -55,13 +54,11 @@
     const removeProductImage = document.getElementById("removeProductImage");
     const removeProductImageField = document.getElementById("removeProductImageField");
     const productDangerActions = document.getElementById("productDangerActions");
-    const catalogDangerActions = document.getElementById("catalogDangerActions");
     const saveProductButton = document.getElementById("saveProductButton");
     const saveCatalogButton = document.getElementById("saveCatalogButton");
     const saveCategoryButton = document.getElementById("saveCategoryButton");
     const toggleStatusButton = document.getElementById("toggleStatusButton");
     const deleteProductButton = document.getElementById("deleteProductButton");
-    const deleteCatalogButton = document.getElementById("deleteCatalogButton");
     const confirmDeleteButton = document.getElementById("confirmDeleteButton");
     const categoryList = document.getElementById("categoryList");
     const emptyCategoryState = document.getElementById("emptyCategoryState");
@@ -332,7 +329,9 @@
         emptyState.hidden = visibleProducts.length !== 0 || !activeCatalog;
 
         if (!activeCatalog) {
-            tableDescription.textContent = "Crie o primeiro catálogo para começar a organizar seus produtos.";
+            tableDescription.textContent = catalogs.length === 0
+                ? "Nenhuma loja vinculada a esta conta. Entre em contato com a Neoeffex para concluir a configuração."
+                : "Nenhuma loja selecionada.";
         } else if (visibleProducts.length === products.length) {
             tableDescription.textContent = products.length + " produto" + (products.length === 1 ? " configurado" : "s configurados") + " em " + activeCatalog.name + ".";
         } else {
@@ -356,29 +355,46 @@
 
     function renderCatalogControls() {
         catalogSelect.replaceChildren();
+        const selectContainer = catalogSelect.closest(".catalog-select-field") || catalogSelect;
 
         if (!catalogs.length) {
-            catalogSelect.appendChild(new Option("Nenhuma loja cadastrada", ""));
+            activeCatalog = null;
+            selectContainer.hidden = true;
             catalogSelect.disabled = true;
             editCatalogButton.disabled = true;
-            activeCatalogName.textContent = "Nenhuma loja selecionada";
+            newProductButton.disabled = true;
+            manageCategoriesButton.disabled = true;
+            configureOrdersButton.disabled = true;
+            activeCatalogName.textContent = "Nenhuma loja vinculada a esta conta. Entre em contato com a Neoeffex para concluir a configuração.";
             viewCatalogLink.removeAttribute("href");
             viewCatalogLink.classList.add("is-disabled");
             viewCatalogLink.setAttribute("aria-disabled", "true");
             viewCatalogLink.setAttribute("tabindex", "-1");
-            viewCatalogLink.title = "Crie e ative um catálogo para visualizar a página pública";
+            viewCatalogLink.title = "Nenhuma loja vinculada";
             renderOrdersSummary();
             return;
         }
 
-        catalogs.forEach(function (catalog) {
-            const option = new Option(catalog.name + (catalog.is_active ? "" : " — pausado"), catalog.id);
-            option.selected = activeCatalog && catalog.id === activeCatalog.id;
-            catalogSelect.appendChild(option);
-        });
+        if (catalogs.length === 1) {
+            activeCatalog = catalogs[0];
+            selectContainer.hidden = true;
+            catalogSelect.disabled = true;
+            catalogSelect.appendChild(new Option(catalogs[0].name, catalogs[0].id));
+        } else {
+            selectContainer.hidden = false;
+            catalogSelect.hidden = false;
+            catalogSelect.disabled = false;
+            catalogs.forEach(function (catalog) {
+                const option = new Option(catalog.name + (catalog.is_active ? "" : " — pausado"), catalog.id);
+                option.selected = activeCatalog && catalog.id === activeCatalog.id;
+                catalogSelect.appendChild(option);
+            });
+        }
 
-        catalogSelect.disabled = false;
         editCatalogButton.disabled = !activeCatalog;
+        newProductButton.disabled = !activeCatalog;
+        manageCategoriesButton.disabled = !activeCatalog;
+        configureOrdersButton.disabled = !activeCatalog;
         activeCatalogName.textContent = activeCatalog
             ? activeCatalog.name + (activeCatalog.is_active ? "" : " (pausado)")
             : "Nenhuma loja selecionada";
@@ -405,10 +421,12 @@
         configureOrdersButton.disabled = !activeCatalog;
 
         if (!activeCatalog) {
-            status.textContent = "Nenhuma loja selecionada";
+            status.textContent = "Nenhuma loja vinculada";
             status.dataset.state = "";
             whatsapp.textContent = "Não configurado";
-            message.textContent = "Selecione ou crie um catálogo para configurar.";
+            message.textContent = catalogs.length === 0
+                ? "Nenhuma loja vinculada a esta conta. Entre em contato com a Neoeffex para concluir a configuração."
+                : "Nenhuma loja selecionada.";
             return;
         }
 
@@ -563,7 +581,6 @@
     function setCatalogFormLoading(isLoading) {
         saveCatalogButton.disabled = isLoading;
         saveCatalogButton.textContent = isLoading ? "Salvando…" : "Salvar loja";
-        deleteCatalogButton.disabled = isLoading;
     }
 
     function setCategoryFormLoading(isLoading) {
@@ -641,6 +658,8 @@
     }
 
     function openCatalogModal(catalog) {
+        if (!catalog || !catalog.id) return;
+
         lastFocusedElement = document.activeElement;
         catalogForm.reset();
         setFeedback(catalogFeedback, "", "");
@@ -648,22 +667,17 @@
         catalogModal.setAttribute("aria-hidden", "false");
         body.classList.add("has-modal");
 
-        const editing = Boolean(catalog);
-        document.getElementById("catalogModalTitle").textContent = editing ? "Editar loja" : "Nova loja";
-        document.getElementById("catalogModalDescription").textContent = editing
-            ? "Atualize os dados de identificação e o status deste catálogo."
-            : "Cada loja tem um catálogo. Use categorias, tipos e grupos para separar seus produtos.";
-        document.getElementById("catalogId").value = editing ? catalog.id : "";
-        document.getElementById("catalogName").value = editing ? catalog.name : "";
-        document.getElementById("catalogSlug").value = editing ? catalog.slug : "";
+        document.getElementById("catalogModalTitle").textContent = "Editar loja";
+        document.getElementById("catalogModalDescription").textContent = "Atualize os dados de identificação e o status deste catálogo.";
+        document.getElementById("catalogId").value = catalog.id;
+        document.getElementById("catalogName").value = catalog.name || "";
+        document.getElementById("catalogSlug").value = catalog.slug || "";
         document.getElementById("catalogSlug").dataset.touched = "";
-        document.getElementById("catalogActive").checked = editing ? catalog.is_active : true;
-        document.getElementById("catalogWhatsapp").value = editing ? (catalog.whatsapp_number || "") : "";
-        document.getElementById("catalogOrderMessage").value = editing
-            ? (catalog.order_message || "Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.")
-            : "Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.";
-        document.getElementById("catalogOrdersEnabled").checked = editing ? Boolean(catalog.orders_enabled) : false;
-        catalogDangerActions.hidden = !editing || Boolean(catalog.is_active);
+        document.getElementById("catalogActive").checked = Boolean(catalog.is_active);
+        document.getElementById("catalogWhatsapp").value = catalog.whatsapp_number || "";
+        document.getElementById("catalogOrderMessage").value = catalog.order_message
+            || "Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.";
+        document.getElementById("catalogOrdersEnabled").checked = Boolean(catalog.orders_enabled);
         setCatalogFormLoading(false);
         window.setTimeout(function () {
             document.getElementById("catalogName").focus();
@@ -681,7 +695,9 @@
 
     function openCategoryModal() {
         if (!activeCatalog) {
-            showToast("Crie uma loja antes de organizar categorias.");
+            showToast(catalogs.length === 0
+                ? "Nenhuma loja vinculada a esta conta. Entre em contato com a Neoeffex para concluir a configuração."
+                : "Selecione uma loja antes de organizar categorias.");
             return;
         }
 
@@ -1084,21 +1100,14 @@
         if (!payload) return;
 
         const catalogId = document.getElementById("catalogId").value;
+        if (!catalogId) {
+            setFeedback(catalogFeedback, "Não é possível salvar: nenhuma loja selecionada para edição.", "error");
+            return;
+        }
+
         setCatalogFormLoading(true);
         setFeedback(catalogFeedback, "", "");
-        let result;
-        if (catalogId) {
-            result = await client.from("catalogs").update(payload).eq("id", catalogId).select("id").single();
-        } else {
-            const userResult = await client.auth.getUser();
-            const user = userResult.data && userResult.data.user;
-            if (userResult.error || !user) {
-                setFeedback(catalogFeedback, "Não foi possível confirmar a conta conectada. Entre novamente.", "error");
-                setCatalogFormLoading(false);
-                return;
-            }
-            result = await client.from("catalogs").insert(Object.assign({}, payload, { owner_id: user.id })).select("id").single();
-        }
+        const result = await client.from("catalogs").update(payload).eq("id", catalogId).select("id").single();
 
         if (result.error) {
             console.error("Erro ao salvar catálogo", result.error);
@@ -1110,8 +1119,8 @@
         }
 
         closeCatalogModal();
-        await loadCatalogs(catalogId || result.data.id);
-        showToast(catalogId ? "Catálogo atualizado com sucesso." : "Loja criada com seu catálogo.");
+        await loadCatalogs(catalogId);
+        showToast("Loja atualizada com sucesso.");
     }
 
     async function saveCategory(event) {
@@ -1397,7 +1406,6 @@
     searchField.addEventListener("input", renderProducts);
     statusFilter.addEventListener("change", renderProducts);
     newProductButton.addEventListener("click", function () { openProductModal(); });
-    newCatalogButton.addEventListener("click", function () { openCatalogModal(); });
     editCatalogButton.addEventListener("click", function () { if (activeCatalog) openCatalogModal(activeCatalog); });
     configureOrdersButton.addEventListener("click", function () { if (activeCatalog) openCatalogModal(activeCatalog); });
     catalogSelect.addEventListener("change", function () {
@@ -1458,15 +1466,6 @@
             name: product.name,
             image_path: product.image_path,
             baseModal: productModal
-        });
-    });
-    deleteCatalogButton.addEventListener("click", function () {
-        if (!activeCatalog || activeCatalog.is_active) return;
-        openDeleteModal({
-            type: "catalog",
-            id: activeCatalog.id,
-            name: activeCatalog.name,
-            baseModal: catalogModal
         });
     });
     document.getElementById("closeDeleteModal").addEventListener("click", closeDeleteModal);

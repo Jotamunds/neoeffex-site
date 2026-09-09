@@ -126,7 +126,7 @@
         const target = event.target && event.target.closest ? event.target.closest("button") : null;
 
         if (!target) return;
-        if (!["newCatalogButton", "editCatalogButton", "configureOrdersButton"].includes(target.id)) return;
+        if (!["editCatalogButton", "configureOrdersButton"].includes(target.id)) return;
 
         window.setTimeout(setupAvailableInputs, 0);
         window.setTimeout(setupAvailableInputs, 80);

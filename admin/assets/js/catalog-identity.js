@@ -172,7 +172,7 @@
     }
 
     function attachEvents(form) {
-        ["newCatalogButton", "editCatalogButton", "configureOrdersButton"].forEach(function (id) {
+        ["editCatalogButton", "configureOrdersButton"].forEach(function (id) {
             const button = document.getElementById(id);
             if (!button) return;
             button.addEventListener("click", function () {

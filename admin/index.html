@@ -245,7 +245,7 @@
                         <div>
                             <span class="eyebrow">ORGANIZAÇÃO</span>
                             <h2 id="settingsTitle">Configurações</h2>
-                            <p id="settingsDescription">Gerencie categorias e subcategorias dos produtos de <span id="settingsCatalogName">Carregando…</span>.</p>
+                            <p id="settingsDescription">Gerencie categorias, subcategorias, tipos e grupos de produtos de <span id="settingsCatalogName">Carregando…</span>.</p>
                         </div>
                     </div>
 
@@ -257,6 +257,14 @@
                         <button class="settings-tab" id="subcategoriesTabButton" type="button" role="tab" aria-selected="false" aria-controls="subcategoriesTabPanel">
                             Subcategorias
                             <span class="settings-tab__count" id="subcategoriesTabCount">0</span>
+                        </button>
+                        <button class="settings-tab" id="typesTabButton" type="button" role="tab" aria-selected="false" aria-controls="typesTabPanel">
+                            Tipos
+                            <span class="settings-tab__count" id="typesTabCount">0</span>
+                        </button>
+                        <button class="settings-tab" id="groupsTabButton" type="button" role="tab" aria-selected="false" aria-controls="groupsTabPanel">
+                            Grupos
+                            <span class="settings-tab__count" id="groupsTabCount">0</span>
                         </button>
                     </div>
 
@@ -361,6 +369,100 @@
                                 <tbody id="subcategoryList"></tbody>
                             </table>
                             <p class="empty-state" id="emptySubcategoryState" hidden>Nenhuma subcategoria cadastrada.</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-panel" id="typesTabPanel" role="tabpanel" aria-labelledby="typesTabButton" hidden>
+                        <div class="settings-panel__head">
+                            <div>
+                                <h3>Tipos de produto</h3>
+                                <p>Defina o formato de venda do produto (ex: Individual, Combo, Kit).</p>
+                            </div>
+                            <button class="primary-button" id="newProductTypeButton" type="button">
+                                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
+                                Novo tipo
+                            </button>
+                        </div>
+
+                        <form class="settings-form" id="productTypeForm" novalidate hidden>
+                            <input id="productTypeId" name="productTypeId" type="hidden">
+                            <h4 id="productTypeFormTitle">Novo tipo</h4>
+                            <div class="settings-form__grid">
+                                <div class="form-field">
+                                    <label for="productTypeName">Nome do tipo</label>
+                                    <input id="productTypeName" name="productTypeName" type="text" maxlength="60" autocomplete="off" placeholder="Ex: Combo" required>
+                                </div>
+                                <div class="form-field form-field--short">
+                                    <label for="productTypeOrder">Ordem</label>
+                                    <input id="productTypeOrder" name="productTypeOrder" type="number" min="0" max="2147483647" step="1" value="0">
+                                </div>
+                            </div>
+                            <p class="form-feedback" id="productTypeFeedback" role="status" aria-live="polite"></p>
+                            <div class="settings-form__actions">
+                                <button class="secondary-button" id="cancelProductTypeButton" type="button">Cancelar</button>
+                                <button class="primary-button" id="saveProductTypeButton" type="submit">Salvar tipo</button>
+                            </div>
+                        </form>
+
+                        <div class="settings-table-wrapper">
+                            <table class="settings-table" id="typesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Ordem</th>
+                                        <th class="settings-table__actions-head">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productTypeList"></tbody>
+                            </table>
+                            <p class="empty-state" id="emptyProductTypeState" hidden>Nenhum tipo configurado.</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-panel" id="groupsTabPanel" role="tabpanel" aria-labelledby="groupsTabButton" hidden>
+                        <div class="settings-panel__head">
+                            <div>
+                                <h3>Grupos de produtos</h3>
+                                <p>Grupos servem para classificar produtos em conjuntos como Promoções, Novidades ou Mais pedidos.</p>
+                            </div>
+                            <button class="primary-button" id="newProductGroupButton" type="button">
+                                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
+                                Novo grupo
+                            </button>
+                        </div>
+
+                        <form class="settings-form" id="productGroupForm" novalidate hidden>
+                            <input id="productGroupId" name="productGroupId" type="hidden">
+                            <h4 id="productGroupFormTitle">Novo grupo</h4>
+                            <div class="settings-form__grid">
+                                <div class="form-field">
+                                    <label for="productGroupName">Nome do grupo</label>
+                                    <input id="productGroupName" name="productGroupName" type="text" maxlength="60" autocomplete="off" placeholder="Ex: Promoções" required>
+                                </div>
+                                <div class="form-field form-field--short">
+                                    <label for="productGroupOrder">Ordem</label>
+                                    <input id="productGroupOrder" name="productGroupOrder" type="number" min="0" max="2147483647" step="1" value="0">
+                                </div>
+                            </div>
+                            <p class="form-feedback" id="productGroupFeedback" role="status" aria-live="polite"></p>
+                            <div class="settings-form__actions">
+                                <button class="secondary-button" id="cancelProductGroupButton" type="button">Cancelar</button>
+                                <button class="primary-button" id="saveProductGroupButton" type="submit">Salvar grupo</button>
+                            </div>
+                        </form>
+
+                        <div class="settings-table-wrapper">
+                            <table class="settings-table" id="groupsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Ordem</th>
+                                        <th class="settings-table__actions-head">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productGroupList"></tbody>
+                            </table>
+                            <p class="empty-state" id="emptyProductGroupState" hidden>Nenhum grupo configurado.</p>
                         </div>
                     </div>
                 </section>
@@ -529,9 +631,9 @@
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
-    <script src="config.js?v=0.3.2" defer></script>
-    <script src="../assets/catalog/organization.js?v=0.3.2" defer></script>
-    <script src="assets/js/admin.js?v=0.3.2" defer></script>
+    <script src="config.js?v=0.3.4" defer></script>
+    <script src="../assets/catalog/organization.js?v=0.3.4" defer></script>
+    <script src="assets/js/admin.js?v=0.3.4" defer></script>
 </body>
 </html>
 

@@ -1,12 +1,17 @@
-# Painel administrativo — v0.2.0
+# Painel administrativo — v0.3.4
 
 Painel em `neoeffex.com.br/admin` e catálogo público em `neoeffex.com.br/catalogo/?catalogo=identificador`, usando Supabase.
 
 ## O que existe nesta etapa
 
 - Login por e-mail e senha, recuperação de senha, sessão persistente e sincronização de login/logout entre abas da mesma origem.
-- Uma conta pode ter várias lojas; cada loja tem exatamente um catálogo, com o mesmo link e carrinho.
-- Categorias e subcategorias em dois níveis, tipo opcional e até 10 grupos por produto.
+- Uma conta pode ter várias lojas; cada loja tem exatamente um catálogo, com o mesmo link e carrinho. Edição e alternância de lojas preservadas (provisionamento de novas lojas centralizado na plataforma).
+- **Configurações estruturadas do catálogo**:
+  - **Categorias**: cadastro, edição e exclusão de categorias principais (`parent_id = null`).
+  - **Subcategorias**: vinculadas a uma categoria raiz (`parent_id != null`) com limite de 2 níveis.
+  - **Tipos**: CRUD persistente real em `product_types` isolado por catálogo com ordenação (`sort_order`).
+  - **Grupos**: CRUD persistente real em `product_groups` isolado por catálogo com ordenação (`sort_order`), servindo para classificar produtos em coleções (ex.: Promoções, Novidades, Mais pedidos).
+- **Transição de Tipos e Grupos**: Tipos e Grupos já possuem tabelas próprias e gerenciamento visual completo em Configurações. **Contudo, o formulário de produto ainda utiliza temporariamente os campos legados `product_type` e `product_groups` (com texto livre/datalist) até a Etapa 4**. A migração dos formulários de produto será realizada na próxima etapa.
 - Marca N original da Neoeffex em SVG no painel e no catálogo.
 - Criação e edição de catálogo, com identificador automático, edição manual sanitizada e status ativo/pausado.
 - Exclusão confirmada somente para catálogo pausado, protegida por função transacional e validação de proprietário.

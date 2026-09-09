@@ -1815,6 +1815,7 @@ body.has-modal {
 
 .settings-tabs {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     margin-top: 20px;
     border-bottom: 1px solid var(--border);

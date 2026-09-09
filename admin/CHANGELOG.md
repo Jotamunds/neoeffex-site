@@ -1,5 +1,18 @@
 # Changelog — Painel administrativo
 
+## [0.3.4] - 2026-09-09
+
+### CRUD visual de Tipos e Grupos em Configurações (Etapa 3B)
+- A área **Configurações** foi expandida com 4 abas estruturadas: **Categorias**, **Subcategorias**, **Tipos** e **Grupos**.
+- Implementado CRUD persistente completo para **Tipos** (`product_types`): listagem ordenada por `sort_order`, cadastro com formulário dedicado, edição in-place, alteração de ordenação e exclusão confirmada por modal.
+- Implementado CRUD persistente completo para **Grupos** (`product_groups`): listagem ordenada por `sort_order`, cadastro com formulário dedicado, edição in-place, alteração de ordenação e exclusão confirmada por modal.
+- Textos orientativos na interface documentando que Grupos servem para classificar produtos em coleções (ex.: Promoções, Novidades, Mais pedidos), diferenciando expressamente de adicionais ou opções de montagem.
+- Isolamento estrito multi-tenant derivado exclusivamente de `activeCatalog.id`: consultas filtradas por catálogo, `catalog_id` injetado pelo backend/cliente ativo sem input manual do usuário, e formulários de edição fechados automaticamente ao alternar entre lojas.
+- Validações no frontend em conformidade com o banco: nome obrigatório de 1 a 60 caracteres (sanitizado com `trim`), ordenação inteira não negativa (`sort_order >= 0`) e proibição de vírgulas no nome de grupos.
+- Tratamento de duplicidade: erro de unicidade (`23505`) capturado e apresentado com mensagens amigáveis ("Já existe um tipo com este nome neste catálogo." / "Já existe um grupo com este nome neste catálogo.") sem exibir erros SQL brutos.
+- Estados vazios dedicados ("Nenhum tipo configurado." / "Nenhum grupo configurado.") e desativação segura das ações quando a conta não possui lojas vinculadas.
+- **Importante (Transição de Etapa)**: O formulário de produto permanece utilizando temporariamente os campos legados `product_type` e `product_groups` (com input de texto e datalist de sugestões) até a Etapa 4. A exclusão ou edição de Tipos e Grupos nas novas tabelas não altera destrutivamente os produtos existentes.
+
 ## [0.3.3] - 2026-09-09
 
 ### Estrutura persistente de Tipos e Grupos (Etapa 3A)

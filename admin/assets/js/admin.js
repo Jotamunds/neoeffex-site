@@ -61,10 +61,16 @@
     const settingsCatalogName = document.getElementById("settingsCatalogName");
     const categoriesTabButton = document.getElementById("categoriesTabButton");
     const subcategoriesTabButton = document.getElementById("subcategoriesTabButton");
+    const typesTabButton = document.getElementById("typesTabButton");
+    const groupsTabButton = document.getElementById("groupsTabButton");
     const categoriesTabPanel = document.getElementById("categoriesTabPanel");
     const subcategoriesTabPanel = document.getElementById("subcategoriesTabPanel");
+    const typesTabPanel = document.getElementById("typesTabPanel");
+    const groupsTabPanel = document.getElementById("groupsTabPanel");
     const categoriesTabCount = document.getElementById("categoriesTabCount");
     const subcategoriesTabCount = document.getElementById("subcategoriesTabCount");
+    const typesTabCount = document.getElementById("typesTabCount");
+    const groupsTabCount = document.getElementById("groupsTabCount");
     const newRootCategoryButton = document.getElementById("newRootCategoryButton");
     const rootCategoryForm = document.getElementById("rootCategoryForm");
     const rootCategoryId = document.getElementById("rootCategoryId");
@@ -86,11 +92,33 @@
     const saveSubcategoryButton = document.getElementById("saveSubcategoryButton");
     const subcategoryList = document.getElementById("subcategoryList");
     const emptySubcategoryState = document.getElementById("emptySubcategoryState");
+    const newProductTypeButton = document.getElementById("newProductTypeButton");
+    const productTypeForm = document.getElementById("productTypeForm");
+    const productTypeId = document.getElementById("productTypeId");
+    const productTypeName = document.getElementById("productTypeName");
+    const productTypeOrder = document.getElementById("productTypeOrder");
+    const productTypeFeedback = document.getElementById("productTypeFeedback");
+    const cancelProductTypeButton = document.getElementById("cancelProductTypeButton");
+    const saveProductTypeButton = document.getElementById("saveProductTypeButton");
+    const productTypeList = document.getElementById("productTypeList");
+    const emptyProductTypeState = document.getElementById("emptyProductTypeState");
+    const newProductGroupButton = document.getElementById("newProductGroupButton");
+    const productGroupForm = document.getElementById("productGroupForm");
+    const productGroupId = document.getElementById("productGroupId");
+    const productGroupName = document.getElementById("productGroupName");
+    const productGroupOrder = document.getElementById("productGroupOrder");
+    const productGroupFeedback = document.getElementById("productGroupFeedback");
+    const cancelProductGroupButton = document.getElementById("cancelProductGroupButton");
+    const saveProductGroupButton = document.getElementById("saveProductGroupButton");
+    const productGroupList = document.getElementById("productGroupList");
+    const emptyProductGroupState = document.getElementById("emptyProductGroupState");
     const organization = window.NEOEFFEX_ORGANIZATION;
     let organizationEnabled = false;
     let client = null;
     let catalogs = [];
     let categories = [];
+    let productTypes = [];
+    let productGroups = [];
     let products = [];
     let activeCatalog = null;
     let pendingDeletion = null;
@@ -372,7 +400,7 @@
         document.getElementById("activeProducts").textContent = activeProducts.length;
         document.getElementById("categoryCount").textContent = categories.length;
         document.getElementById("menuProductCount").textContent = products.length;
-        if (menuSettingsCount) menuSettingsCount.textContent = categories.length;
+        if (menuSettingsCount) menuSettingsCount.textContent = categories.length + productTypes.length + productGroups.length;
         const legacyMenuCatCount = document.getElementById("menuCategoryCount");
         if (legacyMenuCatCount) legacyMenuCatCount.textContent = categories.length;
         newProductButton.disabled = !activeCatalog;
@@ -470,6 +498,8 @@
         tableDescription.textContent = "Carregando lojas…";
         products = [];
         categories = [];
+        productTypes = [];
+        productGroups = [];
         renderProducts();
         updateSummary();
 
@@ -504,6 +534,8 @@
     async function loadActiveCatalogData(sequence) {
         products = [];
         categories = [];
+        productTypes = [];
+        productGroups = [];
 
         if (!activeCatalog) {
             renderProducts();
@@ -517,7 +549,19 @@
         updateSummary();
 
         const catalogId = activeCatalog.id;
-        const rows = await organization.loadRows(client, catalogId, false);
+        const rowsPromise = organization.loadRows(client, catalogId, false);
+        const typesPromise = client.from("product_types")
+            .select("id, catalog_id, name, sort_order, created_at")
+            .eq("catalog_id", catalogId)
+            .order("sort_order", { ascending: true })
+            .order("created_at", { ascending: true });
+        const groupsPromise = client.from("product_groups")
+            .select("id, catalog_id, name, sort_order, created_at")
+            .eq("catalog_id", catalogId)
+            .order("sort_order", { ascending: true })
+            .order("created_at", { ascending: true });
+
+        const [rows, typesResult, groupsResult] = await Promise.all([rowsPromise, typesPromise, groupsPromise]);
         const categoriesResult = rows.categories;
         const productsResult = rows.products;
 
@@ -530,12 +574,21 @@
             return;
         }
 
+        if (typesResult.error) {
+            console.error("Erro ao carregar tipos de produto", typesResult.error);
+        }
+        if (groupsResult.error) {
+            console.error("Erro ao carregar grupos de produtos", groupsResult.error);
+        }
+
         organizationEnabled = rows.enabled;
         document.querySelectorAll("[data-organization-field]").forEach(function (field) {
             field.disabled = !organizationEnabled;
         });
         document.getElementById("organizationNotice").hidden = organizationEnabled;
         categories = organization.orderedCategories(categoriesResult.data || []);
+        productTypes = typesResult && !typesResult.error ? (typesResult.data || []) : [];
+        productGroups = groupsResult && !groupsResult.error ? (groupsResult.data || []) : [];
         products = (productsResult.data || []).map(function (product) {
             return Object.assign({}, product, { categoryName: getCategoryName(product.category_id) });
         });
@@ -718,13 +771,25 @@
 
     function switchSettingsTab(tabName) {
         const isCategories = tabName === "categories";
+        const isSubcategories = tabName === "subcategories";
+        const isTypes = tabName === "types";
+        const isGroups = tabName === "groups";
+
         categoriesTabButton.classList.toggle("settings-tab--active", isCategories);
         categoriesTabButton.setAttribute("aria-selected", String(isCategories));
         categoriesTabPanel.hidden = !isCategories;
 
-        subcategoriesTabButton.classList.toggle("settings-tab--active", !isCategories);
-        subcategoriesTabButton.setAttribute("aria-selected", String(!isCategories));
-        subcategoriesTabPanel.hidden = isCategories;
+        subcategoriesTabButton.classList.toggle("settings-tab--active", isSubcategories);
+        subcategoriesTabButton.setAttribute("aria-selected", String(isSubcategories));
+        subcategoriesTabPanel.hidden = !isSubcategories;
+
+        typesTabButton.classList.toggle("settings-tab--active", isTypes);
+        typesTabButton.setAttribute("aria-selected", String(isTypes));
+        typesTabPanel.hidden = !isTypes;
+
+        groupsTabButton.classList.toggle("settings-tab--active", isGroups);
+        groupsTabButton.setAttribute("aria-selected", String(isGroups));
+        groupsTabPanel.hidden = !isGroups;
     }
 
     function getNextSortOrder(items) {
@@ -740,24 +805,40 @@
             settingsCatalogName.textContent = "Nenhuma loja vinculada";
             newRootCategoryButton.disabled = true;
             newSubcategoryButton.disabled = true;
+            newProductTypeButton.disabled = true;
+            newProductGroupButton.disabled = true;
             rootCategoryForm.hidden = true;
             subcategoryForm.hidden = true;
+            productTypeForm.hidden = true;
+            productGroupForm.hidden = true;
             rootCategoryList.replaceChildren();
             subcategoryList.replaceChildren();
+            productTypeList.replaceChildren();
+            productGroupList.replaceChildren();
             emptyRootCategoryState.hidden = false;
             emptyRootCategoryState.textContent = "Nenhuma loja vinculada a esta conta.";
             emptySubcategoryState.hidden = false;
             emptySubcategoryState.textContent = "Nenhuma loja vinculada a esta conta.";
+            emptyProductTypeState.hidden = false;
+            emptyProductTypeState.textContent = "Nenhuma loja vinculada a esta conta.";
+            emptyProductGroupState.hidden = false;
+            emptyProductGroupState.textContent = "Nenhuma loja vinculada a esta conta.";
             categoriesTabCount.textContent = "0";
             subcategoriesTabCount.textContent = "0";
+            typesTabCount.textContent = "0";
+            groupsTabCount.textContent = "0";
             return;
         }
 
         settingsCatalogName.textContent = activeCatalog.name;
         newRootCategoryButton.disabled = false;
         newSubcategoryButton.disabled = false;
+        newProductTypeButton.disabled = false;
+        newProductGroupButton.disabled = false;
         renderRootCategories();
         renderSubcategories();
+        renderProductTypes();
+        renderProductGroups();
     }
 
     function renderRootCategories() {
@@ -1072,24 +1153,279 @@
         }).length;
     }
 
+    function renderProductTypes() {
+        typesTabCount.textContent = productTypes.length;
+        productTypeList.replaceChildren();
+        emptyProductTypeState.hidden = productTypes.length !== 0;
+        emptyProductTypeState.textContent = "Nenhum tipo configurado.";
+
+        productTypes.forEach(function (type) {
+            const tr = document.createElement("tr");
+
+            const nameTd = document.createElement("td");
+            const strong = document.createElement("strong");
+            strong.textContent = type.name;
+            nameTd.appendChild(strong);
+
+            const orderTd = document.createElement("td");
+            orderTd.textContent = String(type.sort_order);
+
+            const actionsTd = document.createElement("td");
+            actionsTd.className = "settings-table__actions";
+
+            const editButton = document.createElement("button");
+            editButton.className = "category-action";
+            editButton.type = "button";
+            editButton.textContent = "Editar";
+            editButton.addEventListener("click", function () {
+                openProductTypeForm(type);
+            });
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "category-action category-action--danger";
+            deleteButton.type = "button";
+            deleteButton.textContent = "Excluir";
+            deleteButton.title = "Excluir tipo";
+            deleteButton.addEventListener("click", function () {
+                openDeleteModal({ type: "product_type", id: type.id, name: type.name });
+            });
+
+            actionsTd.append(editButton, deleteButton);
+            tr.append(nameTd, orderTd, actionsTd);
+            productTypeList.appendChild(tr);
+        });
+    }
+
+    function openProductTypeForm(type) {
+        if (!activeCatalog) return;
+        setFeedback(productTypeFeedback, "", "");
+        if (type) {
+            document.getElementById("productTypeFormTitle").textContent = "Editar tipo";
+            productTypeId.value = type.id;
+            productTypeName.value = type.name;
+            productTypeOrder.value = type.sort_order;
+            saveProductTypeButton.textContent = "Salvar alterações";
+        } else {
+            document.getElementById("productTypeFormTitle").textContent = "Novo tipo";
+            productTypeId.value = "";
+            productTypeName.value = "";
+            productTypeOrder.value = getNextSortOrder(productTypes);
+            saveProductTypeButton.textContent = "Salvar tipo";
+        }
+        productTypeForm.hidden = false;
+        window.setTimeout(function () { productTypeName.focus(); }, 0);
+    }
+
+    function closeProductTypeForm() {
+        productTypeForm.hidden = true;
+        productTypeForm.reset();
+        productTypeId.value = "";
+        setFeedback(productTypeFeedback, "", "");
+    }
+
+    async function saveProductType(event) {
+        event.preventDefault();
+        if (!activeCatalog) return;
+
+        const name = productTypeName.value.trim();
+        const typeId = productTypeId.value;
+
+        if (name.length < 1 || name.length > 60) {
+            setFeedback(productTypeFeedback, "O nome do tipo precisa ter entre 1 e 60 caracteres.", "error");
+            return;
+        }
+
+        const order = Number(productTypeOrder.value);
+        if (!Number.isInteger(order) || order < 0 || order > 2147483647) {
+            setFeedback(productTypeFeedback, "Informe uma ordem inteira a partir de zero.", "error");
+            return;
+        }
+
+        saveProductTypeButton.disabled = true;
+        saveProductTypeButton.textContent = "Salvando…";
+        setFeedback(productTypeFeedback, "", "");
+
+        const payload = { name: name, sort_order: order };
+        let result;
+        if (typeId) {
+            result = await client.from("product_types").update(payload).eq("id", typeId).select("id").single();
+        } else {
+            result = await client.from("product_types").insert(Object.assign({}, payload, { catalog_id: activeCatalog.id })).select("id").single();
+        }
+
+        saveProductTypeButton.disabled = false;
+        saveProductTypeButton.textContent = typeId ? "Salvar alterações" : "Salvar tipo";
+
+        if (result.error) {
+            if (result.error.code !== "23505") console.error("Erro ao salvar tipo", result.error);
+            setFeedback(productTypeFeedback, result.error.code === "23505"
+                ? "Já existe um tipo com este nome neste catálogo."
+                : "Não foi possível salvar o tipo. Tente novamente.", "error");
+            return;
+        }
+
+        closeProductTypeForm();
+        await loadActiveCatalogData();
+        showToast(typeId ? "Tipo atualizado com sucesso." : "Tipo adicionado com sucesso.");
+    }
+
+    function renderProductGroups() {
+        groupsTabCount.textContent = productGroups.length;
+        productGroupList.replaceChildren();
+        emptyProductGroupState.hidden = productGroups.length !== 0;
+        emptyProductGroupState.textContent = "Nenhum grupo configurado.";
+
+        productGroups.forEach(function (group) {
+            const tr = document.createElement("tr");
+
+            const nameTd = document.createElement("td");
+            const strong = document.createElement("strong");
+            strong.textContent = group.name;
+            nameTd.appendChild(strong);
+
+            const orderTd = document.createElement("td");
+            orderTd.textContent = String(group.sort_order);
+
+            const actionsTd = document.createElement("td");
+            actionsTd.className = "settings-table__actions";
+
+            const editButton = document.createElement("button");
+            editButton.className = "category-action";
+            editButton.type = "button";
+            editButton.textContent = "Editar";
+            editButton.addEventListener("click", function () {
+                openProductGroupForm(group);
+            });
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "category-action category-action--danger";
+            deleteButton.type = "button";
+            deleteButton.textContent = "Excluir";
+            deleteButton.title = "Excluir grupo";
+            deleteButton.addEventListener("click", function () {
+                openDeleteModal({ type: "product_group", id: group.id, name: group.name });
+            });
+
+            actionsTd.append(editButton, deleteButton);
+            tr.append(nameTd, orderTd, actionsTd);
+            productGroupList.appendChild(tr);
+        });
+    }
+
+    function openProductGroupForm(group) {
+        if (!activeCatalog) return;
+        setFeedback(productGroupFeedback, "", "");
+        if (group) {
+            document.getElementById("productGroupFormTitle").textContent = "Editar grupo";
+            productGroupId.value = group.id;
+            productGroupName.value = group.name;
+            productGroupOrder.value = group.sort_order;
+            saveProductGroupButton.textContent = "Salvar alterações";
+        } else {
+            document.getElementById("productGroupFormTitle").textContent = "Novo grupo";
+            productGroupId.value = "";
+            productGroupName.value = "";
+            productGroupOrder.value = getNextSortOrder(productGroups);
+            saveProductGroupButton.textContent = "Salvar grupo";
+        }
+        productGroupForm.hidden = false;
+        window.setTimeout(function () { productGroupName.focus(); }, 0);
+    }
+
+    function closeProductGroupForm() {
+        productGroupForm.hidden = true;
+        productGroupForm.reset();
+        productGroupId.value = "";
+        setFeedback(productGroupFeedback, "", "");
+    }
+
+    async function saveProductGroup(event) {
+        event.preventDefault();
+        if (!activeCatalog) return;
+
+        const name = productGroupName.value.trim();
+        const groupId = productGroupId.value;
+
+        if (name.length < 1 || name.length > 60) {
+            setFeedback(productGroupFeedback, "O nome do grupo precisa ter entre 1 e 60 caracteres.", "error");
+            return;
+        }
+
+        if (name.includes(",")) {
+            setFeedback(productGroupFeedback, "O nome do grupo não pode conter vírgulas.", "error");
+            return;
+        }
+
+        const order = Number(productGroupOrder.value);
+        if (!Number.isInteger(order) || order < 0 || order > 2147483647) {
+            setFeedback(productGroupFeedback, "Informe uma ordem inteira a partir de zero.", "error");
+            return;
+        }
+
+        saveProductGroupButton.disabled = true;
+        saveProductGroupButton.textContent = "Salvando…";
+        setFeedback(productGroupFeedback, "", "");
+
+        const payload = { name: name, sort_order: order };
+        let result;
+        if (groupId) {
+            result = await client.from("product_groups").update(payload).eq("id", groupId).select("id").single();
+        } else {
+            result = await client.from("product_groups").insert(Object.assign({}, payload, { catalog_id: activeCatalog.id })).select("id").single();
+        }
+
+        saveProductGroupButton.disabled = false;
+        saveProductGroupButton.textContent = groupId ? "Salvar alterações" : "Salvar grupo";
+
+        if (result.error) {
+            if (result.error.code !== "23505") console.error("Erro ao salvar grupo", result.error);
+            setFeedback(productGroupFeedback, result.error.code === "23505"
+                ? "Já existe um grupo com este nome neste catálogo."
+                : "Não foi possível salvar o grupo. Tente novamente.", "error");
+            return;
+        }
+
+        closeProductGroupForm();
+        await loadActiveCatalogData();
+        showToast(groupId ? "Grupo atualizado com sucesso." : "Grupo adicionado com sucesso.");
+    }
+
     function openDeleteModal(deletion) {
         pendingDeletion = deletion;
         const isCategory = deletion.type === "category";
         const isCatalog = deletion.type === "catalog";
+        const isProductType = deletion.type === "product_type";
+        const isProductGroup = deletion.type === "product_group";
         if (deletion.baseModal) {
             deletion.baseModal.setAttribute("aria-hidden", "true");
         }
         document.getElementById("deleteModalTitle").textContent = isCatalog
             ? "Excluir loja e catálogo pausado?"
-            : (isCategory ? "Excluir categoria?" : "Excluir produto?");
+            : (isCategory
+                ? "Excluir categoria?"
+                : (isProductType
+                    ? "Excluir tipo?"
+                    : (isProductGroup
+                        ? "Excluir grupo?"
+                        : "Excluir produto?")));
         document.getElementById("deleteModalDescription").textContent = isCatalog
             ? "O catálogo “" + deletion.name + "”, suas categorias, produtos e imagens vinculadas serão removidos. Essa ação não poderá ser desfeita."
             : (isCategory
                 ? "A categoria “" + deletion.name + "” será removida. Essa ação não poderá ser desfeita."
-                : "O produto “" + deletion.name + "” será removido do banco de dados e não poderá ser desfeito.");
+                : (isProductType
+                    ? "O tipo “" + deletion.name + "” será removido. Essa ação não poderá ser desfeita."
+                    : (isProductGroup
+                        ? "O grupo “" + deletion.name + "” será removido. Essa ação não poderá ser desfeita."
+                        : "O produto “" + deletion.name + "” será removido do banco de dados e não poderá ser desfeito.")));
         confirmDeleteButton.textContent = isCatalog
             ? "Excluir catálogo"
-            : (isCategory ? "Excluir categoria" : "Excluir produto");
+            : (isCategory
+                ? "Excluir categoria"
+                : (isProductType
+                    ? "Excluir tipo"
+                    : (isProductGroup
+                        ? "Excluir grupo"
+                        : "Excluir produto")));
         deleteModal.hidden = false;
         deleteModal.setAttribute("aria-hidden", "false");
         window.setTimeout(function () {
@@ -1446,6 +1782,8 @@
             closeCatalogModal();
             catalogs = [];
             categories = [];
+            productTypes = [];
+            productGroups = [];
             products = [];
             activeCatalog = null;
             clearRememberedCatalog();
@@ -1453,6 +1791,31 @@
             showToast(storageCleanupFailed
                 ? "Catálogo excluído, mas algum arquivo não pôde ser removido do armazenamento."
                 : "Loja e catálogo excluídos com sucesso.");
+            return;
+        }
+
+        if (deletion.type === "product_type" || deletion.type === "product_group") {
+            const isType = deletion.type === "product_type";
+            const table = isType ? "product_types" : "product_groups";
+            const label = isType ? "tipo" : "grupo";
+            const { data, error } = await client
+                .from(table)
+                .delete()
+                .eq("id", deletion.id)
+                .select("id")
+                .maybeSingle();
+
+            confirmDeleteButton.disabled = false;
+            if (error || !data) {
+                console.error("Erro ao excluir " + label, error);
+                closeDeleteModal();
+                showToast("Não foi possível excluir o " + label + ". Tente novamente.");
+                return;
+            }
+
+            closeDeleteModal();
+            await loadActiveCatalogData();
+            showToast(isType ? "Tipo excluído com sucesso." : "Grupo excluído com sucesso.");
             return;
         }
 
@@ -1646,6 +2009,8 @@
         if (!activeCatalog) return;
         closeRootCategoryForm();
         closeSubcategoryForm();
+        closeProductTypeForm();
+        closeProductGroupForm();
         rememberActiveCatalog(activeCatalog.id);
         renderCatalogControls();
         loadActiveCatalogData(++loadSequence);
@@ -1668,12 +2033,20 @@
 
     categoriesTabButton.addEventListener("click", function () { switchSettingsTab("categories"); });
     subcategoriesTabButton.addEventListener("click", function () { switchSettingsTab("subcategories"); });
+    typesTabButton.addEventListener("click", function () { switchSettingsTab("types"); });
+    groupsTabButton.addEventListener("click", function () { switchSettingsTab("groups"); });
     newRootCategoryButton.addEventListener("click", function () { openRootCategoryForm(null); });
     cancelRootCategoryButton.addEventListener("click", closeRootCategoryForm);
     rootCategoryForm.addEventListener("submit", saveRootCategory);
     newSubcategoryButton.addEventListener("click", function () { openSubcategoryForm(null); });
     cancelSubcategoryButton.addEventListener("click", closeSubcategoryForm);
     subcategoryForm.addEventListener("submit", saveSubcategory);
+    newProductTypeButton.addEventListener("click", function () { openProductTypeForm(null); });
+    cancelProductTypeButton.addEventListener("click", closeProductTypeForm);
+    productTypeForm.addEventListener("submit", saveProductType);
+    newProductGroupButton.addEventListener("click", function () { openProductGroupForm(null); });
+    cancelProductGroupButton.addEventListener("click", closeProductGroupForm);
+    productGroupForm.addEventListener("submit", saveProductGroup);
 
     document.getElementById("ordersMenuLink").addEventListener("click", function () { toggleMenu(false); });
     productForm.addEventListener("submit", saveProduct);

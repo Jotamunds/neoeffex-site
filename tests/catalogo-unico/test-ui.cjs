@@ -68,6 +68,11 @@ async function setup(area,legacy=false,customDb=null){
  assert(x.d.querySelector('#configureOrdersButton').disabled);
  assert(x.d.querySelector('#catalogSelect').closest('.catalog-select-field').hidden);
  assert(x.d.querySelector('#activeCatalogName').textContent.includes('Entre em contato com a Neoeffex'));
+ assert(x.d.querySelector('#settingsCatalogName').textContent.includes('Nenhuma loja vinculada'));
+ assert(x.d.querySelector('#newRootCategoryButton').disabled);
+ assert(x.d.querySelector('#newSubcategoryButton').disabled);
+ assert(x.d.querySelector('#rootCategoryForm').hidden);
+ assert(x.d.querySelector('#subcategoryForm').hidden);
  assert.deepEqual(x.errors,[]);checks++;x.dom.window.close();
 
  // Cenário 2: Uma loja existente
@@ -80,6 +85,13 @@ async function setup(area,legacy=false,customDb=null){
  assert.equal(x.d.querySelector('#newProductButton').disabled,false);
  assert.equal(x.d.querySelector('#configureOrdersButton').disabled,false);
  assert(x.d.querySelector('#activeCatalogName').textContent.includes('Loja teste'));checks++;
+
+ // Sidebar Configurações
+ const settingsLink = x.d.querySelector('#settingsMenuLink');
+ assert(settingsLink);
+ assert(settingsLink.textContent.includes('Configurações'));
+ assert.equal(x.d.querySelector('#categoriesMenuLink'),null);
+ assert(!x.d.querySelector('#configuracoes').hidden);checks++;
 
  // Edição de loja existente
  x.d.querySelector('#editCatalogButton').click();
@@ -104,15 +116,98 @@ async function setup(area,legacy=false,customDb=null){
  assert(x.d.querySelector('#catalogFeedback').textContent.includes('nenhuma loja'));checks++;
  x.d.querySelector('#closeCatalogModal').click();
 
- // Produtos e categorias funcionam na loja ativa
+ // Produtos funcionam na loja ativa
  x.d.querySelector('#newProductButton').click();assert(!x.d.querySelector('#productModal').hidden);assert(!x.d.querySelector('#productType').disabled);checks++;
  for(const [id,value] of Object.entries({productName:'Produto novo',productPrice:'12.50',productType:'Combo',productGroups:'Novo, novo, Oferta',productCategory:'child'}))x.d.getElementById(id).value=value;
  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
  const product=x.db.products.find(p=>p.name==='Produto novo');assert(product);assert.equal(product.product_type,'Combo');assert.deepEqual(Array.from(product.product_groups),['Novo','Oferta']);assert.equal(product.category_id,'child');assert.equal(product.price,'12.50');checks++;
- x.d.querySelector('#manageCategoriesButton').click();assert(!x.d.querySelector('#categoryModal').hidden);assert.equal(x.d.querySelectorAll('#categoryParent option').length,3);checks++;
- x.d.querySelector('#categoryName').value='Fitness';x.d.querySelector('#categoryParent').value='main';x.d.querySelector('#categoryOrder').value='4';x.d.querySelector('#categoryForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
- const category=x.db.categories.find(c=>c.name==='Fitness');assert(category);assert.equal(category.parent_id,'main');assert.equal(category.sort_order,4);checks++;
- assert(x.d.querySelector('#categoryList .category-action--danger').disabled);checks++;
+
+ // CONFIGURAÇÕES: CATEGORIAS PRINCIPAIS
+ assert.equal(x.d.querySelectorAll('#rootCategoryList tr').length,2);
+ const marmitasRow=Array.from(x.d.querySelectorAll('#rootCategoryList tr')).find(r=>r.textContent.includes('Marmitas'));
+ assert(marmitasRow.querySelector('.category-action--danger').disabled);
+ assert(marmitasRow.querySelector('.category-action--danger').title.includes('subcategorias'));checks++;
+ const bebidasRow=Array.from(x.d.querySelectorAll('#rootCategoryList tr')).find(r=>r.textContent.includes('Bebidas'));
+ assert(bebidasRow.querySelector('.category-action--danger').disabled);
+ assert(bebidasRow.querySelector('.category-action--danger').title.includes('produtos'));checks++;
+
+ // Criar nova categoria raiz
+ x.d.querySelector('#newRootCategoryButton').click();
+ assert(!x.d.querySelector('#rootCategoryForm').hidden);
+ x.d.querySelector('#rootCategoryName').value='Sobremesas';
+ x.d.querySelector('#rootCategoryOrder').value='3';
+ x.d.querySelector('#rootCategoryForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+ const sobremesas=x.db.categories.find(c=>c.name==='Sobremesas');
+ assert(sobremesas);assert.equal(sobremesas.parent_id,null);assert.equal(sobremesas.sort_order,3);checks++;
+
+ // Editar categoria raiz
+ const sobremesasRow=Array.from(x.d.querySelectorAll('#rootCategoryList tr')).find(r=>r.textContent.includes('Sobremesas'));
+ assert(sobremesasRow);
+ sobremesasRow.querySelectorAll('.category-action')[0].click();
+ assert(!x.d.querySelector('#rootCategoryForm').hidden);
+ assert.equal(x.d.querySelector('#rootCategoryName').value,'Sobremesas');
+ x.d.querySelector('#rootCategoryName').value='Doces & Sobremesas';
+ x.d.querySelector('#rootCategoryForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+ assert.equal(x.db.categories.find(c=>c.id===sobremesas.id).name,'Doces & Sobremesas');checks++;
+
+ // Excluir categoria raiz vazia
+ const docesRow=Array.from(x.d.querySelectorAll('#rootCategoryList tr')).find(r=>r.textContent.includes('Doces & Sobremesas'));
+ assert(!docesRow.querySelector('.category-action--danger').disabled);
+ docesRow.querySelector('.category-action--danger').click();
+ assert(!x.d.querySelector('#deleteModal').hidden);
+ x.d.querySelector('#confirmDeleteButton').click();await wait();
+ assert(!x.db.categories.some(c=>c.name==='Doces & Sobremesas'));checks++;
+
+ // CONFIGURAÇÕES: SUBCATEGORIAS
+ x.d.querySelector('#subcategoriesTabButton').click();
+ assert(!x.d.querySelector('#subcategoriesTabPanel').hidden);
+ assert(x.d.querySelector('#categoriesTabPanel').hidden);checks++;
+
+ // Subcategoria 'Tradicionais' com produto tem exclusão desabilitada
+ const tradRow=Array.from(x.d.querySelectorAll('#subcategoryList tr')).find(r=>r.textContent.includes('Tradicionais'));
+ assert(tradRow);
+ assert(tradRow.querySelector('.category-action--danger').disabled);
+ assert(tradRow.querySelector('.category-action--danger').title.includes('produtos vinculados'));checks++;
+
+ // Criar subcategoria (regra de 2 níveis: opções do select são SOMENTE categorias raiz)
+ x.d.querySelector('#newSubcategoryButton').click();
+ assert(!x.d.querySelector('#subcategoryForm').hidden);
+ const parentOptions=Array.from(x.d.querySelectorAll('#subcategoryParent option')).map(o=>o.value);
+ assert(!parentOptions.includes('child'));
+ assert(parentOptions.includes('main'));
+ x.d.querySelector('#subcategoryName').value='Fitness';
+ x.d.querySelector('#subcategoryParent').value='main';
+ x.d.querySelector('#subcategoryOrder').value='2';
+ x.d.querySelector('#subcategoryForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+ const fitnessCat=x.db.categories.find(c=>c.name==='Fitness');
+ assert(fitnessCat);assert.equal(fitnessCat.parent_id,'main');assert.equal(fitnessCat.sort_order,2);checks++;
+
+ // Bloqueio de 3º nível: tentativa de passar parent_id que aponta para outra subcategoria é rejeitada
+ x.d.querySelector('#newSubcategoryButton').click();
+ x.d.querySelector('#subcategoryName').value='Inválida Nível 3';
+ x.d.querySelector('#subcategoryParent').appendChild(new x.w.Option('Child', 'child'));
+ x.d.querySelector('#subcategoryParent').value='child'; // 'child' já possui parent_id
+ x.d.querySelector('#subcategoryForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+ assert(!x.db.categories.some(c=>c.name==='Inválida Nível 3'));
+ assert(x.d.querySelector('#subcategoryFeedback').textContent.includes('2 níveis'));checks++;
+ x.d.querySelector('#cancelSubcategoryButton').click();
+
+ // Editar subcategoria
+ const fitnessRow=Array.from(x.d.querySelectorAll('#subcategoryList tr')).find(r=>r.textContent.includes('Fitness'));
+ fitnessRow.querySelectorAll('.category-action')[0].click();
+ assert.equal(x.d.querySelector('#subcategoryName').value,'Fitness');
+ x.d.querySelector('#subcategoryName').value='Linha Fit';
+ x.d.querySelector('#subcategoryForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+ assert.equal(x.db.categories.find(c=>c.id===fitnessCat.id).name,'Linha Fit');checks++;
+
+ // Excluir subcategoria vazia
+ const fitRow=Array.from(x.d.querySelectorAll('#subcategoryList tr')).find(r=>r.textContent.includes('Linha Fit'));
+ assert(!fitRow.querySelector('.category-action--danger').disabled);
+ fitRow.querySelector('.category-action--danger').click();
+ assert(!x.d.querySelector('#deleteModal').hidden);
+ x.d.querySelector('#confirmDeleteButton').click();await wait();
+ assert(!x.db.categories.some(c=>c.name==='Linha Fit'));checks++;
+
  assert.deepEqual(x.errors,[]);x.dom.window.close();
 
  // Cenário 3: Múltiplas lojas existentes
@@ -136,15 +231,24 @@ async function setup(area,legacy=false,customDb=null){
  assert.equal(x.d.querySelector('#newCatalogButton'),null);
  assert.equal(x.d.querySelector('#deleteCatalogButton'),null);
  assert.equal(x.d.querySelectorAll('.product-row').length,1);
- assert(x.d.querySelector('.product-row').textContent.includes('Produto Loja 1'));checks++;
+ assert(x.d.querySelector('.product-row').textContent.includes('Produto Loja 1'));
+ assert(x.d.querySelector('#rootCategoryList').textContent.includes('Cat Loja 1'));
+ assert(!x.d.querySelector('#rootCategoryList').textContent.includes('Cat Loja 2'));checks++;
 
- // Alternar entre lojas isola os produtos
+ // Formulário aberto é fechado ao trocar de loja (evita salvar na loja errada)
+ x.d.querySelector('#newRootCategoryButton').click();
+ assert(!x.d.querySelector('#rootCategoryForm').hidden);
+
+ // Alternar entre lojas isola os produtos e as configurações
  x.d.querySelector('#catalogSelect').value='c2';
  x.d.querySelector('#catalogSelect').dispatchEvent(new x.w.Event('change'));
  await wait();
  assert.equal(x.d.querySelectorAll('.product-row').length,1);
  assert(x.d.querySelector('.product-row').textContent.includes('Produto Loja 2'));
- assert(!x.d.querySelector('.product-row').textContent.includes('Produto Loja 1'));checks++;
+ assert(!x.d.querySelector('.product-row').textContent.includes('Produto Loja 1'));
+ assert(x.d.querySelector('#rootCategoryList').textContent.includes('Cat Loja 2'));
+ assert(!x.d.querySelector('#rootCategoryList').textContent.includes('Cat Loja 1'));
+ assert(x.d.querySelector('#rootCategoryForm').hidden);checks++;
  assert.deepEqual(x.errors,[]);x.dom.window.close();
 
  // Modo legado

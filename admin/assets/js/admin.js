@@ -35,16 +35,15 @@
     const activeCatalogName = document.getElementById("activeCatalogName");
     const manageCategoriesButton = document.getElementById("manageCategoriesButton");
     const configureOrdersButton = document.getElementById("configureOrdersButton");
+    const settingsMenuLink = document.getElementById("settingsMenuLink") || document.getElementById("categoriesMenuLink");
+    const menuSettingsCount = document.getElementById("menuSettingsCount") || document.getElementById("menuCategoryCount");
     const productModal = document.getElementById("productModal");
     const catalogModal = document.getElementById("catalogModal");
-    const categoryModal = document.getElementById("categoryModal");
     const deleteModal = document.getElementById("deleteModal");
     const productForm = document.getElementById("productForm");
     const catalogForm = document.getElementById("catalogForm");
-    const categoryForm = document.getElementById("categoryForm");
     const productFeedback = document.getElementById("productFeedback");
     const catalogFeedback = document.getElementById("catalogFeedback");
-    const categoryFeedback = document.getElementById("categoryFeedback");
     const productDescription = document.getElementById("productDescription");
     const descriptionCounter = document.getElementById("descriptionCounter");
     const productCategory = document.getElementById("productCategory");
@@ -56,12 +55,37 @@
     const productDangerActions = document.getElementById("productDangerActions");
     const saveProductButton = document.getElementById("saveProductButton");
     const saveCatalogButton = document.getElementById("saveCatalogButton");
-    const saveCategoryButton = document.getElementById("saveCategoryButton");
     const toggleStatusButton = document.getElementById("toggleStatusButton");
     const deleteProductButton = document.getElementById("deleteProductButton");
     const confirmDeleteButton = document.getElementById("confirmDeleteButton");
-    const categoryList = document.getElementById("categoryList");
-    const emptyCategoryState = document.getElementById("emptyCategoryState");
+    const settingsCatalogName = document.getElementById("settingsCatalogName");
+    const categoriesTabButton = document.getElementById("categoriesTabButton");
+    const subcategoriesTabButton = document.getElementById("subcategoriesTabButton");
+    const categoriesTabPanel = document.getElementById("categoriesTabPanel");
+    const subcategoriesTabPanel = document.getElementById("subcategoriesTabPanel");
+    const categoriesTabCount = document.getElementById("categoriesTabCount");
+    const subcategoriesTabCount = document.getElementById("subcategoriesTabCount");
+    const newRootCategoryButton = document.getElementById("newRootCategoryButton");
+    const rootCategoryForm = document.getElementById("rootCategoryForm");
+    const rootCategoryId = document.getElementById("rootCategoryId");
+    const rootCategoryName = document.getElementById("rootCategoryName");
+    const rootCategoryOrder = document.getElementById("rootCategoryOrder");
+    const rootCategoryFeedback = document.getElementById("rootCategoryFeedback");
+    const cancelRootCategoryButton = document.getElementById("cancelRootCategoryButton");
+    const saveRootCategoryButton = document.getElementById("saveRootCategoryButton");
+    const rootCategoryList = document.getElementById("rootCategoryList");
+    const emptyRootCategoryState = document.getElementById("emptyRootCategoryState");
+    const newSubcategoryButton = document.getElementById("newSubcategoryButton");
+    const subcategoryForm = document.getElementById("subcategoryForm");
+    const subcategoryId = document.getElementById("subcategoryId");
+    const subcategoryName = document.getElementById("subcategoryName");
+    const subcategoryParent = document.getElementById("subcategoryParent");
+    const subcategoryOrder = document.getElementById("subcategoryOrder");
+    const subcategoryFeedback = document.getElementById("subcategoryFeedback");
+    const cancelSubcategoryButton = document.getElementById("cancelSubcategoryButton");
+    const saveSubcategoryButton = document.getElementById("saveSubcategoryButton");
+    const subcategoryList = document.getElementById("subcategoryList");
+    const emptySubcategoryState = document.getElementById("emptySubcategoryState");
     const organization = window.NEOEFFEX_ORGANIZATION;
     let organizationEnabled = false;
     let client = null;
@@ -348,9 +372,11 @@
         document.getElementById("activeProducts").textContent = activeProducts.length;
         document.getElementById("categoryCount").textContent = categories.length;
         document.getElementById("menuProductCount").textContent = products.length;
-        document.getElementById("menuCategoryCount").textContent = categories.length;
+        if (menuSettingsCount) menuSettingsCount.textContent = categories.length;
+        const legacyMenuCatCount = document.getElementById("menuCategoryCount");
+        if (legacyMenuCatCount) legacyMenuCatCount.textContent = categories.length;
         newProductButton.disabled = !activeCatalog;
-        manageCategoriesButton.disabled = !activeCatalog;
+        if (manageCategoriesButton) manageCategoriesButton.disabled = !activeCatalog;
     }
 
     function renderCatalogControls() {
@@ -372,6 +398,7 @@
             viewCatalogLink.setAttribute("tabindex", "-1");
             viewCatalogLink.title = "Nenhuma loja vinculada";
             renderOrdersSummary();
+            renderSettingsSection();
             return;
         }
 
@@ -481,6 +508,7 @@
         if (!activeCatalog) {
             renderProducts();
             updateSummary();
+            renderSettingsSection();
             return;
         }
 
@@ -513,7 +541,7 @@
         });
         renderProducts();
         updateSummary();
-        renderCategoryList();
+        renderSettingsSection();
     }
 
     function updateDescriptionCounter() {
@@ -583,12 +611,7 @@
         saveCatalogButton.textContent = isLoading ? "Salvando…" : "Salvar loja";
     }
 
-    function setCategoryFormLoading(isLoading) {
-        saveCategoryButton.disabled = isLoading;
-        saveCategoryButton.textContent = isLoading
-            ? "Salvando…"
-            : (document.getElementById("categoryId").value ? "Salvar categoria" : "Adicionar");
-    }
+
 
     function populateProductCategories(selectedId) {
         productCategory.replaceChildren();
@@ -693,52 +716,354 @@
         if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
     }
 
-    function openCategoryModal() {
+    function switchSettingsTab(tabName) {
+        const isCategories = tabName === "categories";
+        categoriesTabButton.classList.toggle("settings-tab--active", isCategories);
+        categoriesTabButton.setAttribute("aria-selected", String(isCategories));
+        categoriesTabPanel.hidden = !isCategories;
+
+        subcategoriesTabButton.classList.toggle("settings-tab--active", !isCategories);
+        subcategoriesTabButton.setAttribute("aria-selected", String(!isCategories));
+        subcategoriesTabPanel.hidden = isCategories;
+    }
+
+    function getNextSortOrder(items) {
+        if (!items || !items.length) return 0;
+        const max = Math.max.apply(null, items.map(function (item) { return Number(item.sort_order) || 0; }));
+        return max >= 0 ? max + 1 : 0;
+    }
+
+    function renderSettingsSection() {
+        if (!settingsCatalogName) return;
+
         if (!activeCatalog) {
-            showToast(catalogs.length === 0
-                ? "Nenhuma loja vinculada a esta conta. Entre em contato com a Neoeffex para concluir a configuração."
-                : "Selecione uma loja antes de organizar categorias.");
+            settingsCatalogName.textContent = "Nenhuma loja vinculada";
+            newRootCategoryButton.disabled = true;
+            newSubcategoryButton.disabled = true;
+            rootCategoryForm.hidden = true;
+            subcategoryForm.hidden = true;
+            rootCategoryList.replaceChildren();
+            subcategoryList.replaceChildren();
+            emptyRootCategoryState.hidden = false;
+            emptyRootCategoryState.textContent = "Nenhuma loja vinculada a esta conta.";
+            emptySubcategoryState.hidden = false;
+            emptySubcategoryState.textContent = "Nenhuma loja vinculada a esta conta.";
+            categoriesTabCount.textContent = "0";
+            subcategoriesTabCount.textContent = "0";
             return;
         }
 
-        lastFocusedElement = document.activeElement;
-        resetCategoryForm();
-        document.getElementById("categoryCatalogName").textContent = activeCatalog.name;
-        categoryModal.hidden = false;
-        categoryModal.setAttribute("aria-hidden", "false");
-        body.classList.add("has-modal");
-        renderCategoryList();
-        window.setTimeout(function () {
-            document.getElementById("categoryName").focus();
-        }, 0);
+        settingsCatalogName.textContent = activeCatalog.name;
+        newRootCategoryButton.disabled = false;
+        newSubcategoryButton.disabled = false;
+        renderRootCategories();
+        renderSubcategories();
     }
 
-    function closeCategoryModal() {
-        categoryModal.hidden = true;
-        categoryModal.setAttribute("aria-hidden", "true");
-        body.classList.remove("has-modal");
-        resetCategoryForm();
-        if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
+    function renderRootCategories() {
+        const rootCategories = categories.filter(function (item) { return !item.parent_id; });
+        categoriesTabCount.textContent = rootCategories.length;
+        rootCategoryList.replaceChildren();
+        emptyRootCategoryState.hidden = rootCategories.length !== 0;
+        emptyRootCategoryState.textContent = "Nenhuma categoria principal cadastrada.";
+
+        rootCategories.forEach(function (category) {
+            const tr = document.createElement("tr");
+
+            const nameTd = document.createElement("td");
+            const strong = document.createElement("strong");
+            strong.textContent = category.name;
+            nameTd.appendChild(strong);
+
+            const orderTd = document.createElement("td");
+            orderTd.textContent = String(category.sort_order);
+
+            const prodCount = getCategoryProductCount(category.id);
+            const prodsTd = document.createElement("td");
+            prodsTd.textContent = prodCount + (prodCount === 1 ? " produto" : " produtos");
+
+            const subcats = categories.filter(function (item) { return item.parent_id === category.id; });
+            const subcatsTd = document.createElement("td");
+            subcatsTd.textContent = subcats.length + (subcats.length === 1 ? " subcategoria" : " subcategorias");
+
+            const actionsTd = document.createElement("td");
+            actionsTd.className = "settings-table__actions";
+
+            const editButton = document.createElement("button");
+            editButton.className = "category-action";
+            editButton.type = "button";
+            editButton.textContent = "Editar";
+            editButton.addEventListener("click", function () {
+                openRootCategoryForm(category);
+            });
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "category-action category-action--danger";
+            deleteButton.type = "button";
+            deleteButton.textContent = "Excluir";
+
+            const hasSubcategories = subcats.length > 0;
+            const hasProducts = prodCount > 0;
+            deleteButton.disabled = hasSubcategories || hasProducts;
+            deleteButton.title = hasSubcategories
+                ? "Esta categoria possui subcategorias. Mova ou exclua as subcategorias primeiro."
+                : (hasProducts ? "Esta categoria possui produtos vinculados. Altere os produtos antes de excluir." : "Excluir categoria");
+
+            deleteButton.addEventListener("click", function () {
+                if (hasSubcategories) {
+                    showToast("Esta categoria possui subcategorias. Mova ou exclua as subcategorias primeiro.");
+                    return;
+                }
+                if (hasProducts) {
+                    showToast("Esta categoria possui produtos vinculados. Altere os produtos antes de excluir.");
+                    return;
+                }
+                openDeleteModal({ type: "category", id: category.id, name: category.name });
+            });
+
+            actionsTd.append(editButton, deleteButton);
+            tr.append(nameTd, orderTd, prodsTd, subcatsTd, actionsTd);
+            rootCategoryList.appendChild(tr);
+        });
     }
 
-    function populateCategoryParents(category) {
-        const field = document.getElementById("categoryParent");
-        field.replaceChildren(new Option("Categoria principal", ""));
-        categories.filter(function (item) { return !item.parent_id && (!category || item.id !== category.id); })
-            .forEach(function (item) { field.appendChild(new Option(item.name, item.id)); });
-        field.value = category ? category.parent_id || "" : "";
-        const hasChildren = category && categories.some(function (item) { return item.parent_id === category.id; });
-        field.disabled = !organizationEnabled || Boolean(hasChildren);
-        document.getElementById("categoryOrder").value = category ? category.sort_order : getNextSortOrder(categories);
+    function renderSubcategories() {
+        const rootCategories = categories.filter(function (item) { return !item.parent_id; });
+        const subcategories = categories.filter(function (item) { return Boolean(item.parent_id); });
+        subcategoriesTabCount.textContent = subcategories.length;
+        subcategoryList.replaceChildren();
+        emptySubcategoryState.hidden = subcategories.length !== 0;
+        emptySubcategoryState.textContent = "Nenhuma subcategoria cadastrada.";
+
+        subcategoryParent.replaceChildren(new Option("Selecione a categoria principal", ""));
+        rootCategories.forEach(function (cat) {
+            subcategoryParent.appendChild(new Option(cat.name, cat.id));
+        });
+
+        subcategories.forEach(function (subcategory) {
+            const tr = document.createElement("tr");
+
+            const nameTd = document.createElement("td");
+            const strong = document.createElement("strong");
+            strong.textContent = subcategory.name;
+            nameTd.appendChild(strong);
+
+            const parent = categories.find(function (item) { return item.id === subcategory.parent_id; });
+            const parentTd = document.createElement("td");
+            const badge = document.createElement("span");
+            badge.className = "badge";
+            badge.textContent = parent ? parent.name : "Indisponível";
+            parentTd.appendChild(badge);
+
+            const orderTd = document.createElement("td");
+            orderTd.textContent = String(subcategory.sort_order);
+
+            const prodCount = getCategoryProductCount(subcategory.id);
+            const prodsTd = document.createElement("td");
+            prodsTd.textContent = prodCount + (prodCount === 1 ? " produto" : " produtos");
+
+            const actionsTd = document.createElement("td");
+            actionsTd.className = "settings-table__actions";
+
+            const editButton = document.createElement("button");
+            editButton.className = "category-action";
+            editButton.type = "button";
+            editButton.textContent = "Editar";
+            editButton.addEventListener("click", function () {
+                openSubcategoryForm(subcategory);
+            });
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "category-action category-action--danger";
+            deleteButton.type = "button";
+            deleteButton.textContent = "Excluir";
+
+            const hasProducts = prodCount > 0;
+            deleteButton.disabled = hasProducts;
+            deleteButton.title = hasProducts
+                ? "Esta subcategoria possui produtos vinculados. Altere os produtos antes de excluir."
+                : "Excluir subcategoria";
+
+            deleteButton.addEventListener("click", function () {
+                if (hasProducts) {
+                    showToast("Esta subcategoria possui produtos vinculados. Altere os produtos antes de excluir.");
+                    return;
+                }
+                openDeleteModal({ type: "category", id: subcategory.id, name: subcategory.name });
+            });
+
+            actionsTd.append(editButton, deleteButton);
+            tr.append(nameTd, parentTd, orderTd, prodsTd, actionsTd);
+            subcategoryList.appendChild(tr);
+        });
     }
 
-    function resetCategoryForm() {
-        categoryForm.reset();
-        populateCategoryParents(null);
-        document.getElementById("categoryId").value = "";
-        saveCategoryButton.textContent = "Adicionar";
-        setCategoryFormLoading(false);
-        setFeedback(categoryFeedback, "", "");
+    function openRootCategoryForm(category) {
+        if (!activeCatalog) return;
+        setFeedback(rootCategoryFeedback, "", "");
+        const roots = categories.filter(function (item) { return !item.parent_id; });
+        if (category) {
+            document.getElementById("rootCategoryFormTitle").textContent = "Editar categoria principal";
+            rootCategoryId.value = category.id;
+            rootCategoryName.value = category.name;
+            rootCategoryOrder.value = category.sort_order;
+            saveRootCategoryButton.textContent = "Salvar alterações";
+        } else {
+            document.getElementById("rootCategoryFormTitle").textContent = "Nova categoria principal";
+            rootCategoryId.value = "";
+            rootCategoryName.value = "";
+            rootCategoryOrder.value = getNextSortOrder(roots);
+            saveRootCategoryButton.textContent = "Salvar categoria";
+        }
+        rootCategoryForm.hidden = false;
+        window.setTimeout(function () { rootCategoryName.focus(); }, 0);
+    }
+
+    function closeRootCategoryForm() {
+        rootCategoryForm.hidden = true;
+        rootCategoryForm.reset();
+        rootCategoryId.value = "";
+        setFeedback(rootCategoryFeedback, "", "");
+    }
+
+    function openSubcategoryForm(subcategory) {
+        if (!activeCatalog) return;
+        setFeedback(subcategoryFeedback, "", "");
+        const subs = categories.filter(function (item) { return Boolean(item.parent_id); });
+        const roots = categories.filter(function (item) { return !item.parent_id; });
+
+        subcategoryParent.replaceChildren(new Option("Selecione a categoria principal", ""));
+        roots.forEach(function (cat) {
+            subcategoryParent.appendChild(new Option(cat.name, cat.id));
+        });
+
+        if (subcategory) {
+            document.getElementById("subcategoryFormTitle").textContent = "Editar subcategoria";
+            subcategoryId.value = subcategory.id;
+            subcategoryName.value = subcategory.name;
+            subcategoryParent.value = subcategory.parent_id || "";
+            subcategoryOrder.value = subcategory.sort_order;
+            saveSubcategoryButton.textContent = "Salvar alterações";
+        } else {
+            document.getElementById("subcategoryFormTitle").textContent = "Nova subcategoria";
+            subcategoryId.value = "";
+            subcategoryName.value = "";
+            subcategoryParent.value = roots[0] ? roots[0].id : "";
+            subcategoryOrder.value = getNextSortOrder(subs);
+            saveSubcategoryButton.textContent = "Salvar subcategoria";
+        }
+        subcategoryForm.hidden = false;
+        window.setTimeout(function () { subcategoryName.focus(); }, 0);
+    }
+
+    function closeSubcategoryForm() {
+        subcategoryForm.hidden = true;
+        subcategoryForm.reset();
+        subcategoryId.value = "";
+        setFeedback(subcategoryFeedback, "", "");
+    }
+
+    async function saveRootCategory(event) {
+        event.preventDefault();
+        if (!activeCatalog) return;
+
+        const name = rootCategoryName.value.trim();
+        const categoryId = rootCategoryId.value;
+        if (name.length < 2 || name.length > 80) {
+            setFeedback(rootCategoryFeedback, "O nome da categoria precisa ter entre 2 e 80 caracteres.", "error");
+            return;
+        }
+
+        const order = Number(rootCategoryOrder.value);
+        if (!Number.isInteger(order) || order < 0 || order > 2147483647) {
+            setFeedback(rootCategoryFeedback, "Informe uma ordem inteira a partir de zero.", "error");
+            return;
+        }
+
+        saveRootCategoryButton.disabled = true;
+        saveRootCategoryButton.textContent = "Salvando…";
+        setFeedback(rootCategoryFeedback, "", "");
+
+        const payload = { name: name, sort_order: order, parent_id: null };
+        let result;
+        if (categoryId) {
+            result = await client.from("categories").update(payload).eq("id", categoryId).select("id").single();
+        } else {
+            result = await client.from("categories").insert(Object.assign({}, payload, { catalog_id: activeCatalog.id })).select("id").single();
+        }
+
+        saveRootCategoryButton.disabled = false;
+        saveRootCategoryButton.textContent = categoryId ? "Salvar alterações" : "Salvar categoria";
+
+        if (result.error) {
+            console.error("Erro ao salvar categoria", result.error);
+            setFeedback(rootCategoryFeedback, result.error.code === "23505"
+                ? "Já existe uma categoria com este nome neste catálogo."
+                : "Não foi possível salvar a categoria. Tente novamente.", "error");
+            return;
+        }
+
+        closeRootCategoryForm();
+        await loadActiveCatalogData();
+        showToast(categoryId ? "Categoria atualizada com sucesso." : "Categoria adicionada com sucesso.");
+    }
+
+    async function saveSubcategory(event) {
+        event.preventDefault();
+        if (!activeCatalog) return;
+
+        const name = subcategoryName.value.trim();
+        const categoryId = subcategoryId.value;
+        const parentId = subcategoryParent.value;
+
+        if (name.length < 2 || name.length > 80) {
+            setFeedback(subcategoryFeedback, "O nome da subcategoria precisa ter entre 2 e 80 caracteres.", "error");
+            return;
+        }
+
+        if (!parentId) {
+            setFeedback(subcategoryFeedback, "Selecione a categoria principal para esta subcategoria.", "error");
+            return;
+        }
+
+        const parentCategory = categories.find(function (item) { return item.id === parentId; });
+        if (!parentCategory || parentCategory.parent_id) {
+            setFeedback(subcategoryFeedback, "Uma subcategoria só pode ser vinculada a uma categoria principal (máximo 2 níveis).", "error");
+            return;
+        }
+
+        const order = Number(subcategoryOrder.value);
+        if (!Number.isInteger(order) || order < 0 || order > 2147483647) {
+            setFeedback(subcategoryFeedback, "Informe uma ordem inteira a partir de zero.", "error");
+            return;
+        }
+
+        saveSubcategoryButton.disabled = true;
+        saveSubcategoryButton.textContent = "Salvando…";
+        setFeedback(subcategoryFeedback, "", "");
+
+        const payload = { name: name, sort_order: order, parent_id: parentId };
+        let result;
+        if (categoryId) {
+            result = await client.from("categories").update(payload).eq("id", categoryId).select("id").single();
+        } else {
+            result = await client.from("categories").insert(Object.assign({}, payload, { catalog_id: activeCatalog.id })).select("id").single();
+        }
+
+        saveSubcategoryButton.disabled = false;
+        saveSubcategoryButton.textContent = categoryId ? "Salvar alterações" : "Salvar subcategoria";
+
+        if (result.error) {
+            console.error("Erro ao salvar subcategoria", result.error);
+            setFeedback(subcategoryFeedback, result.error.code === "23505"
+                ? "Já existe uma categoria com este nome neste catálogo."
+                : "Não foi possível salvar a subcategoria. Tente novamente.", "error");
+            return;
+        }
+
+        closeSubcategoryForm();
+        await loadActiveCatalogData();
+        showToast(categoryId ? "Subcategoria atualizada com sucesso." : "Subcategoria adicionada com sucesso.");
     }
 
     function getCategoryProductCount(categoryId) {
@@ -747,62 +1072,13 @@
         }).length;
     }
 
-    function renderCategoryList() {
-        categoryList.replaceChildren();
-        emptyCategoryState.hidden = categories.length !== 0;
-
-        categories.forEach(function (category) {
-            const item = document.createElement("article");
-            const copy = document.createElement("div");
-            const actions = document.createElement("div");
-            const name = document.createElement("strong");
-            const detail = document.createElement("small");
-            const editButton = document.createElement("button");
-            const deleteButton = document.createElement("button");
-            const productCount = getCategoryProductCount(category.id);
-
-            item.className = "category-list__item";
-            name.textContent = getCategoryName(category.id);
-            detail.textContent = productCount + " produto" + (productCount === 1 ? " vinculado" : "s vinculados");
-            copy.appendChild(name);
-            copy.appendChild(detail);
-            editButton.className = "category-action";
-            editButton.type = "button";
-            editButton.textContent = "Editar";
-            editButton.addEventListener("click", function () {
-                document.getElementById("categoryId").value = category.id;
-                document.getElementById("categoryName").value = category.name;
-                populateCategoryParents(category);
-                saveCategoryButton.textContent = "Salvar categoria";
-                setFeedback(categoryFeedback, "", "");
-                document.getElementById("categoryName").focus();
-            });
-            deleteButton.className = "category-action category-action--danger";
-            deleteButton.type = "button";
-            deleteButton.textContent = "Excluir";
-            const hasChildren = categories.some(function (item) { return item.parent_id === category.id; });
-            deleteButton.disabled = productCount > 0 || hasChildren;
-            deleteButton.title = hasChildren ? "Remova ou mova as subcategorias antes de excluir" : productCount > 0 ? "Remova ou altere os produtos desta categoria antes de excluí-la" : "Excluir categoria";
-            deleteButton.addEventListener("click", function () {
-                if (productCount > 0) {
-                    setFeedback(categoryFeedback, "Esta categoria possui produtos vinculados e não pode ser excluída.", "error");
-                    return;
-                }
-                openDeleteModal({ type: "category", id: category.id, name: category.name, baseModal: categoryModal });
-            });
-            actions.appendChild(editButton);
-            actions.appendChild(deleteButton);
-            item.appendChild(copy);
-            item.appendChild(actions);
-            categoryList.appendChild(item);
-        });
-    }
-
     function openDeleteModal(deletion) {
         pendingDeletion = deletion;
         const isCategory = deletion.type === "category";
         const isCatalog = deletion.type === "catalog";
-        deletion.baseModal.setAttribute("aria-hidden", "true");
+        if (deletion.baseModal) {
+            deletion.baseModal.setAttribute("aria-hidden", "true");
+        }
         document.getElementById("deleteModalTitle").textContent = isCatalog
             ? "Excluir loja e catálogo pausado?"
             : (isCategory ? "Excluir categoria?" : "Excluir produto?");
@@ -824,7 +1100,7 @@
     function closeDeleteModal() {
         deleteModal.hidden = true;
         deleteModal.setAttribute("aria-hidden", "true");
-        if (pendingDeletion && !pendingDeletion.baseModal.hidden) {
+        if (pendingDeletion && pendingDeletion.baseModal && !pendingDeletion.baseModal.hidden) {
             pendingDeletion.baseModal.setAttribute("aria-hidden", "false");
         }
         pendingDeletion = null;
@@ -1123,49 +1399,7 @@
         showToast("Loja atualizada com sucesso.");
     }
 
-    async function saveCategory(event) {
-        event.preventDefault();
-        if (!activeCatalog) return;
 
-        const name = document.getElementById("categoryName").value.trim();
-        const categoryId = document.getElementById("categoryId").value;
-        if (name.length < 2 || name.length > 80) {
-            setFeedback(categoryFeedback, "O nome da categoria precisa ter entre 2 e 80 caracteres.", "error");
-            return;
-        }
-
-        setCategoryFormLoading(true);
-        setFeedback(categoryFeedback, "", "");
-        const order = Number(document.getElementById("categoryOrder").value);
-        if (!Number.isInteger(order) || order < 0 || order > 2147483647) {
-            setFeedback(categoryFeedback, "Informe uma ordem inteira a partir de zero.", "error");
-            setCategoryFormLoading(false);
-            return;
-        }
-        const payload = { name: name, sort_order: order };
-        if (organizationEnabled) payload.parent_id = document.getElementById("categoryParent").value || null;
-        let result;
-        if (categoryId) {
-            result = await client.from("categories").update(payload).eq("id", categoryId).select("id").single();
-        } else {
-            result = await client.from("categories").insert(Object.assign({}, payload, {
-                catalog_id: activeCatalog.id
-            })).select("id").single();
-        }
-
-        if (result.error) {
-            console.error("Erro ao salvar categoria", result.error);
-            setFeedback(categoryFeedback, result.error.code === "23505"
-                ? "Já existe uma categoria com este nome neste catálogo."
-                : "Não foi possível salvar. Confira o nome e a categoria principal; são permitidos dois níveis.", "error");
-            setCategoryFormLoading(false);
-            return;
-        }
-
-        resetCategoryForm();
-        await loadActiveCatalogData();
-        setFeedback(categoryFeedback, categoryId ? "Categoria atualizada." : "Categoria adicionada.", "success");
-    }
 
     async function removeStoredFiles(bucket, paths) {
         const candidates = Array.isArray(paths) ? paths : [paths];
@@ -1245,9 +1479,8 @@
 
         closeDeleteModal();
         if (deletion.type === "category") {
-            resetCategoryForm();
             await loadActiveCatalogData();
-            setFeedback(categoryFeedback, "Categoria excluída.", "success");
+            showToast("Categoria excluída com sucesso.");
         } else {
             closeProductModal();
             await loadActiveCatalogData();
@@ -1411,20 +1644,40 @@
     catalogSelect.addEventListener("change", function () {
         activeCatalog = catalogs.find(function (catalog) { return catalog.id === catalogSelect.value; }) || null;
         if (!activeCatalog) return;
+        closeRootCategoryForm();
+        closeSubcategoryForm();
         rememberActiveCatalog(activeCatalog.id);
         renderCatalogControls();
         loadActiveCatalogData(++loadSequence);
     });
-    manageCategoriesButton.addEventListener("click", openCategoryModal);
-    document.getElementById("categoriesMenuLink").addEventListener("click", function (event) {
-        event.preventDefault();
-        toggleMenu(false);
-        openCategoryModal();
-    });
+
+    if (manageCategoriesButton) {
+        manageCategoriesButton.addEventListener("click", function () {
+            const section = document.getElementById("configuracoes");
+            if (section && typeof section.scrollIntoView === "function") {
+                section.scrollIntoView({ behavior: "smooth" });
+            }
+        });
+    }
+
+    if (settingsMenuLink) {
+        settingsMenuLink.addEventListener("click", function () {
+            toggleMenu(false);
+        });
+    }
+
+    categoriesTabButton.addEventListener("click", function () { switchSettingsTab("categories"); });
+    subcategoriesTabButton.addEventListener("click", function () { switchSettingsTab("subcategories"); });
+    newRootCategoryButton.addEventListener("click", function () { openRootCategoryForm(null); });
+    cancelRootCategoryButton.addEventListener("click", closeRootCategoryForm);
+    rootCategoryForm.addEventListener("submit", saveRootCategory);
+    newSubcategoryButton.addEventListener("click", function () { openSubcategoryForm(null); });
+    cancelSubcategoryButton.addEventListener("click", closeSubcategoryForm);
+    subcategoryForm.addEventListener("submit", saveSubcategory);
+
     document.getElementById("ordersMenuLink").addEventListener("click", function () { toggleMenu(false); });
     productForm.addEventListener("submit", saveProduct);
     catalogForm.addEventListener("submit", saveCatalog);
-    categoryForm.addEventListener("submit", saveCategory);
     productDescription.addEventListener("input", updateDescriptionCounter);
     productImageInput.addEventListener("change", previewSelectedProductImage);
     productImagePreviewImage.addEventListener("error", function () {
@@ -1455,7 +1708,6 @@
     });
     document.getElementById("closeProductModal").addEventListener("click", closeProductModal);
     document.getElementById("closeCatalogModal").addEventListener("click", closeCatalogModal);
-    document.getElementById("closeCategoryModal").addEventListener("click", closeCategoryModal);
     toggleStatusButton.addEventListener("click", toggleProductStatus);
     deleteProductButton.addEventListener("click", function () {
         const productId = document.getElementById("productId").value;
@@ -1489,7 +1741,6 @@
 
     dismissOnBackdropPointer(productModal, closeProductModal);
     dismissOnBackdropPointer(catalogModal, closeCatalogModal);
-    dismissOnBackdropPointer(categoryModal, closeCategoryModal);
     dismissOnBackdropPointer(deleteModal, closeDeleteModal);
     loginForm.addEventListener("submit", handleLogin);
     recoveryForm.addEventListener("submit", handleRecovery);
@@ -1516,8 +1767,6 @@
             closeProductModal();
         } else if (!catalogModal.hidden) {
             closeCatalogModal();
-        } else if (!categoryModal.hidden) {
-            closeCategoryModal();
         } else {
             toggleMenu(false);
         }

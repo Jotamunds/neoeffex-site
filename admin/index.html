@@ -78,10 +78,10 @@
                     Produtos
                     <span class="menu__counter" id="menuProductCount">0</span>
                 </a>
-                <a class="menu__item" href="#categorias" id="categoriesMenuLink">
-                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>
-                    Categorias
-                    <span class="menu__counter" id="menuCategoryCount">0</span>
+                <a class="menu__item" href="#configuracoes" id="settingsMenuLink">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"></path></svg>
+                    Configurações
+                    <span class="menu__counter" id="menuSettingsCount">0</span>
                 </a>
                 <a class="menu__item" href="#pedidos" id="ordersMenuLink">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 8h10l2 12H5L7 8Z"></path><path d="M9 8a3 3 0 0 1 6 0"></path></svg>
@@ -198,7 +198,7 @@
                                     <option value="paused">Pausados</option>
                                 </select>
                             </label>
-                            <button class="secondary-button catalog-actions__button" id="manageCategoriesButton" type="button">Categorias</button>
+                            <button class="secondary-button catalog-actions__button" id="manageCategoriesButton" type="button">Configurações</button>
                         </div>
                     </div>
 
@@ -240,7 +240,130 @@
                     </div>
                 </section>
 
-                <section class="category-anchor" id="categorias" aria-hidden="true"></section>
+                <section class="settings-section" id="configuracoes" aria-labelledby="settingsTitle">
+                    <div class="section-heading">
+                        <div>
+                            <span class="eyebrow">ORGANIZAÇÃO</span>
+                            <h2 id="settingsTitle">Configurações</h2>
+                            <p id="settingsDescription">Gerencie categorias e subcategorias dos produtos de <span id="settingsCatalogName">Carregando…</span>.</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-tabs" role="tablist" aria-label="Abas de configurações">
+                        <button class="settings-tab settings-tab--active" id="categoriesTabButton" type="button" role="tab" aria-selected="true" aria-controls="categoriesTabPanel">
+                            Categorias
+                            <span class="settings-tab__count" id="categoriesTabCount">0</span>
+                        </button>
+                        <button class="settings-tab" id="subcategoriesTabButton" type="button" role="tab" aria-selected="false" aria-controls="subcategoriesTabPanel">
+                            Subcategorias
+                            <span class="settings-tab__count" id="subcategoriesTabCount">0</span>
+                        </button>
+                    </div>
+
+                    <div class="settings-panel" id="categoriesTabPanel" role="tabpanel" aria-labelledby="categoriesTabButton">
+                        <div class="settings-panel__head">
+                            <div>
+                                <h3>Categorias principais</h3>
+                                <p>Estruture as seções principais do catálogo (ex: Marmitas, Bebidas, Sobremesas).</p>
+                            </div>
+                            <button class="primary-button" id="newRootCategoryButton" type="button">
+                                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
+                                Nova categoria
+                            </button>
+                        </div>
+
+                        <form class="settings-form" id="rootCategoryForm" novalidate hidden>
+                            <input id="rootCategoryId" name="rootCategoryId" type="hidden">
+                            <h4 id="rootCategoryFormTitle">Nova categoria principal</h4>
+                            <div class="settings-form__grid">
+                                <div class="form-field">
+                                    <label for="rootCategoryName">Nome da categoria</label>
+                                    <input id="rootCategoryName" name="rootCategoryName" type="text" maxlength="80" autocomplete="off" placeholder="Ex: Marmitas" required>
+                                </div>
+                                <div class="form-field form-field--short">
+                                    <label for="rootCategoryOrder">Ordem</label>
+                                    <input id="rootCategoryOrder" name="rootCategoryOrder" type="number" min="0" max="2147483647" step="1" value="0">
+                                </div>
+                            </div>
+                            <p class="form-feedback" id="rootCategoryFeedback" role="status" aria-live="polite"></p>
+                            <div class="settings-form__actions">
+                                <button class="secondary-button" id="cancelRootCategoryButton" type="button">Cancelar</button>
+                                <button class="primary-button" id="saveRootCategoryButton" type="submit">Salvar categoria</button>
+                            </div>
+                        </form>
+
+                        <div class="settings-table-wrapper">
+                            <table class="settings-table" id="rootCategoriesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Ordem</th>
+                                        <th>Produtos</th>
+                                        <th>Subcategorias</th>
+                                        <th class="settings-table__actions-head">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rootCategoryList"></tbody>
+                            </table>
+                            <p class="empty-state" id="emptyRootCategoryState" hidden>Nenhuma categoria principal cadastrada.</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-panel" id="subcategoriesTabPanel" role="tabpanel" aria-labelledby="subcategoriesTabButton" hidden>
+                        <div class="settings-panel__head">
+                            <div>
+                                <h3>Subcategorias</h3>
+                                <p>Estruture subdivisões ligadas a uma categoria principal (ex: Tradicionais em Marmitas).</p>
+                            </div>
+                            <button class="primary-button" id="newSubcategoryButton" type="button">
+                                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
+                                Nova subcategoria
+                            </button>
+                        </div>
+
+                        <form class="settings-form" id="subcategoryForm" novalidate hidden>
+                            <input id="subcategoryId" name="subcategoryId" type="hidden">
+                            <h4 id="subcategoryFormTitle">Nova subcategoria</h4>
+                            <div class="settings-form__grid">
+                                <div class="form-field">
+                                    <label for="subcategoryName">Nome da subcategoria</label>
+                                    <input id="subcategoryName" name="subcategoryName" type="text" maxlength="80" autocomplete="off" placeholder="Ex: Fitness" required>
+                                </div>
+                                <div class="form-field">
+                                    <label for="subcategoryParent">Categoria principal</label>
+                                    <select id="subcategoryParent" required>
+                                        <option value="">Selecione a categoria principal</option>
+                                    </select>
+                                </div>
+                                <div class="form-field form-field--short">
+                                    <label for="subcategoryOrder">Ordem</label>
+                                    <input id="subcategoryOrder" name="subcategoryOrder" type="number" min="0" max="2147483647" step="1" value="0">
+                                </div>
+                            </div>
+                            <p class="form-feedback" id="subcategoryFeedback" role="status" aria-live="polite"></p>
+                            <div class="settings-form__actions">
+                                <button class="secondary-button" id="cancelSubcategoryButton" type="button">Cancelar</button>
+                                <button class="primary-button" id="saveSubcategoryButton" type="submit">Salvar subcategoria</button>
+                            </div>
+                        </form>
+
+                        <div class="settings-table-wrapper">
+                            <table class="settings-table" id="subcategoriesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Categoria principal</th>
+                                        <th>Ordem</th>
+                                        <th>Produtos</th>
+                                        <th class="settings-table__actions-head">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subcategoryList"></tbody>
+                            </table>
+                            <p class="empty-state" id="emptySubcategoryState" hidden>Nenhuma subcategoria cadastrada.</p>
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
     </div>
@@ -381,36 +504,7 @@
         </div>
     </div>
 
-    <div class="modal" id="categoryModal" role="dialog" aria-modal="true" aria-labelledby="categoryModalTitle" aria-hidden="true" hidden>
-        <div class="modal__card modal__card--medium">
-            <div class="modal__head">
-                <div>
-                    <span class="eyebrow">CATEGORIAS</span>
-                    <h2 id="categoryModalTitle">Categorias do catálogo</h2>
-                    <p id="categoryModalDescription">As categorias ajudam a organizar os produtos de <span id="categoryCatalogName"></span>.</p>
-                </div>
-                <button class="icon-button" id="closeCategoryModal" type="button" aria-label="Fechar categorias">
-                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
-                </button>
-            </div>
 
-            <form class="category-form" id="categoryForm" novalidate>
-                <input id="categoryId" name="categoryId" type="hidden">
-                <label class="sr-only" for="categoryName">Nome da categoria</label>
-                <input id="categoryName" name="categoryName" type="text" maxlength="80" autocomplete="off" placeholder="Nova categoria" required>
-                <label class="category-organization-field">Categoria principal
-                    <select id="categoryParent" data-organization-field disabled><option value="">Categoria principal</option></select>
-                </label>
-                <label class="category-organization-field">Ordem
-                    <input id="categoryOrder" type="number" min="0" max="2147483647" step="1" value="0">
-                </label>
-                <button class="primary-button" id="saveCategoryButton" type="submit">Adicionar</button>
-            </form>
-            <p class="form-feedback category-feedback" id="categoryFeedback" role="status" aria-live="polite"></p>
-            <div class="category-list" id="categoryList" aria-live="polite"></div>
-            <p class="empty-state" id="emptyCategoryState" hidden>Você ainda não cadastrou categorias para este catálogo.</p>
-        </div>
-    </div>
 
     <div class="modal modal--confirm" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" aria-describedby="deleteModalDescription" aria-hidden="true" hidden>
         <div class="modal__card modal__card--small">
@@ -435,9 +529,9 @@
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
-    <script src="config.js?v=0.3.1" defer></script>
-    <script src="../assets/catalog/organization.js?v=0.3.1" defer></script>
-    <script src="assets/js/admin.js?v=0.3.1" defer></script>
+    <script src="config.js?v=0.3.2" defer></script>
+    <script src="../assets/catalog/organization.js?v=0.3.2" defer></script>
+    <script src="assets/js/admin.js?v=0.3.2" defer></script>
 </body>
 </html>
 

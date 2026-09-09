@@ -29,6 +29,8 @@ Não use este arquivo como changelog.
 - Alterações no Admin devem funcionar com múltiplos catálogos.
 - O painel do lojista administra lojas já provisionadas. O fluxo de criação de loja não deve ser restaurado no frontend sem nova decisão de produto.
 - A exclusão definitiva de loja/catálogo foi retirada da interface do lojista para evitar perda acidental de acesso ou deixar contas sem loja provisionada.
+- A organização estrutural do catálogo fica centralizada na seção "Configurações" (em substituição ao antigo modal simples de categorias).
+- Nesta etapa, "Configurações" gerencia funcionalmente Categorias e Subcategorias com regra estrita de dois níveis e exclusões seguras explicadas ao usuário; Tipos e Grupos serão migrados para configuração persistente em etapa posterior.
 - O estado de autenticação deve ser consistente entre abas quando o mecanismo atual permitir sincronização.
 - Modais/painéis não devem fechar por interações iniciadas dentro do conteúdo e finalizadas fora de maneira acidental.
 - Exclusão de dados deve exigir confirmação quando houver risco de perda.

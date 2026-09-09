@@ -1540,11 +1540,6 @@ body.has-modal {
     color: #b8363d;
 }
 
-.category-anchor {
-    position: relative;
-    top: -76px;
-}
-
 @media (max-width: 900px) {
     .app-shell {
         grid-template-columns: 1fr;
@@ -1803,3 +1798,191 @@ body.has-modal {
 .category-organization-field { display: grid; gap: 6px; min-width: 0; flex: 1 1 140px; font-size: 12px; }
 .category-organization-field select, .category-organization-field input { width: 100%; min-height: 44px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px; }
 .organization-notice { margin: 16px 0; font-size: 14px; }
+
+/* ==========================================================================
+   Seção de Configurações (Categorias e Subcategorias)
+   ========================================================================== */
+
+.settings-section {
+    margin-top: 24px;
+    padding: 25px;
+    scroll-margin-top: 92px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+}
+
+.settings-tabs {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+}
+
+.settings-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-muted);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 180ms ease;
+}
+
+.settings-tab:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+    background: var(--surface-hover);
+}
+
+.settings-tab--active {
+    border-color: var(--blue-600);
+    background: var(--blue-800);
+    color: #ffffff;
+}
+
+.settings-tab--active:hover {
+    background: var(--blue-950);
+    color: #ffffff;
+}
+
+.settings-tab__count {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: color-mix(in srgb, currentColor 20%, transparent);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.settings-panel {
+    margin-top: 20px;
+}
+
+.settings-panel__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.settings-panel__head h3 {
+    margin: 0 0 4px;
+    color: var(--text);
+    font-size: 16px;
+    letter-spacing: -0.02em;
+}
+
+.settings-panel__head p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.settings-form {
+    margin-bottom: 20px;
+    padding: 18px;
+    border: 1px solid var(--blue-600);
+    border-radius: 10px;
+    background: var(--surface-muted);
+}
+
+.settings-form h4 {
+    margin: 0 0 14px;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.settings-form__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.settings-form__grid .form-field {
+    flex: 1 1 220px;
+}
+
+.settings-form__grid .form-field--short {
+    flex: 0 0 100px;
+    max-width: 120px;
+}
+
+.settings-form__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.settings-table-wrapper {
+    overflow-x: auto;
+}
+
+.settings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: left;
+}
+
+.settings-table th {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-subtle);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.settings-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: middle;
+}
+
+.settings-table tbody tr:hover {
+    background: var(--surface-muted);
+}
+
+.settings-table__actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.settings-table__actions-head {
+    text-align: right;
+}
+
+@media (max-width: 700px) {
+    .settings-section {
+        padding: 19px 14px;
+    }
+
+    .settings-panel__head {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .settings-panel__head .primary-button {
+        width: 100%;
+    }
+
+    .settings-form__grid {
+        flex-direction: column;
+    }
+
+    .settings-form__grid .form-field--short {
+        max-width: 100%;
+    }
+}

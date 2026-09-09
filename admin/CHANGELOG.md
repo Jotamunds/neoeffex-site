@@ -1,5 +1,17 @@
 # Changelog — Painel administrativo
 
+## [0.3.2] - 2026-09-09
+
+### Configurações e organização do catálogo
+- Substituída a antiga área e modal simples de "Categorias" por uma nova seção estruturada de "Configurações" (`#configuracoes`) com navegação interna por abas.
+- Menu lateral atualizado: item "Categorias" substituído por "Configurações", com ícone vetorial de ajustes e contador de itens do catálogo.
+- Implementada interface dedicada para **Categorias principais** (`parent_id = null`), permitindo listagem com contadores, cadastro, edição, ordenação e exclusão segura.
+- Implementada interface dedicada para **Subcategorias** (`parent_id != null`), permitindo listagem com indicação visual da categoria principal vinculada, cadastro, edição, ordenação e exclusão segura.
+- Regra de dois níveis preservada: a seleção de categoria pai restringe-se estritamente a categorias raiz do mesmo catálogo, impedindo a criação de um terceiro nível tanto no frontend quanto no handler de envio.
+- Proteções contra exclusão indevida mantidas e aprimoradas com explicações claras ao usuário (bloqueio quando há produtos ou subcategorias vinculadas).
+- Estado sem loja e alternância entre múltiplas lojas tratados: fechamento de formulários ativos na troca, isolamento estrito de dados por catálogo e preservação de `loadSequence`.
+- Preservada total compatibilidade com os campos existentes de produtos (`product_type`, `product_groups`), catálogo público e WhatsApp.
+
 ## [0.3.1] - 2026-09-09
 
 ### Lojas e provisionamento

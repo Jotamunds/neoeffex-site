@@ -2,6 +2,17 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.2.2] - 2026-09-09
+
+### Adicionado
+- Adiciona botão minimalista com ícone de cadeado para o "Acesso administrativo" direcionando para `/admin/` na barra de navegação superior (`topbar`), posicionado à esquerda de "Pedir orçamento", com suporte a interação magnética e cursor personalizado.
+- Adiciona botão de "Acesso administrativo" nas ações do menu mobile dropdown para telas menores e dispositivos móveis.
+- Adiciona links institucionais e atalho para "Acesso administrativo" no rodapé da página principal.
+
+### Alterado
+- Atualiza o link do rodapé em `/planos/` para a nomenclatura unificada "Acesso administrativo" (apontando para `../admin/`).
+- Atualiza estilos e responsividade no `assets/home/css/home.css` para manter harmonia visual entre o CTA comercial e o acesso de lojistas/administradores.
+
 ## [0.2.1] - 2026-09-07
 
 ### Corrigido

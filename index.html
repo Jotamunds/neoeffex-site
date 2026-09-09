@@ -74,6 +74,12 @@
                 </nav>
 
                 <div class="topbar__actions">
+                    <a class="button button--ghost button--admin button--magnetic topbar-admin" href="/admin/" data-cursor="↗" data-magnetic aria-label="Acesso administrativo" title="Acesso administrativo">
+                        <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </a>
                     <a class="button button--ghost button--magnetic topbar-cta" href="/planos/" data-cursor="↗" data-magnetic>
                         <span>Pedir orçamento</span>
                         <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -93,10 +99,19 @@
                     <a href="#modelos" class="mobile-menu__link">Modelos</a>
                     <a href="/planos/" class="mobile-menu__link">Planos</a>
                     <a href="#como-funciona" class="mobile-menu__link">Como funciona</a>
-                    <a href="/planos/" class="button button--primary mobile-menu__cta">
-                        <span>Pedir orçamento</span>
-                        <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
+                    <div class="mobile-menu__actions">
+                        <a href="/planos/" class="button button--primary mobile-menu__cta">
+                            <span>Pedir orçamento</span>
+                            <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                        <a href="/admin/" class="button button--ghost mobile-menu__admin">
+                            <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>Acesso administrativo</span>
+                        </a>
+                    </div>
                 </nav>
             </div>
         </header>
@@ -451,6 +466,14 @@
 
         <footer class="footer">
             <div class="footer__inner">
+                <div class="footer__links">
+                    <a href="#diferenciais">Diferenciais</a>
+                    <a href="#modelos">Modelos</a>
+                    <a href="/planos/">Planos</a>
+                    <a href="#como-funciona">Como funciona</a>
+                    <a href="/privacidade.html">Privacidade</a>
+                    <a href="/admin/" class="footer__link--admin">Acesso administrativo</a>
+                </div>
                 <p>&copy; 2026 <span class="footer-brand">Neoeffex</span>. Todos os direitos reservados.</p>
             </div>
         </footer>

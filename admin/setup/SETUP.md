@@ -5,24 +5,20 @@ Este documento descreve a ordem técnica atual para preparar o Supabase usado po
 ## Versão de referência
 
 ```text
-Catálogo: 0.1.13
-Migrations mais recentes:
-  - 011_remove_single_catalog_per_owner.sql
-  - 012_enforce_paused_catalog_delete_policy.sql
+Admin e Catálogo: 0.2.0
+Nova migração (na raiz): supabase/migrations/20260907235435_store_catalog_organization.sql
 ```
 
-A `v0.1.13` consolida o suporte a múltiplos catálogos por conta e alinha a política RLS de exclusão direta de catálogos para exigir estado pausado.
-
----
+Uma conta pode possuir várias lojas; cada loja tem exatamente um catálogo.
 
 ## 1. Instalação já existente
 
-Se o projeto já chegou à `v0.1.12`:
-
-1. aplique `011_remove_single_catalog_per_owner.sql` (remove índice único de owner_id);
-2. aplique `012_enforce_paused_catalog_delete_policy.sql` (alinha RLS de exclusão ao estado pausado);
-3. execute `audits/production_security_audit.sql`;
-4. confirme que `admin/VERSION` e `catalogo/VERSION` estão em `0.1.13`.
+Com 001–008 e 010–012 já aplicadas, execute somente a nova migração, uma vez,
+no SQL Editor do projeto correto. Em seguida execute `verify_store_catalog_organization.sql`.
+Não reaplique a 009: ela impõe unicidade por conta, que não é a regra atual.
+O procedimento completo está em `docs/catalogo-unico/APLICACAO.md` na raiz.
+Não use `supabase db push` automaticamente: este repositório tem migrações legadas
+fora de `supabase/migrations`, e o histórico remoto precisa ser reconciliado antes.
 
 ### Atenção à ordem 007 → 008
 
@@ -38,7 +34,7 @@ Portanto:
 008_catalog_identity.sql
 ```
 
-Se por qualquer motivo a `007` for reaplicada em um banco que já possui a `008`, **reaplique a `008` em seguida** antes de validar ou publicar o catálogo.
+Se por qualquer motivo a `007` for reaplicada em um banco que já possui a `008`, **reaplique a `008` em seguida** antes de validar ou publicar o catálogo. Após a v0.2.0, restabeleça também os grants SELECT de `categories.parent_id` e `products.product_type, product_groups`; não reaplique a nova migração inteira.
 
 Não use a ordem inversa.
 
@@ -62,6 +58,7 @@ No SQL Editor, aplique as migrations nesta ordem:
 010_delete_paused_catalog.sql
 011_remove_single_catalog_per_owner.sql
 012_enforce_paused_catalog_delete_policy.sql
+../../supabase/migrations/20260907235435_store_catalog_organization.sql
 ```
 
 *(Nota: em instalações novas, a migration 009 foi superada pela 011 e não deve ser aplicada).*
@@ -187,3 +184,4 @@ docs/operations/CLIENT_ONBOARDING.md
 ```
 
 Não crie atalhos que enfraqueçam RLS, Storage ou autenticação apenas para facilitar o cadastro de clientes.
+

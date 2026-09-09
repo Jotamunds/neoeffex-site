@@ -13,10 +13,10 @@ docs/operations/BACKUP_AND_ROLLBACK.md
 
 Não execute migrations apenas porque existe um novo release de frontend.
 
-A migration mais recente da base atual é:
+A migration mais recente (caminho a partir da raiz) é:
 
 ```text
-010_delete_paused_catalog.sql
+supabase/migrations/20260907235435_store_catalog_organization.sql
 ```
 
 Para uma instalação nova:
@@ -30,8 +30,10 @@ Para uma instalação nova:
 006_product_images.sql
 007_security_hardening.sql
 008_catalog_identity.sql
-009_single_catalog_per_owner.sql
 010_delete_paused_catalog.sql
+011_remove_single_catalog_per_owner.sql
+012_enforce_paused_catalog_delete_policy.sql
+supabase/migrations/20260907235435_store_catalog_organization.sql
 ```
 
 ### Regra 007 → 008
@@ -50,9 +52,11 @@ Se a 007 for reaplicada:
 
 Não publicar depois de reaplicar somente a 007.
 
-### Regra 009 → 010
+### Loja com catálogo único
 
-A `009` reforça `uma conta → um catálogo`. A `010` adiciona a função transacional de exclusão de catálogo pausado e o ajuste da política de remoção de logos. Em uma instalação nova, execute ambas nessa ordem.
+A 009 é histórica e não deve ser aplicada. Uma conta pode possuir várias lojas; a nova migração garante exatamente um catálogo por loja. Execute também `verify_store_catalog_organization.sql` e teste: criação da loja com catálogo, acesso entre duas contas, subcategoria do mesmo catálogo, exclusão pausada e filtros combinados.
+
+Após v0.2.0, reaplicar a 007 também exige restabelecer SELECT público de `categories.parent_id` e `products.product_type, product_groups`; a migração nova não deve ser reaplicada inteira.
 
 ---
 
@@ -241,3 +245,4 @@ O release completo só é liberado depois de concluir:
 ```text
 docs/operations/RELEASE_CHECKLIST.md
 ```
+

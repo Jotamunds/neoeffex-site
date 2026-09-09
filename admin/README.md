@@ -1,11 +1,13 @@
-# Painel administrativo — v0.1.12
+# Painel administrativo — v0.2.0
 
 Painel em `neoeffex.com.br/admin` e catálogo público em `neoeffex.com.br/catalogo/?catalogo=identificador`, usando Supabase.
 
 ## O que existe nesta etapa
 
 - Login por e-mail e senha, recuperação de senha, sessão persistente e sincronização de login/logout entre abas da mesma origem.
-- Um catálogo por conta no MVP, preservando a compatibilidade de leitura de contas legadas.
+- Uma conta pode ter várias lojas; cada loja tem exatamente um catálogo, com o mesmo link e carrinho.
+- Categorias e subcategorias em dois níveis, tipo opcional e até 10 grupos por produto.
+- Marca N original da Neoeffex em SVG no painel e no catálogo.
 - Criação e edição de catálogo, com identificador automático, edição manual sanitizada e status ativo/pausado.
 - Exclusão confirmada somente para catálogo pausado, protegida por função transacional e validação de proprietário.
 - Categorias próprias por catálogo: cadastro, edição e exclusão segura quando não há produtos vinculados.
@@ -52,7 +54,7 @@ admin/
     ├── 006_product_images.sql
     ├── 007_security_hardening.sql
     ├── 008_catalog_identity.sql
-    ├── 009_single_catalog_per_owner.sql
+    ├── 009_single_catalog_per_owner.sql (histórica; NÃO executar)
     ├── 010_delete_paused_catalog.sql
     ├── audits/
     │   └── production_security_audit.sql
@@ -73,3 +75,8 @@ Em uma instalação existente na v0.1.11, execute `010_delete_paused_catalog.sql
 O pedido não é gravado no banco e não inclui pagamento on-line. O WhatsApp abre com a mensagem pronta para o responsável confirmar disponibilidade, prazo e pagamento.
 
 O editor otimiza o enquadramento no navegador, mas o resultado ainda deve ser conferido antes de salvar — especialmente quando o arquivo original possui margens internas incomuns.
+
+
+## Atualização para v0.2.0
+
+Siga `../docs/catalogo-unico/APLICACAO.md`. SQL e verificação vêm antes da publicação. A migração canônica está em `supabase/migrations/20260907235435_store_catalog_organization.sql`; não execute `supabase db push` sobre um banco existente sem reconciliar o histórico legado.

@@ -1,5 +1,16 @@
 # Changelog — Painel administrativo
 
+## [0.2.0] - 2026-09-08
+
+- Loja com exatamente um catálogo; conta pode administrar várias lojas.
+- Migração transacional preserva catálogos existentes e suporta INSERT do Admin anterior.
+- Categorias e subcategorias em dois níveis, com ordenação e proteção no banco.
+- Tipo e grupos por produto, com sugestões no painel, busca e filtros combinados no público.
+- Marca N original da Neoeffex substitui o símbolo genérico desenhado em CSS.
+- Compatibilidade de leitura com o esquema anterior, sem alterar preço nem formato de carrinho.
+- SETUP e checklist deixam de recomendar a antiga unicidade por conta.
+- Regras comerciais de adicionais, variações e importação do cardápio não fazem parte desta versão estrutural.
+
 ## [0.1.12] - 2026-09-02
 
 ### Admin
@@ -438,3 +449,4 @@
 - Banco de dados.
 - Inclusão, edição e exclusão persistentes.
 - Pedidos e integração com WhatsApp.
+

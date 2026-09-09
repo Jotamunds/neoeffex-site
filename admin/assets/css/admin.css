@@ -338,11 +338,13 @@ body.is-loading .auth-screen {
 }
 
 .brand__mark {
-    width: 19px;
-    height: 19px;
-    border: 5px solid var(--blue-600);
-    border-radius: 50%;
-    box-shadow: 9px 0 0 -5px var(--blue-950);
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    background: currentColor;
+    -webkit-mask: url("../../../img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
+    mask: url("../../../img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
 }
 
 .environment,
@@ -1793,3 +1795,11 @@ body.has-modal {
         animation-iteration-count: 1 !important;
     }
 }
+
+
+.category-form { grid-template-columns: minmax(0, 1fr) minmax(90px, 120px); }
+.category-form #categoryName { grid-column: 1 / -1; }
+.category-form #saveCategoryButton { grid-column: 1 / -1; }
+.category-organization-field { display: grid; gap: 6px; min-width: 0; flex: 1 1 140px; font-size: 12px; }
+.category-organization-field select, .category-organization-field input { width: 100%; min-height: 44px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px; }
+.organization-notice { margin: 16px 0; font-size: 14px; }

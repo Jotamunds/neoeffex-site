@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/admin.css?v=0.1.13">
+    <link rel="stylesheet" href="assets/css/admin.css?v=0.2.0">
 </head>
 <body class="is-loading">
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -127,11 +127,11 @@
                     <div>
                         <span class="eyebrow">PAINEL ADMINISTRATIVO</span>
                         <h1 id="pageTitle">Produtos</h1>
-                        <p>Organize produtos, categorias e catálogos em um único lugar.</p>
+                        <p>Uma loja, um catálogo. Organize seus produtos por categorias, tipos e grupos.</p>
                     </div>
                     <div class="page-heading__actions">
                         <a class="secondary-button secondary-link is-disabled" id="viewCatalogLink" href="#" aria-disabled="true" tabindex="-1" target="_blank" rel="noopener noreferrer">Ver catálogo</a>
-                        <button class="secondary-button" id="newCatalogButton" type="button">Novo catálogo</button>
+                        <button class="secondary-button" id="newCatalogButton" type="button">Nova loja</button>
                         <button class="primary-button" id="newProductButton" type="button">
                             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
                             Novo produto
@@ -144,18 +144,18 @@
                     <p><strong>Validação de produção disponível.</strong> Aplique a migração 007 e confirme todos os itens da auditoria antes de atender o primeiro cliente.</p>
                 </section>
 
-                <section class="catalog-switcher" aria-label="Catálogo selecionado">
+                <section class="catalog-switcher" aria-label="Loja selecionada">
                     <div>
-                        <span class="catalog-switcher__label">CATÁLOGO ATUAL</span>
+                        <span class="catalog-switcher__label">LOJA ATUAL</span>
                         <strong id="activeCatalogName">Carregando catálogo…</strong>
                     </div>
                     <label class="catalog-select-field">
-                        <span class="sr-only">Selecionar catálogo</span>
+                        <span class="sr-only">Selecionar loja</span>
                         <select id="catalogSelect" disabled>
                             <option>Carregando…</option>
                         </select>
                     </label>
-                    <button class="icon-button" id="editCatalogButton" type="button" aria-label="Editar catálogo atual" title="Editar catálogo atual" disabled>
+                    <button class="icon-button" id="editCatalogButton" type="button" aria-label="Editar loja atual" title="Editar loja atual" disabled>
                         <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 19h4l9-9a2.8 2.8 0 0 0-4-4l-9 9v4Z"></path><path d="m12.5 7.5 4 4"></path></svg>
                     </button>
                 </section>
@@ -178,6 +178,7 @@
                     </article>
                 </section>
 
+                <p class="organization-notice" id="organizationNotice" hidden>A organização ampliada ainda não está disponível nesta instalação.</p>
                 <section class="catalog-section" id="produtos" aria-labelledby="productsTitle">
                     <div class="section-heading">
                         <div>
@@ -272,6 +273,17 @@
                     <label for="productPrice">Preço</label>
                     <div class="price-field"><span aria-hidden="true">R$</span><input id="productPrice" name="productPrice" type="number" min="0" max="99999999.99" step="0.01" inputmode="decimal" required></div>
                 </div>
+                <div class="form-field">
+                    <label for="productType">Tipo (opcional)</label>
+                    <input id="productType" type="text" maxlength="60" list="productTypeOptions" placeholder="Ex.: Tradicional" data-organization-field disabled>
+                    <datalist id="productTypeOptions"></datalist>
+                </div>
+                <div class="form-field">
+                    <label for="productGroups">Grupos (opcional)</label>
+                    <input id="productGroups" type="text" maxlength="618" list="productGroupOptions" placeholder="Ex.: Combo, Mais pedido" aria-describedby="productGroupsHint" data-organization-field disabled>
+                    <datalist id="productGroupOptions"></datalist>
+                    <span class="field-hint" id="productGroupsHint">Separe por vírgulas. Até 10 grupos de 60 caracteres.</span>
+                </div>
                 <div class="form-field form-field--full">
                     <label for="productDescription">Descrição</label>
                     <textarea id="productDescription" name="productDescription" maxlength="500" rows="4"></textarea>
@@ -318,8 +330,8 @@
             <div class="modal__head">
                 <div>
                     <span class="eyebrow">CATÁLOGO</span>
-                    <h2 id="catalogModalTitle">Novo catálogo</h2>
-                    <p id="catalogModalDescription">Defina o nome e o endereço que será usado no catálogo público.</p>
+                    <h2 id="catalogModalTitle">Nova loja</h2>
+                    <p id="catalogModalDescription">Cada loja tem um catálogo. Separe os produtos com categorias, tipos e grupos.</p>
                 </div>
                 <button class="icon-button" id="closeCatalogModal" type="button" aria-label="Fechar formulário">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
@@ -329,7 +341,7 @@
             <form class="product-form" id="catalogForm" novalidate>
                 <input id="catalogId" name="catalogId" type="hidden">
                 <div class="form-field form-field--full">
-                    <label for="catalogName">Nome do catálogo</label>
+                    <label for="catalogName">Nome da loja</label>
                     <input id="catalogName" name="catalogName" type="text" maxlength="100" autocomplete="off" required>
                 </div>
                 <div class="form-field form-field--full">
@@ -367,7 +379,7 @@
                     <div class="modal__danger-actions" id="catalogDangerActions" hidden>
                         <button class="danger-button" id="deleteCatalogButton" type="button">Excluir catálogo pausado</button>
                     </div>
-                    <button class="primary-button" id="saveCatalogButton" type="submit">Salvar catálogo</button>
+                    <button class="primary-button" id="saveCatalogButton" type="submit">Salvar loja</button>
                 </div>
             </form>
         </div>
@@ -390,6 +402,12 @@
                 <input id="categoryId" name="categoryId" type="hidden">
                 <label class="sr-only" for="categoryName">Nome da categoria</label>
                 <input id="categoryName" name="categoryName" type="text" maxlength="80" autocomplete="off" placeholder="Nova categoria" required>
+                <label class="category-organization-field">Categoria principal
+                    <select id="categoryParent" data-organization-field disabled><option value="">Categoria principal</option></select>
+                </label>
+                <label class="category-organization-field">Ordem
+                    <input id="categoryOrder" type="number" min="0" max="2147483647" step="1" value="0">
+                </label>
                 <button class="primary-button" id="saveCategoryButton" type="submit">Adicionar</button>
             </form>
             <p class="form-feedback category-feedback" id="categoryFeedback" role="status" aria-live="polite"></p>
@@ -421,7 +439,9 @@
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
-    <script src="config.js?v=0.1.13" defer></script>
-    <script src="assets/js/admin.js?v=0.1.13" defer></script>
+    <script src="config.js?v=0.2.0" defer></script>
+    <script src="../assets/catalog/organization.js?v=0.2.0" defer></script>
+    <script src="assets/js/admin.js?v=0.2.0" defer></script>
 </body>
 </html>
+

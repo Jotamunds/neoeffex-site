@@ -128,11 +128,13 @@ svg {
 }
 
 .brand__mark {
-    width: 19px;
-    height: 19px;
-    border: 5px solid var(--blue-500);
-    border-radius: 50%;
-    box-shadow: 9px 0 0 -5px #ffffff;
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    background: currentColor;
+    -webkit-mask: url("../../../img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
+    mask: url("../../../img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
 }
 
 .site-header__label,
@@ -1091,3 +1093,11 @@ body.has-cart-open {
         animation-iteration-count: 1 !important;
     }
 }
+
+
+.organization-filters { display: flex; gap: 16px; flex-wrap: wrap; }
+.organization-filters[hidden], .organization-filters label[hidden] { display: none; }
+.organization-filters label { display: grid; gap: 6px; flex: 1 1 180px; min-width: 0; font-size: 13px; }
+.organization-filters select { width: 100%; min-height: 44px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; background: #fff; color: #172b40; font: inherit; }
+.product-labels { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.product-labels span { padding: 4px 8px; background: #edf3f8; color: #29415b; border-radius: 6px; font-size: 11px; overflow-wrap: anywhere; }

@@ -20,13 +20,13 @@ Antes de criar, editar, sugerir ou aplicar SQL:
 
 ## Decisão atual sobre múltiplos catálogos
 
-`../../DECISIONS.md` é a fonte de decisão arquitetural atual e determina que uma conta pode possuir mais de um catálogo.
+`../../DECISIONS.md` é a fonte de decisão arquitetural atual e determina que uma conta pode possuir várias lojas, cada uma com exatamente um catálogo.
 
 Existe nesta pasta uma migration histórica chamada:
 
 `009_single_catalog_per_owner.sql`
 
-E `SETUP.md` ainda contém instruções relacionadas a ela.
+Essa migration é histórica e foi superada; `SETUP.md` documenta a ordem atual.
 
 Portanto, NÃO aplique, reaplique, recomende ou replique automaticamente uma restrição de catálogo único apenas porque essa migration existe.
 
@@ -90,3 +90,4 @@ Qualquer operação destrutiva deve verificar:
 - estado permitido;
 - relacionamentos dependentes;
 - confirmação no fluxo de UI quando aplicável.
+

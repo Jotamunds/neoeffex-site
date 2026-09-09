@@ -65,6 +65,8 @@
     const confirmDeleteButton = document.getElementById("confirmDeleteButton");
     const categoryList = document.getElementById("categoryList");
     const emptyCategoryState = document.getElementById("emptyCategoryState");
+    const organization = window.NEOEFFEX_ORGANIZATION;
+    let organizationEnabled = false;
     let client = null;
     let catalogs = [];
     let categories = [];
@@ -218,10 +220,7 @@
     }
 
     function getCategoryName(categoryId) {
-        const category = categories.find(function (item) {
-            return item.id === categoryId;
-        });
-        return category ? category.name : "Categoria indisponível";
+        return organization.categoryLabel(categories, categoryId);
     }
 
     function getFilteredProducts() {
@@ -229,7 +228,7 @@
         const status = statusFilter.value;
 
         return products.filter(function (product) {
-            const searchableText = [product.name, product.categoryName, product.description]
+            const searchableText = [product.name, product.categoryName, product.description, product.product_type, (product.product_groups || []).join(" ")]
                 .join(" ")
                 .toLocaleLowerCase("pt-BR");
             const matchesSearch = !search || searchableText.includes(search);
@@ -359,10 +358,10 @@
         catalogSelect.replaceChildren();
 
         if (!catalogs.length) {
-            catalogSelect.appendChild(new Option("Nenhum catálogo cadastrado", ""));
+            catalogSelect.appendChild(new Option("Nenhuma loja cadastrada", ""));
             catalogSelect.disabled = true;
             editCatalogButton.disabled = true;
-            activeCatalogName.textContent = "Nenhum catálogo selecionado";
+            activeCatalogName.textContent = "Nenhuma loja selecionada";
             viewCatalogLink.removeAttribute("href");
             viewCatalogLink.classList.add("is-disabled");
             viewCatalogLink.setAttribute("aria-disabled", "true");
@@ -382,7 +381,7 @@
         editCatalogButton.disabled = !activeCatalog;
         activeCatalogName.textContent = activeCatalog
             ? activeCatalog.name + (activeCatalog.is_active ? "" : " (pausado)")
-            : "Nenhum catálogo selecionado";
+            : "Nenhuma loja selecionada";
 
         const publicCatalogAvailable = Boolean(activeCatalog && activeCatalog.is_active);
         viewCatalogLink.classList.toggle("is-disabled", !publicCatalogAvailable);
@@ -406,7 +405,7 @@
         configureOrdersButton.disabled = !activeCatalog;
 
         if (!activeCatalog) {
-            status.textContent = "Nenhum catálogo selecionado";
+            status.textContent = "Nenhuma loja selecionada";
             status.dataset.state = "";
             whatsapp.textContent = "Não configurado";
             message.textContent = "Selecione ou crie um catálogo para configurar.";
@@ -423,7 +422,7 @@
 
     async function loadCatalogs(preferredCatalogId) {
         const sequence = ++loadSequence;
-        tableDescription.textContent = "Carregando catálogos…";
+        tableDescription.textContent = "Carregando lojas…";
         products = [];
         categories = [];
         renderProducts();
@@ -472,18 +471,9 @@
         updateSummary();
 
         const catalogId = activeCatalog.id;
-        const [categoriesResult, productsResult] = await Promise.all([
-            client.from("categories")
-                .select("id, name, sort_order, created_at")
-                .eq("catalog_id", catalogId)
-                .order("sort_order", { ascending: true })
-                .order("created_at", { ascending: true }),
-            client.from("products")
-                .select("id, name, description, category_id, price, status, image_path, sort_order, created_at")
-                .eq("catalog_id", catalogId)
-                .order("sort_order", { ascending: true })
-                .order("created_at", { ascending: true })
-        ]);
+        const rows = await organization.loadRows(client, catalogId, false);
+        const categoriesResult = rows.categories;
+        const productsResult = rows.products;
 
         if ((sequence && sequence !== loadSequence) || !activeCatalog || activeCatalog.id !== catalogId) return;
 
@@ -494,7 +484,12 @@
             return;
         }
 
-        categories = categoriesResult.data || [];
+        organizationEnabled = rows.enabled;
+        document.querySelectorAll("[data-organization-field]").forEach(function (field) {
+            field.disabled = !organizationEnabled;
+        });
+        document.getElementById("organizationNotice").hidden = organizationEnabled;
+        categories = organization.orderedCategories(categoriesResult.data || []);
         products = (productsResult.data || []).map(function (product) {
             return Object.assign({}, product, { categoryName: getCategoryName(product.category_id) });
         });
@@ -567,7 +562,7 @@
 
     function setCatalogFormLoading(isLoading) {
         saveCatalogButton.disabled = isLoading;
-        saveCatalogButton.textContent = isLoading ? "Salvando…" : "Salvar catálogo";
+        saveCatalogButton.textContent = isLoading ? "Salvando…" : "Salvar loja";
         deleteCatalogButton.disabled = isLoading;
     }
 
@@ -582,7 +577,7 @@
         productCategory.replaceChildren();
         productCategory.appendChild(new Option("Selecione uma categoria", ""));
         categories.forEach(function (category) {
-            const option = new Option(category.name, category.id);
+            const option = new Option(getCategoryName(category.id), category.id);
             option.selected = category.id === selectedId;
             productCategory.appendChild(option);
         });
@@ -590,7 +585,7 @@
 
     function openProductModal(product) {
         if (!activeCatalog) {
-            showToast("Crie um catálogo antes de cadastrar produtos.");
+            showToast("Crie uma loja antes de cadastrar produtos.");
             return;
         }
         if (!categories.length) {
@@ -615,6 +610,13 @@
         populateProductCategories(editing ? product.category_id : "");
         document.getElementById("productPrice").value = editing ? Number(product.price).toFixed(2) : "";
         productDescription.value = editing ? product.description || "" : "";
+        document.getElementById("productType").value = editing ? product.product_type || "" : "";
+        document.getElementById("productGroups").value = editing ? (product.product_groups || []).join(", ") : "";
+        [["productTypeOptions", "product_type"], ["productGroupOptions", "product_groups"]].forEach(function (entry) {
+            const list = document.getElementById(entry[0]);
+            list.replaceChildren();
+            organization.facets(products, entry[1]).forEach(function (value) { list.appendChild(new Option(value, value)); });
+        });
         document.getElementById("productStatus").value = editing ? product.status : "active";
         resetProductImageFields(editing ? product : null);
         productDangerActions.hidden = !editing;
@@ -647,10 +649,10 @@
         body.classList.add("has-modal");
 
         const editing = Boolean(catalog);
-        document.getElementById("catalogModalTitle").textContent = editing ? "Editar catálogo" : "Novo catálogo";
+        document.getElementById("catalogModalTitle").textContent = editing ? "Editar loja" : "Nova loja";
         document.getElementById("catalogModalDescription").textContent = editing
             ? "Atualize os dados de identificação e o status deste catálogo."
-            : "Defina o nome e o endereço que será usado no catálogo público.";
+            : "Cada loja tem um catálogo. Use categorias, tipos e grupos para separar seus produtos.";
         document.getElementById("catalogId").value = editing ? catalog.id : "";
         document.getElementById("catalogName").value = editing ? catalog.name : "";
         document.getElementById("catalogSlug").value = editing ? catalog.slug : "";
@@ -679,7 +681,7 @@
 
     function openCategoryModal() {
         if (!activeCatalog) {
-            showToast("Crie um catálogo antes de organizar categorias.");
+            showToast("Crie uma loja antes de organizar categorias.");
             return;
         }
 
@@ -703,8 +705,20 @@
         if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
     }
 
+    function populateCategoryParents(category) {
+        const field = document.getElementById("categoryParent");
+        field.replaceChildren(new Option("Categoria principal", ""));
+        categories.filter(function (item) { return !item.parent_id && (!category || item.id !== category.id); })
+            .forEach(function (item) { field.appendChild(new Option(item.name, item.id)); });
+        field.value = category ? category.parent_id || "" : "";
+        const hasChildren = category && categories.some(function (item) { return item.parent_id === category.id; });
+        field.disabled = !organizationEnabled || Boolean(hasChildren);
+        document.getElementById("categoryOrder").value = category ? category.sort_order : getNextSortOrder(categories);
+    }
+
     function resetCategoryForm() {
         categoryForm.reset();
+        populateCategoryParents(null);
         document.getElementById("categoryId").value = "";
         saveCategoryButton.textContent = "Adicionar";
         setCategoryFormLoading(false);
@@ -732,7 +746,7 @@
             const productCount = getCategoryProductCount(category.id);
 
             item.className = "category-list__item";
-            name.textContent = category.name;
+            name.textContent = getCategoryName(category.id);
             detail.textContent = productCount + " produto" + (productCount === 1 ? " vinculado" : "s vinculados");
             copy.appendChild(name);
             copy.appendChild(detail);
@@ -742,6 +756,7 @@
             editButton.addEventListener("click", function () {
                 document.getElementById("categoryId").value = category.id;
                 document.getElementById("categoryName").value = category.name;
+                populateCategoryParents(category);
                 saveCategoryButton.textContent = "Salvar categoria";
                 setFeedback(categoryFeedback, "", "");
                 document.getElementById("categoryName").focus();
@@ -749,8 +764,9 @@
             deleteButton.className = "category-action category-action--danger";
             deleteButton.type = "button";
             deleteButton.textContent = "Excluir";
-            deleteButton.disabled = productCount > 0;
-            deleteButton.title = productCount > 0 ? "Remova ou altere os produtos desta categoria antes de excluí-la" : "Excluir categoria";
+            const hasChildren = categories.some(function (item) { return item.parent_id === category.id; });
+            deleteButton.disabled = productCount > 0 || hasChildren;
+            deleteButton.title = hasChildren ? "Remova ou mova as subcategorias antes de excluir" : productCount > 0 ? "Remova ou altere os produtos desta categoria antes de excluí-la" : "Excluir categoria";
             deleteButton.addEventListener("click", function () {
                 if (productCount > 0) {
                     setFeedback(categoryFeedback, "Esta categoria possui produtos vinculados e não pode ser excluída.", "error");
@@ -772,7 +788,7 @@
         const isCatalog = deletion.type === "catalog";
         deletion.baseModal.setAttribute("aria-hidden", "true");
         document.getElementById("deleteModalTitle").textContent = isCatalog
-            ? "Excluir catálogo pausado?"
+            ? "Excluir loja e catálogo pausado?"
             : (isCategory ? "Excluir categoria?" : "Excluir produto?");
         document.getElementById("deleteModalDescription").textContent = isCatalog
             ? "O catálogo “" + deletion.name + "”, suas categorias, produtos e imagens vinculadas serão removidos. Essa ação não poderá ser desfeita."
@@ -822,7 +838,18 @@
             return null;
         }
 
-        return { name: name, category_id: categoryId, description: description, price: price.toFixed(2), status: status };
+        const payload = { name: name, category_id: categoryId, description: description, price: price.toFixed(2), status: status };
+        if (organizationEnabled) {
+            const type = document.getElementById("productType").value.trim();
+            const groups = organization.parseGroups(document.getElementById("productGroups").value);
+            if (type.length > 60 || groups.length > 10 || groups.some(function (group) { return group.length > 60; })) {
+                setFeedback(productFeedback, "Use até 60 caracteres no tipo e em cada grupo, com no máximo 10 grupos.", "error");
+                return null;
+            }
+            payload.product_type = type || null;
+            payload.product_groups = groups;
+        }
+        return payload;
     }
 
     function getNextSortOrder(items) {
@@ -1084,7 +1111,7 @@
 
         closeCatalogModal();
         await loadCatalogs(catalogId || result.data.id);
-        showToast(catalogId ? "Catálogo atualizado com sucesso." : "Catálogo criado com sucesso.");
+        showToast(catalogId ? "Catálogo atualizado com sucesso." : "Loja criada com seu catálogo.");
     }
 
     async function saveCategory(event) {
@@ -1100,22 +1127,28 @@
 
         setCategoryFormLoading(true);
         setFeedback(categoryFeedback, "", "");
+        const order = Number(document.getElementById("categoryOrder").value);
+        if (!Number.isInteger(order) || order < 0 || order > 2147483647) {
+            setFeedback(categoryFeedback, "Informe uma ordem inteira a partir de zero.", "error");
+            setCategoryFormLoading(false);
+            return;
+        }
+        const payload = { name: name, sort_order: order };
+        if (organizationEnabled) payload.parent_id = document.getElementById("categoryParent").value || null;
         let result;
         if (categoryId) {
-            result = await client.from("categories").update({ name: name }).eq("id", categoryId).select("id").single();
+            result = await client.from("categories").update(payload).eq("id", categoryId).select("id").single();
         } else {
-            result = await client.from("categories").insert({
-                catalog_id: activeCatalog.id,
-                name: name,
-                sort_order: getNextSortOrder(categories)
-            }).select("id").single();
+            result = await client.from("categories").insert(Object.assign({}, payload, {
+                catalog_id: activeCatalog.id
+            })).select("id").single();
         }
 
         if (result.error) {
             console.error("Erro ao salvar categoria", result.error);
             setFeedback(categoryFeedback, result.error.code === "23505"
                 ? "Já existe uma categoria com este nome neste catálogo."
-                : "Não foi possível salvar a categoria. Tente novamente.", "error");
+                : "Não foi possível salvar. Confira o nome e a categoria principal; são permitidos dois níveis.", "error");
             setCategoryFormLoading(false);
             return;
         }
@@ -1176,7 +1209,7 @@
             await loadCatalogs();
             showToast(storageCleanupFailed
                 ? "Catálogo excluído, mas algum arquivo não pôde ser removido do armazenamento."
-                : "Catálogo excluído com sucesso.");
+                : "Loja e catálogo excluídos com sucesso.");
             return;
         }
 
@@ -1506,3 +1539,4 @@
 
     initializeConfiguredPanel();
 }());
+

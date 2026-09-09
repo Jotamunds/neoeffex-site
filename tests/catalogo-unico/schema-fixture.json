@@ -1,0 +1,1681 @@
+{
+  "colunas": [
+    {
+      "tipo": "uuid",
+      "coluna": "id",
+      "tabela": "catalogs",
+      "posicao": 1,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "uuid",
+      "valor_padrao": "gen_random_uuid()",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "uuid",
+      "coluna": "owner_id",
+      "tabela": "catalogs",
+      "posicao": 2,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "uuid",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "name",
+      "tabela": "catalogs",
+      "posicao": 3,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "slug",
+      "tabela": "catalogs",
+      "posicao": 4,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "boolean",
+      "coluna": "is_active",
+      "tabela": "catalogs",
+      "posicao": 5,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "bool",
+      "valor_padrao": "true",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "timestamp with time zone",
+      "coluna": "created_at",
+      "tabela": "catalogs",
+      "posicao": 6,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "timestamptz",
+      "valor_padrao": "now()",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "timestamp with time zone",
+      "coluna": "updated_at",
+      "tabela": "catalogs",
+      "posicao": 7,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "timestamptz",
+      "valor_padrao": "now()",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "whatsapp_number",
+      "tabela": "catalogs",
+      "posicao": 8,
+      "precisao": null,
+      "aceita_nulo": "YES",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "boolean",
+      "coluna": "orders_enabled",
+      "tabela": "catalogs",
+      "posicao": 9,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "bool",
+      "valor_padrao": "false",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "order_message",
+      "tabela": "catalogs",
+      "posicao": 10,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "text",
+      "valor_padrao": "'Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.'::text",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "logo_path",
+      "tabela": "catalogs",
+      "posicao": 11,
+      "precisao": null,
+      "aceita_nulo": "YES",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "short_description",
+      "tabela": "catalogs",
+      "posicao": 12,
+      "precisao": null,
+      "aceita_nulo": "YES",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "service_area",
+      "tabela": "catalogs",
+      "posicao": 13,
+      "precisao": null,
+      "aceita_nulo": "YES",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "business_hours",
+      "tabela": "catalogs",
+      "posicao": 14,
+      "precisao": null,
+      "aceita_nulo": "YES",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "fulfillment_mode",
+      "tabela": "catalogs",
+      "posicao": 15,
+      "precisao": null,
+      "aceita_nulo": "YES",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "uuid",
+      "coluna": "id",
+      "tabela": "categories",
+      "posicao": 1,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "uuid",
+      "valor_padrao": "gen_random_uuid()",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "uuid",
+      "coluna": "catalog_id",
+      "tabela": "categories",
+      "posicao": 2,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "uuid",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "name",
+      "tabela": "categories",
+      "posicao": 3,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "integer",
+      "coluna": "sort_order",
+      "tabela": "categories",
+      "posicao": 4,
+      "precisao": 32,
+      "aceita_nulo": "NO",
+      "tipo_interno": "int4",
+      "valor_padrao": "0",
+      "casas_decimais": 0,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "timestamp with time zone",
+      "coluna": "created_at",
+      "tabela": "categories",
+      "posicao": 5,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "timestamptz",
+      "valor_padrao": "now()",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "timestamp with time zone",
+      "coluna": "updated_at",
+      "tabela": "categories",
+      "posicao": 6,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "timestamptz",
+      "valor_padrao": "now()",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "uuid",
+      "coluna": "id",
+      "tabela": "products",
+      "posicao": 1,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "uuid",
+      "valor_padrao": "gen_random_uuid()",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "uuid",
+      "coluna": "catalog_id",
+      "tabela": "products",
+      "posicao": 2,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "uuid",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "name",
+      "tabela": "products",
+      "posicao": 3,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "description",
+      "tabela": "products",
+      "posicao": 4,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "text",
+      "valor_padrao": "''::text",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "numeric",
+      "coluna": "price",
+      "tabela": "products",
+      "posicao": 6,
+      "precisao": 10,
+      "aceita_nulo": "NO",
+      "tipo_interno": "numeric",
+      "valor_padrao": null,
+      "casas_decimais": 2,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "status",
+      "tabela": "products",
+      "posicao": 7,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "text",
+      "valor_padrao": "'active'::text",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "integer",
+      "coluna": "sort_order",
+      "tabela": "products",
+      "posicao": 8,
+      "precisao": 32,
+      "aceita_nulo": "NO",
+      "tipo_interno": "int4",
+      "valor_padrao": "0",
+      "casas_decimais": 0,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "timestamp with time zone",
+      "coluna": "created_at",
+      "tabela": "products",
+      "posicao": 9,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "timestamptz",
+      "valor_padrao": "now()",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "timestamp with time zone",
+      "coluna": "updated_at",
+      "tabela": "products",
+      "posicao": 10,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "timestamptz",
+      "valor_padrao": "now()",
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "uuid",
+      "coluna": "category_id",
+      "tabela": "products",
+      "posicao": 11,
+      "precisao": null,
+      "aceita_nulo": "NO",
+      "tipo_interno": "uuid",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    },
+    {
+      "tipo": "text",
+      "coluna": "image_path",
+      "tabela": "products",
+      "posicao": 12,
+      "precisao": null,
+      "aceita_nulo": "YES",
+      "tipo_interno": "text",
+      "valor_padrao": null,
+      "casas_decimais": null,
+      "tamanho_maximo": null
+    }
+  ],
+  "restricoes": [
+    {
+      "nome": "catalogs_business_hours_check",
+      "tipo": "c",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (business_hours IS NULL OR char_length(TRIM(BOTH FROM business_hours)) >= 1 AND char_length(TRIM(BOTH FROM business_hours)) <= 200)"
+    },
+    {
+      "nome": "catalogs_fulfillment_mode_check",
+      "tipo": "c",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (fulfillment_mode IS NULL OR (fulfillment_mode = ANY (ARRAY['pickup'::text, 'delivery'::text, 'both'::text])))"
+    },
+    {
+      "nome": "catalogs_logo_path_check",
+      "tipo": "c",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (logo_path IS NULL OR logo_path ~ '^[0-9a-f-]{36}/[0-9a-f-]{36}/[0-9]{10,16}\\.(jpg|png|webp)$'::text)"
+    },
+    {
+      "nome": "catalogs_name_check",
+      "tipo": "c",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (char_length(TRIM(BOTH FROM name)) >= 2 AND char_length(TRIM(BOTH FROM name)) <= 100)"
+    },
+    {
+      "nome": "catalogs_order_message_check",
+      "tipo": "c",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (char_length(TRIM(BOTH FROM order_message)) >= 10 AND char_length(TRIM(BOTH FROM order_message)) <= 300)"
+    },
+    {
+      "nome": "catalogs_orders_require_whatsapp_check",
+      "tipo": "c",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (NOT orders_enabled OR whatsapp_number IS NOT NULL)"
+    },
+    {
+      "nome": "catalogs_owner_id_fkey",
+      "tipo": "f",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "FOREIGN KEY (owner_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "nome": "catalogs_pkey",
+      "tipo": "p",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "PRIMARY KEY (id)"
+    },
+    {
+      "nome": "catalogs_service_area_check",
+      "tipo": "c",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (service_area IS NULL OR char_length(TRIM(BOTH FROM service_area)) >= 1 AND char_length(TRIM(BOTH FROM service_area)) <= 200)"
+    },
+    {
+      "nome": "catalogs_short_description_check",
+      "tipo": "c",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (short_description IS NULL OR char_length(TRIM(BOTH FROM short_description)) >= 1 AND char_length(TRIM(BOTH FROM short_description)) <= 200)"
+    },
+    {
+      "nome": "catalogs_slug_check",
+      "tipo": "c",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (slug ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$'::text)"
+    },
+    {
+      "nome": "catalogs_slug_key",
+      "tipo": "u",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "UNIQUE (slug)"
+    },
+    {
+      "nome": "catalogs_whatsapp_number_check",
+      "tipo": "c",
+      "tabela": "catalogs",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (whatsapp_number IS NULL OR whatsapp_number ~ '^[1-9][0-9]{9,14}$'::text)"
+    },
+    {
+      "nome": "categories_catalog_id_fkey",
+      "tipo": "f",
+      "tabela": "categories",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "FOREIGN KEY (catalog_id) REFERENCES catalogs(id) ON DELETE CASCADE"
+    },
+    {
+      "nome": "categories_id_catalog_id_key",
+      "tipo": "u",
+      "tabela": "categories",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "UNIQUE (id, catalog_id)"
+    },
+    {
+      "nome": "categories_name_check",
+      "tipo": "c",
+      "tabela": "categories",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (char_length(TRIM(BOTH FROM name)) >= 2 AND char_length(TRIM(BOTH FROM name)) <= 80)"
+    },
+    {
+      "nome": "categories_pkey",
+      "tipo": "p",
+      "tabela": "categories",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "PRIMARY KEY (id)"
+    },
+    {
+      "nome": "categories_sort_order_check",
+      "tipo": "c",
+      "tabela": "categories",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (sort_order >= 0)"
+    },
+    {
+      "nome": "products_catalog_id_fkey",
+      "tipo": "f",
+      "tabela": "products",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "FOREIGN KEY (catalog_id) REFERENCES catalogs(id) ON DELETE CASCADE"
+    },
+    {
+      "nome": "products_category_catalog_fk",
+      "tipo": "f",
+      "tabela": "products",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "FOREIGN KEY (category_id, catalog_id) REFERENCES categories(id, catalog_id) ON DELETE RESTRICT"
+    },
+    {
+      "nome": "products_description_check",
+      "tipo": "c",
+      "tabela": "products",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (char_length(description) <= 500)"
+    },
+    {
+      "nome": "products_image_path_check",
+      "tipo": "c",
+      "tabela": "products",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (image_path IS NULL OR image_path ~ '^[0-9a-f-]{36}/[0-9a-f-]{36}/[0-9a-f-]{36}/[0-9]{10,16}\\.(jpg|png|webp)$'::text)"
+    },
+    {
+      "nome": "products_name_check",
+      "tipo": "c",
+      "tabela": "products",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (char_length(TRIM(BOTH FROM name)) >= 2 AND char_length(TRIM(BOTH FROM name)) <= 140)"
+    },
+    {
+      "nome": "products_pkey",
+      "tipo": "p",
+      "tabela": "products",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "PRIMARY KEY (id)"
+    },
+    {
+      "nome": "products_price_check",
+      "tipo": "c",
+      "tabela": "products",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (price >= 0::numeric)"
+    },
+    {
+      "nome": "products_sort_order_check",
+      "tipo": "c",
+      "tabela": "products",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (sort_order >= 0)"
+    },
+    {
+      "nome": "products_status_check",
+      "tipo": "c",
+      "tabela": "products",
+      "adiavel": false,
+      "validada": true,
+      "definicao": "CHECK (status = ANY (ARRAY['active'::text, 'paused'::text]))"
+    }
+  ],
+  "permissoes_colunas": [
+    {
+      "papel": "anon",
+      "coluna": "business_hours",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "business_hours",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "business_hours",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "business_hours",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "fulfillment_mode",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "fulfillment_mode",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "fulfillment_mode",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "fulfillment_mode",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "is_active",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "is_active",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "is_active",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "is_active",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "logo_path",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "logo_path",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "logo_path",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "logo_path",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "order_message",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "order_message",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "order_message",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "order_message",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "orders_enabled",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "orders_enabled",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "orders_enabled",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "orders_enabled",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "owner_id",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "owner_id",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "owner_id",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "service_area",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "service_area",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "service_area",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "service_area",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "short_description",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "short_description",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "short_description",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "short_description",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "slug",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "slug",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "slug",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "slug",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "updated_at",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "updated_at",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "updated_at",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "whatsapp_number",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "whatsapp_number",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "whatsapp_number",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "whatsapp_number",
+      "schema": "public",
+      "tabela": "catalogs",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "catalog_id",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "catalog_id",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "catalog_id",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "catalog_id",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "sort_order",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "sort_order",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "sort_order",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "sort_order",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "updated_at",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "updated_at",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "updated_at",
+      "schema": "public",
+      "tabela": "categories",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "catalog_id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "catalog_id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "catalog_id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "catalog_id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "category_id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "category_id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "category_id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "category_id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "created_at",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "description",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "description",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "description",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "description",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "id",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "image_path",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "image_path",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "image_path",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "image_path",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "name",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "price",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "price",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "price",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "price",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "sort_order",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "sort_order",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "sort_order",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "sort_order",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "anon",
+      "coluna": "status",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "status",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "status",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "status",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "updated_at",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "INSERT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "updated_at",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "SELECT"
+    },
+    {
+      "papel": "authenticated",
+      "coluna": "updated_at",
+      "schema": "public",
+      "tabela": "products",
+      "privilegio": "UPDATE"
+    }
+  ],
+  "politicas": [
+    {
+      "modo": "PERMISSIVE",
+      "nome": "catalogs_delete_own",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "catalogs",
+      "operacao": "DELETE",
+      "check_expression": null,
+      "using_expression": "((( SELECT auth.uid() AS uid) = owner_id) AND (is_active = false))"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "catalogs_insert_own",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "catalogs",
+      "operacao": "INSERT",
+      "check_expression": "(( SELECT auth.uid() AS uid) = owner_id)",
+      "using_expression": null
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "catalogs_public_select_active",
+      "papeis": [
+        "anon"
+      ],
+      "schema": "public",
+      "tabela": "catalogs",
+      "operacao": "SELECT",
+      "check_expression": null,
+      "using_expression": "(is_active = true)"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "catalogs_select_own",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "catalogs",
+      "operacao": "SELECT",
+      "check_expression": null,
+      "using_expression": "(( SELECT auth.uid() AS uid) = owner_id)"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "catalogs_update_own",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "catalogs",
+      "operacao": "UPDATE",
+      "check_expression": "(( SELECT auth.uid() AS uid) = owner_id)",
+      "using_expression": "(( SELECT auth.uid() AS uid) = owner_id)"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "categories_delete_own_catalog",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "categories",
+      "operacao": "DELETE",
+      "check_expression": null,
+      "using_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = categories.catalog_id) AND (catalog.owner_id = ( SELECT auth.uid() AS uid)))))"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "categories_insert_own_catalog",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "categories",
+      "operacao": "INSERT",
+      "check_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = categories.catalog_id) AND (catalog.owner_id = ( SELECT auth.uid() AS uid)))))",
+      "using_expression": null
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "categories_public_select_active_catalog",
+      "papeis": [
+        "anon"
+      ],
+      "schema": "public",
+      "tabela": "categories",
+      "operacao": "SELECT",
+      "check_expression": null,
+      "using_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = categories.catalog_id) AND (catalog.is_active = true))))"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "categories_select_own_catalog",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "categories",
+      "operacao": "SELECT",
+      "check_expression": null,
+      "using_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = categories.catalog_id) AND (catalog.owner_id = ( SELECT auth.uid() AS uid)))))"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "categories_update_own_catalog",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "categories",
+      "operacao": "UPDATE",
+      "check_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = categories.catalog_id) AND (catalog.owner_id = ( SELECT auth.uid() AS uid)))))",
+      "using_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = categories.catalog_id) AND (catalog.owner_id = ( SELECT auth.uid() AS uid)))))"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "products_delete_own_catalog",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "products",
+      "operacao": "DELETE",
+      "check_expression": null,
+      "using_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = products.catalog_id) AND (catalog.owner_id = ( SELECT auth.uid() AS uid)))))"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "products_insert_own_catalog",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "products",
+      "operacao": "INSERT",
+      "check_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = products.catalog_id) AND (catalog.owner_id = ( SELECT auth.uid() AS uid)))))",
+      "using_expression": null
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "products_public_select_active",
+      "papeis": [
+        "anon"
+      ],
+      "schema": "public",
+      "tabela": "products",
+      "operacao": "SELECT",
+      "check_expression": null,
+      "using_expression": "((status = 'active'::text) AND (EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = products.catalog_id) AND (catalog.is_active = true)))))"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "products_select_own_catalog",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "products",
+      "operacao": "SELECT",
+      "check_expression": null,
+      "using_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = products.catalog_id) AND (catalog.owner_id = ( SELECT auth.uid() AS uid)))))"
+    },
+    {
+      "modo": "PERMISSIVE",
+      "nome": "products_update_own_catalog",
+      "papeis": [
+        "authenticated"
+      ],
+      "schema": "public",
+      "tabela": "products",
+      "operacao": "UPDATE",
+      "check_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = products.catalog_id) AND (catalog.owner_id = ( SELECT auth.uid() AS uid)))))",
+      "using_expression": "(EXISTS ( SELECT 1\n   FROM catalogs catalog\n  WHERE ((catalog.id = products.catalog_id) AND (catalog.owner_id = ( SELECT auth.uid() AS uid)))))"
+    }
+  ],
+  "catalogos": [
+    {
+      "id": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+      "owner_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "nome": "Loja A",
+      "slug": "lu-leve-e-saudavel",
+      "ativo": "true"
+    },
+    {
+      "id": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "owner_id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "nome": "Loja B",
+      "slug": "loja-b",
+      "ativo": "true"
+    },
+    {
+      "id": "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      "owner_id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "nome": "Loja C",
+      "slug": "loja-c",
+      "ativo": "true"
+    },
+    {
+      "id": "ffffffff-ffff-4fff-8fff-ffffffffffff",
+      "owner_id": "ffffffff-ffff-4fff-8fff-fffffffffff1",
+      "nome": "Loja D",
+      "slug": "loja-d",
+      "ativo": "true"
+    }
+  ]
+}

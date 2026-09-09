@@ -28,6 +28,9 @@
     const whatsappButton = document.getElementById("whatsappButton");
     const restoreCartButton = document.getElementById("restoreCartButton");
     const toast = document.getElementById("toast");
+    const organization = window.NEOEFFEX_ORGANIZATION;
+    const typeFilter = document.getElementById("typeFilter");
+    const groupFilter = document.getElementById("groupFilter");
     let client = null;
     let catalog = null;
     let categories = [];
@@ -103,10 +106,9 @@
     function getFilteredProducts() {
         const search = normalizeText(searchInput.value.trim());
         return products.filter(function (product) {
-            const category = getCategory(product.category_id);
-            const matchesCategory = selectedCategory === "all" || product.category_id === selectedCategory;
-            const searchableText = normalizeText([product.name, product.description, category ? category.name : ""].join(" "));
-            return matchesCategory && (!search || searchableText.includes(search));
+            const matchesCategory = organization.matchesCategory(product, selectedCategory, categories);
+            const searchableText = normalizeText([product.name, product.description, organization.categoryLabel(categories, product.category_id), product.product_type, (product.product_groups || []).join(" ")].join(" "));
+            return matchesCategory && organization.matchesFacets(product, typeFilter.value, groupFilter.value) && (!search || searchableText.includes(search));
         });
     }
 
@@ -134,8 +136,8 @@
         categoryFilters.replaceChildren();
         categoryFilters.appendChild(createFilterButton("Todos", "all", products.length));
         categories.forEach(function (category) {
-            const count = products.filter(function (product) { return product.category_id === category.id; }).length;
-            if (count > 0) categoryFilters.appendChild(createFilterButton(category.name, category.id, count));
+            const count = products.filter(function (product) { return organization.matchesCategory(product, category.id, categories); }).length;
+            if (count > 0) categoryFilters.appendChild(createFilterButton(organization.categoryLabel(categories, category.id), category.id, count));
         });
     }
 
@@ -165,7 +167,7 @@
         media.className = "product-card__media";
         image.className = "product-card__image";
         mark.className = "product-card__mark";
-        categoryLabel.textContent = category.name;
+        categoryLabel.textContent = organization.categoryLabel(categories, category.id);
         price.textContent = formatCurrency(product.price);
         mark.textContent = product.name.trim().charAt(0).toLocaleUpperCase("pt-BR") || "N";
         const imageUrl = getProductImageUrl(product.image_path);
@@ -190,6 +192,17 @@
         article.appendChild(media);
         article.appendChild(title);
         article.appendChild(description);
+        const labels = [product.product_type].concat(product.product_groups || []).filter(Boolean);
+        if (labels.length) {
+            const badges = document.createElement("div");
+            badges.className = "product-labels";
+            labels.forEach(function (label) {
+                const badge = document.createElement("span");
+                badge.textContent = label;
+                badges.appendChild(badge);
+            });
+            article.appendChild(badges);
+        }
         if (ordersAvailable()) {
             const addButton = document.createElement("button");
             addButton.className = "add-product-button";
@@ -212,7 +225,7 @@
         section.setAttribute("aria-labelledby", "category-" + category.id);
         heading.className = "category-section__heading";
         title.id = "category-" + category.id;
-        title.textContent = category.name;
+        title.textContent = organization.categoryLabel(categories, category.id);
         count.textContent = pluralizeProducts(categoryProducts.length);
         grid.className = "product-grid";
         categoryProducts.forEach(function (product) { grid.appendChild(createProductCard(product, category)); });
@@ -480,27 +493,40 @@
         window.dispatchEvent(new CustomEvent("neoeffex:catalog-loaded", {
             detail: { client: client, catalog: catalog }
         }));
-        const [categoriesResult, productsResult] = await Promise.all([
-            client.from("categories").select("id, catalog_id, name, sort_order, created_at")
-                .eq("catalog_id", catalog.id).order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
-            client.from("products").select("id, catalog_id, name, description, category_id, price, status, image_path, sort_order, created_at")
-                .eq("catalog_id", catalog.id).eq("status", "active")
-                .order("sort_order", { ascending: true }).order("created_at", { ascending: true })
-        ]);
+        const rows = await organization.loadRows(client, catalog.id, true);
+        const categoriesResult = rows.categories;
+        const productsResult = rows.products;
         if (categoriesResult.error || productsResult.error) {
             console.error("Erro ao carregar dados públicos", categoriesResult.error || productsResult.error);
             showError("Catálogo indisponível", "Não foi possível carregar os produtos agora.", true);
             return;
         }
-        categories = categoriesResult.data || [];
+        categories = organization.orderedCategories(categoriesResult.data || []);
         products = (productsResult.data || []).filter(function (product) {
             return categories.some(function (category) { return category.id === product.category_id; });
         });
         selectedCategory = "all";
+        typeFilter.value = "";
+        groupFilter.value = "";
         searchInput.value = "";
+        renderFacetOptions();
         loadingState.setAttribute("aria-busy", "false");
         showCatalog();
     }
+
+    function renderFacetOptions() {
+        [[typeFilter, "product_type", "Todos os tipos"], [groupFilter, "product_groups", "Todos os grupos"]].forEach(function (entry) {
+            const values = organization.facets(products, entry[1]);
+            entry[0].replaceChildren(new Option(entry[2], ""));
+            values.forEach(function (value) { entry[0].appendChild(new Option(value, value)); });
+            entry[0].closest("label").hidden = !values.length;
+        });
+        document.getElementById("organizationFilters").hidden = !typeFilter.options.length ||
+            (typeFilter.options.length === 1 && groupFilter.options.length === 1);
+    }
+
+    typeFilter.addEventListener("change", renderProducts);
+    groupFilter.addEventListener("change", renderProducts);
 
     function showToast(message) {
         window.clearTimeout(toastTimeout);
@@ -537,6 +563,8 @@
     searchInput.addEventListener("input", renderProducts);
     clearFiltersButton.addEventListener("click", function () {
         selectedCategory = "all";
+        typeFilter.value = "";
+        groupFilter.value = "";
         searchInput.value = "";
         renderFilters();
         renderProducts();
@@ -605,3 +633,4 @@
     window.dispatchEvent(new CustomEvent("neoeffex:client-ready", { detail: client }));
     loadCatalog();
 }());
+

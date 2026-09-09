@@ -16,7 +16,7 @@ Antes de alterar:
 
 ## Múltiplos catálogos
 
-Uma conta pode possuir vários catálogos.
+Uma conta pode possuir várias lojas, cada uma com exatamente um catálogo.
 
 Nunca use lógica equivalente a:
 
@@ -84,3 +84,4 @@ Para exclusão de catálogo ou outro dado importante:
 Correções de logo, botões, espaçamentos e cards devem funcionar para todos os clientes.
 
 Não use seletores específicos como solução permanente para apenas um slug.
+

@@ -135,3 +135,10 @@ O slug permanece globalmente único. Nenhuma URL pública existente é alterada.
 - Ao clicar em `Enviar pedido pelo WhatsApp`, o carrinho atual é guardado como último carrinho e então limpo.
 - Quando o carrinho está vazio e existe um pedido anterior válido, aparece o botão `Restaurar último carrinho`.
 - O último carrinho continua armazenado somente no navegador e separado pelo identificador interno do catálogo.
+
+
+## v0.2.0 — organização no mesmo catálogo
+
+Categorias principais incluem os produtos de suas subcategorias. Filtros de categoria, tipo e grupo combinam-se com a busca. Só classificações de produtos públicos são listadas. Todas as seleções usam o mesmo catálogo e carrinho. Os nomes dos grupos não definem preço, descontos ou adicionais.
+
+O módulo compartilhado `assets/catalog/organization.js` deve ser publicado junto com os arquivos de `/admin` e `/catalogo`. Ordem de aplicação: `docs/catalogo-unico/APLICACAO.md`.

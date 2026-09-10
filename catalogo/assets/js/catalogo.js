@@ -305,7 +305,7 @@
 
         const available = productPf.map(function (pf) {
             const f = flavors.find(function (item) { return item.id === pf.flavor_id; });
-            if (!f || f.status === "paused") return null;
+            if (!f || f.is_active === false) return null;
             return {
                 flavor_id: f.id,
                 name: f.name,
@@ -931,12 +931,16 @@
         let pfRes = { data: [] };
         try {
             [flavorsRes, pfRes] = await Promise.all([
-                client.from("flavors").select("id, catalog_id, name, description, image_path, sort_order, status")
-                    .eq("catalog_id", catalog.id).eq("status", "active")
-                    .order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
-                client.from("product_flavors").select("id, catalog_id, product_id, flavor_id, additional_price, is_available, sort_order")
-                    .eq("catalog_id", catalog.id).eq("is_available", true)
+                client.from("flavors")
+                    .select("id, catalog_id, name, description, image_path, sort_order, is_active")
+                    .eq("catalog_id", catalog.id)
+                    .eq("is_active", true)
                     .order("sort_order", { ascending: true })
+                    .order("created_at", { ascending: true }),
+
+                client.from("product_flavors")
+                    .select("catalog_id, product_id, flavor_id, additional_price, is_available, sort_order")
+                    .eq("catalog_id", catalog.id)
             ]);
         } catch (err) {
             console.warn("Sabores não puderam ser carregados ou tabela ausente", err);
@@ -1045,7 +1049,7 @@
             const total = entries.reduce(function (sum, entry) { return sum + entry.totalPrice; }, 0);
             const message = buildOrderMessage(entries, total);
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(message).catch(function () {});
+                navigator.clipboard.writeText(message).catch(function () { });
             }
             showToast("Demonstração: mensagem copiada para transferência. Nenhum pedido foi enviado.");
             return;

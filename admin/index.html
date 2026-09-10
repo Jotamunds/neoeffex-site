@@ -274,6 +274,10 @@
                             Grupos
                             <span class="settings-tab__count" id="groupsTabCount">0</span>
                         </button>
+                        <button class="settings-tab" id="flavorsTabButton" type="button" role="tab" aria-selected="false" aria-controls="flavorsTabPanel">
+                            Sabores
+                            <span class="settings-tab__count" id="flavorsTabCount">0</span>
+                        </button>
                     </div>
 
                     <div class="settings-panel" id="categoriesTabPanel" role="tabpanel" aria-labelledby="categoriesTabButton">
@@ -471,6 +475,83 @@
                                 <tbody id="productGroupList"></tbody>
                             </table>
                             <p class="empty-state" id="emptyProductGroupState" hidden>Nenhum grupo configurado.</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-panel" id="flavorsTabPanel" role="tabpanel" aria-labelledby="flavorsTabButton" hidden>
+                        <div class="settings-panel__head">
+                            <div>
+                                <h3>Sabores e composições</h3>
+                                <p>Cadastre os sabores disponíveis para os combos e marmitas deste catálogo.</p>
+                            </div>
+                            <button class="primary-button" id="newFlavorButton" type="button">
+                                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
+                                Novo sabor
+                            </button>
+                        </div>
+
+                        <form class="settings-form" id="flavorForm" novalidate hidden>
+                            <input id="flavorId" name="flavorId" type="hidden">
+                            <h4 id="flavorFormTitle">Novo sabor</h4>
+                            <div class="settings-form__grid">
+                                <div class="form-field">
+                                    <label for="flavorName">Nome do sabor</label>
+                                    <input id="flavorName" name="flavorName" type="text" maxlength="80" autocomplete="off" placeholder="Ex: Carne de panela com batatas" required>
+                                </div>
+                                <div class="form-field form-field--short">
+                                    <label for="flavorOrder">Ordem</label>
+                                    <input id="flavorOrder" name="flavorOrder" type="number" min="0" max="2147483647" step="1" value="0">
+                                </div>
+                                <div class="form-field form-field--short">
+                                    <label for="flavorStatus">Status</label>
+                                    <select id="flavorStatus" name="flavorStatus">
+                                        <option value="active">Ativo</option>
+                                        <option value="paused">Pausado</option>
+                                    </select>
+                                </div>
+                                <div class="form-field form-field--full">
+                                    <label for="flavorDescription">Descrição (opcional)</label>
+                                    <textarea id="flavorDescription" name="flavorDescription" maxlength="500" rows="2" placeholder="Ingredientes ou observações do preparo"></textarea>
+                                </div>
+                                <div class="form-field form-field--full">
+                                    <label for="flavorImage">Foto do sabor (opcional)</label>
+                                    <div class="product-image-field">
+                                        <div class="product-image-preview" id="flavorImagePreview">
+                                            <img id="flavorImagePreviewImage" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" hidden>
+                                            <span id="flavorImagePreviewFallback" aria-hidden="true">S</span>
+                                        </div>
+                                        <div class="product-image-input">
+                                            <input id="flavorImage" name="flavorImage" type="file" accept="image/jpeg,image/png,image/webp">
+                                            <span class="field-help">Opcional. JPEG, PNG ou WebP com no máximo 5 MB.</span>
+                                        </div>
+                                    </div>
+                                    <label class="checkbox-field checkbox-field--compact" id="removeFlavorImageField" hidden>
+                                        <input id="removeFlavorImage" name="removeFlavorImage" type="checkbox">
+                                        <span><strong>Remover foto atual</strong><small>O sabor voltará a usar a inicial padrão.</small></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <p class="form-feedback" id="flavorFeedback" role="status" aria-live="polite"></p>
+                            <div class="settings-form__actions">
+                                <button class="secondary-button" id="cancelFlavorButton" type="button">Cancelar</button>
+                                <button class="primary-button" id="saveFlavorButton" type="submit">Salvar sabor</button>
+                            </div>
+                        </form>
+
+                        <div class="settings-table-wrapper">
+                            <table class="settings-table" id="flavorsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Foto</th>
+                                        <th>Sabor</th>
+                                        <th>Status</th>
+                                        <th>Ordem</th>
+                                        <th class="settings-table__actions-head">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="flavorList"></tbody>
+                            </table>
+                            <p class="empty-state" id="emptyFlavorState" hidden>Nenhum sabor configurado.</p>
                         </div>
                     </div>
                 </section>

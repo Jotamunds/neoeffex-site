@@ -8,11 +8,13 @@ function fixture(){return {
  categories:[{id:'main',catalog_id:'cat',name:'Marmitas',sort_order:0},{id:'child',catalog_id:'cat',name:'Tradicionais',parent_id:'main',sort_order:1},{id:'other',catalog_id:'cat',name:'Bebidas',sort_order:2}],
  product_types:[],
  product_groups:[],
- products:[{id:'p1',catalog_id:'cat',category_id:'child',name:'Combo 10',description:'Dez marmitas',price:150,status:'active',product_type:'Combo',product_groups:['Mais pedido'],sort_order:0},{id:'p2',catalog_id:'cat',category_id:'other',name:'Suco',description:'Natural',price:5,status:'active',product_type:'Individual',product_groups:['Bebida'],sort_order:1}]
+ flavors:[{id:'fl-carne',catalog_id:'cat',name:'Carne de Panela',description:'Carne macia com legumes',is_active:true,sort_order:0}],
+ product_flavors:[{product_id:'p1',flavor_id:'fl-carne',catalog_id:'cat',sort_order:0,additional_price:0,is_available:true}],
+ products:[{id:'p1',catalog_id:'cat',category_id:'child',name:'Combo 10',description:'Dez marmitas',price:150,status:'active',product_type:'Combo',product_groups:['Mais pedido'],purchase_mode:'simple',sort_order:0},{id:'p2',catalog_id:'cat',category_id:'other',name:'Suco',description:'Natural',price:5,status:'active',product_type:'Individual',product_groups:['Bebida'],purchase_mode:'simple',sort_order:1}]
 };}
 function client(db,legacy,requests){return {
  auth:{onAuthStateChange(){},getUser:async()=>({data:{user:{id:'owner',email:'test@example.com'}}}),signOut:async()=>({})},
- storage:{from:()=>({getPublicUrl:()=>({data:{publicUrl:''}})})},
+ storage:{from:()=>({getPublicUrl:()=>({data:{publicUrl:''}}),upload:async()=>({data:{path:'test/path.webp'},error:null}),remove:async()=>({data:{},error:null})})},
  from(table){let filters=[],selected='',op='',payload,one=false;
   const query={select(s){selected=s;return query;},eq(k,v){filters.push([k,v]);return query;},order(){return query;},single(){one=true;return query;},maybeSingle(){one=true;return query;},insert(v){op='insert';payload=v;return query;},update(v){op='update';payload=v;return query;},delete(){op='delete';return query;},
    then(resolve,reject){return Promise.resolve().then(()=>{
@@ -21,13 +23,13 @@ function client(db,legacy,requests){return {
     if(!db[table]) db[table] = [];
     let rows=db[table].filter(row=>filters.every(([k,v])=>row[k]===v));
     if(op==='insert'){
-     if((table==='product_types'||table==='product_groups'||table==='categories') && payload.name && db[table].some(r=>r.catalog_id===payload.catalog_id && String(r.name).trim().toLowerCase()===String(payload.name).trim().toLowerCase())) {
+     if((table==='product_types'||table==='product_groups'||table==='categories'||table==='flavors') && payload.name && db[table].some(r=>r.catalog_id===payload.catalog_id && String(r.name).trim().toLowerCase()===String(payload.name).trim().toLowerCase())) {
       return {data:null,error:{code:'23505',message:'duplicate key value violates unique constraint'}};
      }
      const row={id:'new-'+db[table].length,...payload};db[table].push(row);rows=[row];
     }
     if(op==='update'){
-     if((table==='product_types'||table==='product_groups'||table==='categories') && payload.name) {
+     if((table==='product_types'||table==='product_groups'||table==='categories'||table==='flavors') && payload.name) {
       const target=rows[0];
       if(target && db[table].some(r=>r.id!==target.id && r.catalog_id===target.catalog_id && String(r.name).trim().toLowerCase()===String(payload.name).trim().toLowerCase())) {
        return {data:null,error:{code:'23505',message:'duplicate key value violates unique constraint'}};
@@ -90,14 +92,18 @@ async function setup(area,legacy=false,customDb=null){
  assert(x.d.querySelector('#newSubcategoryButton').disabled);
  assert(x.d.querySelector('#newProductTypeButton').disabled);
  assert(x.d.querySelector('#newProductGroupButton').disabled);
+ assert(x.d.querySelector('#newFlavorButton').disabled);
  assert(x.d.querySelector('#rootCategoryForm').hidden);
  assert(x.d.querySelector('#subcategoryForm').hidden);
  assert(x.d.querySelector('#productTypeForm').hidden);
  assert(x.d.querySelector('#productGroupForm').hidden);
+ assert(x.d.querySelector('#flavorForm').hidden);
  assert(x.d.querySelector('#emptyProductTypeState').textContent.includes('Nenhuma loja vinculada'));
  assert(x.d.querySelector('#emptyProductGroupState').textContent.includes('Nenhuma loja vinculada'));
+ assert(x.d.querySelector('#emptyFlavorState').textContent.includes('Nenhuma loja vinculada'));
  assert.equal(x.d.querySelector('#typesTabCount').textContent, '0');
  assert.equal(x.d.querySelector('#groupsTabCount').textContent, '0');
+ assert.equal(x.d.querySelector('#flavorsTabCount').textContent, '0');
  assert.deepEqual(x.errors,[]);checks++;x.dom.window.close();
 
  // Cenário 2: Uma loja existente
@@ -411,6 +417,86 @@ async function setup(area,legacy=false,customDb=null){
   assert.equal(x.db.product_groups.length,2);
   assert(!x.db.product_groups.some(g=>g.name==='Temporário'));checks++;
 
+  // CONFIGURAÇÕES: SABORES
+  x.d.querySelector('#flavorsTabButton').click();
+  assert(!x.d.querySelector('#flavorsTabPanel').hidden);
+  assert(x.d.querySelector('#typesTabPanel').hidden);
+  assert(x.d.querySelector('#groupsTabPanel').hidden);
+  assert(x.d.querySelector('#emptyFlavorState').hidden);
+  assert.equal(x.d.querySelector('#flavorsTabCount').textContent,'1');checks++;
+
+  // Carne de Panela já está vinculada a p1 via product_flavors: exclusão bloqueada
+  const flavor1Row = x.d.querySelector('#flavorList tr');
+  assert(flavor1Row && flavor1Row.textContent.includes('Carne de Panela'));
+  assert(flavor1Row.querySelector('.category-action--danger').disabled);
+  assert(flavor1Row.querySelector('.category-action--danger').title.includes('associado'));checks++;
+
+  // Validações de Sabor: nome vazio, nome > 80, ordem negativa
+  x.d.querySelector('#newFlavorButton').click();
+  assert(!x.d.querySelector('#flavorForm').hidden);
+  x.d.querySelector('#flavorName').value='';
+  x.d.querySelector('#flavorForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert(x.d.querySelector('#flavorFeedback').textContent.includes('entre 1 e 80'));
+
+  x.d.querySelector('#flavorName').value='A'.repeat(81);
+  x.d.querySelector('#flavorForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert(x.d.querySelector('#flavorFeedback').textContent.includes('entre 1 e 80'));
+
+  x.d.querySelector('#flavorName').value='Frango Desfiado';
+  x.d.querySelector('#flavorOrder').value='-1';
+  x.d.querySelector('#flavorForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert(x.d.querySelector('#flavorFeedback').textContent.includes('inteira a partir de zero'));checks++;
+
+  // Duplicidade de sabor (case-insensitive com Carne de Panela existente)
+  x.d.querySelector('#flavorName').value=' carne de panela ';
+  x.d.querySelector('#flavorOrder').value='1';
+  x.d.querySelector('#flavorForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert.equal(x.db.flavors.length,1);
+  assert(x.d.querySelector('#flavorFeedback').textContent.includes('Já existe um sabor com este nome'));
+  x.d.querySelector('#cancelFlavorButton').click();
+  assert(x.d.querySelector('#flavorForm').hidden);checks++;
+
+  // Alternância rápida de status (Ativo / Pausado)
+  const statusBtn = flavor1Row.querySelector('.flavor-status-btn');
+  assert(statusBtn && statusBtn.textContent.includes('Ativo'));
+  statusBtn.click(); await wait();
+  assert.equal(x.db.flavors[0].is_active, false);
+  const statusBtn2 = x.d.querySelector('#flavorList tr .flavor-status-btn');
+  assert(statusBtn2 && statusBtn2.textContent.includes('Pausado'));
+  statusBtn2.click(); await wait();
+  assert.equal(x.db.flavors[0].is_active, true);checks++;
+
+  // Editar Sabor
+  flavor1Row.querySelectorAll('.category-action')[0].click();
+  assert(!x.d.querySelector('#flavorForm').hidden);
+  assert.equal(x.d.querySelector('#flavorName').value,'Carne de Panela');
+  assert.equal(x.d.querySelector('#flavorDescription').value,'Carne macia com legumes');
+  x.d.querySelector('#flavorDescription').value='Carne desfiada cozida lentamente';
+  x.d.querySelector('#flavorForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert.equal(x.db.flavors[0].description,'Carne desfiada cozida lentamente');checks++;
+
+  // Criar segundo sabor (Frango Desfiado)
+  x.d.querySelector('#newFlavorButton').click();
+  x.d.querySelector('#flavorName').value='Frango Desfiado';
+  x.d.querySelector('#flavorOrder').value='1';
+  x.d.querySelector('#flavorDescription').value='Peito de frango temperado';
+  x.d.querySelector('#flavorForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert.equal(x.db.flavors.length,2);
+  assert.equal(x.d.querySelector('#flavorsTabCount').textContent,'2');
+
+  // Frango Desfiado não está vinculado a produto, pode ser excluído
+  const rowsAfter = Array.from(x.d.querySelectorAll('#flavorList tr'));
+  const rowFrango = rowsAfter.find(r => r.textContent.includes('Frango Desfiado'));
+  assert(!rowFrango.querySelector('.category-action--danger').disabled);
+  rowFrango.querySelector('.category-action--danger').click();
+  assert(!x.d.querySelector('#deleteModal').hidden);
+  assert.equal(x.d.querySelector('#deleteModalTitle').textContent,'Excluir sabor?');
+  assert(x.d.querySelector('#deleteModalDescription').textContent.includes('Frango Desfiado'));
+  x.d.querySelector('#confirmDeleteButton').click();await wait();
+  assert.equal(x.db.flavors.length,1);
+  assert(!x.db.flavors.some(f=>f.name==='Frango Desfiado'));
+  assert.equal(x.d.querySelector('#flavorsTabCount').textContent,'1');checks++;
+
   // =========================================================================
   // ETAPA 4: INTEGRAÇÃO DAS CONFIGURAÇÕES AO FORMULÁRIO DE PRODUTOS
   // =========================================================================
@@ -546,6 +632,11 @@ async function setup(area,legacy=false,customDb=null){
    {id:'pg1',catalog_id:'c1',name:'Destaques',sort_order:0},
    {id:'pg2',catalog_id:'c2',name:'Promoções',sort_order:0}
   ],
+  flavors:[
+   {id:'fl1',catalog_id:'c1',name:'Sabor Loja 1',description:'Desc 1',is_active:true,sort_order:0},
+   {id:'fl2',catalog_id:'c2',name:'Sabor Loja 2',description:'Desc 2',is_active:true,sort_order:0}
+  ],
+  product_flavors:[],
   products:[
    {id:'p1',catalog_id:'c1',category_id:'cat1',name:'Produto Loja 1',price:10,status:'active',sort_order:0},
    {id:'p2',catalog_id:'c2',category_id:'cat2',name:'Produto Loja 2',price:20,status:'active',sort_order:0}
@@ -563,11 +654,15 @@ async function setup(area,legacy=false,customDb=null){
  assert(x.d.querySelector('#productTypeList').textContent.includes('Individual'));
  assert(!x.d.querySelector('#productTypeList').textContent.includes('Combo'));
  assert(x.d.querySelector('#productGroupList').textContent.includes('Destaques'));
- assert(!x.d.querySelector('#productGroupList').textContent.includes('Promoções'));checks++;
+ assert(!x.d.querySelector('#productGroupList').textContent.includes('Promoções'));
+ assert(x.d.querySelector('#flavorList').textContent.includes('Sabor Loja 1'));
+ assert(!x.d.querySelector('#flavorList').textContent.includes('Sabor Loja 2'));checks++;
 
  // Formulários e modais abertos são fechados ao trocar de loja (evita salvar na loja errada)
  x.d.querySelector('#newProductTypeButton').click();
  assert(!x.d.querySelector('#productTypeForm').hidden);
+ x.d.querySelector('#newFlavorButton').click();
+ assert(!x.d.querySelector('#flavorForm').hidden);
  x.d.querySelector('#newProductButton').click();
  assert(!x.d.querySelector('#productModal').hidden);
 
@@ -577,6 +672,7 @@ async function setup(area,legacy=false,customDb=null){
  await wait();
  assert(x.d.querySelector('#productModal').hidden);
  assert(x.d.querySelector('#productTypeForm').hidden);
+ assert(x.d.querySelector('#flavorForm').hidden);
  assert.equal(x.d.querySelectorAll('.product-row').length,1);
  assert(x.d.querySelector('.product-row').textContent.includes('Produto Loja 2'));
  assert(!x.d.querySelector('.product-row').textContent.includes('Produto Loja 1'));
@@ -586,6 +682,8 @@ async function setup(area,legacy=false,customDb=null){
  assert(!x.d.querySelector('#productTypeList').textContent.includes('Individual'));
  assert(x.d.querySelector('#productGroupList').textContent.includes('Promoções'));
  assert(!x.d.querySelector('#productGroupList').textContent.includes('Destaques'));
+ assert(x.d.querySelector('#flavorList').textContent.includes('Sabor Loja 2'));
+ assert(!x.d.querySelector('#flavorList').textContent.includes('Sabor Loja 1'));
 
  // Modal de edição de loja também fecha ao alternar loja
  x.d.querySelector('#editCatalogButton').click();

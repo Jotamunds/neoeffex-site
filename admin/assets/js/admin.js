@@ -124,6 +124,27 @@
     const saveProductGroupButton = document.getElementById("saveProductGroupButton");
     const productGroupList = document.getElementById("productGroupList");
     const emptyProductGroupState = document.getElementById("emptyProductGroupState");
+    const flavorsTabButton = document.getElementById("flavorsTabButton");
+    const flavorsTabCount = document.getElementById("flavorsTabCount");
+    const flavorsTabPanel = document.getElementById("flavorsTabPanel");
+    const newFlavorButton = document.getElementById("newFlavorButton");
+    const flavorForm = document.getElementById("flavorForm");
+    const flavorFormTitle = document.getElementById("flavorFormTitle");
+    const flavorId = document.getElementById("flavorId");
+    const flavorName = document.getElementById("flavorName");
+    const flavorOrder = document.getElementById("flavorOrder");
+    const flavorStatus = document.getElementById("flavorStatus");
+    const flavorDescription = document.getElementById("flavorDescription");
+    const flavorImageInput = document.getElementById("flavorImage");
+    const flavorImagePreviewImage = document.getElementById("flavorImagePreviewImage");
+    const flavorImagePreviewFallback = document.getElementById("flavorImagePreviewFallback");
+    const removeFlavorImage = document.getElementById("removeFlavorImage");
+    const removeFlavorImageField = document.getElementById("removeFlavorImageField");
+    const cancelFlavorButton = document.getElementById("cancelFlavorButton");
+    const saveFlavorButton = document.getElementById("saveFlavorButton");
+    const flavorFeedback = document.getElementById("flavorFeedback");
+    const flavorList = document.getElementById("flavorList");
+    const emptyFlavorState = document.getElementById("emptyFlavorState");
     const organization = window.NEOEFFEX_ORGANIZATION;
     let organizationEnabled = false;
     let client = null;
@@ -131,8 +152,11 @@
     let categories = [];
     let productTypes = [];
     let productGroups = [];
+    let flavors = [];
+    let productFlavorsRelations = [];
     let productTypesLoadError = false;
     let productGroupsLoadError = false;
+    let flavorsLoadError = false;
     let products = [];
     let activeCatalog = null;
     let pendingDeletion = null;
@@ -140,6 +164,7 @@
     let lastFocusedElement = null;
     let loadSequence = 0;
     let productImageObjectUrl = null;
+    let flavorImageObjectUrl = null;
     let authenticatedUserId = null;
     const productImagesBucket = "catalog-products";
     const catalogIdentitiesBucket = "catalog-identities";
@@ -603,8 +628,22 @@
             .eq("catalog_id", catalogId)
             .order("sort_order", { ascending: true })
             .order("created_at", { ascending: true });
+        const flavorsPromise = client.from("flavors")
+            .select("id, catalog_id, name, description, image_path, is_active, sort_order, created_at")
+            .eq("catalog_id", catalogId)
+            .order("sort_order", { ascending: true })
+            .order("name", { ascending: true });
+        const productFlavorsPromise = client.from("product_flavors")
+            .select("product_id, flavor_id, catalog_id, sort_order, additional_price, is_available")
+            .eq("catalog_id", catalogId);
 
-        const [rows, typesResult, groupsResult] = await Promise.all([rowsPromise, typesPromise, groupsPromise]);
+        const [rows, typesResult, groupsResult, flavorsResult, productFlavorsResult] = await Promise.all([
+            rowsPromise,
+            typesPromise,
+            groupsPromise,
+            flavorsPromise,
+            productFlavorsPromise
+        ]);
         const categoriesResult = rows.categories;
         const productsResult = rows.products;
 
@@ -619,12 +658,16 @@
 
         productTypesLoadError = Boolean(typesResult && typesResult.error);
         productGroupsLoadError = Boolean(groupsResult && groupsResult.error);
+        flavorsLoadError = Boolean(flavorsResult && flavorsResult.error);
 
         if (productTypesLoadError) {
             console.error("Erro ao carregar tipos de produto", typesResult.error);
         }
         if (productGroupsLoadError) {
             console.error("Erro ao carregar grupos de produtos", groupsResult.error);
+        }
+        if (flavorsLoadError) {
+            console.error("Erro ao carregar sabores do catálogo", flavorsResult.error);
         }
 
         organizationEnabled = rows.enabled;
@@ -635,6 +678,8 @@
         categories = organization.orderedCategories(categoriesResult.data || []);
         productTypes = typesResult && !typesResult.error ? (typesResult.data || []) : [];
         productGroups = groupsResult && !groupsResult.error ? (groupsResult.data || []) : [];
+        flavors = flavorsResult && !flavorsResult.error ? (flavorsResult.data || []) : [];
+        productFlavorsRelations = productFlavorsResult && !productFlavorsResult.error ? (productFlavorsResult.data || []) : [];
         products = (productsResult.data || []).map(function (product) {
             return Object.assign({}, product, { categoryName: getCategoryName(product.category_id) });
         });
@@ -1028,6 +1073,7 @@
         const isSubcategories = tabName === "subcategories";
         const isTypes = tabName === "types";
         const isGroups = tabName === "groups";
+        const isFlavors = tabName === "flavors";
 
         categoriesTabButton.classList.toggle("settings-tab--active", isCategories);
         categoriesTabButton.setAttribute("aria-selected", String(isCategories));
@@ -1044,6 +1090,12 @@
         groupsTabButton.classList.toggle("settings-tab--active", isGroups);
         groupsTabButton.setAttribute("aria-selected", String(isGroups));
         groupsTabPanel.hidden = !isGroups;
+
+        if (flavorsTabButton && flavorsTabPanel) {
+            flavorsTabButton.classList.toggle("settings-tab--active", isFlavors);
+            flavorsTabButton.setAttribute("aria-selected", String(isFlavors));
+            flavorsTabPanel.hidden = !isFlavors;
+        }
     }
 
     function getNextSortOrder(items) {
@@ -1061,14 +1113,17 @@
             newSubcategoryButton.disabled = true;
             newProductTypeButton.disabled = true;
             newProductGroupButton.disabled = true;
+            if (newFlavorButton) newFlavorButton.disabled = true;
             rootCategoryForm.hidden = true;
             subcategoryForm.hidden = true;
             productTypeForm.hidden = true;
             productGroupForm.hidden = true;
+            if (flavorForm) flavorForm.hidden = true;
             rootCategoryList.replaceChildren();
             subcategoryList.replaceChildren();
             productTypeList.replaceChildren();
             productGroupList.replaceChildren();
+            if (flavorList) flavorList.replaceChildren();
             emptyRootCategoryState.hidden = false;
             emptyRootCategoryState.textContent = "Nenhuma loja vinculada a esta conta.";
             emptySubcategoryState.hidden = false;
@@ -1077,10 +1132,15 @@
             emptyProductTypeState.textContent = "Nenhuma loja vinculada a esta conta.";
             emptyProductGroupState.hidden = false;
             emptyProductGroupState.textContent = "Nenhuma loja vinculada a esta conta.";
+            if (emptyFlavorState) {
+                emptyFlavorState.hidden = false;
+                emptyFlavorState.textContent = "Nenhuma loja vinculada a esta conta.";
+            }
             categoriesTabCount.textContent = "0";
             subcategoriesTabCount.textContent = "0";
             typesTabCount.textContent = "0";
             groupsTabCount.textContent = "0";
+            if (flavorsTabCount) flavorsTabCount.textContent = "0";
             return;
         }
 
@@ -1089,10 +1149,12 @@
         newSubcategoryButton.disabled = false;
         newProductTypeButton.disabled = false;
         newProductGroupButton.disabled = false;
+        if (newFlavorButton) newFlavorButton.disabled = false;
         renderRootCategories();
         renderSubcategories();
         renderProductTypes();
         renderProductGroups();
+        renderFlavors();
     }
 
     function renderRootCategories() {
@@ -1678,12 +1740,312 @@
         showToast(groupId ? "Grupo atualizado com sucesso." : "Grupo adicionado com sucesso.");
     }
 
+    function clearFlavorImageObjectUrl() {
+        if (!flavorImageObjectUrl) return;
+        URL.revokeObjectURL(flavorImageObjectUrl);
+        flavorImageObjectUrl = null;
+    }
+
+    function showFlavorImagePreview(url, flavorNameText) {
+        if (!flavorImagePreviewFallback || !flavorImagePreviewImage) return;
+        flavorImagePreviewFallback.textContent = (flavorNameText || "S").trim().charAt(0).toLocaleUpperCase("pt-BR") || "S";
+        flavorImagePreviewImage.hidden = !url;
+        flavorImagePreviewFallback.hidden = Boolean(url);
+        flavorImagePreviewImage.src = url || "";
+        flavorImagePreviewImage.alt = url ? "Prévia de " + (flavorNameText || "sabor") : "";
+    }
+
+    function previewSelectedFlavorImage() {
+        const file = flavorImageInput.files && flavorImageInput.files[0];
+        const validationMessage = validateProductImage(file);
+        if (validationMessage) {
+            flavorImageInput.value = "";
+            setFeedback(flavorFeedback, validationMessage, "error");
+            return;
+        }
+        if (!file) return;
+        clearFlavorImageObjectUrl();
+        flavorImageObjectUrl = URL.createObjectURL(file);
+        removeFlavorImage.checked = false;
+        showFlavorImagePreview(flavorImageObjectUrl, flavorName.value || "Sabor");
+        setFeedback(flavorFeedback, "", "");
+    }
+
+    function countProductsUsingFlavor(targetFlavorId) {
+        return productFlavorsRelations.filter(function (r) { return r.flavor_id === targetFlavorId; }).length;
+    }
+
+    function renderFlavors() {
+        if (!flavorsTabCount || !flavorList) return;
+        flavorsTabCount.textContent = String(flavors.length);
+        flavorList.replaceChildren();
+        emptyFlavorState.hidden = flavors.length !== 0;
+
+        flavors.forEach(function (flavor) {
+            const tr = document.createElement("tr");
+
+            // Coluna Foto
+            const photoTd = document.createElement("td");
+            const thumb = document.createElement("div");
+            thumb.className = "flavor-thumb";
+            if (flavor.image_path) {
+                const img = document.createElement("img");
+                img.src = getProductImageUrl(flavor.image_path);
+                img.alt = flavor.name;
+                img.className = "flavor-thumb";
+                img.addEventListener("error", function () {
+                    thumb.textContent = flavor.name.charAt(0).toUpperCase();
+                    photoTd.replaceChildren(thumb);
+                });
+                photoTd.appendChild(img);
+            } else {
+                thumb.textContent = flavor.name.charAt(0).toUpperCase();
+                photoTd.appendChild(thumb);
+            }
+
+            // Coluna Nome & Descrição
+            const nameTd = document.createElement("td");
+            const strong = document.createElement("strong");
+            strong.textContent = flavor.name;
+            nameTd.appendChild(strong);
+            if (flavor.description) {
+                const desc = document.createElement("small");
+                desc.style.display = "block";
+                desc.style.color = "var(--text-muted)";
+                desc.style.fontSize = "11px";
+                desc.textContent = flavor.description;
+                nameTd.appendChild(desc);
+            }
+
+            // Coluna Status
+            const statusTd = document.createElement("td");
+            const statusBadge = document.createElement("button");
+            statusBadge.type = "button";
+            statusBadge.className = "flavor-status-btn " + (flavor.is_active ? "flavor-status-btn--active" : "flavor-status-btn--paused");
+            statusBadge.textContent = flavor.is_active ? "Ativo" : "Pausado";
+            statusBadge.title = flavor.is_active ? "Clique para pausar este sabor" : "Clique para ativar este sabor";
+            statusBadge.addEventListener("click", function () {
+                toggleFlavorStatus(flavor);
+            });
+            statusTd.appendChild(statusBadge);
+
+            // Coluna Ordem
+            const orderTd = document.createElement("td");
+            orderTd.textContent = String(flavor.sort_order);
+
+            // Coluna Ações
+            const actionsTd = document.createElement("td");
+            actionsTd.className = "settings-table__actions";
+
+            const editButton = document.createElement("button");
+            editButton.className = "category-action";
+            editButton.type = "button";
+            editButton.textContent = "Editar";
+            editButton.addEventListener("click", function () {
+                openFlavorForm(flavor);
+            });
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "category-action category-action--danger";
+            deleteButton.type = "button";
+            deleteButton.textContent = "Excluir";
+            deleteButton.title = "Excluir sabor";
+            const usedCount = countProductsUsingFlavor(flavor.id);
+            if (usedCount > 0) {
+                deleteButton.disabled = true;
+                deleteButton.title = "Este sabor está associado a " + usedCount + " produto" + (usedCount === 1 ? "" : "s");
+            }
+            deleteButton.addEventListener("click", function () {
+                openDeleteModal({ type: "flavor", id: flavor.id, name: flavor.name, image_path: flavor.image_path });
+            });
+
+            actionsTd.append(editButton, deleteButton);
+            tr.append(photoTd, nameTd, statusTd, orderTd, actionsTd);
+            flavorList.appendChild(tr);
+        });
+    }
+
+    function openFlavorForm(flavor) {
+        if (!activeCatalog) return;
+        setFeedback(flavorFeedback, "", "");
+        clearFlavorImageObjectUrl();
+        if (flavor) {
+            flavorFormTitle.textContent = "Editar sabor";
+            flavorId.value = flavor.id;
+            flavorName.value = flavor.name;
+            flavorOrder.value = flavor.sort_order;
+            flavorStatus.value = flavor.is_active ? "active" : "paused";
+            flavorDescription.value = flavor.description || "";
+            removeFlavorImageField.hidden = !flavor.image_path;
+            removeFlavorImage.checked = false;
+            showFlavorImagePreview(flavor.image_path ? getProductImageUrl(flavor.image_path) : "", flavor.name);
+            saveFlavorButton.textContent = "Salvar alterações";
+        } else {
+            flavorFormTitle.textContent = "Novo sabor";
+            flavorId.value = "";
+            flavorName.value = "";
+            flavorOrder.value = getNextSortOrder(flavors);
+            flavorStatus.value = "active";
+            flavorDescription.value = "";
+            removeFlavorImageField.hidden = true;
+            removeFlavorImage.checked = false;
+            showFlavorImagePreview("", "S");
+            saveFlavorButton.textContent = "Salvar sabor";
+        }
+        flavorImageInput.value = "";
+        flavorForm.hidden = false;
+        window.setTimeout(function () { flavorName.focus(); }, 0);
+    }
+
+    function closeFlavorForm() {
+        flavorForm.hidden = true;
+        flavorForm.reset();
+        flavorId.value = "";
+        clearFlavorImageObjectUrl();
+        showFlavorImagePreview("", "S");
+        removeFlavorImageField.hidden = true;
+        setFeedback(flavorFeedback, "", "");
+    }
+
+    async function toggleFlavorStatus(flavor) {
+        if (!activeCatalog || !flavor) return;
+        const nextActive = !flavor.is_active;
+        const result = await client.from("flavors").update({ is_active: nextActive }).eq("id", flavor.id).eq("catalog_id", activeCatalog.id);
+        if (result.error) {
+            console.error("Erro ao alternar status do sabor", result.error);
+            showToast("Não foi possível alterar o status do sabor.");
+            return;
+        }
+        await loadActiveCatalogData();
+        showToast(nextActive ? "Sabor ativado." : "Sabor pausado.");
+    }
+
+    async function saveFlavor(event) {
+        event.preventDefault();
+        if (!activeCatalog) return;
+
+        const name = flavorName.value.trim();
+        const currentId = flavorId.value;
+        const description = flavorDescription.value.trim();
+        const isActive = flavorStatus.value === "active";
+
+        if (name.length < 1 || name.length > 80) {
+            setFeedback(flavorFeedback, "O nome do sabor precisa ter entre 1 e 80 caracteres.", "error");
+            return;
+        }
+
+        if (description.length > 500) {
+            setFeedback(flavorFeedback, "A descrição do sabor não pode ter mais de 500 caracteres.", "error");
+            return;
+        }
+
+        const order = Number(flavorOrder.value);
+        if (!Number.isInteger(order) || order < 0 || order > 2147483647) {
+            setFeedback(flavorFeedback, "Informe uma ordem inteira a partir de zero.", "error");
+            return;
+        }
+
+        const imageFile = flavorImageInput.files && flavorImageInput.files[0];
+        const imageValidation = validateProductImage(imageFile);
+        if (imageValidation) {
+            setFeedback(flavorFeedback, imageValidation, "error");
+            return;
+        }
+
+        saveFlavorButton.disabled = true;
+        saveFlavorButton.textContent = "Salvando…";
+        setFeedback(flavorFeedback, "", "");
+
+        const payload = {
+            name: name,
+            description: description,
+            is_active: isActive,
+            sort_order: order
+        };
+
+        const existingFlavor = flavors.find(function (f) { return f.id === currentId; }) || null;
+        let uploadedImagePath = "";
+        let savedFlavorId = currentId;
+
+        try {
+            if (currentId) {
+                if (imageFile) {
+                    const uploadRes = await uploadCatalogImage(imageFile, currentId);
+                    if (uploadRes.error) {
+                        console.error("Erro no upload de imagem de sabor", uploadRes.error);
+                        setFeedback(flavorFeedback, "Não foi possível enviar a imagem do sabor.", "error");
+                        saveFlavorButton.disabled = false;
+                        saveFlavorButton.textContent = "Salvar alterações";
+                        return;
+                    }
+                    uploadedImagePath = uploadRes.path;
+                    payload.image_path = uploadedImagePath;
+                } else if (removeFlavorImage.checked && existingFlavor && existingFlavor.image_path) {
+                    payload.image_path = null;
+                }
+
+                const updateRes = await client.from("flavors").update(payload).eq("id", currentId).eq("catalog_id", activeCatalog.id).select("id").single();
+                if (updateRes.error) {
+                    if (updateRes.error.code !== "23505") console.error("Erro ao atualizar sabor", updateRes.error);
+                    if (uploadedImagePath) await removeStoredProductImage(uploadedImagePath);
+                    setFeedback(flavorFeedback, updateRes.error.code === "23505"
+                        ? "Já existe um sabor com este nome neste catálogo."
+                        : "Não foi possível salvar o sabor. Tente novamente.", "error");
+                    saveFlavorButton.disabled = false;
+                    saveFlavorButton.textContent = "Salvar alterações";
+                    return;
+                }
+                if (removeFlavorImage.checked && existingFlavor && existingFlavor.image_path) {
+                    await removeStoredProductImage(existingFlavor.image_path);
+                }
+            } else {
+                const insertRes = await client.from("flavors").insert(Object.assign({}, payload, {
+                    catalog_id: activeCatalog.id
+                })).select("id").single();
+
+                if (insertRes.error) {
+                    if (insertRes.error.code !== "23505") console.error("Erro ao inserir sabor", insertRes.error);
+                    setFeedback(flavorFeedback, insertRes.error.code === "23505"
+                        ? "Já existe um sabor com este nome neste catálogo."
+                        : "Não foi possível salvar o sabor. Tente novamente.", "error");
+                    saveFlavorButton.disabled = false;
+                    saveFlavorButton.textContent = "Salvar sabor";
+                    return;
+                }
+                savedFlavorId = insertRes.data.id;
+
+                if (imageFile) {
+                    const uploadRes = await uploadCatalogImage(imageFile, savedFlavorId);
+                    if (uploadRes.error) {
+                        console.error("Erro no upload de imagem de novo sabor", uploadRes.error);
+                        await client.from("flavors").delete().eq("id", savedFlavorId).eq("catalog_id", activeCatalog.id);
+                        setFeedback(flavorFeedback, "Não foi possível enviar a foto do sabor. Tente novamente.", "error");
+                        saveFlavorButton.disabled = false;
+                        saveFlavorButton.textContent = "Salvar sabor";
+                        return;
+                    }
+                    await client.from("flavors").update({ image_path: uploadRes.path }).eq("id", savedFlavorId).eq("catalog_id", activeCatalog.id);
+                }
+            }
+
+            closeFlavorForm();
+            await loadActiveCatalogData();
+            showToast(currentId ? "Sabor atualizado com sucesso." : "Sabor cadastrado com sucesso.");
+        } catch (err) {
+            console.error("Exceção ao salvar sabor", err);
+            setFeedback(flavorFeedback, "Ocorreu um erro ao salvar o sabor.", "error");
+            saveFlavorButton.disabled = false;
+            saveFlavorButton.textContent = currentId ? "Salvar alterações" : "Salvar sabor";
+        }
+    }
+
     function openDeleteModal(deletion) {
         pendingDeletion = deletion;
         const isCategory = deletion.type === "category";
         const isCatalog = deletion.type === "catalog";
         const isProductType = deletion.type === "product_type";
         const isProductGroup = deletion.type === "product_group";
+        const isFlavor = deletion.type === "flavor";
         if (isProductType) {
             const count = countProductsUsingType(deletion.name);
             if (count > 0) {
@@ -1698,6 +2060,13 @@
                 return;
             }
         }
+        if (isFlavor) {
+            const count = countProductsUsingFlavor(deletion.id);
+            if (count > 0) {
+                showToast("Este sabor está associado a " + count + " produto" + (count === 1 ? "" : "s") + ". Remova-o dos produtos antes de excluir o sabor.");
+                return;
+            }
+        }
         if (deletion.baseModal) {
             deletion.baseModal.setAttribute("aria-hidden", "true");
         }
@@ -1709,7 +2078,9 @@
                     ? "Excluir tipo?"
                     : (isProductGroup
                         ? "Excluir grupo?"
-                        : "Excluir produto?")));
+                        : (isFlavor
+                            ? "Excluir sabor?"
+                            : "Excluir produto?"))));
         document.getElementById("deleteModalDescription").textContent = isCatalog
             ? "O catálogo “" + deletion.name + "”, suas categorias, produtos e imagens vinculadas serão removidos. Essa ação não poderá ser desfeita."
             : (isCategory
@@ -1718,7 +2089,9 @@
                     ? "O tipo “" + deletion.name + "” será removido. Essa ação não poderá ser desfeita."
                     : (isProductGroup
                         ? "O grupo “" + deletion.name + "” será removido. Essa ação não poderá ser desfeita."
-                        : "O produto “" + deletion.name + "” será removido do banco de dados e não poderá ser desfeito.")));
+                        : (isFlavor
+                            ? "O sabor “" + deletion.name + "” será removido. Essa ação não poderá ser desfeita."
+                            : "O produto “" + deletion.name + "” será removido do banco de dados e não poderá ser desfeito."))));
         confirmDeleteButton.textContent = isCatalog
             ? "Excluir catálogo"
             : (isCategory
@@ -1727,7 +2100,9 @@
                     ? "Excluir tipo"
                     : (isProductGroup
                         ? "Excluir grupo"
-                        : "Excluir produto")));
+                        : (isFlavor
+                            ? "Excluir sabor"
+                            : "Excluir produto"))));
         deleteModal.hidden = false;
         deleteModal.setAttribute("aria-hidden", "false");
         window.setTimeout(function () {
@@ -1853,20 +2228,24 @@
         }[file.type] || "";
     }
 
-    async function uploadProductImage(file, productId) {
+    async function uploadCatalogImage(file, entityId) {
         const userResult = await client.auth.getUser();
         const user = userResult.data && userResult.data.user;
         if (userResult.error || !user) {
             return { path: "", error: userResult.error || new Error("Sessão não encontrada") };
         }
         const extension = getProductImageExtension(file);
-        const path = user.id + "/" + activeCatalog.id + "/" + productId + "/" + Date.now() + "." + extension;
+        const path = user.id + "/" + activeCatalog.id + "/" + entityId + "/" + Date.now() + "." + extension;
         const uploadResult = await client.storage.from(productImagesBucket).upload(path, file, {
             cacheControl: "3600",
             contentType: file.type,
             upsert: false
         });
         return { path: uploadResult.error ? "" : path, error: uploadResult.error };
+    }
+
+    async function uploadProductImage(file, productId) {
+        return uploadCatalogImage(file, productId);
     }
 
     async function removeStoredProductImage(imagePath) {
@@ -2212,6 +2591,41 @@
             return;
         }
 
+        if (deletion.type === "flavor") {
+            const count = countProductsUsingFlavor(deletion.id);
+            if (count > 0) {
+                confirmDeleteButton.disabled = false;
+                closeDeleteModal();
+                showToast("Este sabor está associado a " + count + " produto" + (count === 1 ? "" : "s") + ". Remova-o dos produtos antes de excluí-lo.");
+                return;
+            }
+
+            const { data, error } = await client
+                .from("flavors")
+                .delete()
+                .eq("id", deletion.id)
+                .eq("catalog_id", activeCatalog.id)
+                .select("id")
+                .maybeSingle();
+
+            confirmDeleteButton.disabled = false;
+            if (error || !data) {
+                console.error("Erro ao excluir sabor", error);
+                closeDeleteModal();
+                showToast("Não foi possível excluir o sabor. Tente novamente.");
+                return;
+            }
+
+            if (deletion.image_path) {
+                await removeStoredProductImage(deletion.image_path);
+            }
+
+            closeDeleteModal();
+            await loadActiveCatalogData();
+            showToast("Sabor excluído com sucesso.");
+            return;
+        }
+
         const { data, error } = await client
             .from(deletion.type === "category" ? "categories" : "products")
             .delete()
@@ -2407,6 +2821,7 @@
         closeSubcategoryForm();
         closeProductTypeForm();
         closeProductGroupForm();
+        closeFlavorForm();
         rememberActiveCatalog(activeCatalog.id);
         renderCatalogControls();
         loadActiveCatalogData(++loadSequence);
@@ -2431,6 +2846,7 @@
     subcategoriesTabButton.addEventListener("click", function () { switchSettingsTab("subcategories"); });
     typesTabButton.addEventListener("click", function () { switchSettingsTab("types"); });
     groupsTabButton.addEventListener("click", function () { switchSettingsTab("groups"); });
+    if (flavorsTabButton) flavorsTabButton.addEventListener("click", function () { switchSettingsTab("flavors"); });
     newRootCategoryButton.addEventListener("click", function () { openRootCategoryForm(null); });
     cancelRootCategoryButton.addEventListener("click", closeRootCategoryForm);
     rootCategoryForm.addEventListener("submit", saveRootCategory);
@@ -2443,6 +2859,29 @@
     newProductGroupButton.addEventListener("click", function () { openProductGroupForm(null); });
     cancelProductGroupButton.addEventListener("click", closeProductGroupForm);
     productGroupForm.addEventListener("submit", saveProductGroup);
+    if (newFlavorButton) newFlavorButton.addEventListener("click", function () { openFlavorForm(null); });
+    if (cancelFlavorButton) cancelFlavorButton.addEventListener("click", closeFlavorForm);
+    if (flavorForm) flavorForm.addEventListener("submit", saveFlavor);
+    if (flavorImageInput) flavorImageInput.addEventListener("change", previewSelectedFlavorImage);
+    if (flavorImagePreviewImage) {
+        flavorImagePreviewImage.addEventListener("error", function () {
+            flavorImagePreviewImage.hidden = true;
+            flavorImagePreviewFallback.hidden = false;
+        });
+    }
+    if (removeFlavorImage) {
+        removeFlavorImage.addEventListener("change", function () {
+            if (!removeFlavorImage.checked) {
+                const currentId = flavorId.value;
+                const flavor = flavors.find(function (f) { return f.id === currentId; });
+                showFlavorImagePreview(flavor && flavor.image_path ? getProductImageUrl(flavor.image_path) : "", flavor ? flavor.name : "S");
+                return;
+            }
+            flavorImageInput.value = "";
+            clearFlavorImageObjectUrl();
+            showFlavorImagePreview("", flavorName.value || "S");
+        });
+    }
 
     document.getElementById("ordersMenuLink").addEventListener("click", function () { toggleMenu(false); });
     productForm.addEventListener("submit", saveProduct);

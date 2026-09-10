@@ -58,6 +58,7 @@
     let products = [];
     let flavors = [];
     let productFlavors = [];
+    let flavorsLoadError = null;
     let cart = {};
     let lastCart = {};
     let selectedCategory = "all";
@@ -316,6 +317,11 @@
                 quantity: 0
             };
         }).filter(Boolean);
+
+        if (flavorsLoadError) {
+            showToast("Não foi possível carregar as opções de sabores deste produto no momento. Tente novamente mais tarde.");
+            return;
+        }
 
         if (!available.length) {
             showToast("Nenhum sabor disponível no momento para este produto.");
@@ -885,8 +891,14 @@
         }
 
         let catalogResult = await client.from("catalogs")
-            .select("id, name, slug, whatsapp_number, orders_enabled, order_message, logo_path, short_description, service_area, business_hours, fulfillment_mode, catalog_profile, minimum_order_quantity")
+            .select("id, name, slug, whatsapp_number, orders_enabled, order_message, logo_path, short_description, service_area, business_hours, fulfillment_mode, catalog_profile, minimum_order_quantity, logo_aspect_ratio")
             .eq("slug", slug).eq("is_active", true).maybeSingle();
+
+        if (catalogResult.error && (catalogResult.error.code === "42703" || catalogResult.error.code === "PGRST204" || /logo_aspect_ratio/.test(catalogResult.error.message || ""))) {
+            catalogResult = await client.from("catalogs")
+                .select("id, name, slug, whatsapp_number, orders_enabled, order_message, logo_path, short_description, service_area, business_hours, fulfillment_mode, catalog_profile, minimum_order_quantity")
+                .eq("slug", slug).eq("is_active", true).maybeSingle();
+        }
 
         if (catalogResult.error && (catalogResult.error.code === "42703" || catalogResult.error.code === "PGRST204")) {
             catalogResult = await client.from("catalogs")
@@ -906,6 +918,7 @@
         catalog = catalogResult.data;
         catalog.catalog_profile = catalog.catalog_profile || "standard";
         catalog.minimum_order_quantity = Number(catalog.minimum_order_quantity) || 0;
+        catalog.logo_aspect_ratio = catalog.logo_aspect_ratio || "square";
 
         window.NEOEFFEX_ACTIVE_CATALOG = catalog;
         window.dispatchEvent(new CustomEvent("neoeffex:catalog-loaded", {
@@ -929,6 +942,7 @@
         // Carrega sabores e relações de produto x sabor
         let flavorsRes = { data: [] };
         let pfRes = { data: [] };
+        flavorsLoadError = null;
         try {
             [flavorsRes, pfRes] = await Promise.all([
                 client.from("flavors")
@@ -942,11 +956,21 @@
                     .select("catalog_id, product_id, flavor_id, additional_price, is_available, sort_order")
                     .eq("catalog_id", catalog.id)
             ]);
+
+            if (flavorsRes && flavorsRes.error) {
+                console.error("Erro ao carregar sabores do catálogo", flavorsRes.error);
+                flavorsLoadError = flavorsRes.error;
+            }
+            if (pfRes && pfRes.error) {
+                console.error("Erro ao carregar relações produto-sabor", pfRes.error);
+                flavorsLoadError = flavorsLoadError || pfRes.error;
+            }
         } catch (err) {
-            console.warn("Sabores não puderam ser carregados ou tabela ausente", err);
+            console.error("Falha na requisição de sabores ou tabela ausente", err);
+            flavorsLoadError = err;
         }
-        flavors = (flavorsRes && flavorsRes.data) || [];
-        productFlavors = (pfRes && pfRes.data) || [];
+        flavors = (flavorsRes && !flavorsRes.error && flavorsRes.data) || [];
+        productFlavors = (pfRes && !pfRes.error && pfRes.data) || [];
 
         selectedCategory = "all";
         typeFilter.value = "";

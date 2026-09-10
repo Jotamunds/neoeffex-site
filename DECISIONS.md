@@ -34,6 +34,7 @@ Não use este arquivo como changelog.
 - Os campos `products.product_type` (texto) e `products.product_groups` (array de texto) permanecem no PostgreSQL como camada de persistência e total compatibilidade com o catálogo público, sem FK nova nem migrações.
 - Proteção de consistência: exclusão e renomeação de Tipos e Grupos em uso por produtos do catálogo ativo são bloqueadas na área de Configurações, orientando o lojista a alterar os produtos primeiro. A alteração de ordem (`sort_order`) permanece sempre permitida.
 - Preservação legada: produtos com classificações antigas inexistentes em Configurações exibem avisos claros na edição e mantêm seus valores intactos sem exclusão silenciosa.
+- Na Etapa 5, a arquitetura de catálogo único por loja e gestão em Configurações foi estabilizada. O isolamento multiloja fecha preventivamente todos os formulários e modais (produto, edição de catálogo e exclusão) ao alternar de loja. Estados de erro na leitura do banco diferenciam-se expressamente de estados vazios. Regras explícitas de não restauração de criação de lojas e de não utilização de texto livre no produto foram consolidadas.
 - O estado de autenticação deve ser consistente entre abas quando o mecanismo atual permitir sincronização.
 - Modais/painéis não devem fechar por interações iniciadas dentro do conteúdo e finalizadas fora de maneira acidental.
 - Exclusão de dados deve exigir confirmação quando houver risco de perda.

@@ -550,14 +550,18 @@ async function setup(area,legacy=false,customDb=null){
  assert(x.d.querySelector('#productGroupList').textContent.includes('Destaques'));
  assert(!x.d.querySelector('#productGroupList').textContent.includes('Promoções'));checks++;
 
- // Formulário aberto é fechado ao trocar de loja (evita salvar na loja errada)
+ // Formulários e modais abertos são fechados ao trocar de loja (evita salvar na loja errada)
  x.d.querySelector('#newProductTypeButton').click();
  assert(!x.d.querySelector('#productTypeForm').hidden);
+ x.d.querySelector('#newProductButton').click();
+ assert(!x.d.querySelector('#productModal').hidden);
 
- // Alternar entre lojas isola os produtos e as configurações
+ // Alternar entre lojas isola os produtos e as configurações e fecha modais abertos
  x.d.querySelector('#catalogSelect').value='c2';
  x.d.querySelector('#catalogSelect').dispatchEvent(new x.w.Event('change'));
  await wait();
+ assert(x.d.querySelector('#productModal').hidden);
+ assert(x.d.querySelector('#productTypeForm').hidden);
  assert.equal(x.d.querySelectorAll('.product-row').length,1);
  assert(x.d.querySelector('.product-row').textContent.includes('Produto Loja 2'));
  assert(!x.d.querySelector('.product-row').textContent.includes('Produto Loja 1'));
@@ -567,7 +571,14 @@ async function setup(area,legacy=false,customDb=null){
  assert(!x.d.querySelector('#productTypeList').textContent.includes('Individual'));
  assert(x.d.querySelector('#productGroupList').textContent.includes('Promoções'));
  assert(!x.d.querySelector('#productGroupList').textContent.includes('Destaques'));
- assert(x.d.querySelector('#productTypeForm').hidden);checks++;
+
+ // Modal de edição de loja também fecha ao alternar loja
+ x.d.querySelector('#editCatalogButton').click();
+ assert(!x.d.querySelector('#catalogModal').hidden);
+ x.d.querySelector('#catalogSelect').value='c1';
+ x.d.querySelector('#catalogSelect').dispatchEvent(new x.w.Event('change'));
+ await wait();
+ assert(x.d.querySelector('#catalogModal').hidden);checks++;
  assert.deepEqual(x.errors,[]);x.dom.window.close();
 
  // Modo legado

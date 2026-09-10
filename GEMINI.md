@@ -94,6 +94,17 @@ Ao trabalhar com catálogo, admin, produtos, categorias, carrinho ou pedidos:
 - preserve isolamento de dados por cliente;
 - mantenha compatibilidade entre admin, catálogo público e landing pages.
 
+### Regras Críticas para Futuras IAs
+
+1. **Não restaurar "Nova loja" no painel do lojista**: O lojista administra lojas já provisionadas. Não reintroduza botões, modais ou fallbacks de criação de catálogo pelo frontend.
+2. **Não restaurar Tipo/Grupo como campos livres**: No formulário de produtos, Tipo é selecionado via `<select>` de `product_types` e Grupos via chips com checkboxes de `product_groups`. Não adicione inputs textuais livres, datalists ou criação automática de classificações no produto.
+3. **Categorias, Subcategorias, Tipos e Grupos pertencem a Configurações**: A gestão estrutural do catálogo fica centralizada na seção Configurações (`#configuracoes`) em abas dedicadas.
+4. **Uma loja possui exatamente um catálogo**: Loja e catálogo compartilham o mesmo identificador/slug, link público e carrinho.
+5. **Uma conta pode possuir múltiplas lojas já provisionadas**: Suportar integralmente contas com 0 lojas (estado orientativo), 1 loja (seletor oculto) e 2+ lojas (seletor ativo com isolamento rigoroso entre lojas).
+6. **Não confundir Grupos de classificação com futuros Grupos de opções**: `product_groups` serve para classificar produtos em coleções/selos (ex.: "Mais pedidos", "Promoções", "Destaques") e não representa adicionais, opções de montagem ou variações.
+7. **Não criar exceções por slug**: Toda solução visual, de layout ou de negócio deve ser genérica e reutilizável por qualquer cliente.
+8. **Modelo transitório de persistência**: `product_types` e `product_groups` são as tabelas configuráveis de onde o formulário lê as opções; `products.product_type` e `products.product_groups` permanecem no PostgreSQL como representação consumida pelo produto e pelo catálogo público. Não remova esses campos do banco.
+
 ## Design
 
 Evite:

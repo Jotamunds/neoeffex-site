@@ -1349,7 +1349,9 @@
         typesTabCount.textContent = productTypes.length;
         productTypeList.replaceChildren();
         emptyProductTypeState.hidden = productTypes.length !== 0;
-        emptyProductTypeState.textContent = "Nenhum tipo configurado.";
+        emptyProductTypeState.textContent = productTypesLoadError
+            ? "Não foi possível carregar os tipos. Tente novamente."
+            : "Nenhum tipo configurado.";
 
         productTypes.forEach(function (type) {
             const tr = document.createElement("tr");
@@ -1480,7 +1482,9 @@
         groupsTabCount.textContent = productGroups.length;
         productGroupList.replaceChildren();
         emptyProductGroupState.hidden = productGroups.length !== 0;
-        emptyProductGroupState.textContent = "Nenhum grupo configurado.";
+        emptyProductGroupState.textContent = productGroupsLoadError
+            ? "Não foi possível carregar os grupos. Tente novamente."
+            : "Nenhum grupo configurado.";
 
         productGroups.forEach(function (group) {
             const tr = document.createElement("tr");
@@ -2318,6 +2322,8 @@
         activeCatalog = catalogs.find(function (catalog) { return catalog.id === catalogSelect.value; }) || null;
         if (!activeCatalog) return;
         closeProductModal();
+        closeCatalogModal();
+        closeDeleteModal();
         closeRootCategoryForm();
         closeSubcategoryForm();
         closeProductTypeForm();

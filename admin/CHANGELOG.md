@@ -1,5 +1,16 @@
 # Changelog — Painel administrativo
 
+## [0.3.6] - 2026-09-09
+
+### Estabilização, limpeza, regressão e finalização (Etapa 5)
+- **Consolidação do ciclo de lojas e configurações**: Finalização das 5 etapas de reorganização arquitetural do painel, garantindo suporte pleno a contas com 0 lojas (modo orientativo), 1 loja (seletor oculto) e múltiplas lojas (seletor ativo com isolamento rigoroso de catálogo).
+- **Proteção ampliada contra salvamentos cruzados na troca de loja**: Além dos formulários de criação/edição inline e do modal de produto, o modal de edição de loja (`catalogModal`) e o modal de confirmação de exclusão (`deleteModal`) agora são fechados automaticamente ao alternar o catálogo no seletor.
+- **Tratamento diferenciado de estados de erro vs vazio**: Estados de falha na consulta ao Supabase para Tipos e Grupos agora exibem mensagens de erro explícitas ("Não foi possível carregar os tipos. Tente novamente." / "Não foi possível carregar os grupos deste catálogo."), evitando mascarar falhas de rede ou acesso como listas vazias.
+- **Correção de tema escuro nos avisos legados**: Seletor CSS alinhado ao padrão do projeto (`:root[data-theme="dark"] .product-legacy-warning` e `:root[data-theme="dark"] .product-group-chip--legacy`), garantindo contraste e legibilidade impecáveis em modo escuro.
+- **Cache busting atualizado**: Query strings de versão no `admin/index.html` atualizadas para `?v=0.3.6` em todos os assets modificados (`admin.css`, `admin.js`, `config.js`, `organization.js`).
+- **Limpeza de código e regras de desenvolvimento**: Removidas referências mortas e documentadas regras críticas em `GEMINI.md` para orientar futuras evoluções (proibição de reintroduzir criação de lojas ou inputs livres de tipo/grupo no painel, respeito ao modelo transitório de persistência e isolamento multiloja).
+- **Validação e regressão completas**: Todos os testes automatizados de banco (63 checks no PGlite), interface (50 checks no DOM mockado) e resiliência (14 testes) passaram com 100% de sucesso.
+
 ## [0.3.5] - 2026-09-09
 
 ### Integração de Configurações ao Formulário de Produto (Etapa 4)

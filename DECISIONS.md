@@ -105,3 +105,19 @@ Não use este arquivo como changelog.
 - Não usar force push como solução comum.
 - Em merges, preservar conscientemente funcionalidades válidas de ambos os lados.
 - Antes de resolver conflito escolhendo um arquivo inteiro de um lado, verificar se o outro lado possui mudanças que precisam ser mantidas.
+
+## Perfis de Catálogo, Modos de Compra e Sabores (v0.3.7)
+
+- **Perfis de Catálogo (`catalog_profile`)**: Representam presets e capabilities centrais (`standard`, `food`, `marmitas`, `services`). Não devem ser usados como amarrações ou travas rígidas condicionadas por slug (proibido `if (slug === '...')`). A definição de capacidades é centralizada no módulo `assets/catalog/profiles.js`.
+- **Modos de Compra (`purchase_mode`)**: O comportamento transacional do produto é definido a nível de produto (`simple`, `flavor_bundle`). Mesmo dentro de um catálogo com perfil `marmitas`, produtos avulsos (como tortas ou lasanhas) usam `purchase_mode = 'simple'`.
+- **Sabores (`flavors`) e Relações (`product_flavors`)**:
+  - `flavors` é gerenciado dentro de Configurações, isolado por `catalog_id`.
+  - `product_flavors` possui chave estrangeira composta e índice único composto `(catalog_id, product_id, flavor_id)`, impedindo terminantemente no banco de dados que um produto de um catálogo seja associado a sabores de outro catálogo.
+  - Exclusão de sabores em uso por produtos é bloqueada preventivamente na interface.
+- **Distribuição de Sabores em Bundles**: No catálogo público, produtos `flavor_bundle` exigem validação estrita de soma: `soma das unidades dos sabores = quantidade total do bundle`. Confirmação é desabilitada para seleções incompletas ou com excesso.
+- **Acréscimos de Preço (`additional_price`)**: Calculados estritamente multiplicando o preço adicional pela quantidade daquele sabor no bundle (`sum(additional_price * quantity)`), somado uma única vez ao preço base do produto.
+- **Pedido Mínimo (`minimum_order_quantity`)**: Bloqueia apenas a finalização do pedido (desabilitando o botão de envio pelo WhatsApp com aviso amigável de itens faltantes), nunca a navegação ou a adição de produtos ao carrinho.
+- **Compatibilidade do Carrinho e WhatsApp**:
+  - Carrinho mantém total retrocompatibilidade com o formato legado em `localStorage` (`{ [productId]: quantity }`) e produtos simples.
+  - Mensagem do WhatsApp preserva a mensagem personalizada da loja e detalha os sabores, quantidades, acréscimos e subtotais.
+

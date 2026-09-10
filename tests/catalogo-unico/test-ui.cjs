@@ -84,6 +84,199 @@ async function setup(area,legacy=false,customDb=null){
  assert.deepEqual(x.errors,[]);x.dom.window.close();
  x=await setup('catalogo',true);assert(!x.d.querySelector('#catalogContent').hidden);assert(x.d.querySelector('#organizationFilters').hidden);assert.equal(x.d.querySelectorAll('.product-card').length,2);assert.deepEqual(x.errors,[]);checks++;x.dom.window.close();
 
+ // Testes Avançados do Catálogo Público: Perfis, Modos de Compra, Sabores, Pedido Mínimo e WhatsApp
+ const marmitasDb = {
+   catalogs: [{
+     id: 'cat-marmitas',
+     name: 'Marmitas da Lu',
+     slug: 'loja-teste',
+     is_active: true,
+     orders_enabled: true,
+     whatsapp_number: '5511999999999',
+     order_message: 'Obrigado pela preferência!',
+     catalog_profile: 'marmitas',
+     minimum_order_quantity: 5,
+     created_at: '2026-01-01'
+   }],
+   categories: [
+     { id: 'cat-main', catalog_id: 'cat-marmitas', name: 'Marmitas', sort_order: 0 },
+     { id: 'cat-trad', catalog_id: 'cat-marmitas', name: 'Tradicionais', parent_id: 'cat-main', sort_order: 1 },
+     { id: 'cat-sobremesas', catalog_id: 'cat-marmitas', name: 'Sobremesas', sort_order: 2 }
+   ],
+   product_types: [],
+   product_groups: [],
+   flavors: [
+     { id: 'fl-carne', catalog_id: 'cat-marmitas', name: 'Carne de Panela', description: 'Com legumes', status: 'active', is_active: true, sort_order: 0 },
+     { id: 'fl-frango', catalog_id: 'cat-marmitas', name: 'Frango com Ervas', description: 'Grelhado suculento', status: 'active', is_active: true, sort_order: 1 },
+     { id: 'fl-pernil', catalog_id: 'cat-marmitas', name: 'Pernil Suíno', description: 'Assado lentamente', status: 'active', is_active: true, sort_order: 2 },
+     { id: 'fl-salmao', catalog_id: 'cat-marmitas', name: 'Salmão com Alcaparras', description: 'Especial', status: 'active', is_active: true, sort_order: 3 }
+   ],
+   product_flavors: [
+     { id: 'pf-1', product_id: 'prod-bundle', flavor_id: 'fl-carne', catalog_id: 'cat-marmitas', sort_order: 0, additional_price: 5.00, is_available: true },
+     { id: 'pf-2', product_id: 'prod-bundle', flavor_id: 'fl-frango', catalog_id: 'cat-marmitas', sort_order: 1, additional_price: 0.00, is_available: true },
+     { id: 'pf-3', product_id: 'prod-bundle', flavor_id: 'fl-pernil', catalog_id: 'cat-marmitas', sort_order: 2, additional_price: 0.00, is_available: true },
+     { id: 'pf-4', product_id: 'prod-bundle', flavor_id: 'fl-salmao', catalog_id: 'cat-marmitas', sort_order: 3, additional_price: 8.00, is_available: true }
+   ],
+   products: [
+     {
+       id: 'prod-bundle',
+       catalog_id: 'cat-marmitas',
+       category_id: 'cat-trad',
+       name: 'Combo Tradicional 400 g',
+       description: 'Monte com seus sabores preferidos',
+       price: 20.00,
+       status: 'active',
+       product_type: 'Tradicional',
+       purchase_mode: 'flavor_bundle',
+       sort_order: 0
+     },
+     {
+       id: 'prod-simple',
+       catalog_id: 'cat-marmitas',
+       category_id: 'cat-sobremesas',
+       name: 'Torta de Limão',
+       description: 'Fatia artesanal',
+       price: 12.00,
+       status: 'active',
+       product_type: 'Sobremesa',
+       purchase_mode: 'simple',
+       sort_order: 1
+     }
+   ]
+ };
+
+ const xMarmitas = await setup('catalogo', false, marmitasDb);
+
+ // 1. mixed_catalog_products: Catálogo exibe botões adequados para cada purchase_mode
+ const cards = Array.from(xMarmitas.d.querySelectorAll('.product-card'));
+ assert.equal(cards.length, 2);
+ const bundleCard = cards.find(c => c.textContent.includes('Combo Tradicional 400 g'));
+ const simpleCard = cards.find(c => c.textContent.includes('Torta de Limão'));
+ assert(bundleCard);
+ assert(simpleCard);
+ assert.equal(bundleCard.querySelector('.add-product-button').textContent, 'Escolher sabores');
+ assert.equal(simpleCard.querySelector('.add-product-button').textContent, 'Adicionar ao pedido');
+ checks++;
+
+ // 2. cart_simple_compatibility & minimum_order_block:
+ // Adicionar 1x produto simples (Torta de Limão)
+ simpleCard.querySelector('.add-product-button').click();
+ assert.equal(xMarmitas.d.querySelector('#cartCount').textContent, '1');
+ assert.match(xMarmitas.d.querySelector('#cartTotal').textContent, /12,00/);
+
+ // Pedido mínimo de 5 unidades bloqueia WhatsApp e exibe aviso de progresso (1 de 5)
+ const minNotice = xMarmitas.d.querySelector('#cartMinimumNotice');
+ assert(!minNotice.hidden);
+ assert(minNotice.textContent.includes('Adicione mais 4 itens para finalizar o pedido (mínimo de 5 itens).'));
+ const waBtn = xMarmitas.d.querySelector('#whatsappButton');
+ assert(waBtn.classList.contains('whatsapp-button--disabled'));
+ assert.equal(waBtn.getAttribute('aria-disabled'), 'true');
+ checks++;
+
+ // 3. Abertura do modal de seleção de sabores para produto flavor_bundle
+ bundleCard.querySelector('.add-product-button').click();
+ const flavorModal = xMarmitas.d.querySelector('#flavorModal');
+ assert(!flavorModal.hidden);
+ assert.equal(xMarmitas.d.querySelector('#flavorModalTitle').textContent, 'Combo Tradicional 400 g');
+ const flavorRows = Array.from(xMarmitas.d.querySelectorAll('.flavor-selection-item'));
+ assert.equal(flavorRows.length, 4);
+ assert(xMarmitas.d.querySelector('#flavorModalBasePrice').textContent.includes('20,00'));
+ checks++;
+
+ // 4. flavor_bundle_quantity_under:
+ // Aumenta quantidade total do bundle para 10 unidades
+ const qtyInc = xMarmitas.d.querySelector('#bundleQtyIncrease');
+ for (let i = 1; i < 10; i++) qtyInc.click();
+ assert.equal(xMarmitas.d.querySelector('#bundleTotalQuantityDisplay').textContent, '10');
+
+ // Adiciona 3 Carne de Panela e 2 Frango (total 5 < 10)
+ const incCarne = xMarmitas.d.querySelector('#flavorInc_fl-carne');
+ const incFrango = xMarmitas.d.querySelector('#flavorInc_fl-frango');
+ const incPernil = xMarmitas.d.querySelector('#flavorInc_fl-pernil');
+
+ incCarne.click(); incCarne.click(); incCarne.click(); // 3 carne
+ incFrango.click(); incFrango.click(); // 2 frango
+ assert.equal(xMarmitas.d.querySelector('#flavorCount_fl-carne').textContent, '3');
+ assert.equal(xMarmitas.d.querySelector('#flavorCount_fl-frango').textContent, '2');
+ assert(xMarmitas.d.querySelector('#flavorDistributionCount').textContent.includes('5 de 10 selecionados'));
+ assert.equal(xMarmitas.d.querySelector('#flavorDistributionBadge').textContent, 'Faltam 5');
+ assert(xMarmitas.d.querySelector('#confirmFlavorModalButton').disabled);
+ checks++;
+
+ // 5. flavor_bundle_quantity_over:
+ // Se tentar diminuir o total para 4 quando já tem 5 sabores selecionados
+ const qtyDec = xMarmitas.d.querySelector('#bundleQtyDecrease');
+ for (let i = 10; i > 4; i--) qtyDec.click();
+ assert.equal(xMarmitas.d.querySelector('#bundleTotalQuantityDisplay').textContent, '4');
+ assert.equal(xMarmitas.d.querySelector('#flavorDistributionBadge').textContent, 'Excesso (1)');
+ assert(xMarmitas.d.querySelector('#confirmFlavorModalButton').disabled);
+ checks++;
+
+ // 6. flavor_bundle_quantity_exact & flavor_additional_price:
+ // Retorna total para 10 e distribui exatamente 10 unidades:
+ // 5x Carne de Panela (+R$ 5 cada), 2x Frango (+R$ 0), 3x Pernil (+R$ 0)
+ for (let i = 4; i < 10; i++) qtyInc.click();
+ assert.equal(xMarmitas.d.querySelector('#bundleTotalQuantityDisplay').textContent, '10');
+ incCarne.click(); incCarne.click(); // total 5 carne
+ incPernil.click(); incPernil.click(); incPernil.click(); // total 3 pernil
+ // Soma: 5 + 2 + 3 = 10!
+ assert.equal(xMarmitas.d.querySelector('#flavorDistributionBadge').textContent, 'Completo');
+ assert.equal(xMarmitas.d.querySelector('#confirmFlavorModalButton').disabled, false);
+
+ // Validar cálculo de acréscimo: Base = 10 × R$ 20 = R$ 200; Acréscimos = 5 × R$ 5 = R$ 25; Total = R$ 225
+ assert(xMarmitas.d.querySelector('#flavorModalBasePrice').textContent.includes('200,00'));
+ assert(xMarmitas.d.querySelector('#flavorModalAddonsPrice').textContent.includes('25,00'));
+ assert(xMarmitas.d.querySelector('#flavorModalTotalPrice').textContent.includes('225,00'));
+ checks++;
+
+ // 7. cart_flavor_bundle & minimum_order_allow:
+ // Confirma e adiciona o bundle ao carrinho
+ xMarmitas.d.querySelector('#confirmFlavorModalButton').click();
+ assert(xMarmitas.d.querySelector('#flavorModal').hidden);
+
+ // Carrinho agora tem: 1x Torta (R$ 12) + 10x Combo com acréscimos (R$ 225) = 11 itens, R$ 237,00
+ assert.equal(xMarmitas.d.querySelector('#cartCount').textContent, '11');
+ assert.match(xMarmitas.d.querySelector('#cartTotal').textContent, /237,00/);
+
+ // Como total de unidades é 11 (>= 5), pedido mínimo está satisfeito
+ assert(xMarmitas.d.querySelector('#cartMinimumNotice').hidden);
+ assert(!waBtn.classList.contains('whatsapp-button--disabled'));
+ assert.equal(waBtn.getAttribute('aria-disabled'), null);
+ checks++;
+
+ // 8. whatsapp_flavor_bundle & whatsapp_simple:
+ // Validação da mensagem gerada no link do WhatsApp
+ const waUrl = decodeURIComponent(waBtn.href).replace(/\u00a0/g, ' ');
+ assert(waUrl.includes('1x Torta de Limão'));
+ assert(waUrl.includes('10x Combo Tradicional 400 g'));
+ assert(waUrl.includes('Sabores:'));
+ assert(waUrl.includes('5x Carne de Panela (+ R$ 25,00)'));
+ assert(waUrl.includes('2x Frango com Ervas'));
+ assert(waUrl.includes('3x Pernil Suíno'));
+ assert(waUrl.includes('Acréscimos: R$ 25,00'));
+ assert(waUrl.includes('Subtotal: R$ 225,00'));
+ assert(waUrl.includes('Total estimado: R$ 237,00'));
+ assert(waUrl.includes('Obrigado pela preferência!'));
+ checks++;
+
+ // 9. cart_simple_compatibility com localStorage legado
+  const domLegacy = new JSDOM(fs.readFileSync(root+'catalogo/index.html','utf8'),{url:'https://test.invalid/catalogo/?catalogo=loja-teste',runScripts:'outside-only',pretendToBeVisual:true});
+  domLegacy.window.matchMedia = () => ({ matches: false, addEventListener() {} });
+  domLegacy.window.NEOEFFEX_SUPABASE_CONFIG = { url: 'https://test.supabase.co', publishableKey: 'test-only' };
+  domLegacy.window.supabase = { createClient: () => client(structuredClone(marmitasDb), false, []) };
+  domLegacy.window.localStorage.setItem('neoeffex-catalog-cart-cat-marmitas', JSON.stringify({ 'prod-simple': 2 }));
+  domLegacy.window.eval(fs.readFileSync(root+'assets/catalog/organization.js','utf8'));
+  domLegacy.window.eval(fs.readFileSync(root+'assets/catalog/profiles.js','utf8'));
+  domLegacy.window.eval(fs.readFileSync(root+'catalogo/assets/js/catalogo.js','utf8'));
+  await wait();
+  assert.equal(domLegacy.window.document.querySelector('#cartCount').textContent, '2');
+  assert.match(domLegacy.window.document.querySelector('#cartTotal').textContent, /24,00/);
+  checks++;
+  domLegacy.window.close();
+
+ assert.deepEqual(xMarmitas.errors, []);
+ xMarmitas.dom.window.close();
+
  // Cenário 1: Zero lojas vinculadas
  x=await setup('admin',false,{catalogs:[],categories:[],products:[]});
  assert(x.d.body.classList.contains('is-authenticated'));

@@ -1,5 +1,15 @@
 # Changelog — Painel administrativo
 
+## [0.3.7] - 2026-09-10
+
+### Perfis de Catálogo, Modos de Compra, Sabores e Pedido Mínimo
+- **Perfis de Catálogo e Capacidades Centralizadas**: Adicionada configuração de `catalog_profile` (`standard`, `food`, `marmitas`, `services`) e `minimum_order_quantity` no modal de loja (`catalogModal`) e no painel de resumo de pedidos. Módulo compartilhado `assets/catalog/profiles.js` centraliza capabilities sem acoplamento condicional por slug.
+- **Gerenciamento Completo de Sabores**: Nova aba **Sabores** adicionada a **Configurações**, oferecendo CRUD completo (`flavors`): criação, edição, ativação/pausa, ordenação, foto com upload otimizado no Storage e exclusão segura bloqueada preventivamente caso o sabor esteja em uso por produtos.
+- **Modos de Compra no Produto**: Introduzido campo `purchase_mode` (`simple`, `flavor_bundle`) no formulário de produtos. Para produtos em modo `flavor_bundle`, o painel dinâmico exibe os sabores cadastrados do catálogo com checkboxes, ordenação, acréscimos de preço (`additional_price`) e disponibilidade individual (`product_flavors`).
+- **Catálogo Público com Modal de Sabores**: Produtos `flavor_bundle` contam com modal dedicado de distribuição exata de sabores (`sum(flavors) === target`), impedindo seleções incompletas ou excedentes, com cálculo dinâmico de acréscimos.
+- **Carrinho e Mensagem do WhatsApp**: Carrinho atualizado para suportar itens bundle preservando compatibilidade retroativa com `localStorage` legado e produtos `simple`. Validação de pedido mínimo (`minimum_order_quantity`) bloqueia a finalização pelo WhatsApp com aviso amigável de progresso. Mensagem do WhatsApp detalha discriminadamente sabores, quantidades, acréscimos e subtotais.
+- **Testes Automatizados**: Suíte de testes expandida para 104 verificações de banco no PGlite e 69 testes de interface DOM mockada cobrindo isolamento, RLS, regras de negócio e retrocompatibilidade.
+
 ## [0.3.6] - 2026-09-09
 
 ### Estabilização, limpeza, regressão e finalização (Etapa 5)

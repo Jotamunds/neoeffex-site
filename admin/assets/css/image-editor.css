@@ -203,6 +203,65 @@ body.image-editor-open {
     color: #ffffff;
 }
 
+.image-editor__ratio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.image-editor__control-title {
+    color: var(--text-muted, #61748a);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.image-editor__ratio-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.image-editor__ratio-button {
+    min-height: 36px;
+    padding: 6px 8px;
+    border: 1px solid var(--border, #dbe6f1);
+    border-radius: 8px;
+    background: var(--surface-soft, #f1f6fb);
+    color: var(--text-muted, #61748a);
+    font: inherit;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 150ms ease;
+    text-align: center;
+}
+
+.image-editor__ratio-button:hover {
+    border-color: var(--border-strong, #c4d4e5);
+    color: var(--text, #10233b);
+}
+
+.image-editor__ratio-button[aria-pressed="true"] {
+    border-color: var(--blue-600, #1575d2);
+    background: var(--blue-600, #1575d2);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(21, 117, 210, 0.25);
+}
+
+[data-theme="dark"] .image-editor__ratio-button {
+    background-color: #0d141d;
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #b4c2d0;
+}
+
+[data-theme="dark"] .image-editor__ratio-button[aria-pressed="true"] {
+    background-color: #1575d2;
+    border-color: #1575d2;
+    color: #ffffff;
+}
+
 .image-editor__zoom {
     display: grid;
     gap: 9px;

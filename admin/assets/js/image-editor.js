@@ -6,21 +6,39 @@
             kind: "product",
             title: "Ajustar imagem do produto",
             width: 1200,
-            height: 900,
+            height: 1200,
+            aspectRatio: "1:1",
             defaultMode: "fill",
             maximumBytes: 5 * 1024 * 1024,
             maximumSourceBytes: 5 * 1024 * 1024,
             prefix: "produto"
         }),
+        flavorImage: Object.freeze({
+            kind: "flavor",
+            title: "Ajustar foto do sabor",
+            width: 1200,
+            height: 1200,
+            aspectRatio: "1:1",
+            defaultMode: "fill",
+            maximumBytes: 5 * 1024 * 1024,
+            maximumSourceBytes: 5 * 1024 * 1024,
+            prefix: "sabor"
+        }),
         catalogLogo: Object.freeze({
             kind: "logo",
             title: "Ajustar logo do comércio",
-            width: 1050,
-            height: 600,
+            width: 1000,
+            height: 1000,
+            defaultRatio: "square",
             defaultMode: "fit",
             maximumBytes: 2 * 1024 * 1024,
             maximumSourceBytes: 2 * 1024 * 1024,
-            prefix: "logo"
+            prefix: "logo",
+            ratios: Object.freeze({
+                square: Object.freeze({ width: 1000, height: 1000, label: "1:1 Quadrada (padrão)" }),
+                portrait_3_4: Object.freeze({ width: 900, height: 1200, label: "3:4 Vertical" }),
+                landscape_4_3: Object.freeze({ width: 1200, height: 900, label: "4:3 Horizontal" })
+            })
         })
     });
 
@@ -32,6 +50,7 @@
 
     let editor = null;
     let activeSession = null;
+    let previousFocusedElement = null;
     let dragging = false;
     let dragPointerId = null;
     let lastPointerX = 0;
@@ -46,7 +65,6 @@
         document.addEventListener("reset", handleFormReset, true);
         document.addEventListener("keydown", handleGlobalKeydown);
         document.addEventListener("click", scheduleDynamicInputSetup, true);
-
     }
 
     function setupAvailableInputs() {
@@ -72,9 +90,13 @@
         button.hidden = true;
 
         help.className = "image-editor-inline-help";
-        help.textContent = input.id === "productImage"
-            ? "O editor padroniza a imagem em 4:3 antes do upload."
-            : "O editor ajuda a enquadrar a logo sem deformá-la.";
+        if (input.id === "productImage") {
+            help.textContent = "O editor padroniza a foto do produto em 1:1 antes do upload.";
+        } else if (input.id === "flavorImage") {
+            help.textContent = "O editor padroniza a foto do sabor em 1:1 antes do upload.";
+        } else {
+            help.textContent = "O editor permite enquadrar a logo em 1:1, 3:4 ou 4:3 sem deformá-la.";
+        }
 
         button.addEventListener("click", function () {
             openFromLaunchButton(input);
@@ -116,7 +138,7 @@
         );
 
         const shouldHide = !(sourceFiles.has(input) || hasPreview);
-        const nextText = sourceFiles.has(input) ? "Ajustar novamente" : "Ajustar imagem atual";
+        const nextText = sourceFiles.has(input) ? "Ajustar novamente" : "Ajustar foto atual";
 
         if (button.hidden !== shouldHide) button.hidden = shouldHide;
         if (button.textContent !== nextText) button.textContent = nextText;
@@ -126,15 +148,32 @@
         const target = event.target && event.target.closest ? event.target.closest("button") : null;
 
         if (!target) return;
-        if (!["editCatalogButton", "configureOrdersButton"].includes(target.id)) return;
+        if (![
+            "editCatalogButton",
+            "configureOrdersButton",
+            "newProductButton",
+            "newFlavorButton"
+        ].includes(target.id)
+            && !target.classList.contains("product-action-btn")
+            && !target.classList.contains("flavor-action-btn")
+            && !target.dataset.flavorAction
+            && !target.dataset.productAction
+        ) {
+            return;
+        }
 
         window.setTimeout(setupAvailableInputs, 0);
         window.setTimeout(setupAvailableInputs, 80);
+        window.setTimeout(setupAvailableInputs, 300);
     }
 
     function getPreviewImage(input) {
         if (input.id === "productImage") {
             return document.getElementById("productImagePreviewImage");
+        }
+
+        if (input.id === "flavorImage") {
+            return document.getElementById("flavorImagePreviewImage");
         }
 
         if (input.id === "catalogLogo") {
@@ -149,9 +188,13 @@
     }
 
     function getFeedbackElement(input) {
-        return document.getElementById(
-            input.id === "productImage" ? "productFeedback" : "catalogFeedback"
-        );
+        if (input.id === "productImage") {
+            return document.getElementById("productFeedback");
+        }
+        if (input.id === "flavorImage") {
+            return document.getElementById("flavorFeedback");
+        }
+        return document.getElementById("catalogFeedback");
     }
 
     function setInputFeedback(input, message, type) {
@@ -219,6 +262,31 @@
         openEditor(input, file, null, "selection");
     }
 
+    function loadImageToBlobViaCanvas(url) {
+        return new Promise(function (resolve) {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function () {
+                try {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = img.naturalWidth || img.width;
+                    canvas.height = img.naturalHeight || img.height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob(function (blob) {
+                        resolve(blob);
+                    }, "image/webp", 0.95);
+                } catch (e) {
+                    resolve(null);
+                }
+            };
+            img.onerror = function () {
+                resolve(null);
+            };
+            img.src = url;
+        });
+    }
+
     async function openFromLaunchButton(input) {
         const config = INPUT_CONFIG[input.id];
 
@@ -244,21 +312,28 @@
         }
 
         try {
-            const response = await fetch(url, { mode: "cors", credentials: "omit" });
-
-            if (!response.ok) throw new Error("Não foi possível carregar a imagem atual.");
-
-            const blob = await response.blob();
-
-            if (!allowedTypes.has(blob.type)) {
-                throw new Error("O formato da imagem atual não pode ser editado.");
+            let blob = null;
+            try {
+                const response = await fetch(url, { mode: "cors", credentials: "omit" });
+                if (response.ok) {
+                    blob = await response.blob();
+                }
+            } catch (fetchErr) {
+                // Fallback para conversão via Image/Canvas quando fetch direto for restringido
             }
 
-            const extension = getExtensionForType(blob.type);
+            if (!blob) {
+                blob = await loadImageToBlobViaCanvas(url);
+            }
+
+            if (!blob) throw new Error("Não foi possível carregar a imagem atual.");
+
+            const type = allowedTypes.has(blob.type) ? blob.type : "image/webp";
+            const extension = getExtensionForType(type);
             const file = new File(
                 [blob],
                 "imagem-atual." + extension,
-                { type: blob.type, lastModified: Date.now() }
+                { type: type, lastModified: Date.now() }
             );
 
             sourceFiles.set(input, file);
@@ -282,15 +357,17 @@
     function handleRemoveImageToggle(event) {
         const field = event.target;
 
-        if (!field || !["removeProductImage", "removeCatalogLogo"].includes(field.id)) {
+        if (!field || !["removeProductImage", "removeFlavorImage", "removeCatalogLogo"].includes(field.id)) {
             return;
         }
 
         if (!field.checked) return;
 
-        const input = document.getElementById(
-            field.id === "removeProductImage" ? "productImage" : "catalogLogo"
-        );
+        let inputId = "catalogLogo";
+        if (field.id === "removeProductImage") inputId = "productImage";
+        if (field.id === "removeFlavorImage") inputId = "flavorImage";
+
+        const input = document.getElementById(inputId);
 
         if (!input) return;
 
@@ -305,7 +382,7 @@
     function handleFormReset(event) {
         const form = event.target;
 
-        if (!form || !["productForm", "catalogForm"].includes(form.id)) return;
+        if (!form || !["productForm", "flavorForm", "catalogForm"].includes(form.id)) return;
 
         window.setTimeout(function () {
             Object.keys(INPUT_CONFIG).forEach(function (id) {
@@ -335,6 +412,15 @@
         const canvas = document.createElement("canvas");
         const dragHint = document.createElement("span");
         const controls = document.createElement("div");
+
+        // Seletor de proporção (ativo para contexto de logo)
+        const ratioGroup = document.createElement("div");
+        const ratioTitle = document.createElement("span");
+        const ratioOptions = document.createElement("div");
+        const ratioSquareBtn = createRatioButton("1:1 Quadrada", "square");
+        const ratioPortraitBtn = createRatioButton("3:4 Vertical", "portrait_3_4");
+        const ratioLandscapeBtn = createRatioButton("4:3 Horizontal", "landscape_4_3");
+
         const quickActions = document.createElement("div");
         const autoButton = createEditorButton("Auto ajustar", "auto");
         const fillButton = createEditorButton("Preencher", "fill");
@@ -386,6 +472,7 @@
         canvas.id = "imageEditorCanvas";
         canvas.className = "image-editor__canvas";
         canvas.setAttribute("aria-label", "Prévia da imagem ajustada");
+        canvas.setAttribute("tabindex", "0");
 
         dragHint.className = "image-editor__drag-hint";
         dragHint.textContent = "Arraste para reposicionar";
@@ -394,6 +481,16 @@
         previewColumn.append(stage);
 
         controls.className = "image-editor__controls";
+
+        // Monta seletor de proporção
+        ratioGroup.className = "image-editor__ratio-group";
+        ratioGroup.hidden = true;
+        ratioTitle.className = "image-editor__control-title";
+        ratioTitle.textContent = "Formato da logo";
+        ratioOptions.className = "image-editor__ratio-options";
+        ratioOptions.append(ratioSquareBtn, ratioPortraitBtn, ratioLandscapeBtn);
+        ratioGroup.append(ratioTitle, ratioOptions);
+
         quickActions.className = "image-editor__quick-actions";
         quickActions.append(autoButton, fillButton, fitButton, centerButton, rotateButton, trimButton);
 
@@ -432,7 +529,7 @@
         applyButton.textContent = "Aplicar imagem";
 
         actions.append(cancelButton, applyButton);
-        controls.append(quickActions, zoomLabel, gridLabel, info, status, actions);
+        controls.append(ratioGroup, quickActions, zoomLabel, gridLabel, info, status, actions);
         content.append(previewColumn, controls);
 
         dialog.append(header, content);
@@ -445,6 +542,10 @@
             title: title,
             description: description,
             canvas: canvas,
+            ratioGroup: ratioGroup,
+            ratioSquareBtn: ratioSquareBtn,
+            ratioPortraitBtn: ratioPortraitBtn,
+            ratioLandscapeBtn: ratioLandscapeBtn,
             autoButton: autoButton,
             fillButton: fillButton,
             fitButton: fitButton,
@@ -463,6 +564,7 @@
         closeButton.addEventListener("click", cancelEditor);
         cancelButton.addEventListener("click", cancelEditor);
         applyButton.addEventListener("click", applyEditor);
+
         let pointerStartedOnOverlay = false;
         overlay.addEventListener("pointerdown", function (event) {
             pointerStartedOnOverlay = event.button === 0 && event.target === overlay;
@@ -498,6 +600,18 @@
         canvas.addEventListener("pointercancel", endDrag);
     }
 
+    function createRatioButton(label, ratioKey) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "image-editor__ratio-button";
+        button.dataset.ratio = ratioKey;
+        button.textContent = label;
+        button.addEventListener("click", function () {
+            setLogoAspectRatio(ratioKey);
+        });
+        return button;
+    }
+
     function createEditorButton(label, action) {
         const button = document.createElement("button");
 
@@ -509,11 +623,44 @@
         return button;
     }
 
+    function setLogoAspectRatio(ratioKey) {
+        if (!activeSession || activeSession.config.kind !== "logo") return;
+        const ratioConfig = activeSession.config.ratios && activeSession.config.ratios[ratioKey];
+        if (!ratioConfig) return;
+
+        activeSession.currentRatioKey = ratioKey;
+        activeSession.sessionWidth = ratioConfig.width;
+        activeSession.sessionHeight = ratioConfig.height;
+
+        editor.canvas.width = ratioConfig.width;
+        editor.canvas.height = ratioConfig.height;
+
+        updateRatioButtons();
+
+        // Sincroniza com formulário de catálogo se houver radio button presente
+        const radio = document.querySelector('input[name="logoAspectRatio"][value="' + ratioKey + '"]');
+        if (radio && !radio.checked) {
+            radio.checked = true;
+            radio.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+
+        renderPreview();
+    }
+
+    function updateRatioButtons() {
+        if (!editor || !activeSession) return;
+        const currentRatio = activeSession.currentRatioKey || "square";
+        editor.ratioSquareBtn.setAttribute("aria-pressed", String(currentRatio === "square"));
+        editor.ratioPortraitBtn.setAttribute("aria-pressed", String(currentRatio === "portrait_3_4"));
+        editor.ratioLandscapeBtn.setAttribute("aria-pressed", String(currentRatio === "landscape_4_3"));
+    }
+
     async function openEditor(input, file, storedState, reason) {
         const config = INPUT_CONFIG[input.id];
 
         if (!editor || !config) return;
 
+        previousFocusedElement = document.activeElement;
         editor.status.textContent = "Preparando imagem…";
         editor.applyButton.disabled = true;
         editor.overlay.hidden = false;
@@ -523,6 +670,23 @@
             const loaded = await loadWorkingImage(file);
 
             if (!loaded || !loaded.source) throw new Error("Falha ao carregar a imagem.");
+
+            // Determina a proporção inicial (para logo)
+            let initialRatio = "square";
+            if (config.kind === "logo") {
+                const selectedRadio = document.querySelector('input[name="logoAspectRatio"]:checked');
+                if (selectedRadio && ["square", "portrait_3_4", "landscape_4_3"].includes(selectedRadio.value)) {
+                    initialRatio = selectedRadio.value;
+                }
+                if (storedState && storedState.ratioKey) {
+                    initialRatio = storedState.ratioKey;
+                }
+            }
+
+            const targetRatioConfig = (config.ratios && config.ratios[initialRatio]) || {
+                width: config.width,
+                height: config.height
+            };
 
             const state = normalizeState(storedState, loaded.width, loaded.height, config);
 
@@ -534,16 +698,28 @@
                 source: loaded.source,
                 sourceWidth: loaded.width,
                 sourceHeight: loaded.height,
+                currentRatioKey: initialRatio,
+                sessionWidth: targetRatioConfig.width,
+                sessionHeight: targetRatioConfig.height,
                 state: state
             };
 
             editor.title.textContent = config.title;
-            editor.description.textContent = config.kind === "product"
-                ? "O resultado será salvo em 4:3. Arraste para escolher o enquadramento do card."
-                : "A logo será encaixada sem deformar. Você pode remover margens vazias opcionalmente.";
+            if (config.kind === "product") {
+                editor.description.textContent = "O resultado será salvo em 1:1. Arraste para escolher o enquadramento do produto.";
+                editor.ratioGroup.hidden = true;
+            } else if (config.kind === "flavor") {
+                editor.description.textContent = "O resultado será salvo em 1:1. Arraste para escolher o enquadramento do sabor.";
+                editor.ratioGroup.hidden = true;
+            } else {
+                editor.description.textContent = "A logo será encaixada sem deformar. Escolha a proporção e ajuste o enquadramento.";
+                editor.ratioGroup.hidden = false;
+                updateRatioButtons();
+            }
+
             editor.trimButton.hidden = config.kind !== "logo";
-            editor.canvas.width = config.width;
-            editor.canvas.height = config.height;
+            editor.canvas.width = activeSession.sessionWidth;
+            editor.canvas.height = activeSession.sessionHeight;
             editor.zoomInput.value = String(state.zoom);
             editor.gridInput.checked = true;
             editor.status.textContent = "";
@@ -578,7 +754,7 @@
                 const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
                 return downscaleSourceIfNeeded(bitmap, bitmap.width, bitmap.height, true);
             } catch (error) {
-                // O fallback abaixo mantém compatibilidade com navegadores sem suporte completo.
+                // Fallback para Image element
             }
         }
 
@@ -601,7 +777,7 @@
     }
 
     function downscaleSourceIfNeeded(source, width, height, closeSource) {
-        const maximumWorkingDimension = 2200;
+        const maximumWorkingDimension = 2400;
         const longestSide = Math.max(width, height);
 
         if (!width || !height) {
@@ -673,8 +849,10 @@
 
     function getBaseScale(session) {
         const size = getRotatedSourceSize(session.state);
-        const widthScale = session.config.width / size.width;
-        const heightScale = session.config.height / size.height;
+        const curWidth = session.sessionWidth || session.config.width;
+        const curHeight = session.sessionHeight || session.config.height;
+        const widthScale = curWidth / size.width;
+        const heightScale = curHeight / size.height;
 
         return session.state.mode === "fill"
             ? Math.max(widthScale, heightScale)
@@ -688,10 +866,12 @@
         const state = session.state;
         const crop = state.crop;
         const scale = getBaseScale(session) * state.zoom;
-        const centerX = session.config.width / 2 + state.offsetX;
-        const centerY = session.config.height / 2 + state.offsetY;
+        const curWidth = session.sessionWidth || session.config.width;
+        const curHeight = session.sessionHeight || session.config.height;
+        const centerX = curWidth / 2 + state.offsetX;
+        const centerY = curHeight / 2 + state.offsetY;
 
-        context.clearRect(0, 0, session.config.width, session.config.height);
+        context.clearRect(0, 0, curWidth, curHeight);
         context.save();
         context.translate(centerX, centerY);
         context.rotate(state.rotation * Math.PI / 180);
@@ -709,7 +889,7 @@
         );
         context.restore();
 
-        if (includeGrid) drawGrid(context, session.config.width, session.config.height);
+        if (includeGrid) drawGrid(context, curWidth, curHeight);
     }
 
     function drawGrid(context, width, height) {
@@ -820,7 +1000,7 @@
             }
         } else {
             session.state.mode = "fill";
-            editor.status.textContent = "Produto centralizado e preenchendo o quadro 4:3.";
+            editor.status.textContent = "Imagem centralizada e preenchendo o quadro 1:1.";
         }
 
         editor.zoomInput.value = "1";
@@ -962,8 +1142,10 @@
         if (!dragging || !activeSession || event.pointerId !== dragPointerId) return;
 
         const rect = editor.canvas.getBoundingClientRect();
-        const scaleX = activeSession.config.width / rect.width;
-        const scaleY = activeSession.config.height / rect.height;
+        const curWidth = activeSession.sessionWidth || activeSession.config.width;
+        const curHeight = activeSession.sessionHeight || activeSession.config.height;
+        const scaleX = curWidth / rect.width;
+        const scaleY = curHeight / rect.height;
 
         activeSession.state.offsetX += (event.clientX - lastPointerX) * scaleX;
         activeSession.state.offsetY += (event.clientY - lastPointerY) * scaleY;
@@ -992,6 +1174,8 @@
 
         const session = activeSession;
         const input = session.input;
+        const curWidth = session.sessionWidth || session.config.width;
+        const curHeight = session.sessionHeight || session.config.height;
 
         editor.applyButton.disabled = true;
         editor.applyButton.textContent = "Processando…";
@@ -1001,8 +1185,8 @@
             const canvas = document.createElement("canvas");
             const context = canvas.getContext("2d", { alpha: true });
 
-            canvas.width = session.config.width;
-            canvas.height = session.config.height;
+            canvas.width = curWidth;
+            canvas.height = curHeight;
 
             const originalCanvas = editor.canvas;
             editor.canvas = canvas;
@@ -1031,15 +1215,24 @@
             transfer.items.add(file);
             input.files = transfer.files;
 
-            savedStates.set(input, cloneState(session.state));
+            savedStates.set(input, cloneState(session.state, session.currentRatioKey));
             sourceFiles.set(input, session.file);
+
+            // Se for logo, sincroniza proporção com o radio do formulário
+            if (session.config.kind === "logo" && session.currentRatioKey) {
+                const radio = document.querySelector('input[name="logoAspectRatio"][value="' + session.currentRatioKey + '"]');
+                if (radio && !radio.checked) {
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+            }
 
             input.dataset.imageEditorBypass = "true";
             input.dispatchEvent(new Event("change", { bubbles: true }));
 
             setInputFeedback(
                 input,
-                "Imagem ajustada: " + session.config.width + " × " + session.config.height
+                "Imagem ajustada: " + curWidth + " × " + curHeight
                     + " • " + formatBytes(file.size) + ".",
                 "success"
             );
@@ -1086,13 +1279,14 @@
         });
     }
 
-    function cloneState(state) {
+    function cloneState(state, ratioKey) {
         return {
             mode: state.mode,
             zoom: state.zoom,
             offsetX: state.offsetX,
             offsetY: state.offsetY,
             rotation: state.rotation,
+            ratioKey: ratioKey || "square",
             crop: {
                 x: state.crop.x,
                 y: state.crop.y,
@@ -1135,14 +1329,43 @@
         editor.applyButton.disabled = false;
         editor.applyButton.textContent = "Aplicar imagem";
         document.body.classList.remove("image-editor-open");
+
+        if (previousFocusedElement && typeof previousFocusedElement.focus === "function") {
+            previousFocusedElement.focus({ preventScroll: true });
+        }
+        previousFocusedElement = null;
     }
 
     function handleGlobalKeydown(event) {
-        if (event.key !== "Escape" || !editor || editor.overlay.hidden) return;
+        if (!editor || editor.overlay.hidden) return;
 
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        cancelEditor();
+        if (event.key === "Escape") {
+            event.preventDefault();
+            event.stopPropagation();
+            cancelEditor();
+            return;
+        }
+
+        if (event.key === "Tab") {
+            const focusables = editor.dialog.querySelectorAll(
+                'button:not([disabled]):not([hidden]), [href], input:not([disabled]):not([hidden]), select:not([disabled]):not([hidden]), textarea:not([disabled]):not([hidden]), [tabindex]:not([tabindex="-1"])'
+            );
+            if (!focusables.length) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+
+            if (event.shiftKey) {
+                if (document.activeElement === first || !editor.dialog.contains(document.activeElement)) {
+                    last.focus();
+                    event.preventDefault();
+                }
+            } else {
+                if (document.activeElement === last || !editor.dialog.contains(document.activeElement)) {
+                    first.focus();
+                    event.preventDefault();
+                }
+            }
+        }
     }
 
     function getExtensionForType(type) {
@@ -1159,6 +1382,20 @@
 
         return (bytes / (1024 * 1024)).toFixed(1).replace(".", ",") + " MB";
     }
+
+    // Expõe API para testes e integração com outros módulos
+    window.NEOEFFEX_IMAGE_EDITOR = Object.freeze({
+        INPUT_CONFIG: INPUT_CONFIG,
+        open: function (inputId, file, state, reason) {
+            const input = typeof inputId === "string" ? document.getElementById(inputId) : inputId;
+            if (!input) return Promise.reject(new Error("Input não encontrado"));
+            return openEditor(input, file, state, reason || "api");
+        },
+        openFromLaunchButton: openFromLaunchButton,
+        setupInputs: setupAvailableInputs,
+        close: cancelEditor,
+        setLogoAspectRatio: setLogoAspectRatio
+    });
 
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", init, { once: true });

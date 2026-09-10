@@ -133,8 +133,8 @@ svg {
     height: 26px;
     flex-shrink: 0;
     background: currentColor;
-    -webkit-mask: url("../../../img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
-    mask: url("../../../img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
+    -webkit-mask: url("/img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
+    mask: url("/img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
 }
 
 .site-header__label,
@@ -639,13 +639,23 @@ svg {
     text-transform: uppercase;
 }
 
-.site-footer a {
+.site-footer__tech {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     color: var(--navy-800);
     text-decoration: none;
+    transition: color 140ms ease;
 }
 
-.site-footer a:hover {
+.site-footer__tech:hover {
     color: var(--blue-600);
+}
+
+.brand__mark--footer {
+    width: 14px;
+    height: 14px;
+    opacity: 0.85;
 }
 
 body.has-cart-open {
@@ -1476,13 +1486,21 @@ body.has-cart-open {
         padding: 8px;
     }
     .flavor-modal__card {
-        max-height: 94vh;
+        max-height: calc(100dvh - 16px);
         border-radius: 14px;
     }
     .flavor-modal__head,
     .flavor-modal__body,
     .flavor-modal__footer {
-        padding-inline: 16px;
+        padding-inline: 14px;
+    }
+    .flavor-selection-item {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+    .flavor-selection-item__media {
+        width: 40px;
+        height: 40px;
     }
     .flavor-modal__actions {
         flex-direction: column-reverse;

@@ -464,7 +464,7 @@ svg {
     z-index: 1;
     display: grid;
     width: 100%;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
     margin-top: 18px;
     overflow: hidden;
     place-items: center;
@@ -1282,6 +1282,7 @@ body.has-cart-open {
 .flavor-selection-item__media {
     width: 44px;
     height: 44px;
+    aspect-ratio: 1 / 1;
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid var(--border);
@@ -1294,6 +1295,7 @@ body.has-cart-open {
 .flavor-selection-item__image {
     width: 100%;
     height: 100%;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
 }
 

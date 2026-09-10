@@ -230,6 +230,14 @@
                             <strong id="ordersStatus">Nenhum catálogo selecionado</strong>
                         </div>
                         <div>
+                            <span class="orders-summary__label">Perfil da loja</span>
+                            <strong id="ordersProfile">Padrão</strong>
+                        </div>
+                        <div>
+                            <span class="orders-summary__label">Pedido mínimo</span>
+                            <strong id="ordersMinimum">Não configurado</strong>
+                        </div>
+                        <div>
                             <span class="orders-summary__label">WhatsApp</span>
                             <strong id="ordersWhatsapp">Não configurado</strong>
                         </div>
@@ -589,6 +597,28 @@
                     </label>
                 </div>
                 <div class="form-field form-field--full form-divider">
+                    <span class="form-section-title">PERFIL E OPERAÇÃO</span>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="catalogProfile">Perfil do catálogo</label>
+                    <select id="catalogProfile" name="catalogProfile">
+                        <option value="standard">Padrão — Produtos, itens e serviços gerais</option>
+                        <option value="food">Alimentação — Restaurantes, lanchonetes e confeitarias</option>
+                        <option value="marmitas">Marmitas e Porções — Combos com escolha de sabores</option>
+                        <option value="services">Serviços — Agendamentos, orçamentos e consultorias</option>
+                    </select>
+                    <span class="field-help" id="catalogProfileHelp">O perfil orienta capacidades e recursos recomendados para este catálogo.</span>
+                </div>
+                <div class="form-field form-field--full" id="catalogProfileFeaturesContainer">
+                    <span class="profile-features-label">Recursos para este perfil:</span>
+                    <div class="profile-features-chips" id="catalogProfileFeatures" aria-live="polite"></div>
+                </div>
+                <div class="form-field form-field--full">
+                    <label for="catalogMinimumOrder">Pedido mínimo (quantidade total de itens)</label>
+                    <input id="catalogMinimumOrder" name="catalogMinimumOrder" type="number" min="1" step="1" placeholder="Ex.: 5 (opcional)">
+                    <span class="field-help">Bloqueia a finalização do pedido no WhatsApp se a quantidade total de itens for inferior ao mínimo. Deixe vazio para permitir qualquer quantidade.</span>
+                </div>
+                <div class="form-field form-field--full form-divider">
                     <span class="form-section-title">PEDIDOS PELO WHATSAPP</span>
                 </div>
                 <div class="form-field form-field--full">
@@ -640,9 +670,10 @@
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
-    <script src="config.js?v=0.3.6" defer></script>
-    <script src="../assets/catalog/organization.js?v=0.3.6" defer></script>
-    <script src="assets/js/admin.js?v=0.3.6" defer></script>
+    <script src="config.js?v=0.3.7" defer></script>
+    <script src="../assets/catalog/organization.js?v=0.3.7" defer></script>
+    <script src="../assets/catalog/profiles.js?v=0.3.7" defer></script>
+    <script src="assets/js/admin.js?v=0.3.7" defer></script>
 </body>
 </html>
 

@@ -62,6 +62,11 @@
     const productDangerActions = document.getElementById("productDangerActions");
     const saveProductButton = document.getElementById("saveProductButton");
     const saveCatalogButton = document.getElementById("saveCatalogButton");
+    const catalogProfile = document.getElementById("catalogProfile");
+    const catalogMinimumOrder = document.getElementById("catalogMinimumOrder");
+    const catalogProfileFeatures = document.getElementById("catalogProfileFeatures");
+    const ordersProfile = document.getElementById("ordersProfile");
+    const ordersMinimum = document.getElementById("ordersMinimum");
     const toggleStatusButton = document.getElementById("toggleStatusButton");
     const deleteProductButton = document.getElementById("deleteProductButton");
     const confirmDeleteButton = document.getElementById("confirmDeleteButton");
@@ -487,6 +492,8 @@
         if (!activeCatalog) {
             status.textContent = "Nenhuma loja vinculada";
             status.dataset.state = "";
+            if (ordersProfile) ordersProfile.textContent = "—";
+            if (ordersMinimum) ordersMinimum.textContent = "—";
             whatsapp.textContent = "Não configurado";
             message.textContent = catalogs.length === 0
                 ? "Nenhuma loja vinculada a esta conta. Entre em contato com a Neoeffex para concluir a configuração."
@@ -497,6 +504,20 @@
         const enabled = Boolean(activeCatalog.orders_enabled && activeCatalog.whatsapp_number);
         status.textContent = enabled ? "Pedidos ativados" : "Pedidos desativados";
         status.dataset.state = enabled ? "active" : "inactive";
+
+        if (ordersProfile) {
+            const profilesApi = window.NEOEFFEX_PROFILES;
+            const profile = profilesApi ? profilesApi.getProfile(activeCatalog.catalog_profile) : null;
+            ordersProfile.textContent = profile ? profile.label : (activeCatalog.catalog_profile || "Padrão");
+        }
+
+        if (ordersMinimum) {
+            const min = Number(activeCatalog.minimum_order_quantity);
+            ordersMinimum.textContent = (Number.isInteger(min) && min > 0)
+                ? (min + " " + (min === 1 ? "item" : "itens"))
+                : "Sem mínimo";
+        }
+
         whatsapp.textContent = formatWhatsapp(activeCatalog.whatsapp_number);
         message.textContent = activeCatalog.order_message
             || "Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.";
@@ -514,10 +535,19 @@
         renderProducts();
         updateSummary();
 
-        const { data, error } = await client
+        let { data, error } = await client
             .from("catalogs")
-            .select("id, name, slug, is_active, whatsapp_number, orders_enabled, order_message, created_at")
+            .select("id, name, slug, is_active, whatsapp_number, orders_enabled, order_message, catalog_profile, minimum_order_quantity, created_at")
             .order("created_at", { ascending: true });
+
+        if (error && /column.*catalog_profile|column.*minimum_order_quantity/.test(error.message || "")) {
+            const fallback = await client
+                .from("catalogs")
+                .select("id, name, slug, is_active, whatsapp_number, orders_enabled, order_message, created_at")
+                .order("created_at", { ascending: true });
+            data = fallback.data;
+            error = fallback.error;
+        }
 
         if (sequence !== loadSequence) return;
 
@@ -925,6 +955,28 @@
         if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
     }
 
+    function renderCatalogProfileFeatures(profileId) {
+        if (!catalogProfileFeatures) return;
+        const profilesApi = window.NEOEFFEX_PROFILES;
+        const profile = profilesApi ? profilesApi.getProfile(profileId) : null;
+        const features = profile ? profile.features : { flavors: false, minimum_order: false, addons: false, allow_purchase_mode: false };
+
+        const items = [
+            { label: "Seleção de sabores", enabled: features.flavors },
+            { label: "Acréscimos por sabor", enabled: features.addons },
+            { label: "Pedido mínimo", enabled: features.minimum_order },
+            { label: "Modos de compra no produto", enabled: features.allow_purchase_mode }
+        ];
+
+        catalogProfileFeatures.replaceChildren();
+        items.forEach(function (item) {
+            const badge = document.createElement("span");
+            badge.className = "profile-feature-badge " + (item.enabled ? "profile-feature-badge--active" : "profile-feature-badge--inactive");
+            badge.textContent = (item.enabled ? "✓ " : "✕ ") + item.label;
+            catalogProfileFeatures.appendChild(badge);
+        });
+    }
+
     function openCatalogModal(catalog) {
         if (!catalog || !catalog.id) return;
 
@@ -942,6 +994,16 @@
         document.getElementById("catalogSlug").value = catalog.slug || "";
         document.getElementById("catalogSlug").dataset.touched = "";
         document.getElementById("catalogActive").checked = Boolean(catalog.is_active);
+
+        if (catalogProfile) {
+            catalogProfile.value = catalog.catalog_profile || "standard";
+            renderCatalogProfileFeatures(catalogProfile.value);
+        }
+        if (catalogMinimumOrder) {
+            const min = Number(catalog.minimum_order_quantity);
+            catalogMinimumOrder.value = (Number.isInteger(min) && min > 0) ? String(min) : "";
+        }
+
         document.getElementById("catalogWhatsapp").value = catalog.whatsapp_number || "";
         document.getElementById("catalogOrderMessage").value = catalog.order_message
             || "Confirme disponibilidade, prazo e forma de pagamento pelo WhatsApp.";
@@ -1993,13 +2055,30 @@
             setFeedback(catalogFeedback, "A instrução ao cliente precisa ter entre 10 e 300 caracteres.", "error");
             return null;
         }
+
+        const allowedProfiles = ["standard", "food", "marmitas", "services"];
+        const profileCandidate = catalogProfile ? catalogProfile.value.trim().toLowerCase() : "standard";
+        const profile = allowedProfiles.includes(profileCandidate) ? profileCandidate : "standard";
+
+        let minimumOrder = null;
+        if (catalogMinimumOrder && catalogMinimumOrder.value.trim()) {
+            const parsed = Number(catalogMinimumOrder.value.trim());
+            if (!Number.isInteger(parsed) || parsed < 1) {
+                setFeedback(catalogFeedback, "O pedido mínimo deve ser um número inteiro positivo maior ou igual a 1.", "error");
+                return null;
+            }
+            minimumOrder = parsed;
+        }
+
         return {
             name: name,
             slug: slug,
             is_active: isActive,
             whatsapp_number: whatsapp || null,
             orders_enabled: ordersEnabled,
-            order_message: orderMessage
+            order_message: orderMessage,
+            catalog_profile: profile,
+            minimum_order_quantity: minimumOrder
         };
     }
 
@@ -2371,6 +2450,11 @@
         populateProductSubcategories(productCategory.value, "");
     });
     catalogForm.addEventListener("submit", saveCatalog);
+    if (catalogProfile) {
+        catalogProfile.addEventListener("change", function () {
+            renderCatalogProfileFeatures(this.value);
+        });
+    }
     productDescription.addEventListener("input", updateDescriptionCounter);
     productImageInput.addEventListener("change", previewSelectedProductImage);
     productImagePreviewImage.addEventListener("error", function () {

@@ -4,7 +4,7 @@ const {JSDOM, VirtualConsole} = require('jsdom');
 const root=require('node:path').resolve(__dirname, '../..') + '/';
 const wait=()=>new Promise(r=>setTimeout(r,30));
 function fixture(){return {
- catalogs:[{id:'cat',name:'Loja teste',slug:'loja-teste',is_active:true,orders_enabled:true,whatsapp_number:'5511999999999',order_message:'Confirme disponibilidade pelo WhatsApp.',created_at:'2026-01-01'}],
+ catalogs:[{id:'cat',name:'Loja teste',slug:'loja-teste',is_active:true,orders_enabled:true,whatsapp_number:'5511999999999',order_message:'Confirme disponibilidade pelo WhatsApp.',catalog_profile:'standard',minimum_order_quantity:null,created_at:'2026-01-01'}],
  categories:[{id:'main',catalog_id:'cat',name:'Marmitas',sort_order:0},{id:'child',catalog_id:'cat',name:'Tradicionais',parent_id:'main',sort_order:1},{id:'other',catalog_id:'cat',name:'Bebidas',sort_order:2}],
  product_types:[],
  product_groups:[],
@@ -51,6 +51,7 @@ async function setup(area,legacy=false,customDb=null){
  w.NEOEFFEX_SUPABASE_CONFIG={url:'https://test.supabase.co',publishableKey:'test-only'};
  w.supabase={createClient:()=>client(db,legacy,requests)};
  w.eval(fs.readFileSync(root+'assets/catalog/organization.js','utf8'));
+ w.eval(fs.readFileSync(root+'assets/catalog/profiles.js','utf8'));
  w.eval(fs.readFileSync(root+area+'/assets/js/'+area+'.js','utf8'));
  await wait();return {dom,w,d:w.document,db,requests,errors};
 }
@@ -110,12 +111,14 @@ async function setup(area,legacy=false,customDb=null){
  assert.equal(x.d.querySelector('#configureOrdersButton').disabled,false);
  assert(x.d.querySelector('#activeCatalogName').textContent.includes('Loja teste'));checks++;
 
- // Sidebar Configurações
+ // Sidebar Configurações e Resumo de Pedidos com Perfil
  const settingsLink = x.d.querySelector('#settingsMenuLink');
  assert(settingsLink);
  assert(settingsLink.textContent.includes('Configurações'));
  assert.equal(x.d.querySelector('#categoriesMenuLink'),null);
- assert(!x.d.querySelector('#configuracoes').hidden);checks++;
+ assert(!x.d.querySelector('#configuracoes').hidden);
+ assert.equal(x.d.querySelector('#ordersProfile').textContent, 'Padrão');
+ assert.equal(x.d.querySelector('#ordersMinimum').textContent, 'Sem mínimo'); checks++;
 
  // Edição de loja existente
  x.d.querySelector('#editCatalogButton').click();
@@ -123,13 +126,25 @@ async function setup(area,legacy=false,customDb=null){
  assert.equal(x.d.querySelector('#catalogModalTitle').textContent,'Editar loja');
  assert.equal(x.d.querySelector('#catalogId').value,'cat');
  assert.equal(x.d.querySelector('#catalogName').value,'Loja teste');
+ assert.equal(x.d.querySelector('#catalogProfile').value,'standard');
+ assert.equal(x.d.querySelector('#catalogMinimumOrder').value,'');
+ assert(x.d.querySelector('#catalogProfileFeatures').children.length >= 4);
  assert.equal(x.d.querySelector('#deleteCatalogButton'),null);checks++;
+
+ // Alterar perfil para marmitas e configurar pedido mínimo
+ x.d.querySelector('#catalogProfile').value = 'marmitas';
+ x.d.querySelector('#catalogProfile').dispatchEvent(new x.w.Event('change'));
+ assert(x.d.querySelector('#catalogProfileFeatures').textContent.includes('Seleção de sabores'));
+ x.d.querySelector('#catalogMinimumOrder').value = '5';
 
  // Salvar via UPDATE
  x.d.querySelector('#catalogName').value='Loja Atualizada';
  x.d.querySelector('#catalogForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
  const catalogUpdate=x.requests.find(r=>r.op==='update' && r.table==='catalogs');
- assert(catalogUpdate);assert.equal(catalogUpdate.payload.name,'Loja Atualizada');
+ assert(catalogUpdate);
+ assert.equal(catalogUpdate.payload.name,'Loja Atualizada');
+ assert.equal(catalogUpdate.payload.catalog_profile,'marmitas');
+ assert.equal(catalogUpdate.payload.minimum_order_quantity,5);
  assert(!x.requests.some(r=>r.op==='insert' && r.table==='catalogs'));checks++;
 
  // Ausência de catalogId aborta e não faz INSERT

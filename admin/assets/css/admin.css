@@ -2080,3 +2080,50 @@ body.has-modal {
         max-width: 100%;
     }
 }
+
+.profile-features-label {
+    display: block;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.profile-features-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 28px;
+}
+
+.profile-feature-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.profile-feature-badge--active {
+    background: rgba(21, 117, 210, 0.08);
+    border-color: rgba(21, 117, 210, 0.35);
+    color: var(--blue-700);
+}
+
+.profile-feature-badge--inactive {
+    opacity: 0.6;
+    text-decoration: line-through;
+}
+
+:root[data-theme="dark"] .profile-feature-badge--active {
+    background: rgba(86, 168, 255, 0.12);
+    border-color: rgba(86, 168, 255, 0.35);
+    color: #93c5fd;
+}
+

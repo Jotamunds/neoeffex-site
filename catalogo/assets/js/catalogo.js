@@ -25,22 +25,50 @@
     const cartFooter = document.getElementById("cartFooter");
     const cartTotal = document.getElementById("cartTotal");
     const cartInstruction = document.getElementById("cartInstruction");
+    const cartMinimumNotice = document.getElementById("cartMinimumNotice");
     const whatsappButton = document.getElementById("whatsappButton");
     const restoreCartButton = document.getElementById("restoreCartButton");
     const toast = document.getElementById("toast");
     const organization = window.NEOEFFEX_ORGANIZATION;
     const typeFilter = document.getElementById("typeFilter");
     const groupFilter = document.getElementById("groupFilter");
+
+    // Elementos do Modal de Sabores
+    const flavorModal = document.getElementById("flavorModal");
+    const flavorModalOverlay = document.getElementById("flavorModalOverlay");
+    const closeFlavorModal = document.getElementById("closeFlavorModal");
+    const cancelFlavorModalButton = document.getElementById("cancelFlavorModalButton");
+    const confirmFlavorModalButton = document.getElementById("confirmFlavorModalButton");
+    const flavorModalTitle = document.getElementById("flavorModalTitle");
+    const flavorModalDescription = document.getElementById("flavorModalDescription");
+    const bundleQtyDecrease = document.getElementById("bundleQtyDecrease");
+    const bundleQtyIncrease = document.getElementById("bundleQtyIncrease");
+    const bundleTotalQuantityDisplay = document.getElementById("bundleTotalQuantityDisplay");
+    const flavorDistributionCount = document.getElementById("flavorDistributionCount");
+    const flavorDistributionBadge = document.getElementById("flavorDistributionBadge");
+    const flavorSelectionList = document.getElementById("flavorSelectionList");
+    const flavorModalBasePrice = document.getElementById("flavorModalBasePrice");
+    const flavorModalAddonsPrice = document.getElementById("flavorModalAddonsPrice");
+    const flavorModalTotalPrice = document.getElementById("flavorModalTotalPrice");
+    const flavorModalFeedback = document.getElementById("flavorModalFeedback");
+
     let client = null;
     let catalog = null;
     let categories = [];
     let products = [];
+    let flavors = [];
+    let productFlavors = [];
     let cart = {};
     let lastCart = {};
     let selectedCategory = "all";
     let toastTimeout = null;
     let lastFocusedElement = null;
     const productImagesBucket = "catalog-products";
+
+    // Estado do Modal de Sabores
+    let currentModalProduct = null;
+    let currentBundleTargetQty = 1;
+    let modalAvailableFlavors = [];
 
     function hasValidConfig() {
         return Boolean(config.url && config.publishableKey && /^https:\/\/.+\.supabase\.co\/?$/.test(config.url));
@@ -85,6 +113,7 @@
 
     function showError(title, message, canRetry) {
         closeCart();
+        closeFlavorModalWindow();
         loadingState.hidden = true;
         catalogContent.hidden = true;
         errorState.hidden = false;
@@ -144,7 +173,8 @@
     function addToCart(productId) {
         const product = getProduct(productId);
         if (!product || !ordersAvailable()) return;
-        cart[productId] = Math.min((Number(cart[productId]) || 0) + 1, 99);
+        const current = typeof cart[productId] === "number" ? cart[productId] : (cart[productId] && cart[productId].quantity) || 0;
+        cart[productId] = Math.min(current + 1, 99);
         saveCart();
         renderCart();
         showToast(product.name + " adicionado ao pedido.");
@@ -207,9 +237,16 @@
             const addButton = document.createElement("button");
             addButton.className = "add-product-button";
             addButton.type = "button";
-            addButton.textContent = "Adicionar ao pedido";
-            addButton.setAttribute("aria-label", "Adicionar " + product.name + " ao pedido");
-            addButton.addEventListener("click", function () { addToCart(product.id); });
+            const isBundle = product.purchase_mode === "flavor_bundle";
+            addButton.textContent = isBundle ? "Escolher sabores" : "Adicionar ao pedido";
+            addButton.setAttribute("aria-label", (isBundle ? "Escolher sabores para " : "Adicionar ") + product.name + " ao pedido");
+            addButton.addEventListener("click", function () {
+                if (isBundle) {
+                    openFlavorModal(product);
+                } else {
+                    addToCart(product.id);
+                }
+            });
             article.appendChild(addButton);
         }
         return article;
@@ -260,6 +297,208 @@
         }
     }
 
+    /* Modal de Sabores */
+    function openFlavorModal(product) {
+        const productPf = productFlavors.filter(function (pf) {
+            return pf.product_id === product.id && pf.is_available !== false;
+        });
+
+        const available = productPf.map(function (pf) {
+            const f = flavors.find(function (item) { return item.id === pf.flavor_id; });
+            if (!f || f.status === "paused") return null;
+            return {
+                flavor_id: f.id,
+                name: f.name,
+                description: f.description || "",
+                image_path: f.image_path || "",
+                additional_price: Number(pf.additional_price) || 0,
+                sort_order: Number(pf.sort_order) || 0,
+                quantity: 0
+            };
+        }).filter(Boolean);
+
+        if (!available.length) {
+            showToast("Nenhum sabor disponível no momento para este produto.");
+            return;
+        }
+
+        currentModalProduct = product;
+        currentBundleTargetQty = 1;
+        modalAvailableFlavors = available;
+
+        flavorModalTitle.textContent = product.name;
+        flavorModalDescription.textContent = "Distribua as unidades entre os sabores disponíveis.";
+
+        renderFlavorSelectionList();
+        updateFlavorModalState();
+
+        flavorModalOverlay.hidden = false;
+        flavorModal.hidden = false;
+        flavorModal.setAttribute("aria-hidden", "false");
+        body.classList.add("has-cart-open");
+    }
+
+    function closeFlavorModalWindow() {
+        if (!flavorModal) return;
+        flavorModal.hidden = true;
+        flavorModal.setAttribute("aria-hidden", "true");
+        flavorModalOverlay.hidden = true;
+        body.classList.remove("has-cart-open");
+        currentModalProduct = null;
+        modalAvailableFlavors = [];
+    }
+
+    function renderFlavorSelectionList() {
+        flavorSelectionList.replaceChildren();
+        modalAvailableFlavors.forEach(function (flavorItem) {
+            const row = document.createElement("div");
+            row.className = "flavor-selection-item" + (flavorItem.quantity > 0 ? " flavor-selection-item--selected" : "");
+            row.id = "flavorRow_" + flavorItem.flavor_id;
+
+            const media = document.createElement("div");
+            media.className = "flavor-selection-item__media";
+            const imgUrl = getProductImageUrl(flavorItem.image_path);
+            if (imgUrl) {
+                const img = document.createElement("img");
+                img.src = imgUrl;
+                img.alt = flavorItem.name;
+                img.className = "flavor-selection-item__image";
+                img.loading = "lazy";
+                img.addEventListener("error", function () {
+                    img.hidden = true;
+                    mark.hidden = false;
+                });
+                media.appendChild(img);
+            }
+            const mark = document.createElement("span");
+            mark.className = "flavor-selection-item__mark";
+            mark.textContent = flavorItem.name.trim().charAt(0).toLocaleUpperCase("pt-BR") || "S";
+            if (imgUrl) mark.hidden = true;
+            media.appendChild(mark);
+
+            const info = document.createElement("div");
+            info.className = "flavor-selection-item__info";
+            const name = document.createElement("strong");
+            name.className = "flavor-selection-item__name";
+            name.textContent = flavorItem.name;
+            info.appendChild(name);
+            if (flavorItem.description) {
+                const desc = document.createElement("p");
+                desc.className = "flavor-selection-item__description";
+                desc.textContent = flavorItem.description;
+                info.appendChild(desc);
+            }
+            if (flavorItem.additional_price > 0) {
+                const badge = document.createElement("span");
+                badge.className = "flavor-selection-item__price-badge";
+                badge.textContent = "+ " + formatCurrency(flavorItem.additional_price) + " / un.";
+                info.appendChild(badge);
+            }
+
+            const controls = document.createElement("div");
+            controls.className = "quantity-control";
+
+            const decBtn = document.createElement("button");
+            decBtn.type = "button";
+            decBtn.textContent = "−";
+            decBtn.id = "flavorDec_" + flavorItem.flavor_id;
+            decBtn.setAttribute("aria-label", "Diminuir " + flavorItem.name);
+            decBtn.addEventListener("click", function () {
+                if (flavorItem.quantity > 0) {
+                    flavorItem.quantity--;
+                    updateFlavorModalState();
+                }
+            });
+
+            const countSpan = document.createElement("span");
+            countSpan.textContent = String(flavorItem.quantity);
+            countSpan.id = "flavorCount_" + flavorItem.flavor_id;
+
+            const incBtn = document.createElement("button");
+            incBtn.type = "button";
+            incBtn.textContent = "+";
+            incBtn.id = "flavorInc_" + flavorItem.flavor_id;
+            incBtn.setAttribute("aria-label", "Aumentar " + flavorItem.name);
+            incBtn.addEventListener("click", function () {
+                const totalDistributed = modalAvailableFlavors.reduce(function (sum, f) { return sum + f.quantity; }, 0);
+                if (totalDistributed < currentBundleTargetQty) {
+                    flavorItem.quantity++;
+                    updateFlavorModalState();
+                }
+            });
+
+            controls.appendChild(decBtn);
+            controls.appendChild(countSpan);
+            controls.appendChild(incBtn);
+
+            row.appendChild(media);
+            row.appendChild(info);
+            row.appendChild(controls);
+            flavorSelectionList.appendChild(row);
+        });
+    }
+
+    function updateFlavorModalState() {
+        if (!currentModalProduct) return;
+        const totalDistributed = modalAvailableFlavors.reduce(function (sum, f) { return sum + f.quantity; }, 0);
+        bundleTotalQuantityDisplay.textContent = String(currentBundleTargetQty);
+        flavorDistributionCount.textContent = totalDistributed + " de " + currentBundleTargetQty + " selecionados";
+        bundleQtyDecrease.disabled = currentBundleTargetQty <= 1;
+
+        if (totalDistributed < currentBundleTargetQty) {
+            const missing = currentBundleTargetQty - totalDistributed;
+            flavorDistributionBadge.textContent = "Faltam " + missing;
+            flavorDistributionBadge.className = "flavor-distribution-badge flavor-distribution-badge--pending";
+            confirmFlavorModalButton.disabled = true;
+            flavorModalFeedback.hidden = false;
+            flavorModalFeedback.textContent = "Distribua mais " + missing + " " + (missing === 1 ? "sabor" : "sabores") + " para atingir o total.";
+        } else if (totalDistributed === currentBundleTargetQty) {
+            flavorDistributionBadge.textContent = "Completo";
+            flavorDistributionBadge.className = "flavor-distribution-badge flavor-distribution-badge--complete";
+            confirmFlavorModalButton.disabled = false;
+            flavorModalFeedback.hidden = true;
+        } else {
+            const excess = totalDistributed - currentBundleTargetQty;
+            flavorDistributionBadge.textContent = "Excesso (" + excess + ")";
+            flavorDistributionBadge.className = "flavor-distribution-badge flavor-distribution-badge--excess";
+            confirmFlavorModalButton.disabled = true;
+            flavorModalFeedback.hidden = false;
+            flavorModalFeedback.textContent = "A soma excede a quantidade total em " + excess + ".";
+        }
+
+        // Atualiza botões e contadores individuais de cada sabor
+        modalAvailableFlavors.forEach(function (flavorItem) {
+            const countSpan = document.getElementById("flavorCount_" + flavorItem.flavor_id);
+            const decBtn = document.getElementById("flavorDec_" + flavorItem.flavor_id);
+            const incBtn = document.getElementById("flavorInc_" + flavorItem.flavor_id);
+            const row = document.getElementById("flavorRow_" + flavorItem.flavor_id);
+            if (countSpan) countSpan.textContent = String(flavorItem.quantity);
+            if (decBtn) decBtn.disabled = flavorItem.quantity <= 0;
+            if (incBtn) incBtn.disabled = totalDistributed >= currentBundleTargetQty;
+            if (row) {
+                if (flavorItem.quantity > 0) row.classList.add("flavor-selection-item--selected");
+                else row.classList.remove("flavor-selection-item--selected");
+            }
+        });
+
+        // Preços
+        const basePrice = Number(currentModalProduct.price) || 0;
+        const baseTotal = basePrice * currentBundleTargetQty;
+        const addonsTotal = modalAvailableFlavors.reduce(function (sum, f) {
+            return sum + (Number(f.additional_price) || 0) * f.quantity;
+        }, 0);
+        const subtotal = baseTotal + addonsTotal;
+
+        flavorModalBasePrice.textContent = "Base: " + formatCurrency(baseTotal);
+        if (addonsTotal > 0) {
+            flavorModalAddonsPrice.hidden = false;
+            flavorModalAddonsPrice.textContent = "Acréscimos: + " + formatCurrency(addonsTotal);
+        } else {
+            flavorModalAddonsPrice.hidden = true;
+        }
+        flavorModalTotalPrice.textContent = formatCurrency(subtotal);
+    }
+
     function getCartStorageKey() {
         return catalog ? "neoeffex-catalog-cart-" + catalog.id : "";
     }
@@ -270,11 +509,47 @@
 
     function sanitizeStoredCart(value) {
         const sanitized = {};
-        if (!value || typeof value !== "object" || Array.isArray(value)) return sanitized;
+        if (!value || typeof value !== "object") return sanitized;
+        const entries = Array.isArray(value) ? value : Object.keys(value).map(function (k) {
+            const item = value[k];
+            if (typeof item === "number") return { product_id: k, quantity: item };
+            if (item && typeof item === "object") return Object.assign({ id: k }, item);
+            return null;
+        }).filter(Boolean);
 
-        Object.keys(value).forEach(function (productId) {
-            const quantity = Math.floor(Number(value[productId]));
-            if (getProduct(productId) && quantity > 0) sanitized[productId] = Math.min(quantity, 99);
+        entries.forEach(function (entry) {
+            if (!entry || !entry.product_id) return;
+            const product = getProduct(entry.product_id);
+            if (!product) return;
+            const qty = Math.min(Math.max(Math.floor(Number(entry.quantity)) || 0, 0), 99);
+            if (qty <= 0) return;
+
+            if (Array.isArray(entry.flavors) && entry.flavors.length > 0) {
+                const validFlavors = entry.flavors.map(function (f) {
+                    if (!f || !f.flavor_id) return null;
+                    const fQty = Math.max(Math.floor(Number(f.quantity)) || 0, 0);
+                    if (fQty <= 0) return null;
+                    return {
+                        flavor_id: String(f.flavor_id),
+                        name: String(f.name || "Sabor"),
+                        quantity: fQty,
+                        additional_price: Math.max(Number(f.additional_price) || 0, 0)
+                    };
+                }).filter(Boolean);
+
+                const sumFlavors = validFlavors.reduce(function (sum, f) { return sum + f.quantity; }, 0);
+                if (validFlavors.length > 0 && sumFlavors === qty) {
+                    const bundleId = entry.id || ("bundle_" + Math.random().toString(36).slice(2, 9));
+                    sanitized[bundleId] = {
+                        id: bundleId,
+                        product_id: product.id,
+                        quantity: qty,
+                        flavors: validFlavors
+                    };
+                }
+            } else {
+                sanitized[product.id] = (Number(sanitized[product.id]) || 0) + qty;
+            }
         });
         return sanitized;
     }
@@ -315,10 +590,45 @@
     }
 
     function getCartEntriesFrom(source) {
-        return Object.keys(source).map(function (productId) {
+        if (!source || typeof source !== "object") return [];
+        return Object.keys(source).map(function (key) {
+            const val = source[key];
+            let productId = null;
+            let quantity = 0;
+            let entryFlavors = [];
+            let itemId = key;
+
+            if (typeof val === "number") {
+                productId = key;
+                quantity = Math.min(Math.max(Math.floor(val) || 0, 0), 99);
+            } else if (val && typeof val === "object") {
+                productId = val.product_id;
+                quantity = Math.min(Math.max(Math.floor(Number(val.quantity)) || 0, 0), 99);
+                entryFlavors = Array.isArray(val.flavors) ? val.flavors : [];
+                itemId = val.id || key;
+            }
+
             const product = getProduct(productId);
-            const quantity = Math.min(Math.max(Math.floor(Number(source[productId])) || 0, 0), 99);
-            return product && quantity ? { product: product, quantity: quantity } : null;
+            if (!product || quantity <= 0) return null;
+
+            const unitPrice = Number(product.price) || 0;
+            const baseTotal = unitPrice * quantity;
+            const addonsTotal = entryFlavors.reduce(function (sum, f) {
+                return sum + (Number(f.additional_price) || 0) * (Number(f.quantity) || 0);
+            }, 0);
+            const totalPrice = baseTotal + addonsTotal;
+
+            return {
+                id: itemId,
+                product: product,
+                quantity: quantity,
+                flavors: entryFlavors,
+                unitPrice: unitPrice,
+                baseTotal: baseTotal,
+                addonsTotal: addonsTotal,
+                totalPrice: totalPrice,
+                isBundle: entryFlavors.length > 0
+            };
         }).filter(Boolean);
     }
 
@@ -327,10 +637,13 @@
     }
 
     function updateCartQuantity(productId, change) {
-        const current = Number(cart[productId]) || 0;
+        const current = typeof cart[productId] === "number" ? cart[productId] : (cart[productId] && cart[productId].quantity) || 0;
         const next = Math.min(current + change, 99);
         if (next <= 0) delete cart[productId];
-        else cart[productId] = next;
+        else {
+            if (typeof cart[productId] === "object") cart[productId].quantity = next;
+            else cart[productId] = next;
+        }
         saveCart();
         renderCart();
     }
@@ -349,43 +662,106 @@
         const copy = document.createElement("div");
         const name = document.createElement("strong");
         const subtotal = document.createElement("span");
-        const controls = document.createElement("div");
-        const quantity = document.createElement("span");
         const removeButton = document.createElement("button");
         item.className = "cart-item";
         copy.className = "cart-item__copy";
-        controls.className = "quantity-control";
         name.textContent = entry.product.name;
-        subtotal.textContent = formatCurrency(Number(entry.product.price) * entry.quantity);
-        quantity.textContent = String(entry.quantity);
-        quantity.setAttribute("aria-label", "Quantidade: " + entry.quantity);
-        controls.appendChild(createQuantityButton("Diminuir " + entry.product.name, "−", entry.product.id, -1));
-        controls.appendChild(quantity);
-        controls.appendChild(createQuantityButton("Aumentar " + entry.product.name, "+", entry.product.id, 1));
-        removeButton.className = "remove-item-button";
-        removeButton.type = "button";
-        removeButton.textContent = "Remover";
-        removeButton.addEventListener("click", function () {
-            delete cart[entry.product.id];
-            saveCart();
-            renderCart();
-        });
+        subtotal.textContent = formatCurrency(entry.totalPrice);
         copy.appendChild(name);
-        copy.appendChild(subtotal);
-        item.appendChild(copy);
-        item.appendChild(controls);
-        item.appendChild(removeButton);
+
+        if (entry.isBundle) {
+            const flavorsList = document.createElement("div");
+            flavorsList.className = "cart-item__flavors";
+            entry.flavors.forEach(function (f) {
+                const flavorRow = document.createElement("small");
+                const addonText = Number(f.additional_price) > 0
+                    ? " (+ " + formatCurrency(Number(f.additional_price) * f.quantity) + ")"
+                    : "";
+                flavorRow.textContent = f.quantity + "x " + f.name + addonText;
+                flavorsList.appendChild(flavorRow);
+            });
+            copy.appendChild(flavorsList);
+
+            if (entry.addonsTotal > 0) {
+                const addonsTag = document.createElement("span");
+                addonsTag.className = "cart-item__addons";
+                addonsTag.textContent = "Acréscimos: + " + formatCurrency(entry.addonsTotal);
+                copy.appendChild(addonsTag);
+            }
+            copy.appendChild(subtotal);
+
+            const controls = document.createElement("div");
+            controls.className = "quantity-control";
+            const qtySpan = document.createElement("span");
+            qtySpan.textContent = entry.quantity + " un.";
+            qtySpan.style.gridColumn = "1 / -1";
+            controls.appendChild(qtySpan);
+
+            removeButton.className = "remove-item-button";
+            removeButton.type = "button";
+            removeButton.textContent = "Remover";
+            removeButton.addEventListener("click", function () {
+                delete cart[entry.id];
+                saveCart();
+                renderCart();
+            });
+
+            item.appendChild(copy);
+            item.appendChild(controls);
+            item.appendChild(removeButton);
+        } else {
+            copy.appendChild(subtotal);
+            const controls = document.createElement("div");
+            controls.className = "quantity-control";
+            const quantity = document.createElement("span");
+            quantity.textContent = String(entry.quantity);
+            quantity.setAttribute("aria-label", "Quantidade: " + entry.quantity);
+            controls.appendChild(createQuantityButton("Diminuir " + entry.product.name, "−", entry.id, -1));
+            controls.appendChild(quantity);
+            controls.appendChild(createQuantityButton("Aumentar " + entry.product.name, "+", entry.id, 1));
+
+            removeButton.className = "remove-item-button";
+            removeButton.type = "button";
+            removeButton.textContent = "Remover";
+            removeButton.addEventListener("click", function () {
+                delete cart[entry.id];
+                saveCart();
+                renderCart();
+            });
+
+            item.appendChild(copy);
+            item.appendChild(controls);
+            item.appendChild(removeButton);
+        }
         return item;
     }
 
     function buildOrderMessage(entries, total) {
         const lines = ["Olá! Gostaria de fazer este pedido pelo catálogo " + catalog.name + ":", ""];
         entries.forEach(function (entry) {
-            const itemTotal = Number(entry.product.price) * entry.quantity;
-            lines.push("• " + entry.quantity + "x " + entry.product.name);
-            lines.push("  " + entry.quantity + " × " + formatCurrency(entry.product.price) + " = " + formatCurrency(itemTotal));
+            if (!entry.flavors || !entry.flavors.length) {
+                // Produto simples
+                lines.push("• " + entry.quantity + "x " + entry.product.name);
+                lines.push("  " + entry.quantity + " × " + formatCurrency(entry.unitPrice) + " = " + formatCurrency(entry.totalPrice));
+            } else {
+                // Produto com sabores (flavor_bundle)
+                lines.push("• " + entry.quantity + "x " + entry.product.name);
+                lines.push("");
+                lines.push("  Sabores:");
+                entry.flavors.forEach(function (f) {
+                    const addonInfo = Number(f.additional_price) > 0
+                        ? " (+ " + formatCurrency(Number(f.additional_price) * f.quantity) + ")"
+                        : "";
+                    lines.push("  " + f.quantity + "x " + f.name + addonInfo);
+                });
+                if (entry.addonsTotal > 0) {
+                    lines.push("");
+                    lines.push("  Acréscimos: " + formatCurrency(entry.addonsTotal));
+                }
+                lines.push("  Subtotal: " + formatCurrency(entry.totalPrice));
+            }
+            lines.push("");
         });
-        lines.push("");
         lines.push("Total estimado: " + formatCurrency(total));
         if (catalog.order_message) {
             lines.push("");
@@ -399,7 +775,8 @@
         const entries = available ? getCartEntries() : [];
         const restorableEntries = available ? getCartEntriesFrom(lastCart) : [];
         const itemCount = entries.reduce(function (sum, entry) { return sum + entry.quantity; }, 0);
-        const total = entries.reduce(function (sum, entry) { return sum + Number(entry.product.price) * entry.quantity; }, 0);
+        const total = entries.reduce(function (sum, entry) { return sum + entry.totalPrice; }, 0);
+
         cartButton.hidden = !available;
         cartCount.textContent = String(itemCount);
         cartItems.replaceChildren();
@@ -407,23 +784,52 @@
         cartEmpty.hidden = entries.length > 0;
         restoreCartButton.hidden = entries.length > 0 || restorableEntries.length === 0;
         cartFooter.hidden = entries.length === 0;
+
+        // Regra de Pedido Mínimo
+        const minOrder = Number(catalog && catalog.minimum_order_quantity) || 0;
+        const meetsMinimum = minOrder <= 0 || itemCount >= minOrder;
+
+        if (entries.length > 0 && minOrder > 0) {
+            if (!meetsMinimum) {
+                const missing = minOrder - itemCount;
+                cartMinimumNotice.textContent = "Adicione mais " + missing + " " + (missing === 1 ? "item" : "itens") + " para finalizar o pedido (mínimo de " + minOrder + " itens).";
+                cartMinimumNotice.hidden = false;
+            } else {
+                cartMinimumNotice.hidden = true;
+            }
+        } else {
+            cartMinimumNotice.hidden = true;
+        }
+
         if (entries.length) {
             cartTotal.textContent = formatCurrency(total);
             const orderMessage = buildOrderMessage(entries, total);
-            if (isSimulationMode()) {
-                cartInstruction.textContent = "Ambiente de demonstração: este pedido fictício não será enviado a um comércio real.";
+
+            if (!meetsMinimum) {
+                whatsappButton.classList.add("whatsapp-button--disabled");
+                whatsappButton.setAttribute("aria-disabled", "true");
+                whatsappButton.removeAttribute("href");
                 whatsappButton.removeAttribute("target");
-                whatsappButton.href = "#simulacao";
-                whatsappButton.dataset.simulation = "true";
             } else {
-                delete whatsappButton.dataset.simulation;
-                cartInstruction.textContent = catalog.order_message || "Confirme os detalhes pelo WhatsApp.";
-                whatsappButton.target = "_blank";
-                whatsappButton.href = "https://wa.me/" + catalog.whatsapp_number
-                    + "?text=" + encodeURIComponent(orderMessage);
+                whatsappButton.classList.remove("whatsapp-button--disabled");
+                whatsappButton.removeAttribute("aria-disabled");
+
+                if (isSimulationMode()) {
+                    cartInstruction.textContent = "Ambiente de demonstração: este pedido fictício não será enviado a um comércio real.";
+                    whatsappButton.removeAttribute("target");
+                    whatsappButton.href = "#simulacao";
+                    whatsappButton.dataset.simulation = "true";
+                } else {
+                    delete whatsappButton.dataset.simulation;
+                    cartInstruction.textContent = catalog.order_message || "Confirme os detalhes pelo WhatsApp.";
+                    whatsappButton.target = "_blank";
+                    whatsappButton.href = "https://wa.me/" + catalog.whatsapp_number
+                        + "?text=" + encodeURIComponent(orderMessage);
+                }
             }
         } else {
             whatsappButton.removeAttribute("href");
+            whatsappButton.classList.remove("whatsapp-button--disabled");
         }
     }
 
@@ -467,6 +873,7 @@
     async function loadCatalog() {
         const slug = getCatalogSlug();
         closeCart();
+        closeFlavorModalWindow();
         loadingState.hidden = false;
         loadingState.setAttribute("aria-busy", "true");
         errorState.hidden = true;
@@ -476,9 +883,17 @@
             showError("Endereço incompleto", "Use o link completo fornecido pelo responsável pelo catálogo.", false);
             return;
         }
-        const catalogResult = await client.from("catalogs")
-            .select("id, name, slug, whatsapp_number, orders_enabled, order_message, logo_path, short_description, service_area, business_hours, fulfillment_mode")
+
+        let catalogResult = await client.from("catalogs")
+            .select("id, name, slug, whatsapp_number, orders_enabled, order_message, logo_path, short_description, service_area, business_hours, fulfillment_mode, catalog_profile, minimum_order_quantity")
             .eq("slug", slug).eq("is_active", true).maybeSingle();
+
+        if (catalogResult.error && (catalogResult.error.code === "42703" || catalogResult.error.code === "PGRST204")) {
+            catalogResult = await client.from("catalogs")
+                .select("id, name, slug, whatsapp_number, orders_enabled, order_message, logo_path, short_description, service_area, business_hours, fulfillment_mode")
+                .eq("slug", slug).eq("is_active", true).maybeSingle();
+        }
+
         if (catalogResult.error) {
             console.error("Erro ao carregar catálogo", catalogResult.error);
             showError("Catálogo indisponível", "Não foi possível abrir este catálogo agora.", true);
@@ -489,10 +904,15 @@
             return;
         }
         catalog = catalogResult.data;
+        catalog.catalog_profile = catalog.catalog_profile || "standard";
+        catalog.minimum_order_quantity = Number(catalog.minimum_order_quantity) || 0;
+
         window.NEOEFFEX_ACTIVE_CATALOG = catalog;
         window.dispatchEvent(new CustomEvent("neoeffex:catalog-loaded", {
             detail: { client: client, catalog: catalog }
         }));
+
+        // Carrega categorias e produtos
         const rows = await organization.loadRows(client, catalog.id, true);
         const categoriesResult = rows.categories;
         const productsResult = rows.products;
@@ -505,6 +925,25 @@
         products = (productsResult.data || []).filter(function (product) {
             return categories.some(function (category) { return category.id === product.category_id; });
         });
+
+        // Carrega sabores e relações de produto x sabor
+        let flavorsRes = { data: [] };
+        let pfRes = { data: [] };
+        try {
+            [flavorsRes, pfRes] = await Promise.all([
+                client.from("flavors").select("id, catalog_id, name, description, image_path, sort_order, status")
+                    .eq("catalog_id", catalog.id).eq("status", "active")
+                    .order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
+                client.from("product_flavors").select("id, catalog_id, product_id, flavor_id, additional_price, is_available, sort_order")
+                    .eq("catalog_id", catalog.id).eq("is_available", true)
+                    .order("sort_order", { ascending: true })
+            ]);
+        } catch (err) {
+            console.warn("Sabores não puderam ser carregados ou tabela ausente", err);
+        }
+        flavors = (flavorsRes && flavorsRes.data) || [];
+        productFlavors = (pfRes && pfRes.data) || [];
+
         selectedCategory = "all";
         typeFilter.value = "";
         groupFilter.value = "";
@@ -592,10 +1031,18 @@
             return;
         }
 
+        const minOrder = Number(catalog && catalog.minimum_order_quantity) || 0;
+        const totalUnits = getCartEntries().reduce(function (sum, entry) { return sum + entry.quantity; }, 0);
+        if (minOrder > 0 && totalUnits < minOrder) {
+            event.preventDefault();
+            showToast("Pedido mínimo de " + minOrder + " itens não atingido.");
+            return;
+        }
+
         if (whatsappButton.dataset.simulation === "true") {
             event.preventDefault();
             const entries = getCartEntries();
-            const total = entries.reduce(function (sum, entry) { return sum + Number(entry.product.price) * entry.quantity; }, 0);
+            const total = entries.reduce(function (sum, entry) { return sum + entry.totalPrice; }, 0);
             const message = buildOrderMessage(entries, total);
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(message).catch(function () {});
@@ -613,8 +1060,69 @@
             showToast("Carrinho limpo. Você pode restaurar o último carrinho.");
         }, 0);
     });
+
+    // Listeners do Modal de Sabores
+    if (closeFlavorModal) closeFlavorModal.addEventListener("click", closeFlavorModalWindow);
+    if (cancelFlavorModalButton) cancelFlavorModalButton.addEventListener("click", closeFlavorModalWindow);
+    if (flavorModalOverlay) flavorModalOverlay.addEventListener("click", closeFlavorModalWindow);
+
+    if (bundleQtyDecrease) {
+        bundleQtyDecrease.addEventListener("click", function () {
+            if (currentBundleTargetQty > 1) {
+                currentBundleTargetQty--;
+                updateFlavorModalState();
+            }
+        });
+    }
+
+    if (bundleQtyIncrease) {
+        bundleQtyIncrease.addEventListener("click", function () {
+            if (currentBundleTargetQty < 99) {
+                currentBundleTargetQty++;
+                updateFlavorModalState();
+            }
+        });
+    }
+
+    if (confirmFlavorModalButton) {
+        confirmFlavorModalButton.addEventListener("click", function () {
+            if (!currentModalProduct) return;
+            const totalDistributed = modalAvailableFlavors.reduce(function (sum, f) { return sum + f.quantity; }, 0);
+            if (totalDistributed !== currentBundleTargetQty) return;
+
+            const selectedFlavors = modalAvailableFlavors.filter(function (f) { return f.quantity > 0; }).map(function (f) {
+                return {
+                    flavor_id: f.flavor_id,
+                    name: f.name,
+                    quantity: f.quantity,
+                    additional_price: Number(f.additional_price) || 0
+                };
+            });
+
+            const bundleKey = "bundle_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+            cart[bundleKey] = {
+                id: bundleKey,
+                product_id: currentModalProduct.id,
+                quantity: currentBundleTargetQty,
+                flavors: selectedFlavors
+            };
+
+            const addedProductName = currentModalProduct.name;
+            saveCart();
+            renderCart();
+            closeFlavorModalWindow();
+            showToast(addedProductName + " (" + currentBundleTargetQty + " un.) adicionado ao pedido.");
+        });
+    }
+
     window.addEventListener("keydown", function (event) {
-        if (event.key === "Escape" && cartDrawer.classList.contains("cart-drawer--open")) closeCart();
+        if (event.key === "Escape") {
+            if (flavorModal && !flavorModal.hidden) {
+                closeFlavorModalWindow();
+            } else if (cartDrawer && cartDrawer.classList.contains("cart-drawer--open")) {
+                closeCart();
+            }
+        }
     });
 
     if (!window.supabase || !hasValidConfig()) {
@@ -633,4 +1141,3 @@
     window.dispatchEvent(new CustomEvent("neoeffex:client-ready", { detail: client }));
     loadCatalog();
 }());
-

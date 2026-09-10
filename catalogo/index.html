@@ -123,6 +123,7 @@
         <div class="cart-drawer__footer" id="cartFooter" hidden>
             <div class="cart-total"><span>Total estimado</span><strong id="cartTotal">R$ 0,00</strong></div>
             <p class="cart-instruction" id="cartInstruction"></p>
+            <p class="cart-minimum-notice" id="cartMinimumNotice" role="status" hidden></p>
             <a class="whatsapp-button" id="whatsappButton" href="#" target="_blank" rel="noopener noreferrer">
                 Enviar pedido pelo WhatsApp
                 <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.4 2.7 1.8 4.1 4.5 5"></path></svg>
@@ -131,12 +132,63 @@
         </div>
     </aside>
 
+    <div class="flavor-modal-overlay" id="flavorModalOverlay" hidden></div>
+    <div class="flavor-modal" id="flavorModal" role="dialog" aria-modal="true" aria-labelledby="flavorModalTitle" aria-hidden="true" hidden>
+        <div class="flavor-modal__card">
+            <div class="flavor-modal__head">
+                <div>
+                    <span class="eyebrow" id="flavorModalEyebrow">SELEÇÃO DE SABORES</span>
+                    <h2 id="flavorModalTitle">Monte seu pedido</h2>
+                    <p id="flavorModalDescription">Distribua as unidades entre os sabores disponíveis.</p>
+                </div>
+                <button class="flavor-modal__close" id="closeFlavorModal" type="button" aria-label="Fechar seleção de sabores">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+                </button>
+            </div>
+            <div class="flavor-modal__body">
+                <div class="bundle-quantity-section">
+                    <span class="bundle-quantity-label">Quantidade total:</span>
+                    <div class="quantity-control quantity-control--bundle">
+                        <button type="button" id="bundleQtyDecrease" aria-label="Diminuir quantidade total">−</button>
+                        <strong id="bundleTotalQuantityDisplay" aria-live="polite">1</strong>
+                        <button type="button" id="bundleQtyIncrease" aria-label="Aumentar quantidade total">+</button>
+                    </div>
+                </div>
+
+                <div class="flavor-distribution-status" id="flavorDistributionStatus" aria-live="polite">
+                    <span id="flavorDistributionCount">0 de 1 selecionados</span>
+                    <span class="flavor-distribution-badge flavor-distribution-badge--pending" id="flavorDistributionBadge">Falta selecionar</span>
+                </div>
+
+                <div class="flavor-selection-list" id="flavorSelectionList" role="list"></div>
+            </div>
+            <div class="flavor-modal__footer">
+                <div class="flavor-modal__summary">
+                    <div class="flavor-modal__prices">
+                        <span class="flavor-modal__base-price" id="flavorModalBasePrice">Base: R$ 0,00</span>
+                        <span class="flavor-modal__addons-price" id="flavorModalAddonsPrice" hidden>Acréscimos: + R$ 0,00</span>
+                    </div>
+                    <div class="flavor-modal__total-wrapper">
+                        <span>Subtotal:</span>
+                        <strong class="flavor-modal__total-price" id="flavorModalTotalPrice">R$ 0,00</strong>
+                    </div>
+                </div>
+                <p class="flavor-modal__feedback" id="flavorModalFeedback" role="status" aria-live="polite" hidden></p>
+                <div class="flavor-modal__actions">
+                    <button class="outline-button" id="cancelFlavorModalButton" type="button">Cancelar</button>
+                    <button class="add-product-button add-product-button--confirm" id="confirmFlavorModalButton" type="button" disabled>Confirmar e adicionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
-    <script src="config.js?v=0.2.0" defer></script>
-    <script src="../assets/catalog/organization.js?v=0.2.0" defer></script>
-    <script src="assets/js/catalogo.js?v=0.2.0" defer></script>
+    <script src="config.js?v=0.3.7" defer></script>
+    <script src="../assets/catalog/organization.js?v=0.3.7" defer></script>
+    <script src="../assets/catalog/profiles.js?v=0.3.7" defer></script>
+    <script src="assets/js/catalogo.js?v=0.3.7" defer></script>
 </body>
 </html>
 

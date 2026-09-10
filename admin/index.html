@@ -607,6 +607,37 @@
                     </fieldset>
                 </div>
                 <div class="form-field form-field--full">
+                    <label for="productPurchaseMode">Comportamento de compra</label>
+                    <select id="productPurchaseMode" name="productPurchaseMode" data-organization-field disabled>
+                        <option value="simple">Produto simples (preço fixo por unidade)</option>
+                        <option value="flavor_bundle">Escolha de sabores (combos, marmitas ou porções)</option>
+                    </select>
+                    <span class="field-hint" id="productPurchaseModeHint">Defina se o cliente adiciona diretamente a unidade ou distribui quantidades entre os sabores.</span>
+                </div>
+                <div class="form-field form-field--full" id="productFlavorsFieldWrapper" hidden>
+                    <fieldset class="product-flavors-fieldset" id="productFlavorsFieldset">
+                        <legend class="product-flavors-legend">Sabores disponíveis para este produto</legend>
+                        <p class="field-hint" style="margin-top:2px; margin-bottom: 10px;">Marque os sabores que o cliente poderá escolher, definindo ordem, acréscimo de preço por unidade (se houver) e disponibilidade.</p>
+                        <div id="productFlavorsEmptyMessage" class="empty-state" hidden>
+                            Nenhum sabor cadastrado neste catálogo. Acesse Configurações &gt; Sabores para cadastrar os sabores da loja.
+                        </div>
+                        <div class="product-flavors-table-wrapper" id="productFlavorsTableWrapper">
+                            <table class="product-flavors-table" id="productFlavorsTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px; text-align: center;">Ativo</th>
+                                        <th>Sabor</th>
+                                        <th style="width: 80px;">Ordem</th>
+                                        <th style="width: 140px;">Acréscimo (R$)</th>
+                                        <th style="width: 100px;">Disponível</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productFlavorsList"></tbody>
+                            </table>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-field form-field--full">
                     <label for="productDescription">Descrição</label>
                     <textarea id="productDescription" name="productDescription" maxlength="500" rows="4"></textarea>
                     <span class="field-counter" id="descriptionCounter">0 / 500</span>

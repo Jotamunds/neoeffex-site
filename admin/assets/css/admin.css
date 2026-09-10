@@ -1323,6 +1323,68 @@ body.has-modal {
     background: rgba(86, 168, 255, 0.14);
 }
 
+.product-flavors-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-flavors-legend {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0;
+    margin-bottom: 2px;
+}
+
+.product-flavors-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+.product-flavors-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.product-flavors-table th,
+.product-flavors-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.product-flavors-table tr:last-child td {
+    border-bottom: none;
+}
+
+.product-flavors-table input[type="number"] {
+    width: 80px;
+    padding: 4px 6px;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text);
+}
+
+.product-flavors-table input[type="number"]:disabled {
+    opacity: 0.45;
+    background: var(--surface-hover);
+}
+
+.product-flavors-table input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: var(--blue-600);
+}
+
 .form-feedback {
     grid-column: 1 / -1;
     min-height: 16px;

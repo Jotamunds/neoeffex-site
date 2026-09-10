@@ -23,10 +23,18 @@ function client(db,legacy,requests){return {
     if(!db[table]) db[table] = [];
     let rows=db[table].filter(row=>filters.every(([k,v])=>row[k]===v));
     if(op==='insert'){
-     if((table==='product_types'||table==='product_groups'||table==='categories'||table==='flavors') && payload.name && db[table].some(r=>r.catalog_id===payload.catalog_id && String(r.name).trim().toLowerCase()===String(payload.name).trim().toLowerCase())) {
-      return {data:null,error:{code:'23505',message:'duplicate key value violates unique constraint'}};
+     const items = Array.isArray(payload) ? payload : [payload];
+     for (const item of items) {
+      if((table==='product_types'||table==='product_groups'||table==='categories'||table==='flavors') && item.name && db[table].some(r=>r.catalog_id===item.catalog_id && String(r.name).trim().toLowerCase()===String(item.name).trim().toLowerCase())) {
+       return {data:null,error:{code:'23505',message:'duplicate key value violates unique constraint'}};
+      }
      }
-     const row={id:'new-'+db[table].length,...payload};db[table].push(row);rows=[row];
+     const insertedRows = items.map(item => {
+      const row = { id: item.id || ('new-' + db[table].length), ...item };
+      db[table].push(row);
+      return row;
+     });
+     rows = insertedRows;
     }
     if(op==='update'){
      if((table==='product_types'||table==='product_groups'||table==='categories'||table==='flavors') && payload.name) {
@@ -583,6 +591,78 @@ async function setup(area,legacy=false,customDb=null){
   assert(x.d.querySelector('#productFeedback').textContent.includes('não pertence a este catálogo'));
   x.d.querySelector('#closeProductModal').click(); checks++;
 
+  // 5. Produto com Escolha de Sabores (flavor_bundle)
+  x.d.querySelector('#newProductButton').click();
+  assert(!x.d.querySelector('#productModal').hidden);
+  assert.equal(x.d.querySelector('#productPurchaseMode').value, 'simple');
+  assert(x.d.querySelector('#productFlavorsFieldWrapper').hidden);
+
+  // Mudar para flavor_bundle revela container e lista de sabores
+  x.d.querySelector('#productPurchaseMode').value = 'flavor_bundle';
+  x.d.querySelector('#productPurchaseMode').dispatchEvent(new x.w.Event('change'));
+  assert(!x.d.querySelector('#productFlavorsFieldWrapper').hidden);
+  assert(!x.d.querySelector('#productFlavorsTableWrapper').hidden);
+  assert(x.d.querySelector('#productFlavorsList').textContent.includes('Carne de Panela'));
+
+  // Tentativa de salvar flavor_bundle sem selecionar sabor é bloqueada
+  x.d.getElementById('productName').value = 'Kit Marmitas 10';
+  x.d.getElementById('productPrice').value = '180.00';
+  x.d.getElementById('productCategory').value = 'main';
+  x.d.getElementById('productCategory').dispatchEvent(new x.w.Event('change'));
+  x.d.getElementById('productSubcategory').value = 'child';
+  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit', { cancelable: true })); await wait();
+  assert(x.d.querySelector('#productFeedback').textContent.includes('ao menos um sabor'));
+
+  // Selecionar sabor Carne de Panela com acréscimo de R$ 3,50
+  const flavorCheck = x.d.querySelector("input[name='productFlavorSelect']");
+  assert(flavorCheck);
+  flavorCheck.checked = true;
+  flavorCheck.dispatchEvent(new x.w.Event('change'));
+  const priceAddInput = x.d.querySelector("input[name='productFlavorAdditionalPrice']");
+  assert(!priceAddInput.disabled);
+  priceAddInput.value = '3.50';
+
+  // Salvar produto flavor_bundle com sucesso
+  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit', { cancelable: true })); await wait();
+  const kit10 = x.db.products.find(p => p.name === 'Kit Marmitas 10');
+  assert(kit10);
+  assert.equal(kit10.purchase_mode, 'flavor_bundle');
+  assert.equal(kit10.price, '180.00');
+  const relCarne = x.db.product_flavors.find(pf => pf.product_id === kit10.id);
+  assert(relCarne);
+  assert.equal(relCarne.flavor_id, x.db.flavors[0].id);
+  assert.equal(Number(relCarne.additional_price), 3.5);
+  assert.equal(relCarne.is_available, true); checks++;
+
+  // 6. Edição de produto flavor_bundle carrega sabores e acréscimos configurados
+  const marmitaBundleRow = Array.from(x.d.querySelectorAll('.product-row')).find(r => r.textContent.includes('Kit Marmitas 10'));
+  assert(marmitaBundleRow);
+  assert(marmitaBundleRow.textContent.includes('Com sabores'));
+  marmitaBundleRow.querySelector('.row-action').click();
+  assert(!x.d.querySelector('#productModal').hidden);
+  assert.equal(x.d.querySelector('#productPurchaseMode').value, 'flavor_bundle');
+  assert(!x.d.querySelector('#productFlavorsFieldWrapper').hidden);
+  const editFlavorCheck = x.d.querySelector("input[name='productFlavorSelect']");
+  assert(editFlavorCheck && editFlavorCheck.checked);
+  const editPriceAdd = x.d.querySelector("input[name='productFlavorAdditionalPrice']");
+  assert.equal(editPriceAdd.value, '3.50');
+
+  // Atualizar acréscimo para 4.00 e salvar
+  editPriceAdd.value = '4.00';
+  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit', { cancelable: true })); await wait();
+  const relUpdated = x.db.product_flavors.find(pf => pf.product_id === kit10.id);
+  assert.equal(Number(relUpdated.additional_price), 4.0); checks++;
+
+  // 7. Converter produto de flavor_bundle para simple remove associações de sabores
+  marmitaBundleRow.querySelector('.row-action').click();
+  x.d.querySelector('#productPurchaseMode').value = 'simple';
+  x.d.querySelector('#productPurchaseMode').dispatchEvent(new x.w.Event('change'));
+  assert(x.d.querySelector('#productFlavorsFieldWrapper').hidden);
+  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit', { cancelable: true })); await wait();
+  const kitSimple = x.db.products.find(p => p.name === 'Kit Marmitas 10');
+  assert.equal(kitSimple.purchase_mode, 'simple');
+  assert(!x.db.product_flavors.some(pf => pf.product_id === kit10.id)); checks++;
+
   assert.deepEqual(x.errors,[]);x.dom.window.close();
 
   // 5. Compatibilidade com valores legados não existentes em Configurações
@@ -694,10 +774,17 @@ async function setup(area,legacy=false,customDb=null){
  assert(x.d.querySelector('#catalogModal').hidden);checks++;
  assert.deepEqual(x.errors,[]);x.dom.window.close();
 
- // Modo legado
- x=await setup('admin',true);x.d.querySelector('#newProductButton').click();assert(x.d.querySelector('#productType').disabled);assert(!x.d.querySelector('#organizationNotice').hidden);checks++;
- for(const [id,value] of Object.entries({productName:'Legado',productPrice:'5',productCategory:'other'}))x.d.getElementById(id).value=value;
- x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
- const request=x.requests.find(r=>r.op==='insert' && r.table==='products');assert(request);assert(!('product_groups' in request.payload));assert(!('product_type' in request.payload));assert.deepEqual(x.errors,[]);checks++;x.dom.window.close();
+  // Modo legado
+  x=await setup('admin',true);x.d.querySelector('#newProductButton').click();
+  assert(x.d.querySelector('#productType').disabled);
+  assert(x.d.querySelector('#productPurchaseMode').disabled);
+  assert(!x.d.querySelector('#organizationNotice').hidden);checks++;
+  for(const [id,value] of Object.entries({productName:'Legado',productPrice:'5',productCategory:'other'}))x.d.getElementById(id).value=value;
+  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  const request=x.requests.find(r=>r.op==='insert' && r.table==='products');assert(request);
+  assert(!('product_groups' in request.payload));
+  assert(!('product_type' in request.payload));
+  assert(!('purchase_mode' in request.payload));
+  assert.deepEqual(x.errors,[]);checks++;x.dom.window.close();
  console.log(`UI DOM: ${checks} checks passed. Mock Supabase, no layout engine or live backend.`);
 })().catch(e=>{console.error(e);process.exit(1);});

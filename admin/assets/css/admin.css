@@ -1220,6 +1220,14 @@ body.has-modal {
 }
 
 .field-hint {
+    display: block;
+    margin-top: 4px;
+    color: var(--text-subtle);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.field-counter {
     position: absolute;
     right: 8px;
     bottom: 6px;
@@ -1228,6 +1236,83 @@ body.has-modal {
     background: var(--surface);
     color: var(--text-subtle);
     font-size: 9px;
+}
+
+.product-groups-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-groups-legend {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0;
+    margin-bottom: 2px;
+}
+
+.product-groups-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.product-group-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.product-group-chip:hover {
+    border-color: var(--blue-600);
+}
+
+.product-group-chip input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--blue-600);
+}
+
+.product-group-chip:has(input:checked) {
+    border-color: var(--blue-600);
+    background: rgba(21, 117, 210, 0.08);
+}
+
+.product-group-chip--legacy {
+    border-style: dashed;
+    border-color: #d97706;
+}
+
+.product-legacy-warning {
+    margin-top: 6px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #fffbeb;
+    color: #92400e;
+    font-size: 11px;
+    line-height: 1.4;
+    border: 1px solid #fde68a;
+}
+
+body.theme-dark .product-legacy-warning {
+    background: rgba(245, 158, 11, 0.12);
+    color: #fbbf24;
+    border-color: rgba(245, 158, 11, 0.3);
 }
 
 .form-feedback {

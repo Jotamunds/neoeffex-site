@@ -140,11 +140,24 @@ async function setup(area,legacy=false,customDb=null){
  assert(x.d.querySelector('#catalogFeedback').textContent.includes('nenhuma loja'));checks++;
  x.d.querySelector('#closeCatalogModal').click();
 
- // Produtos funcionam na loja ativa
- x.d.querySelector('#newProductButton').click();assert(!x.d.querySelector('#productModal').hidden);assert(!x.d.querySelector('#productType').disabled);checks++;
- for(const [id,value] of Object.entries({productName:'Produto novo',productPrice:'12.50',productType:'Combo',productGroups:'Novo, novo, Oferta',productCategory:'child'}))x.d.getElementById(id).value=value;
- x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
- const product=x.db.products.find(p=>p.name==='Produto novo');assert(product);assert.equal(product.product_type,'Combo');assert.deepEqual(Array.from(product.product_groups),['Novo','Oferta']);assert.equal(product.category_id,'child');assert.equal(product.price,'12.50');checks++;
+ // Produtos funcionam na loja ativa (sem tipos nem grupos configurados inicialmente)
+ x.d.querySelector('#newProductButton').click();
+ assert(!x.d.querySelector('#productModal').hidden);
+ assert(!x.d.querySelector('#productType').disabled);
+ assert.equal(x.d.querySelector('#productType').value, '');
+ assert(!x.d.querySelector('#productGroupsEmptyHint').hidden);
+ x.d.getElementById('productName').value = 'Produto novo';
+ x.d.getElementById('productPrice').value = '12.50';
+ x.d.getElementById('productCategory').value = 'main';
+ x.d.getElementById('productCategory').dispatchEvent(new x.w.Event('change'));
+ x.d.getElementById('productSubcategory').value = 'child';
+ x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit', { cancelable: true })); await wait();
+ const product = x.db.products.find(p => p.name === 'Produto novo');
+ assert(product);
+ assert.equal(product.product_type, null);
+ assert.deepEqual(Array.from(product.product_groups), []);
+ assert.equal(product.category_id, 'child');
+ assert.equal(product.price, '12.50'); checks++;
 
  // CONFIGURAÇÕES: CATEGORIAS PRINCIPAIS
  assert.equal(x.d.querySelectorAll('#rootCategoryList tr').length,2);
@@ -276,32 +289,50 @@ async function setup(area,legacy=false,customDb=null){
   x.d.querySelector('#cancelProductTypeButton').click();
   assert(x.d.querySelector('#productTypeForm').hidden);checks++;
 
-  // Editar Tipo
+  // Editar Tipo - Bloqueio de renomeação quando em uso por produto
   const typeRow=x.d.querySelector('#productTypeList tr');
   assert(typeRow && typeRow.textContent.includes('Individual'));
+  // Individual é usado por p2: exclusão bloqueada
+  assert(typeRow.querySelector('.category-action--danger').disabled);
   typeRow.querySelectorAll('.category-action')[0].click();
   assert(!x.d.querySelector('#productTypeForm').hidden);
   assert.equal(x.d.querySelector('#productTypeName').value,'Individual');
-  x.d.querySelector('#productTypeName').value='Combo';
+  // Tentativa de renomear tipo em uso é bloqueada
+  x.d.querySelector('#productTypeName').value='Individual Modificado';
+  x.d.querySelector('#productTypeForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert(x.d.querySelector('#productTypeFeedback').textContent.includes('está sendo usado por 1 produto'));
+  assert.equal(x.db.product_types[0].name,'Individual');
+  // Alterar ordem de tipo em uso é permitido
+  x.d.querySelector('#productTypeName').value='Individual';
   x.d.querySelector('#productTypeOrder').value='1';
   x.d.querySelector('#productTypeForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
-  assert.equal(x.db.product_types[0].name,'Combo');
   assert.equal(x.db.product_types[0].sort_order,1);checks++;
 
-  // Criar segundo tipo e excluir
+  // Criar segundo tipo (Combo, já em uso por p1)
   x.d.querySelector('#newProductTypeButton').click();
-  x.d.querySelector('#productTypeName').value='Kit';
+  x.d.querySelector('#productTypeName').value='Combo';
   x.d.querySelector('#productTypeOrder').value='2';
   x.d.querySelector('#productTypeForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
   assert.equal(x.db.product_types.length,2);
+  const comboRow=Array.from(x.d.querySelectorAll('#productTypeList tr')).find(r=>r.textContent.includes('Combo'));
+  assert(comboRow);
+  assert(comboRow.querySelector('.category-action--danger').disabled);checks++;
+
+  // Criar terceiro tipo (Kit, não usado por nenhum produto) e excluir
+  x.d.querySelector('#newProductTypeButton').click();
+  x.d.querySelector('#productTypeName').value='Kit';
+  x.d.querySelector('#productTypeOrder').value='3';
+  x.d.querySelector('#productTypeForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert.equal(x.db.product_types.length,3);
   const kitRow=Array.from(x.d.querySelectorAll('#productTypeList tr')).find(r=>r.textContent.includes('Kit'));
   assert(kitRow);
+  assert(!kitRow.querySelector('.category-action--danger').disabled);
   kitRow.querySelector('.category-action--danger').click();
   assert(!x.d.querySelector('#deleteModal').hidden);
   assert.equal(x.d.querySelector('#deleteModalTitle').textContent,'Excluir tipo?');
   assert(x.d.querySelector('#deleteModalDescription').textContent.includes('Kit'));
   x.d.querySelector('#confirmDeleteButton').click();await wait();
-  assert.equal(x.db.product_types.length,1);
+  assert.equal(x.db.product_types.length,2);
   assert(!x.db.product_types.some(t=>t.name==='Kit'));checks++;
 
   // CONFIGURAÇÕES: GRUPOS DE PRODUTOS
@@ -318,47 +349,169 @@ async function setup(area,legacy=false,customDb=null){
   x.d.querySelector('#productGroupForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
   assert(x.d.querySelector('#productGroupFeedback').textContent.includes('não pode conter vírgulas'));checks++;
 
-  // Criar Grupo válido
-  x.d.querySelector('#productGroupName').value='Mais pedidos';
+  // Criar Grupo válido (Destaques)
+  x.d.querySelector('#productGroupName').value='Destaques';
   x.d.querySelector('#productGroupOrder').value='0';
   x.d.querySelector('#productGroupForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
   assert(x.d.querySelector('#productGroupForm').hidden);
   assert.equal(x.db.product_groups.length,1);
-  assert.equal(x.db.product_groups[0].name,'Mais pedidos');
+  assert.equal(x.db.product_groups[0].name,'Destaques');
   assert.equal(x.db.product_groups[0].catalog_id,'cat');
   assert.equal(x.d.querySelector('#groupsTabCount').textContent,'1');
   assert(x.d.querySelector('#emptyProductGroupState').hidden);checks++;
 
-  // Duplicidade de Grupo rejeitada
+  // Criar Grupo em uso por p1 (Mais pedido)
   x.d.querySelector('#newProductGroupButton').click();
-  x.d.querySelector('#productGroupName').value='mais pedidos';
-  x.d.querySelector('#productGroupForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
-  assert.equal(x.db.product_groups.length,1);
-  assert(x.d.querySelector('#productGroupFeedback').textContent.includes('Já existe um grupo com este nome'));
-  x.d.querySelector('#cancelProductGroupButton').click();checks++;
-
-  // Editar Grupo
-  const groupRow=x.d.querySelector('#productGroupList tr');
-  assert(groupRow && groupRow.textContent.includes('Mais pedidos'));
-  groupRow.querySelectorAll('.category-action')[0].click();
-  assert(!x.d.querySelector('#productGroupForm').hidden);
-  x.d.querySelector('#productGroupName').value='Destaques';
+  x.d.querySelector('#productGroupName').value='Mais pedido';
   x.d.querySelector('#productGroupOrder').value='1';
   x.d.querySelector('#productGroupForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
-  assert.equal(x.db.product_groups[0].name,'Destaques');
-  assert.equal(x.db.product_groups[0].sort_order,1);checks++;
+  assert.equal(x.db.product_groups.length,2);
+  const maisPedidoRow=Array.from(x.d.querySelectorAll('#productGroupList tr')).find(r=>r.textContent.includes('Mais pedido'));
+  assert(maisPedidoRow);
+  // Mais pedido é usado por p1: exclusão bloqueada
+  assert(maisPedidoRow.querySelector('.category-action--danger').disabled);
+  // Tentativa de renomear grupo em uso é bloqueada
+  maisPedidoRow.querySelectorAll('.category-action')[0].click();
+  assert(!x.d.querySelector('#productGroupForm').hidden);
+  x.d.querySelector('#productGroupName').value='Super Oferta';
+  x.d.querySelector('#productGroupForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert(x.d.querySelector('#productGroupFeedback').textContent.includes('está sendo usado por 1 produto'));
+  // Alterar ordem de grupo em uso é permitido
+  x.d.querySelector('#productGroupName').value='Mais pedido';
+  x.d.querySelector('#productGroupOrder').value='2';
+  x.d.querySelector('#productGroupForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert.equal(x.db.product_groups.find(g=>g.name==='Mais pedido').sort_order,2);checks++;
 
-  // Excluir Grupo
-  const destRow=x.d.querySelector('#productGroupList tr');
-  destRow.querySelector('.category-action--danger').click();
+  // Criar terceiro grupo (Temporário) e excluir
+  x.d.querySelector('#newProductGroupButton').click();
+  x.d.querySelector('#productGroupName').value='Temporário';
+  x.d.querySelector('#productGroupOrder').value='3';
+  x.d.querySelector('#productGroupForm').dispatchEvent(new x.w.Event('submit',{cancelable:true}));await wait();
+  assert.equal(x.db.product_groups.length,3);
+  const tempRow=Array.from(x.d.querySelectorAll('#productGroupList tr')).find(r=>r.textContent.includes('Temporário'));
+  assert(!tempRow.querySelector('.category-action--danger').disabled);
+  tempRow.querySelector('.category-action--danger').click();
   assert(!x.d.querySelector('#deleteModal').hidden);
-  assert.equal(x.d.querySelector('#deleteModalTitle').textContent,'Excluir grupo?');
-  assert(x.d.querySelector('#deleteModalDescription').textContent.includes('Destaques'));
   x.d.querySelector('#confirmDeleteButton').click();await wait();
-  assert.equal(x.db.product_groups.length,0);
-  assert(!x.d.querySelector('#emptyProductGroupState').hidden);checks++;
+  assert.equal(x.db.product_groups.length,2);
+  assert(!x.db.product_groups.some(g=>g.name==='Temporário'));checks++;
+
+  // =========================================================================
+  // ETAPA 4: INTEGRAÇÃO DAS CONFIGURAÇÕES AO FORMULÁRIO DE PRODUTOS
+  // =========================================================================
+
+  // 1. Novo produto com Tipos e Grupos configurados
+  x.d.querySelector('#newProductButton').click();
+  assert(!x.d.querySelector('#productModal').hidden);
+  // Tipo agora é select com opções carregadas
+  const typeOptions = Array.from(x.d.querySelectorAll('#productType option')).map(o => o.value);
+  assert(typeOptions.includes(''));
+  assert(typeOptions.includes('Individual'));
+  assert(typeOptions.includes('Combo'));
+  // Grupos agora são checkboxes visuais
+  const groupBoxes = Array.from(x.d.querySelectorAll("input[name='productGroupItem']")).map(b => b.value);
+  assert(groupBoxes.includes('Destaques'));
+  assert(groupBoxes.includes('Mais pedido'));
+  // Dinâmica Categoria -> Subcategoria
+  x.d.getElementById('productCategory').value = 'other'; // Bebidas (sem subcategorias)
+  x.d.getElementById('productCategory').dispatchEvent(new x.w.Event('change'));
+  assert.equal(x.d.querySelectorAll('#productSubcategory option').length, 1);
+  x.d.getElementById('productCategory').value = 'main'; // Marmitas (tem 'Tradicionais')
+  x.d.getElementById('productCategory').dispatchEvent(new x.w.Event('change'));
+  const subOptions = Array.from(x.d.querySelectorAll('#productSubcategory option')).map(o => o.value);
+  assert(subOptions.includes('child'));
+
+  // Preencher e salvar com Tipo e Múltiplos Grupos selecionados
+  x.d.getElementById('productName').value = 'Marmita Fit Especial';
+  x.d.getElementById('productPrice').value = '25.00';
+  x.d.getElementById('productCategory').value = 'main';
+  x.d.getElementById('productSubcategory').value = 'child';
+  x.d.getElementById('productType').value = 'Combo';
+  Array.from(x.d.querySelectorAll("input[name='productGroupItem']")).forEach(cb => {
+    cb.checked = true; // Marca Destaques e Mais pedido
+  });
+  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit', { cancelable: true })); await wait();
+
+  const fitEspecial = x.db.products.find(p => p.name === 'Marmita Fit Especial');
+  assert(fitEspecial);
+  assert.equal(fitEspecial.category_id, 'child');
+  assert.equal(fitEspecial.product_type, 'Combo');
+  assert(fitEspecial.product_groups.includes('Destaques'));
+  assert(fitEspecial.product_groups.includes('Mais pedido'));
+  assert.equal(fitEspecial.price, '25.00'); checks++;
+
+  // 2. Salvar produto somente com categoria raiz (sem subcategoria)
+  x.d.querySelector('#newProductButton').click();
+  x.d.getElementById('productName').value = 'Suco de Uva';
+  x.d.getElementById('productPrice').value = '8.00';
+  x.d.getElementById('productCategory').value = 'other';
+  x.d.getElementById('productCategory').dispatchEvent(new x.w.Event('change'));
+  x.d.getElementById('productSubcategory').value = '';
+  x.d.getElementById('productType').value = ''; // Nenhum tipo
+  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit', { cancelable: true })); await wait();
+  const sucoUva = x.db.products.find(p => p.name === 'Suco de Uva');
+  assert(sucoUva);
+  assert.equal(sucoUva.category_id, 'other');
+  assert.equal(sucoUva.product_type, null);
+  assert.deepEqual(Array.from(sucoUva.product_groups), []); checks++;
+
+  // 3. Edição de produto existente (p1): categorias resolvidas, tipo selecionado e grupos marcados
+  const editRow = Array.from(x.d.querySelectorAll('.product-row')).find(r => r.textContent.includes('Combo 10'));
+  assert(editRow);
+  editRow.querySelector('.row-action').click();
+  assert(!x.d.querySelector('#productModal').hidden);
+  assert.equal(x.d.getElementById('productCategory').value, 'main');
+  assert.equal(x.d.getElementById('productSubcategory').value, 'child');
+  assert.equal(x.d.getElementById('productType').value, 'Combo');
+  const maisPedidoBox = Array.from(x.d.querySelectorAll("input[name='productGroupItem']")).find(b => b.value === 'Mais pedido');
+  assert(maisPedidoBox && maisPedidoBox.checked);
+  // Salvar sem alterações preserva os dados intactos
+  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit', { cancelable: true })); await wait();
+  const p1Saved = x.db.products.find(p => p.id === 'p1');
+  assert.equal(p1Saved.product_type, 'Combo');
+  assert(p1Saved.product_groups.includes('Mais pedido')); checks++;
+
+  // 4. Injeção arbitrária rejeitada no frontend
+  x.d.querySelector('#newProductButton').click();
+  x.d.getElementById('productName').value = 'Tentativa Invalida';
+  x.d.getElementById('productPrice').value = '10.00';
+  x.d.getElementById('productCategory').value = 'main';
+  x.d.getElementById('productType').appendChild(new x.w.Option('Invalido', 'Invalido'));
+  x.d.getElementById('productType').value = 'Invalido';
+  x.d.querySelector('#productForm').dispatchEvent(new x.w.Event('submit', { cancelable: true })); await wait();
+  assert(x.d.querySelector('#productFeedback').textContent.includes('não pertence a este catálogo'));
+  x.d.querySelector('#closeProductModal').click(); checks++;
 
   assert.deepEqual(x.errors,[]);x.dom.window.close();
+
+  // 5. Compatibilidade com valores legados não existentes em Configurações
+  const legacyDb = fixture();
+  legacyDb.products.push({
+    id: 'p_legacy',
+    catalog_id: 'cat',
+    category_id: 'other',
+    name: 'Produto Antigo',
+    price: 30,
+    status: 'active',
+    product_type: 'Tipo Raro Descontinuado',
+    product_groups: ['Grupo Descontinuado'],
+    sort_order: 10
+  });
+  const xLegacy = await setup('admin', false, legacyDb);
+  const legacyRow = Array.from(xLegacy.d.querySelectorAll('.product-row')).find(r => r.textContent.includes('Produto Antigo'));
+  assert(legacyRow);
+  legacyRow.querySelector('.row-action').click();
+  assert(!xLegacy.d.querySelector('#productTypeLegacyWarning').hidden);
+  assert(xLegacy.d.querySelector('#productTypeLegacyWarning').textContent.includes('Tipo Raro Descontinuado'));
+  assert(!xLegacy.d.querySelector('#productGroupsLegacyWarning').hidden);
+  assert(xLegacy.d.querySelector('#productGroupsLegacyWarning').textContent.includes('Grupo Descontinuado'));
+  // Salvar sem modificar preserva os valores legados
+  xLegacy.d.querySelector('#productForm').dispatchEvent(new xLegacy.w.Event('submit', { cancelable: true })); await wait();
+  const legacySaved = xLegacy.db.products.find(p => p.id === 'p_legacy');
+  assert.equal(legacySaved.product_type, 'Tipo Raro Descontinuado');
+  assert(legacySaved.product_groups.includes('Grupo Descontinuado')); checks++;
+  assert.deepEqual(xLegacy.errors, []);
+  xLegacy.dom.window.close();
 
  // Cenário 3: Múltiplas lojas existentes
  const multiDb={

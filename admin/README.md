@@ -1,4 +1,4 @@
-# Painel administrativo — v0.3.4
+# Painel administrativo — v0.3.5
 
 Painel em `neoeffex.com.br/admin` e catálogo público em `neoeffex.com.br/catalogo/?catalogo=identificador`, usando Supabase.
 
@@ -11,7 +11,13 @@ Painel em `neoeffex.com.br/admin` e catálogo público em `neoeffex.com.br/catal
   - **Subcategorias**: vinculadas a uma categoria raiz (`parent_id != null`) com limite de 2 níveis.
   - **Tipos**: CRUD persistente real em `product_types` isolado por catálogo com ordenação (`sort_order`).
   - **Grupos**: CRUD persistente real em `product_groups` isolado por catálogo com ordenação (`sort_order`), servindo para classificar produtos em coleções (ex.: Promoções, Novidades, Mais pedidos).
-- **Transição de Tipos e Grupos**: Tipos e Grupos já possuem tabelas próprias e gerenciamento visual completo em Configurações. **Contudo, o formulário de produto ainda utiliza temporariamente os campos legados `product_type` e `product_groups` (com texto livre/datalist) até a Etapa 4**. A migração dos formulários de produto será realizada na próxima etapa.
+- **Integração total ao formulário de produto (Etapa 4)**:
+  - Tipo e Grupos são selecionados a partir das opções configuradas na loja ativa (sem digitação livre nem criação no produto).
+  - Grupos selecionáveis via chips com checkboxes (até 10 grupos).
+  - Dropdowns separados e sincronizados para Categoria principal e Subcategoria.
+  - Bloqueio de exclusão e renomeação de Tipos e Grupos em uso por produtos (alteração de ordem continua permitida).
+  - Preservação transparente de classificações legadas com avisos visuais.
+  - `products.product_type` e `products.product_groups` mantidos no banco como camada de compatibilidade com o catálogo público.
 - Marca N original da Neoeffex em SVG no painel e no catálogo.
 - Criação e edição de catálogo, com identificador automático, edição manual sanitizada e status ativo/pausado.
 - Exclusão confirmada somente para catálogo pausado, protegida por função transacional e validação de proprietário.

@@ -47,6 +47,13 @@
     const productDescription = document.getElementById("productDescription");
     const descriptionCounter = document.getElementById("descriptionCounter");
     const productCategory = document.getElementById("productCategory");
+    const productSubcategory = document.getElementById("productSubcategory");
+    const productType = document.getElementById("productType");
+    const productTypeHint = document.getElementById("productTypeHint");
+    const productTypeLegacyWarning = document.getElementById("productTypeLegacyWarning");
+    const productGroupsContainer = document.getElementById("productGroupsContainer");
+    const productGroupsEmptyHint = document.getElementById("productGroupsEmptyHint");
+    const productGroupsLegacyWarning = document.getElementById("productGroupsLegacyWarning");
     const productImageInput = document.getElementById("productImage");
     const productImagePreviewImage = document.getElementById("productImagePreviewImage");
     const productImagePreviewFallback = document.getElementById("productImagePreviewFallback");
@@ -119,6 +126,8 @@
     let categories = [];
     let productTypes = [];
     let productGroups = [];
+    let productTypesLoadError = false;
+    let productGroupsLoadError = false;
     let products = [];
     let activeCatalog = null;
     let pendingDeletion = null;
@@ -500,6 +509,8 @@
         categories = [];
         productTypes = [];
         productGroups = [];
+        productTypesLoadError = false;
+        productGroupsLoadError = false;
         renderProducts();
         updateSummary();
 
@@ -536,6 +547,8 @@
         categories = [];
         productTypes = [];
         productGroups = [];
+        productTypesLoadError = false;
+        productGroupsLoadError = false;
 
         if (!activeCatalog) {
             renderProducts();
@@ -574,10 +587,13 @@
             return;
         }
 
-        if (typesResult.error) {
+        productTypesLoadError = Boolean(typesResult && typesResult.error);
+        productGroupsLoadError = Boolean(groupsResult && groupsResult.error);
+
+        if (productTypesLoadError) {
             console.error("Erro ao carregar tipos de produto", typesResult.error);
         }
-        if (groupsResult.error) {
+        if (productGroupsLoadError) {
             console.error("Erro ao carregar grupos de produtos", groupsResult.error);
         }
 
@@ -666,14 +682,172 @@
 
 
 
-    function populateProductCategories(selectedId) {
+    function populateProductCategories(selectedRootId, selectedSubId) {
         productCategory.replaceChildren();
         productCategory.appendChild(new Option("Selecione uma categoria", ""));
-        categories.forEach(function (category) {
-            const option = new Option(getCategoryName(category.id), category.id);
-            option.selected = category.id === selectedId;
+        const rootCategories = categories.filter(function (category) {
+            return !category.parent_id;
+        });
+        rootCategories.forEach(function (category) {
+            const option = new Option(category.name, category.id);
+            option.selected = category.id === selectedRootId;
             productCategory.appendChild(option);
         });
+        populateProductSubcategories(productCategory.value, selectedSubId);
+    }
+
+    function populateProductSubcategories(rootCategoryId, selectedSubId) {
+        productSubcategory.replaceChildren();
+        productSubcategory.appendChild(new Option("Nenhuma subcategoria", ""));
+        if (!rootCategoryId) {
+            productSubcategory.disabled = true;
+            return;
+        }
+        const subcategories = categories.filter(function (category) {
+            return category.parent_id === rootCategoryId;
+        });
+        subcategories.forEach(function (sub) {
+            const option = new Option(sub.name, sub.id);
+            option.selected = sub.id === selectedSubId;
+            productSubcategory.appendChild(option);
+        });
+        productSubcategory.disabled = false;
+    }
+
+    function populateProductTypes(selectedType) {
+        productType.replaceChildren();
+        productTypeLegacyWarning.hidden = true;
+        productTypeLegacyWarning.textContent = "";
+
+        if (productTypesLoadError) {
+            productType.appendChild(new Option("Erro ao carregar tipos", ""));
+            productType.disabled = true;
+            productTypeHint.textContent = "Não foi possível carregar os tipos deste catálogo.";
+            return;
+        }
+
+        if (!organizationEnabled) {
+            productType.appendChild(new Option("Recurso desativado", ""));
+            productType.disabled = true;
+            productTypeHint.textContent = "";
+            return;
+        }
+
+        productType.disabled = false;
+        if (productTypes.length === 0) {
+            productType.appendChild(new Option("Nenhum tipo configurado", ""));
+            productTypeHint.textContent = "Gerencie os tipos em Configurações.";
+        } else {
+            productType.appendChild(new Option("Nenhum tipo", ""));
+            productTypeHint.textContent = "Gerencie os tipos em Configurações.";
+        }
+
+        let foundSelected = false;
+        productTypes.forEach(function (t) {
+            const option = new Option(t.name, t.name);
+            if (selectedType && organization.key(t.name) === organization.key(selectedType)) {
+                option.selected = true;
+                foundSelected = true;
+            }
+            productType.appendChild(option);
+        });
+
+        if (selectedType && !foundSelected) {
+            const legacyOption = new Option(selectedType + " (não configurado)", selectedType);
+            legacyOption.selected = true;
+            legacyOption.dataset.legacy = "true";
+            productType.appendChild(legacyOption);
+            productTypeLegacyWarning.textContent = "Este produto utiliza o tipo '" + selectedType + "', que não existe mais em Configurações.";
+            productTypeLegacyWarning.hidden = false;
+        }
+    }
+
+    function populateProductGroups(selectedGroupNames) {
+        productGroupsContainer.replaceChildren();
+        productGroupsLegacyWarning.hidden = true;
+        productGroupsLegacyWarning.textContent = "";
+
+        if (productGroupsLoadError) {
+            productGroupsEmptyHint.textContent = "Não foi possível carregar os grupos deste catálogo.";
+            productGroupsEmptyHint.hidden = false;
+            return;
+        }
+
+        if (!organizationEnabled) {
+            productGroupsEmptyHint.textContent = "Recurso desativado.";
+            productGroupsEmptyHint.hidden = false;
+            return;
+        }
+
+        const selectedKeys = new Set((selectedGroupNames || []).map(function (g) { return organization.key(g); }));
+
+        if (productGroups.length === 0) {
+            productGroupsEmptyHint.textContent = "Nenhum grupo configurado. Configure os grupos em Configurações.";
+            productGroupsEmptyHint.hidden = false;
+        } else {
+            productGroupsEmptyHint.hidden = true;
+        }
+
+        const configuredKeys = new Set();
+        productGroups.forEach(function (g) {
+            const key = organization.key(g.name);
+            configuredKeys.add(key);
+            const label = document.createElement("label");
+            label.className = "product-group-chip";
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.name = "productGroupItem";
+            checkbox.value = g.name;
+            checkbox.checked = selectedKeys.has(key);
+            const span = document.createElement("span");
+            span.textContent = g.name;
+            label.appendChild(checkbox);
+            label.appendChild(span);
+            productGroupsContainer.appendChild(label);
+        });
+
+        const missingGroups = (selectedGroupNames || []).filter(function (g) {
+            return !configuredKeys.has(organization.key(g));
+        });
+
+        if (missingGroups.length > 0) {
+            productGroupsLegacyWarning.textContent = "Este produto utiliza grupos antigos que não existem mais em Configurações: " + missingGroups.join(", ") + ".";
+            productGroupsLegacyWarning.hidden = false;
+
+            missingGroups.forEach(function (missingGroup) {
+                const label = document.createElement("label");
+                label.className = "product-group-chip product-group-chip--legacy";
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.name = "productGroupItem";
+                checkbox.value = missingGroup;
+                checkbox.dataset.legacy = "true";
+                checkbox.checked = true;
+                const span = document.createElement("span");
+                span.textContent = missingGroup + " (não configurado)";
+                label.appendChild(checkbox);
+                label.appendChild(span);
+                productGroupsContainer.appendChild(label);
+            });
+        }
+    }
+
+    function countProductsUsingType(typeName) {
+        if (!activeCatalog || !typeName) return 0;
+        const targetKey = organization.key(typeName);
+        return products.filter(function (p) {
+            return p.catalog_id === activeCatalog.id && organization.key(p.product_type) === targetKey;
+        }).length;
+    }
+
+    function countProductsUsingGroup(groupName) {
+        if (!activeCatalog || !groupName) return 0;
+        const targetKey = organization.key(groupName);
+        return products.filter(function (p) {
+            return p.catalog_id === activeCatalog.id && (p.product_groups || []).some(function (g) {
+                return organization.key(g) === targetKey;
+            });
+        }).length;
     }
 
     function openProductModal(product) {
@@ -681,8 +855,9 @@
             showToast("Crie uma loja antes de cadastrar produtos.");
             return;
         }
-        if (!categories.length) {
-            showToast("Cadastre ao menos uma categoria antes de adicionar produtos.");
+        const rootCategories = categories.filter(function (c) { return !c.parent_id; });
+        if (!rootCategories.length) {
+            showToast("Cadastre ao menos uma categoria principal antes de adicionar produtos.");
             return;
         }
 
@@ -700,16 +875,29 @@
             : "Preencha os dados que serão exibidos no catálogo.";
         document.getElementById("productId").value = editing ? product.id : "";
         document.getElementById("productName").value = editing ? product.name : "";
-        populateProductCategories(editing ? product.category_id : "");
+
+        let selectedRootId = "";
+        let selectedSubId = "";
+        if (editing && product.category_id) {
+            const cat = categories.find(function (c) { return c.id === product.category_id; });
+            if (cat) {
+                if (cat.parent_id) {
+                    selectedRootId = cat.parent_id;
+                    selectedSubId = cat.id;
+                } else {
+                    selectedRootId = cat.id;
+                    selectedSubId = "";
+                }
+            }
+        }
+        populateProductCategories(selectedRootId, selectedSubId);
+
         document.getElementById("productPrice").value = editing ? Number(product.price).toFixed(2) : "";
         productDescription.value = editing ? product.description || "" : "";
-        document.getElementById("productType").value = editing ? product.product_type || "" : "";
-        document.getElementById("productGroups").value = editing ? (product.product_groups || []).join(", ") : "";
-        [["productTypeOptions", "product_type"], ["productGroupOptions", "product_groups"]].forEach(function (entry) {
-            const list = document.getElementById(entry[0]);
-            list.replaceChildren();
-            organization.facets(products, entry[1]).forEach(function (value) { list.appendChild(new Option(value, value)); });
-        });
+
+        populateProductTypes(editing ? product.product_type || "" : "");
+        populateProductGroups(editing ? product.product_groups || [] : []);
+
         document.getElementById("productStatus").value = editing ? product.status : "active";
         resetProductImageFields(editing ? product : null);
         productDangerActions.hidden = !editing;
@@ -730,6 +918,10 @@
         showProductImagePreview("", "N");
         setFeedback(productFeedback, "", "");
         updateDescriptionCounter();
+        productTypeLegacyWarning.hidden = true;
+        productTypeLegacyWarning.textContent = "";
+        productGroupsLegacyWarning.hidden = true;
+        productGroupsLegacyWarning.textContent = "";
         if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
     }
 
@@ -1186,6 +1378,11 @@
             deleteButton.type = "button";
             deleteButton.textContent = "Excluir";
             deleteButton.title = "Excluir tipo";
+            const usedCount = countProductsUsingType(type.name);
+            if (usedCount > 0) {
+                deleteButton.disabled = true;
+                deleteButton.title = "Este tipo está sendo usado por " + usedCount + " produto" + (usedCount === 1 ? "" : "s");
+            }
             deleteButton.addEventListener("click", function () {
                 openDeleteModal({ type: "product_type", id: type.id, name: type.name });
             });
@@ -1248,6 +1445,16 @@
         const payload = { name: name, sort_order: order };
         let result;
         if (typeId) {
+            const existingType = productTypes.find(function (t) { return t.id === typeId; });
+            if (existingType && organization.key(existingType.name) !== organization.key(name)) {
+                const count = countProductsUsingType(existingType.name);
+                if (count > 0) {
+                    saveProductTypeButton.disabled = false;
+                    saveProductTypeButton.textContent = "Salvar alterações";
+                    setFeedback(productTypeFeedback, "Este tipo está sendo usado por " + count + " produto" + (count === 1 ? "" : "s") + ". Altere os produtos antes de renomeá-lo.", "error");
+                    return;
+                }
+            }
             result = await client.from("product_types").update(payload).eq("id", typeId).select("id").single();
         } else {
             result = await client.from("product_types").insert(Object.assign({}, payload, { catalog_id: activeCatalog.id })).select("id").single();
@@ -1302,6 +1509,11 @@
             deleteButton.type = "button";
             deleteButton.textContent = "Excluir";
             deleteButton.title = "Excluir grupo";
+            const usedCount = countProductsUsingGroup(group.name);
+            if (usedCount > 0) {
+                deleteButton.disabled = true;
+                deleteButton.title = "Este grupo está sendo usado por " + usedCount + " produto" + (usedCount === 1 ? "" : "s");
+            }
             deleteButton.addEventListener("click", function () {
                 openDeleteModal({ type: "product_group", id: group.id, name: group.name });
             });
@@ -1369,6 +1581,16 @@
         const payload = { name: name, sort_order: order };
         let result;
         if (groupId) {
+            const existingGroup = productGroups.find(function (g) { return g.id === groupId; });
+            if (existingGroup && organization.key(existingGroup.name) !== organization.key(name)) {
+                const count = countProductsUsingGroup(existingGroup.name);
+                if (count > 0) {
+                    saveProductGroupButton.disabled = false;
+                    saveProductGroupButton.textContent = "Salvar alterações";
+                    setFeedback(productGroupFeedback, "Este grupo está sendo usado por " + count + " produto" + (count === 1 ? "" : "s") + ". Remova ou altere o grupo nos produtos antes de renomeá-lo.", "error");
+                    return;
+                }
+            }
             result = await client.from("product_groups").update(payload).eq("id", groupId).select("id").single();
         } else {
             result = await client.from("product_groups").insert(Object.assign({}, payload, { catalog_id: activeCatalog.id })).select("id").single();
@@ -1396,6 +1618,20 @@
         const isCatalog = deletion.type === "catalog";
         const isProductType = deletion.type === "product_type";
         const isProductGroup = deletion.type === "product_group";
+        if (isProductType) {
+            const count = countProductsUsingType(deletion.name);
+            if (count > 0) {
+                showToast("Este tipo está sendo usado por " + count + " produto" + (count === 1 ? "" : "s") + ". Altere esses produtos antes de excluir o tipo.");
+                return;
+            }
+        }
+        if (isProductGroup) {
+            const count = countProductsUsingGroup(deletion.name);
+            if (count > 0) {
+                showToast("Este grupo está sendo usado por " + count + " produto" + (count === 1 ? "" : "s") + ". Remova o grupo desses produtos antes de excluí-lo.");
+                return;
+            }
+        }
         if (deletion.baseModal) {
             deletion.baseModal.setAttribute("aria-hidden", "true");
         }
@@ -1444,19 +1680,38 @@
 
     function getProductPayload() {
         const name = document.getElementById("productName").value.trim();
-        const categoryId = productCategory.value;
+        const rootCatId = productCategory.value;
+        const subCatId = productSubcategory.value;
         const description = productDescription.value.trim();
         const priceInput = document.getElementById("productPrice").value.trim();
         const price = Number(priceInput);
         const status = document.getElementById("productStatus").value;
-        const categoryExists = categories.some(function (category) {
-            return category.id === categoryId;
-        });
 
-        if (name.length < 2 || !categoryExists) {
-            setFeedback(productFeedback, "Informe um nome e selecione uma categoria válida.", "error");
+        if (name.length < 2) {
+            setFeedback(productFeedback, "Informe um nome para o produto.", "error");
             return null;
         }
+
+        const rootCategory = categories.find(function (category) {
+            return category.id === rootCatId && !category.parent_id && category.catalog_id === activeCatalog.id;
+        });
+        if (!rootCategory) {
+            setFeedback(productFeedback, "Selecione uma categoria válida.", "error");
+            return null;
+        }
+
+        let finalCategoryId = rootCatId;
+        if (subCatId) {
+            const subCategory = categories.find(function (category) {
+                return category.id === subCatId && category.parent_id === rootCatId && category.catalog_id === activeCatalog.id;
+            });
+            if (!subCategory) {
+                setFeedback(productFeedback, "A subcategoria selecionada não pertence à categoria escolhida.", "error");
+                return null;
+            }
+            finalCategoryId = subCatId;
+        }
+
         if (!priceInput || !Number.isFinite(price) || price < 0 || price > 99999999.99) {
             setFeedback(productFeedback, "Informe um preço válido e maior ou igual a zero.", "error");
             return null;
@@ -1466,16 +1721,54 @@
             return null;
         }
 
-        const payload = { name: name, category_id: categoryId, description: description, price: price.toFixed(2), status: status };
+        const payload = { name: name, category_id: finalCategoryId, description: description, price: price.toFixed(2), status: status };
         if (organizationEnabled) {
-            const type = document.getElementById("productType").value.trim();
-            const groups = organization.parseGroups(document.getElementById("productGroups").value);
-            if (type.length > 60 || groups.length > 10 || groups.some(function (group) { return group.length > 60; })) {
-                setFeedback(productFeedback, "Use até 60 caracteres no tipo e em cada grupo, com no máximo 10 grupos.", "error");
+            const editingProductId = document.getElementById("productId").value;
+            const currentProduct = editingProductId
+                ? products.find(function (p) { return p.id === editingProductId; }) || null
+                : null;
+
+            // Validação de Tipo
+            const selectedType = productType.value.trim();
+            let finalType = null;
+            if (selectedType) {
+                const validConfigType = productTypes.find(function (t) {
+                    return organization.key(t.name) === organization.key(selectedType) && t.catalog_id === activeCatalog.id;
+                });
+                if (validConfigType) {
+                    finalType = validConfigType.name;
+                } else if (currentProduct && organization.key(currentProduct.product_type) === organization.key(selectedType)) {
+                    finalType = currentProduct.product_type;
+                } else {
+                    setFeedback(productFeedback, "O tipo selecionado não pertence a este catálogo.", "error");
+                    return null;
+                }
+            }
+            payload.product_type = finalType;
+
+            // Validação de Grupos
+            const checkedBoxes = Array.from(productGroupsContainer.querySelectorAll("input[name='productGroupItem']:checked"));
+            const selectedGroupNames = [];
+            for (let i = 0; i < checkedBoxes.length; i++) {
+                const val = checkedBoxes[i].value.trim();
+                const isLegacy = checkedBoxes[i].dataset.legacy === "true";
+                const validConfigGroup = productGroups.find(function (g) {
+                    return organization.key(g.name) === organization.key(val) && g.catalog_id === activeCatalog.id;
+                });
+                if (validConfigGroup) {
+                    selectedGroupNames.push(validConfigGroup.name);
+                } else if (isLegacy && currentProduct && (currentProduct.product_groups || []).some(function (g) { return organization.key(g) === organization.key(val); })) {
+                    selectedGroupNames.push(val);
+                } else {
+                    setFeedback(productFeedback, "Um ou mais grupos selecionados não pertencem a este catálogo.", "error");
+                    return null;
+                }
+            }
+            if (selectedGroupNames.length > 10) {
+                setFeedback(productFeedback, "Selecione no máximo 10 grupos para o produto.", "error");
                 return null;
             }
-            payload.product_type = type || null;
-            payload.product_groups = groups;
+            payload.product_groups = selectedGroupNames;
         }
         return payload;
     }
@@ -1796,6 +2089,23 @@
 
         if (deletion.type === "product_type" || deletion.type === "product_group") {
             const isType = deletion.type === "product_type";
+            if (isType) {
+                const count = countProductsUsingType(deletion.name);
+                if (count > 0) {
+                    confirmDeleteButton.disabled = false;
+                    closeDeleteModal();
+                    showToast("Este tipo está sendo usado por " + count + " produto" + (count === 1 ? "" : "s") + ". Altere esses produtos antes de excluir o tipo.");
+                    return;
+                }
+            } else {
+                const count = countProductsUsingGroup(deletion.name);
+                if (count > 0) {
+                    confirmDeleteButton.disabled = false;
+                    closeDeleteModal();
+                    showToast("Este grupo está sendo usado por " + count + " produto" + (count === 1 ? "" : "s") + ". Remova o grupo desses produtos antes de excluí-lo.");
+                    return;
+                }
+            }
             const table = isType ? "product_types" : "product_groups";
             const label = isType ? "tipo" : "grupo";
             const { data, error } = await client
@@ -2007,6 +2317,7 @@
     catalogSelect.addEventListener("change", function () {
         activeCatalog = catalogs.find(function (catalog) { return catalog.id === catalogSelect.value; }) || null;
         if (!activeCatalog) return;
+        closeProductModal();
         closeRootCategoryForm();
         closeSubcategoryForm();
         closeProductTypeForm();
@@ -2050,6 +2361,9 @@
 
     document.getElementById("ordersMenuLink").addEventListener("click", function () { toggleMenu(false); });
     productForm.addEventListener("submit", saveProduct);
+    productCategory.addEventListener("change", function () {
+        populateProductSubcategories(productCategory.value, "");
+    });
     catalogForm.addEventListener("submit", saveCatalog);
     productDescription.addEventListener("input", updateDescriptionCounter);
     productImageInput.addEventListener("change", previewSelectedProductImage);

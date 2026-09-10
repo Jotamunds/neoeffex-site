@@ -494,24 +494,33 @@
                     <select id="productCategory" name="productCategory" required></select>
                 </div>
                 <div class="form-field">
+                    <label for="productSubcategory">Subcategoria (opcional)</label>
+                    <select id="productSubcategory" name="productSubcategory">
+                        <option value="">Nenhuma subcategoria</option>
+                    </select>
+                </div>
+                <div class="form-field">
                     <label for="productPrice">Preço</label>
                     <div class="price-field"><span aria-hidden="true">R$</span><input id="productPrice" name="productPrice" type="number" min="0" max="99999999.99" step="0.01" inputmode="decimal" required></div>
                 </div>
                 <div class="form-field">
                     <label for="productType">Tipo (opcional)</label>
-                    <input id="productType" type="text" maxlength="60" list="productTypeOptions" placeholder="Ex.: Tradicional" data-organization-field disabled>
-                    <datalist id="productTypeOptions"></datalist>
+                    <select id="productType" name="productType" data-organization-field disabled></select>
+                    <span class="field-hint" id="productTypeHint"></span>
+                    <p class="product-legacy-warning" id="productTypeLegacyWarning" role="status" hidden></p>
                 </div>
-                <div class="form-field">
-                    <label for="productGroups">Grupos (opcional)</label>
-                    <input id="productGroups" type="text" maxlength="618" list="productGroupOptions" placeholder="Ex.: Combo, Mais pedido" aria-describedby="productGroupsHint" data-organization-field disabled>
-                    <datalist id="productGroupOptions"></datalist>
-                    <span class="field-hint" id="productGroupsHint">Separe por vírgulas. Até 10 grupos de 60 caracteres.</span>
+                <div class="form-field form-field--full">
+                    <fieldset class="product-groups-fieldset" id="productGroupsFieldset">
+                        <legend class="product-groups-legend">Grupos (opcional)</legend>
+                        <div class="product-groups-options" id="productGroupsContainer" role="group" aria-label="Grupos do produto"></div>
+                        <p class="field-hint" id="productGroupsEmptyHint" hidden>Nenhum grupo configurado. Configure os grupos em Configurações.</p>
+                        <p class="product-legacy-warning" id="productGroupsLegacyWarning" role="status" hidden></p>
+                    </fieldset>
                 </div>
                 <div class="form-field form-field--full">
                     <label for="productDescription">Descrição</label>
                     <textarea id="productDescription" name="productDescription" maxlength="500" rows="4"></textarea>
-                    <span class="field-hint" id="descriptionCounter">0 / 500</span>
+                    <span class="field-counter" id="descriptionCounter">0 / 500</span>
                 </div>
                 <div class="form-field form-field--full">
                     <label for="productImage">Imagem do produto</label>
@@ -631,9 +640,9 @@
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
-    <script src="config.js?v=0.3.4" defer></script>
-    <script src="../assets/catalog/organization.js?v=0.3.4" defer></script>
-    <script src="assets/js/admin.js?v=0.3.4" defer></script>
+    <script src="config.js?v=0.3.5" defer></script>
+    <script src="../assets/catalog/organization.js?v=0.3.5" defer></script>
+    <script src="assets/js/admin.js?v=0.3.5" defer></script>
 </body>
 </html>
 

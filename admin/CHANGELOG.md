@@ -1,5 +1,20 @@
 # Changelog — Painel administrativo
 
+## [0.3.5] - 2026-09-09
+
+### Integração de Configurações ao Formulário de Produto (Etapa 4)
+- **Seleção estruturada de Tipo**: O campo Tipo no formulário de produto foi substituído de input livre/datalist por um `<select>` nativo alimentado pelas opções cadastradas em `product_types` para o catálogo ativo (`activeCatalog.id`), ordenadas por `sort_order`. Tipo permanece opcional ("Nenhum tipo selecionado").
+- **Seleção visual de Grupos**: O campo de texto livre com vírgulas e datalist para Grupos foi substituído por uma seleção múltipla visual e acessível baseada em chips e checkboxes (`#productGroupsContainer`), alimentada por `product_groups` do catálogo ativo e limitada a 10 seleções.
+- **Hierarquia Categoria e Subcategoria no Produto**: O formulário agora dispõe de dois dropdowns coordenados — Categoria principal e Subcategoria vinculada. Ao selecionar a categoria raiz, o dropdown de subcategorias é preenchido dinamicamente apenas com as subcategorias filhas daquela raiz. Persistência transparente em `products.category_id` (ID da subcategoria se selecionada, ou ID da raiz se nenhuma subcategoria for escolhida).
+- **Remoção de entrada livre e sugestões**: Não é mais possível digitar livremente tipos ou grupos nem criá-los dentro do formulário de produtos. O lojista é direcionado para a seção **Configurações**. Sugestões via `organization.facets` foram removidas do Admin (mantidas estritamente no catálogo público).
+- **Compatibilidade e preservação de dados legados**: Produtos antigos com `product_type` ou `product_groups` que não estejam cadastrados em Configurações não têm seus dados apagados ao abrir ou fechar o modal. Avisos informativos (`#productTypeLegacyWarning`, `#productGroupsLegacyWarning`) alertam o usuário, e caso o formulário seja salvo sem alterações, as classificações legadas são mantidas.
+- **Proteção contra exclusão e renomeação em uso**:
+  - Se um Tipo configurado estiver em uso por algum produto do catálogo ativo, sua exclusão é bloqueada e sua renomeação é impedida no modal de edição de Configurações, exibindo mensagem de orientação ("Este tipo está sendo usado por X produto(s)..."). A alteração de `sort_order` continua permitida.
+  - Se um Grupo configurado estiver em uso por algum produto do catálogo ativo, sua exclusão e renomeação também são bloqueadas de forma preventiva, preservando a consistência dos produtos sem disparar atualizações em cascata arriscadas.
+- **Isolamento multiloja e concorrência**: Ao alternar o catálogo selecionado, o modal de produto é fechado automaticamente (`closeProductModal()`) para evitar salvar classificações ou dados no catálogo incorreto. Cache em memória e estado são invalidados e recarregados para a nova loja ativa.
+- **Correção de layout (`.field-hint` vs `.field-counter`)**: Textos explicativos e orientações foram desacoplados da contagem de caracteres (`#descriptionCounter`), garantindo que `.field-hint` permaneça no fluxo vertical regular do documento, eliminando sobreposições sobre inputs em telas desktop e mobile.
+- **Persistência inalterada**: `products.product_type` e `products.product_groups` permanecem nas tabelas existentes como camada de persistência e compatibilidade com o catálogo público e WhatsApp. Nenhuma migração ou alteração de banco foi realizada.
+
 ## [0.3.4] - 2026-09-09
 
 ### CRUD visual de Tipos e Grupos em Configurações (Etapa 3B)

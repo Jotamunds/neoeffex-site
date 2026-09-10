@@ -30,8 +30,10 @@ Não use este arquivo como changelog.
 - O painel do lojista administra lojas já provisionadas. O fluxo de criação de loja não deve ser restaurado no frontend sem nova decisão de produto.
 - A exclusão definitiva de loja/catálogo foi retirada da interface do lojista para evitar perda acidental de acesso ou deixar contas sem loja provisionada.
 - A organização estrutural do catálogo fica centralizada na seção "Configurações" (em substituição ao antigo modal simples de categorias), gerenciando em abas: Categorias, Subcategorias, Tipos e Grupos.
-- `product_types` e `product_groups` são tabelas persistentes no banco de dados vinculadas por `catalog_id`, com isolamento estrito por loja e validação de unicidade case-insensitive. Elas representam classificações e selos configuráveis do catálogo e não grupos de adicionais ou opções de montagem.
-- Na Etapa 3B, Tipos e Grupos possuem CRUD visual persistente completo na área Configurações com isolamento multiloja. O formulário de produtos ainda utiliza temporariamente os campos legados `products.product_type` e `products.product_groups` (com inputs de texto e datalists) até a substituição definitiva na Etapa 4.
+- Na Etapa 4, o formulário de produto integra-se diretamente às Configurações da loja ativa: Tipo e Grupos são selecionados exclusivamente a partir de `product_types` e `product_groups` (sem digitação livre nem criação em tela). Categoria e Subcategoria possuem dropdowns dedicados e coordenados que persistem em `products.category_id`.
+- Os campos `products.product_type` (texto) e `products.product_groups` (array de texto) permanecem no PostgreSQL como camada de persistência e total compatibilidade com o catálogo público, sem FK nova nem migrações.
+- Proteção de consistência: exclusão e renomeação de Tipos e Grupos em uso por produtos do catálogo ativo são bloqueadas na área de Configurações, orientando o lojista a alterar os produtos primeiro. A alteração de ordem (`sort_order`) permanece sempre permitida.
+- Preservação legada: produtos com classificações antigas inexistentes em Configurações exibem avisos claros na edição e mantêm seus valores intactos sem exclusão silenciosa.
 - O estado de autenticação deve ser consistente entre abas quando o mecanismo atual permitir sincronização.
 - Modais/painéis não devem fechar por interações iniciadas dentro do conteúdo e finalizadas fora de maneira acidental.
 - Exclusão de dados deve exigir confirmação quando houver risco de perda.

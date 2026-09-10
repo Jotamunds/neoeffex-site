@@ -1,6 +1,15 @@
 # Changelog — Painel administrativo
 
-## [0.3.7] - 2026-09-10
+## [0.3.8] - 2026-09-10
+
+### Padronização de Imagens 1:1, Proporções de Logo, Editor Universal e Branding
+- **Editor Universal de Imagens (`image-editor.js`)**: Módulo evoluído para aceitar configurações dinâmicas por contexto (produto 1:1 ~1200x1200, sabor 1:1 ~1200x1200 e logo configurável em 1:1, 3:4 e 4:3).
+- **Edição de Imagens Existentes**: Adicionada funcionalidade de "Ajustar foto atual" para produtos, sabores e logotipo, permitindo recortar e reposicionar imagens salvas sem necessidade de re-upload de arquivo.
+- **Padronização 1:1 para Produtos e Sabores**: Imagens de produtos e sabores padronizadas para proporção quadrada 1:1 (`aspect-ratio: 1 / 1; object-fit: cover`) no Admin, nas listagens públicas e no modal de distribuição de sabores.
+- **Proporções de Logo Configuráveis**: Lojistas podem configurar o logotipo da loja como Quadrado (1:1 padrão), Vertical (3:4) ou Horizontal (4:3), persistido no banco via `catalogs.logo_aspect_ratio` com migração retrocompatível (`20260910200000_catalog_logo_aspect_ratio.sql`) e fallback seguro no frontend.
+- **Branding Neoeffex e Identidade**: Marca Neoeffex padronizada utilizando os assets SVG oficiais (`/img/logos/neoeffex-n-logo-white.svg`, `neoeffex-horizontal-blue.svg`), com presença discreta no catálogo público ("Tecnologia Neoeffex") sem ofuscar a identidade do comerciante.
+- **Resiliência e Tratamento de Schema**: Correção no carregamento de sabores para que eventuais falhas de consulta Supabase registrem log de erro no console sem disparar falsos avisos de "Nenhum sabor disponível".
+
 
 ### Perfis de Catálogo, Modos de Compra, Sabores e Pedido Mínimo
 - **Perfis de Catálogo e Capacidades Centralizadas**: Adicionada configuração de `catalog_profile` (`standard`, `food`, `marmitas`, `services`) e `minimum_order_quantity` no modal de loja (`catalogModal`) e no painel de resumo de pedidos. Módulo compartilhado `assets/catalog/profiles.js` centraliza capabilities sem acoplamento condicional por slug.

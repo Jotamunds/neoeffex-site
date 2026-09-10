@@ -12,11 +12,11 @@ window.NEOEFFEX_SUPABASE_CONFIG = Object.freeze({
 
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = "assets/css/catalog-identity.css?v=0.1.14";
+    stylesheet.href = "assets/css/catalog-identity.css?v=0.3.8";
     document.head.appendChild(stylesheet);
 
     const script = document.createElement("script");
-    script.src = "assets/js/catalog-identity.js?v=0.1.14";
+    script.src = "assets/js/catalog-identity.js?v=0.3.8";
     script.async = false;
     document.head.appendChild(script);
 }());

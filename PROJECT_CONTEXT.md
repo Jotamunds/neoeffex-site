@@ -30,12 +30,13 @@ Painel administrativo do sistema de catálogo.
 Responsabilidades incluem, conforme a implementação atual:
 
 - autenticação;
-- gerenciamento de catálogos e perfis (`catalog_profile`, `minimum_order_quantity`);
+- gerenciamento de catálogos, perfis (`catalog_profile`, `minimum_order_quantity`) e proporção de logo (`logo_aspect_ratio`: `square`, `portrait_3_4`, `landscape_4_3`);
 - configurações estruturais em abas: Categorias, Subcategorias, Tipos, Grupos e Sabores;
-- gerenciamento de sabores com CRUD, ordenação, foto e status;
-- cadastro e edição de produtos com seleção estruturada de tipos, grupos e modos de compra (`purchase_mode: simple | flavor_bundle`);
+- gerenciamento de sabores com CRUD, ordenação, foto padronizada 1:1 e status;
+- cadastro e edição de produtos com fotos padronizadas 1:1, seleção estruturada de tipos, grupos e modos de compra (`purchase_mode: simple | flavor_bundle`);
+- editor universal de imagens (`image-editor.js`) para recorte/ajuste de produtos, sabores e logotipo, com suporte à edição de fotos existentes;
 - associação de sabores disponíveis ao produto com ordenação, adicionais (`additional_price`) e disponibilidade individual;
-- identidade do catálogo;
+- identidade do catálogo com pré-visualização responsiva do logotipo da loja;
 - status ativo/pausado;
 - informações comerciais;
 - gerenciamento relacionado ao catálogo público.
@@ -46,7 +47,9 @@ Frontend público do catálogo.
 
 Responsabilidades incluem:
 
-- exibição de identidade do catálogo;
+- exibição de identidade do catálogo com suporte a logo quadrada (1:1), vertical (3:4) e horizontal (4:3);
+- fotos de produtos e sabores no catálogo público e modal padronizadas em 1:1 sem distorção;
+- branding discreto e padronizado da plataforma ("Tecnologia Neoeffex") no rodapé, mantendo a identidade da loja como principal;
 - categorias e facetas organizacionais;
 - produtos simples e bundles com seleção de sabores (`flavor_bundle`);
 - modal de distribuição exata de sabores e cálculo em tempo real de acréscimos;
@@ -54,7 +57,8 @@ Responsabilidades incluem:
 - carrinho com suporte a múltiplos itens bundle e produtos simples, mantendo retrocompatibilidade;
 - validação de pedido mínimo (`minimum_order_quantity`) bloqueando apenas a finalização pelo WhatsApp;
 - total do pedido e envio discriminado de mensagem pelo WhatsApp com detalhamento de sabores, acréscimos e subtotais;
-- experiência mobile-first.
+- experiência mobile-first e responsividade completa (320px a 1920px+).
+
 
 ### `/modelos`
 

@@ -121,3 +121,22 @@ Não use este arquivo como changelog.
   - Carrinho mantém total retrocompatibilidade com o formato legado em `localStorage` (`{ [productId]: quantity }`) e produtos simples.
   - Mensagem do WhatsApp preserva a mensagem personalizada da loja e detalha os sabores, quantidades, acréscimos e subtotais.
 
+## Layout, Imagens 1:1, Editor Universal e Branding (v0.3.8)
+
+- **Padronização 1:1 de Produtos e Sabores**:
+  - Todas as fotos de produtos e sabores adotam proporção quadrada 1:1 obrigatória (`aspect-ratio: 1 / 1; object-fit: cover`).
+  - Imagens antigas não são reprocessadas destrutivamente nem distorcidas; o CSS preserva o enquadramento central com cobertura total.
+  - A renderização no modal de sabores público e no Admin utiliza consistentemente contêineres 1:1.
+- **Proporções Configuráveis de Logotipo (`catalogs.logo_aspect_ratio`)**:
+  - O logotipo do comércio suporta 3 formatos: `square` (1:1 padrão/recomendado), `portrait_3_4` (3:4 vertical) e `landscape_4_3` (4:3 horizontal).
+  - Persistido na coluna `catalogs.logo_aspect_ratio` com constraint `CHECK (logo_aspect_ratio IN ('square', 'portrait_3_4', 'landscape_4_3'))`.
+  - Frontend implementa fallback resiliente para erro 42703 (coluna inexistente no schema), assumindo `'square'` sem interromper o salvamento dos demais dados da loja.
+- **Editor Universal de Imagens (`image-editor.js`)**:
+  - Um único editor compartilhado gerencia o recorte e ajuste para Produtos (1:1 ~1200x1200px), Sabores (1:1 ~1200x1200px) e Logotipo (1:1, 3:4 e 4:3 com troca dinâmica de proporção mantendo zoom e posição relativa).
+  - Suporta edição de imagens existentes já salvas sem necessidade de re-upload de arquivo, injetando botões "Ajustar foto atual" acessíveis e reativos.
+  - Limpeza estrita de URLs temporárias (`URL.revokeObjectURL`) prevenindo vazamentos de memória e sobreposição de imagens entre produtos/sabores distintos.
+- **Identidade e Branding Neoeffex**:
+  - A presença institucional da marca Neoeffex na plataforma é padronizada utilizando os arquivos SVG oficiais de `img/logos/` (`neoeffex-n-logo-white.svg` via CSS mask e `neoeffex-horizontal-blue.svg`).
+  - No catálogo público do cliente, a identidade da loja permanece principal e soberana. A Neoeffex é apresentada de forma discreta no rodapé ("Tecnologia Neoeffex") com proporção protegida contra distorção.
+
+

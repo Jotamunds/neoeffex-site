@@ -55,7 +55,7 @@
 
     function missingOrganizationColumn(error) {
         return Boolean(error && ["42703", "PGRST204"].includes(error.code)
-            && /parent_id|product_type|product_groups/.test(error.message || ""));
+            && /parent_id|product_type|product_groups|purchase_mode/.test(error.message || ""));
     }
 
     async function loadRows(client, catalogId, publicOnly) {
@@ -65,7 +65,7 @@
                 .eq("catalog_id", catalogId).order("sort_order", { ascending: true }).order("created_at", { ascending: true });
             let products = client.from("products")
                 .select("id, catalog_id, name, description, category_id, price, status, image_path, sort_order, created_at"
-                    + (extended ? ", product_type, product_groups" : ""))
+                    + (extended ? ", product_type, product_groups, purchase_mode" : ""))
                 .eq("catalog_id", catalogId);
             if (publicOnly) products = products.eq("status", "active");
             products = products.order("sort_order", { ascending: true }).order("created_at", { ascending: true });

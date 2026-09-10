@@ -152,16 +152,52 @@ const cb = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
  await denied('anon update product_types denied', `update product_types set name='Anon'`, '42501');
  await denied('anon delete product_types denied', `delete from product_types`, '42501');
 
- await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)}; update products set status='paused' where catalog_id=${q(ca)}; set role anon;`);
- assert.equal((await one(`select count(id)::int n from products where catalog_id=${q(ca)}`)).n,0);checks++;
- await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)}; update catalogs set is_active=false where id=${q(ca)}; set role anon;`);
- assert.equal((await one(`select count(id)::int n from categories where catalog_id=${q(ca)}`)).n,0);checks++;
- await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)};`);
- await ok('delete populated hierarchy via old RPC',`select delete_own_paused_catalog(${q(ca)});`);
- // Confirma que exclusão do catálogo removeu types e groups vinculados em cascata
- assert.equal((await one(`select count(*)::int n from product_types where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades product_types');
- assert.equal((await one(`select count(*)::int n from product_groups where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades product_groups');
- await sql('reset role');
+  // ETAPA 1 — Aplicação da migração de catalog_profile e purchase_mode
+  await sql('reset role');
+  const migrationProfilesPurchaseMode = fs.readFileSync(root + 'supabase/migrations/20260910170000_catalog_profiles_purchase_mode.sql', 'utf8');
+  await ok('migration profiles and purchase mode', migrationProfilesPurchaseMode);
+
+  // Verificação pós-migration via script SQL
+  const verifiedProfiles = JSON.parse((await one(fs.readFileSync(root + 'admin/setup/verify_catalog_profiles_and_purchase_mode.sql', 'utf8'))).verificacao);
+  assert.equal(verifiedProfiles.status, 'PASS', 'Todas as verificações de profiles e purchase_mode devem passar');
+  checks++; console.log('PASS verify_catalog_profiles_and_purchase_mode read-only SQL');
+
+  // Conferir defaults dos registros existentes
+  const defaultCatalog = await one(`select catalog_profile, minimum_order_quantity from catalogs where id=${q(cb)}`);
+  assert.equal(defaultCatalog.catalog_profile, 'standard');
+  assert.equal(defaultCatalog.minimum_order_quantity, null);
+  const defaultProduct = await one(`select purchase_mode from products where catalog_id=${q(cb)} limit 1`);
+  assert.equal(defaultProduct.purchase_mode, 'simple');
+  checks++; console.log('PASS catalog_profile_default_standard and product_purchase_mode_default_simple');
+
+  // Testes de constraints de perfis e purchase_mode
+  await sql(`set role authenticated; set request.jwt.claim.sub=${q(b)};`);
+  await denied('invalid catalog profile', `update catalogs set catalog_profile='invalid_profile' where id=${q(cb)}`, '23514');
+  await denied('zero minimum order quantity', `update catalogs set minimum_order_quantity=0 where id=${q(cb)}`, '23514');
+  await denied('negative minimum order quantity', `update catalogs set minimum_order_quantity=-1 where id=${q(cb)}`, '23514');
+  await denied('invalid purchase mode', `update products set purchase_mode='invalid_mode' where catalog_id=${q(cb)}`, '23514');
+
+  // Atualizações válidas
+  await ok('valid profile marmitas and minimum order', `update catalogs set catalog_profile='marmitas', minimum_order_quantity=5 where id=${q(cb)};`);
+  await ok('valid purchase mode flavor_bundle', `update products set purchase_mode='flavor_bundle' where catalog_id=${q(cb)};`);
+  checks++; console.log('PASS catalog_profile_marmitas and product_purchase_mode_flavor_bundle');
+
+  // Anon lê novas colunas públicas
+  await sql(`set role anon; reset request.jwt.claim.sub;`);
+  await ok('anon reads profile and purchase mode', `select catalog_profile, minimum_order_quantity from catalogs; select purchase_mode from products;`);
+
+  await sql('reset role');
+
+  await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)}; update products set status='paused' where catalog_id=${q(ca)}; set role anon;`);
+  assert.equal((await one(`select count(id)::int n from products where catalog_id=${q(ca)}`)).n,0);checks++;
+  await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)}; update catalogs set is_active=false where id=${q(ca)}; set role anon;`);
+  assert.equal((await one(`select count(id)::int n from categories where catalog_id=${q(ca)}`)).n,0);checks++;
+  await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)};`);
+  await ok('delete populated hierarchy via old RPC',`select delete_own_paused_catalog(${q(ca)});`);
+  // Confirma que exclusão do catálogo removeu types e groups vinculados em cascata
+  assert.equal((await one(`select count(*)::int n from product_types where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades product_types');
+  assert.equal((await one(`select count(*)::int n from product_groups where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades product_groups');
+  await sql('reset role');
 
  // A reaplicação deve falhar antes de tocar em dados.
  try {await sql(migration); assert.fail('repeat should fail');} catch(e){assert.match(e.message,/stores já existe/);await sql('rollback');checks++;}

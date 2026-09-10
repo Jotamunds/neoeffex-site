@@ -186,6 +186,75 @@ const cb = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
   await sql(`set role anon; reset request.jwt.claim.sub;`);
   await ok('anon reads profile and purchase mode', `select catalog_profile, minimum_order_quantity from catalogs; select purchase_mode from products;`);
 
+  // ETAPA 2 — Aplicação da migração de flavors e product_flavors
+  await sql('reset role');
+  const migrationFlavors = fs.readFileSync(root + 'supabase/migrations/20260910173000_catalog_flavors.sql', 'utf8');
+  await ok('migration flavors and product_flavors', migrationFlavors);
+
+  // Verificação pós-migration via script SQL
+  const verifiedFlavors = JSON.parse((await one(fs.readFileSync(root + 'admin/setup/verify_catalog_flavors.sql', 'utf8'))).verificacao);
+  assert.equal(verifiedFlavors.status, 'PASS', 'Todas as verificações de flavors e product_flavors devem passar');
+  checks++; console.log('PASS verify_catalog_flavors read-only SQL');
+
+  // Recupera produtos de ca e cb para testes relacionais
+  const prodA = (await one(`select id from products where catalog_id=${q(ca)} limit 1`)).id;
+  const prodB = (await one(`select id from products where catalog_id=${q(cb)} limit 1`)).id;
+
+  // CRUD e constraints de flavors
+  await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)};`);
+  const flavorA1 = (await one(`insert into flavors(catalog_id, name, description, sort_order) values (${q(ca)}, 'Frango com Catupiry', 'Delicioso frango desfiado', 10) returning id`)).id;
+  const flavorA2 = (await one(`insert into flavors(catalog_id, name, description, sort_order) values (${q(ca)}, 'Carne de Panela', 'Carne macia com legumes', 20) returning id`)).id;
+  checks += 2; console.log('PASS flavors_crud insert');
+
+  // Validações de constraints em flavors
+  await denied('empty flavor name', `insert into flavors(catalog_id, name) values (${q(ca)}, '')`, '23514');
+  await denied('whitespace only flavor name', `insert into flavors(catalog_id, name) values (${q(ca)}, '   ')`, '23514');
+  await denied('duplicate flavor same case', `insert into flavors(catalog_id, name) values (${q(ca)}, 'Frango com Catupiry')`, '23505');
+  await denied('duplicate flavor different case', `insert into flavors(catalog_id, name) values (${q(ca)}, 'frango com catupiry')`, '23505');
+  await denied('negative sort order flavor', `insert into flavors(catalog_id, name, sort_order) values (${q(ca)}, 'Novo Sabor', -1)`, '23514');
+
+  // Relação product_flavors
+  await ok('product_flavors insert valid', `insert into product_flavors(product_id, flavor_id, catalog_id, sort_order, additional_price, is_available) values (${q(prodA)}, ${q(flavorA1)}, ${q(ca)}, 1, 0.00, true);`);
+  await ok('product_flavors with additional price', `insert into product_flavors(product_id, flavor_id, catalog_id, sort_order, additional_price, is_available) values (${q(prodA)}, ${q(flavorA2)}, ${q(ca)}, 2, 5.00, true);`);
+  checks += 2; console.log('PASS product_flavors_relation and flavor_additional_price');
+
+  // Validações de constraints em product_flavors
+  await denied('negative additional price', `insert into product_flavors(product_id, flavor_id, catalog_id, additional_price) values (${q(prodA)}, ${q(flavorA1)}, ${q(ca)}, -5.00)`, '23514');
+  await denied('duplicate product flavor', `insert into product_flavors(product_id, flavor_id, catalog_id) values (${q(prodA)}, ${q(flavorA1)}, ${q(ca)})`, '23505');
+
+  // ISOLAMENTO ANTI-CRUZAMENTO DE CATÁLOGOS NO BANCO
+  // Usuário B cria um sabor no catálogo CB
+  await sql(`set request.jwt.claim.sub=${q(b)};`);
+  const flavorB1 = (await one(`insert into flavors(catalog_id, name) values (${q(cb)}, 'Vegano Especial') returning id`)).id;
+  checks++;
+
+  // Tentativa de associar produto de Ca com sabor de Cb (anti-cruzamento FK composta)
+  await sql(`reset role`); // mesmo sem RLS, a constraint relacional composta impede o cruzamento
+  await denied('cross-catalog flavor association (prodA with flavorB1)', `insert into product_flavors(product_id, flavor_id, catalog_id) values (${q(prodA)}, ${q(flavorB1)}, ${q(ca)})`, '23503');
+  // Usar flavorA2 que já foi inserido mas com produto diferente ou novo sabor
+  const flavorA3 = (await one(`insert into flavors(catalog_id, name) values (${q(ca)}, 'Calabresa Acebolada') returning id`)).id;
+  await denied('mismatched catalog_id in product_flavors', `insert into product_flavors(product_id, flavor_id, catalog_id) values (${q(prodA)}, ${q(flavorA3)}, ${q(cb)})`, '23503');
+  console.log('PASS product_flavors_isolation strict composite FKs');
+
+  // SEGURANÇA E RLS EM FLAVORS E PRODUCT_FLAVORS
+  await sql(`set role authenticated; set request.jwt.claim.sub=${q(b)};`);
+  // Usuário B tenta inserir sabor no catálogo de A
+  await denied('cross-account insert flavor', `insert into flavors(catalog_id, name) values (${q(ca)}, 'Invasao')`, '42501');
+  // Usuário B tenta associar sabor no catálogo de A
+  await denied('cross-account insert product_flavors', `insert into product_flavors(product_id, flavor_id, catalog_id) values (${q(prodA)}, ${q(flavorA1)}, ${q(ca)})`, '42501');
+  // Usuário B não vê nem altera sabores de A
+  assert.equal((await one(`select count(*)::int n from flavors where catalog_id=${q(ca)}`)).n, 0); checks++;
+  assert.equal((await db.query(`update flavors set name='Hacked' where catalog_id=${q(ca)} returning id`)).rows.length, 0); checks++;
+  assert.equal((await db.query(`delete from flavors where catalog_id=${q(ca)} returning id`)).rows.length, 0); checks++;
+  console.log('PASS flavors_rls');
+
+  // Anon lê sabores ativos de produtos ativos
+  await sql(`set role anon; reset request.jwt.claim.sub;`);
+  const anonFlavors = (await db.query(`select f.name, pf.additional_price from product_flavors pf join flavors f on f.id = pf.flavor_id where pf.catalog_id=${q(ca)}`)).rows;
+  assert.equal(anonFlavors.length, 2); checks++;
+  await denied('anon insert flavor denied', `insert into flavors(catalog_id, name) values (${q(ca)}, 'Anon')`, '42501');
+  await denied('anon insert product_flavors denied', `insert into product_flavors(product_id, flavor_id, catalog_id) values (${q(prodA)}, ${q(flavorA1)}, ${q(ca)})`, '42501');
+
   await sql('reset role');
 
   await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)}; update products set status='paused' where catalog_id=${q(ca)}; set role anon;`);
@@ -193,15 +262,19 @@ const cb = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
   await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)}; update catalogs set is_active=false where id=${q(ca)}; set role anon;`);
   assert.equal((await one(`select count(id)::int n from categories where catalog_id=${q(ca)}`)).n,0);checks++;
   await sql(`set role authenticated; set request.jwt.claim.sub=${q(a)};`);
-  await ok('delete populated hierarchy via old RPC',`select delete_own_paused_catalog(${q(ca)});`);
-  // Confirma que exclusão do catálogo removeu types e groups vinculados em cascata
+  await ok('delete populated hierarchy via updated RPC',`select delete_own_paused_catalog(${q(ca)});`);
+  // Confirma que exclusão do catálogo removeu types, groups, flavors e product_flavors vinculados em cascata
   assert.equal((await one(`select count(*)::int n from product_types where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades product_types');
   assert.equal((await one(`select count(*)::int n from product_groups where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades product_groups');
+  assert.equal((await one(`select count(*)::int n from flavors where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades flavors');
+  assert.equal((await one(`select count(*)::int n from product_flavors where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades product_flavors');
   await sql('reset role');
 
- // A reaplicação deve falhar antes de tocar em dados.
+ // A reaplicação deve falhar antes de tocar em dados para tabelas estruturais, ou ser idempotente para alterações de colunas.
  try {await sql(migration); assert.fail('repeat should fail');} catch(e){assert.match(e.message,/stores já existe/);await sql('rollback');checks++;}
  try {await sql(migrationTypesGroups); assert.fail('repeat types_groups should fail');} catch(e){assert.match(e.message,/product_types ou product_groups já existem/);await sql('rollback');checks++;}
+ await ok('repeat profiles_purchase_mode idempotent', migrationProfilesPurchaseMode);
+ try {await sql(migrationFlavors); assert.fail('repeat flavors should fail');} catch(e){assert.match(e.message,/flavors ou product_flavors já existem/);await sql('rollback');checks++;}
 
  console.log(`DATABASE: ${checks} checks passed (PGlite PostgreSQL 18.3; fixture from supplied diagnostic).`);
  await db.close();

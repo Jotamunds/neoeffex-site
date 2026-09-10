@@ -576,10 +576,10 @@
 
         let { data, error } = await client
             .from("catalogs")
-            .select("id, name, slug, is_active, whatsapp_number, orders_enabled, order_message, catalog_profile, minimum_order_quantity, created_at")
+            .select("id, name, slug, is_active, whatsapp_number, orders_enabled, order_message, catalog_profile, minimum_order_quantity, logo_aspect_ratio, created_at")
             .order("created_at", { ascending: true });
 
-        if (error && /column.*catalog_profile|column.*minimum_order_quantity/.test(error.message || "")) {
+        if (error && /column.*catalog_profile|column.*minimum_order_quantity|column.*logo_aspect_ratio/.test(error.message || "")) {
             const fallback = await client
                 .from("catalogs")
                 .select("id, name, slug, is_active, whatsapp_number, orders_enabled, order_message, created_at")

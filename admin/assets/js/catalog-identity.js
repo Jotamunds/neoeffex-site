@@ -90,6 +90,39 @@
         logoBox.append(preview, logoInputBox);
         logoField.append(logoLabel, logoBox);
 
+        const ratioField = document.createElement("div");
+        ratioField.className = "form-field form-field--full";
+        const ratioLabel = document.createElement("label");
+        ratioLabel.textContent = "Formato da logo";
+        const ratioContainer = document.createElement("div");
+        ratioContainer.className = "catalog-logo-ratio-options";
+        ratioContainer.setAttribute("role", "radiogroup");
+        ratioContainer.setAttribute("aria-label", "Formato da logo");
+
+        const ratioOptions = [
+            { value: "square", label: "Quadrada — 1:1 (recomendado)" },
+            { value: "portrait_3_4", label: "Vertical — 3:4" },
+            { value: "landscape_4_3", label: "Horizontal — 4:3" }
+        ];
+
+        ratioOptions.forEach(function (opt) {
+            const optLabel = document.createElement("label");
+            optLabel.className = "catalog-logo-ratio-choice";
+            const optInput = document.createElement("input");
+            optInput.type = "radio";
+            optInput.name = "logoAspectRatio";
+            optInput.value = opt.value;
+            if (opt.value === "square") optInput.checked = true;
+            optInput.addEventListener("change", function () {
+                syncLogoPreviewRatio(opt.value);
+            });
+            const optText = document.createElement("span");
+            optText.textContent = opt.label;
+            optLabel.append(optInput, optText);
+            ratioContainer.appendChild(optLabel);
+        });
+        ratioField.append(ratioLabel, ratioContainer);
+
         const descriptionField = createTextField(
             "catalogShortDescription",
             "Descrição curta",
@@ -130,7 +163,7 @@
         fulfillmentField.append(fulfillmentLabel, fulfillment);
 
         const fragment = document.createDocumentFragment();
-        fragment.append(wrapper, logoField, descriptionField, serviceAreaField, hoursField, fulfillmentField);
+        fragment.append(wrapper, logoField, ratioField, descriptionField, serviceAreaField, hoursField, fulfillmentField);
         form.insertBefore(fragment, whatsappDivider);
     }
 
@@ -245,6 +278,9 @@
             const field = document.getElementById(id);
             if (field) field.disabled = disabled;
         });
+        document.querySelectorAll('input[name="logoAspectRatio"]').forEach(function (radio) {
+            radio.disabled = disabled;
+        });
     }
 
     function getPublicLogoUrl(path) {
@@ -306,12 +342,20 @@
         showLogoPreview(getPublicLogoUrl(currentLogoPath), document.getElementById("catalogName").value || "N");
     }
 
+    function syncLogoPreviewRatio(ratio) {
+        const preview = document.querySelector(".catalog-identity-logo__preview");
+        if (preview) preview.dataset.ratio = ratio || "square";
+    }
+
     function resetIdentityFields() {
         currentLogoPath = "";
         clearLogoObjectUrl();
         document.getElementById("catalogLogo").value = "";
         document.getElementById("removeCatalogLogo").checked = false;
         document.getElementById("removeCatalogLogoField").hidden = true;
+        const defaultRadio = document.querySelector('input[name="logoAspectRatio"][value="square"]');
+        if (defaultRadio) defaultRadio.checked = true;
+        syncLogoPreviewRatio("square");
         document.getElementById("catalogShortDescription").value = "";
         document.getElementById("catalogServiceArea").value = "";
         document.getElementById("catalogBusinessHours").value = "";
@@ -326,10 +370,18 @@
         const catalogId = document.getElementById("catalogId").value;
         if (!catalogId) return;
 
-        const result = await client.from("catalogs")
-            .select("id, name, logo_path, short_description, service_area, business_hours, fulfillment_mode")
+        let result = await client.from("catalogs")
+            .select("id, name, logo_path, logo_aspect_ratio, short_description, service_area, business_hours, fulfillment_mode")
             .eq("id", catalogId)
             .maybeSingle();
+
+        if (result.error && (result.error.code === "42703" || String(result.error.message || "").includes("logo_aspect_ratio"))) {
+            result = await client.from("catalogs")
+                .select("id, name, logo_path, short_description, service_area, business_hours, fulfillment_mode")
+                .eq("id", catalogId)
+                .maybeSingle();
+        }
+
         if (result.error || !result.data || modal.hidden || document.getElementById("catalogId").value !== catalogId) {
             if (result.error) console.error("Erro ao carregar identidade do catálogo", result.error);
             return;
@@ -337,6 +389,12 @@
 
         const data = result.data;
         currentLogoPath = data.logo_path || "";
+        const ratio = data.logo_aspect_ratio || "square";
+        const ratioRadio = document.querySelector('input[name="logoAspectRatio"][value="' + ratio + '"]');
+        if (ratioRadio) {
+            ratioRadio.checked = true;
+            syncLogoPreviewRatio(ratio);
+        }
         document.getElementById("catalogShortDescription").value = data.short_description || "";
         document.getElementById("catalogServiceArea").value = data.service_area || "";
         document.getElementById("catalogBusinessHours").value = data.business_hours || "";
@@ -363,11 +421,17 @@
             return;
         }
 
+        const selectedRatioInput = document.querySelector('input[name="logoAspectRatio"]:checked');
+        const logoAspectRatio = selectedRatioInput && ["square", "portrait_3_4", "landscape_4_3"].includes(selectedRatioInput.value)
+            ? selectedRatioInput.value
+            : "square";
+
         pendingSave = {
             catalogId: document.getElementById("catalogId").value,
             slug: document.getElementById("catalogSlug").value.trim().toLocaleLowerCase("pt-BR"),
             name: document.getElementById("catalogName").value.trim(),
             logoFile: file || null,
+            logoAspectRatio: logoAspectRatio,
             removeLogo: document.getElementById("removeCatalogLogo").checked,
             previousLogoPath: currentLogoPath,
             shortDescription: shortDescription,
@@ -436,12 +500,17 @@
             short_description: snapshot.shortDescription || null,
             service_area: snapshot.serviceArea || null,
             business_hours: snapshot.businessHours || null,
-            fulfillment_mode: snapshot.fulfillmentMode || null
+            fulfillment_mode: snapshot.fulfillmentMode || null,
+            logo_aspect_ratio: snapshot.logoAspectRatio || "square"
         };
         if (uploadedLogoPath) payload.logo_path = uploadedLogoPath;
         else if (snapshot.removeLogo) payload.logo_path = null;
 
-        const updateResult = await client.from("catalogs").update(payload).eq("id", catalogId).select("id").single();
+        let updateResult = await client.from("catalogs").update(payload).eq("id", catalogId).select("id").single();
+        if (updateResult.error && (updateResult.error.code === "42703" || String(updateResult.error.message || "").includes("logo_aspect_ratio"))) {
+            delete payload.logo_aspect_ratio;
+            updateResult = await client.from("catalogs").update(payload).eq("id", catalogId).select("id").single();
+        }
         if (updateResult.error) {
             console.error("Erro ao atualizar identidade do catálogo", updateResult.error);
             if (uploadedLogoPath) await removeStoredLogo(uploadedLogoPath);

@@ -78,8 +78,10 @@
             const logoBox = document.createElement("div");
             const image = document.createElement("img");
 
-            logoBox.className = "catalog-identity-logo";
+            const ratio = (catalog && catalog.logo_aspect_ratio) || "square";
+            logoBox.className = "catalog-identity-logo catalog-identity-logo--" + ratio;
             logoBox.dataset.catalogIdentity = "logo";
+            logoBox.dataset.ratio = ratio;
 
             image.src = logoUrl;
             image.alt = "Logo de " + catalog.name;

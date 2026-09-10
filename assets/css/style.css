@@ -134,8 +134,15 @@
     .navbar { height: 76px; display: flex; align-items: center; justify-content: space-between; transition: height 250ms; }
     .scrolled .navbar { height: 64px; }
     .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 590; letter-spacing: -.04em; }
-    .brand-mark { position: relative; width: 24px; height: 24px; border: 1px solid var(--border-hover); border-radius: 7px; transform: rotate(45deg); }
-    .brand-mark::before { content: ""; position: absolute; inset: 5px; border: 1px solid var(--accent-bright); border-radius: 3px; }
+    .brand-mark {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        background: currentColor;
+        -webkit-mask: url("/img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
+        mask: url("/img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
+    }
     .nav-links { display: flex; align-items: center; gap: 30px; }
     .nav-link { position: relative; color: var(--muted); font-size: 13px; font-weight: 510; transition: color 180ms; }
     .nav-link::after { content: ""; position: absolute; inset: auto 0 -7px; height: 1px; transform: scaleX(0); transform-origin: right; background: var(--accent-soft); transition: transform 200ms var(--ease); }

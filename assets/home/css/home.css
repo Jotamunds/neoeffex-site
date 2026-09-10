@@ -263,13 +263,15 @@ pre {
 }
 
 .brand-mark {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    transform: rotate(45deg);
-    border: 2px solid var(--theme-accent);
-    box-shadow: 0 0 10px var(--theme-glow);
-    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    background: currentColor;
+    -webkit-mask: url("/img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
+    mask: url("/img/logos/neoeffex-n-logo-white.svg") center / contain no-repeat;
+    filter: drop-shadow(0 0 8px var(--theme-glow));
+    transition: filter 0.4s ease;
 }
 
 .topnav {

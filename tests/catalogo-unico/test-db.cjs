@@ -270,12 +270,41 @@ const cb = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
   assert.equal((await one(`select count(*)::int n from product_flavors where catalog_id=${q(ca)}`)).n, 0); checks++; console.log('PASS catalog deletion cascades product_flavors');
   await sql('reset role');
 
+  // ETAPA LOGO ASPECT RATIO — Aplicação da migração de catalogs.logo_aspect_ratio
+  const migrationLogoRatio = fs.readFileSync(root + 'supabase/migrations/20260910200000_catalog_logo_aspect_ratio.sql', 'utf8');
+  await ok('migration logo_aspect_ratio', migrationLogoRatio);
+
+  // Verificação pós-migration via script SQL
+  const verifiedLogoRatio = JSON.parse((await one(fs.readFileSync(root + 'admin/setup/verify_catalog_logo_aspect_ratio.sql', 'utf8'))).verificacao);
+  assert.equal(verifiedLogoRatio.status, 'PASS', 'Todas as verificações de logo_aspect_ratio devem passar');
+  checks++; console.log('PASS verify_catalog_logo_aspect_ratio read-only SQL');
+
+  // Conferir default dos catálogos existentes: square
+  const defaultLogoRatio = await one(`select logo_aspect_ratio from catalogs where id=${q(cb)}`);
+  assert.equal(defaultLogoRatio.logo_aspect_ratio, 'square');
+  checks++; console.log('PASS logo_ratio_default_square');
+
+  // Testes de constraints de logo_aspect_ratio
+  await sql(`set role authenticated; set request.jwt.claim.sub=${q(b)};`);
+  await denied('invalid logo aspect ratio', `update catalogs set logo_aspect_ratio='invalid_ratio' where id=${q(cb)}`, '23514');
+  await ok('logo_ratio_portrait_3_4', `update catalogs set logo_aspect_ratio='portrait_3_4' where id=${q(cb)};`);
+  await ok('logo_ratio_landscape_4_3', `update catalogs set logo_aspect_ratio='landscape_4_3' where id=${q(cb)};`);
+  await ok('logo_ratio_square', `update catalogs set logo_aspect_ratio='square' where id=${q(cb)};`);
+
+  // Anon lê nova coluna pública
+  await sql(`set role anon; reset request.jwt.claim.sub;`);
+  const anonLogo = await one(`select logo_aspect_ratio from catalogs where id=${q(cb)}`);
+  assert.equal(anonLogo.logo_aspect_ratio, 'square'); checks++; console.log('PASS anon reads logo_aspect_ratio');
+  await sql('reset role');
+
  // A reaplicação deve falhar antes de tocar em dados para tabelas estruturais, ou ser idempotente para alterações de colunas.
  try {await sql(migration); assert.fail('repeat should fail');} catch(e){assert.match(e.message,/stores já existe/);await sql('rollback');checks++;}
  try {await sql(migrationTypesGroups); assert.fail('repeat types_groups should fail');} catch(e){assert.match(e.message,/product_types ou product_groups já existem/);await sql('rollback');checks++;}
  await ok('repeat profiles_purchase_mode idempotent', migrationProfilesPurchaseMode);
  try {await sql(migrationFlavors); assert.fail('repeat flavors should fail');} catch(e){assert.match(e.message,/flavors ou product_flavors já existem/);await sql('rollback');checks++;}
+ await ok('repeat logo_aspect_ratio idempotent', migrationLogoRatio);
 
  console.log(`DATABASE: ${checks} checks passed (PGlite PostgreSQL 18.3; fixture from supplied diagnostic).`);
  await db.close();
 })().catch(e=>{console.error(e.message,e.code);process.exit(1);});
+

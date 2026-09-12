@@ -16,11 +16,11 @@ window.NEOEFFEX_CATALOG_CONFIG = Object.freeze({
 
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = "assets/css/catalog-identity.css?v=0.3.9";
+    stylesheet.href = "assets/css/catalog-identity.css?v=0.4.0";
     document.head.appendChild(stylesheet);
 
     const script = document.createElement("script");
-    script.src = "assets/js/catalog-identity.js?v=0.3.9";
+    script.src = "assets/js/catalog-identity.js?v=0.4.0";
     script.async = false;
     document.head.appendChild(script);
 }());
@@ -36,7 +36,7 @@ window.NEOEFFEX_CATALOG_CONFIG = Object.freeze({
 
     const themes = Object.freeze({
         "lu-leve-e-saudavel": Object.freeze({
-            stylesheet: "assets/css/themes/lu-leve-e-saudavel.css?v=0.3.9",
+            stylesheet: "assets/css/themes/lu-leve-e-saudavel.css?v=0.4.0",
             siteUrl: "../sites/lu-leve-e-saudavel/",
             themeColor: "#153b2b",
             brandName: "Lu Leve e Saudável",

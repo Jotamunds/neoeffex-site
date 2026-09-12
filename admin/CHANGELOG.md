@@ -1,5 +1,27 @@
 # Changelog — Painel administrativo
 
+## [0.4.0] - 2026-09-12
+
+### Simplificação e Novo Motor de Combos (5, 10 e 15 Unidades)
+- **Configuração Amigável e Unificada no Admin**:
+  - Substituição da seleção técnica dropdown (`purchase_mode`) por um checkbox amigável único: `[ ] Este produto é vendido em combo`.
+  - Ao ativar, o sistema habilita automaticamente os três tamanhos padronizados: 5, 10 e 15 unidades.
+  - Campos dedicados para descontos percentuais (`combo_discount_5`, `combo_discount_10`, `combo_discount_15`) configuráveis de 0% a 100% (iniciando em 0%), com validação comercial.
+  - Prévia de preço em tempo real calculando dinamicamente o valor bruto (`preço unitário × quantidade`) e o valor final com desconto ("De R$ 100,00 Por R$ 95,00 (5% OFF)" ou "R$ 100,00 (sem desconto)").
+- **Catálogo Público com Escolha Responsiva de Combos**:
+  - No modal de sabores, eliminada a quantidade numérica livre (1..99). O cliente escolhe diretamente entre os cards de 5, 10 ou 15 unidades.
+  - Cards com design responsivo e visualização clara de quantidade e preço base já calculado com o desconto comercial.
+  - Distribuição estrita e validação de total de sabores igual ao tamanho do combo selecionado.
+- **Fórmula de Preço e Não Incidência em Adicionais**:
+  - O desconto do combo incide exclusivamente sobre o valor base (`unitPrice * comboQuantity`).
+  - Adicionais de sabor (`additional_price`) são somados separadamente ao final, impedindo qualquer desconto duplo indevido ou divergência de centavos.
+- **Carrinho e WhatsApp com Estrutura Transparente e Retrocompatível**:
+  - Carrinho armazena explicitamente o objeto com todos os valores discriminados (`productId`, `purchaseMode: 'flavor_bundle'`, `comboQuantity`, `unitPrice`, `grossPrice`, `discountPercent`, `discountAmount`, `comboPrice`, `flavors`, `addonsTotal`, `totalPrice`).
+  - Mensagem gerada para WhatsApp discrimina detalhadamente o tamanho do combo, lista de sabores, valor base, desconto (omitido se 0%), valor do combo, acréscimos (omitido se 0) e subtotal final.
+- **Persistência Não Destrutiva e Migração SQL**:
+  - Criação da migração `20260912160000_product_combo_discounts.sql` com novas colunas `combo_discount_5`, `combo_discount_10` e `combo_discount_15` em `products`.
+  - Fallback automático e seguro via `assets/catalog/organization.js` para bancos ainda não migrados (retrocompatibilidade transparente).
+
 ## [0.3.9] - 2026-09-12
 
 ### Estabilização do Editor de Imagens, Sabores, Storage e Responsividade

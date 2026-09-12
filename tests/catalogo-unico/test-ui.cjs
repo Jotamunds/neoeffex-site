@@ -180,13 +180,13 @@ async function setup(area,legacy=false,customDb=null){
  assert.equal(xMarmitas.d.querySelector('#flavorModalTitle').textContent, 'Combo Tradicional 400 g');
  const flavorRows = Array.from(xMarmitas.d.querySelectorAll('.flavor-selection-item'));
  assert.equal(flavorRows.length, 4);
- assert(xMarmitas.d.querySelector('#flavorModalBasePrice').textContent.includes('20,00'));
+ // Combo inicial padrão de 5 unidades: 5 × R$ 20,00 = R$ 100,00
+ assert(xMarmitas.d.querySelector('#flavorModalBasePrice').textContent.includes('100,00'));
  checks++;
 
  // 4. flavor_bundle_quantity_under:
- // Aumenta quantidade total do bundle para 10 unidades
- const qtyInc = xMarmitas.d.querySelector('#bundleQtyIncrease');
- for (let i = 1; i < 10; i++) qtyInc.click();
+ // Seleciona combo de 10 unidades
+ xMarmitas.d.querySelector('#comboSizeBtn10').click();
  assert.equal(xMarmitas.d.querySelector('#bundleTotalQuantityDisplay').textContent, '10');
 
  // Adiciona 3 Carne de Panela e 2 Frango (total 5 < 10)
@@ -204,18 +204,18 @@ async function setup(area,legacy=false,customDb=null){
  checks++;
 
  // 5. flavor_bundle_quantity_over:
- // Se tentar diminuir o total para 4 quando já tem 5 sabores selecionados
- const qtyDec = xMarmitas.d.querySelector('#bundleQtyDecrease');
- for (let i = 10; i > 4; i--) qtyDec.click();
- assert.equal(xMarmitas.d.querySelector('#bundleTotalQuantityDisplay').textContent, '4');
- assert.equal(xMarmitas.d.querySelector('#flavorDistributionBadge').textContent, 'Excesso (1)');
- assert(xMarmitas.d.querySelector('#confirmFlavorModalButton').disabled);
+ // Se selecionar combo de 5 unidades quando já tem 5 sabores selecionados (3 carne + 2 frango), atinge o total exato de 5
+ xMarmitas.d.querySelector('#comboSizeBtn5').click();
+ assert.equal(xMarmitas.d.querySelector('#bundleTotalQuantityDisplay').textContent, '5');
+ assert.equal(xMarmitas.d.querySelector('#flavorDistributionBadge').textContent, 'Completo');
+ // Ao atingir a quantidade do combo, botões de incremento ficam desabilitados
+ assert(xMarmitas.d.querySelector('#flavorInc_fl-carne').disabled);
  checks++;
 
  // 6. flavor_bundle_quantity_exact & flavor_additional_price:
- // Retorna total para 10 e distribui exatamente 10 unidades:
+ // Retorna para combo de 10 unidades e distribui exatamente 10 unidades:
  // 5x Carne de Panela (+R$ 5 cada), 2x Frango (+R$ 0), 3x Pernil (+R$ 0)
- for (let i = 4; i < 10; i++) qtyInc.click();
+ xMarmitas.d.querySelector('#comboSizeBtn10').click();
  assert.equal(xMarmitas.d.querySelector('#bundleTotalQuantityDisplay').textContent, '10');
  incCarne.click(); incCarne.click(); // total 5 carne
  incPernil.click(); incPernil.click(); incPernil.click(); // total 3 pernil
@@ -248,11 +248,11 @@ async function setup(area,legacy=false,customDb=null){
  // Validação da mensagem gerada no link do WhatsApp
  const waUrl = decodeURIComponent(waBtn.href).replace(/\u00a0/g, ' ');
  assert(waUrl.includes('1x Torta de Limão'));
- assert(waUrl.includes('10x Combo Tradicional 400 g'));
+ assert(waUrl.includes('1x Combo 10 — Combo Tradicional 400 g'));
  assert(waUrl.includes('Sabores:'));
- assert(waUrl.includes('5x Carne de Panela (+ R$ 25,00)'));
- assert(waUrl.includes('2x Frango com Ervas'));
- assert(waUrl.includes('3x Pernil Suíno'));
+ assert(waUrl.includes('- 5x Carne de Panela (+ R$ 25,00)'));
+ assert(waUrl.includes('- 2x Frango com Ervas'));
+ assert(waUrl.includes('- 3x Pernil Suíno'));
  assert(waUrl.includes('Acréscimos: R$ 25,00'));
  assert(waUrl.includes('Subtotal: R$ 225,00'));
  assert(waUrl.includes('Total estimado: R$ 237,00'));

@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/catalogo.css?v=0.3.9">
+    <link rel="stylesheet" href="assets/css/catalogo.css?v=0.4.0">
 </head>
 
 <body class="is-loading">
@@ -181,17 +181,33 @@
                 </button>
             </div>
             <div class="flavor-modal__body">
-                <div class="bundle-quantity-section">
-                    <span class="bundle-quantity-label">Quantidade total:</span>
-                    <div class="quantity-control quantity-control--bundle">
-                        <button type="button" id="bundleQtyDecrease" aria-label="Diminuir quantidade total">−</button>
-                        <strong id="bundleTotalQuantityDisplay" aria-live="polite">1</strong>
-                        <button type="button" id="bundleQtyIncrease" aria-label="Aumentar quantidade total">+</button>
+                <div class="combo-size-section">
+                    <span class="combo-size-label">Escolha o tamanho do combo:</span>
+                    <div class="combo-size-grid" id="comboSizeGrid" role="radiogroup" aria-label="Tamanho do combo">
+                        <button type="button" class="combo-size-card" id="comboSizeBtn5" data-size="5" role="radio" aria-checked="false">
+                            <span class="combo-size-card__qty">5 unidades</span>
+                            <span class="combo-size-card__price" id="comboSizePrice5">R$ 0,00</span>
+                            <span class="combo-size-card__badge" id="comboSizeBadge5" hidden></span>
+                        </button>
+                        <button type="button" class="combo-size-card" id="comboSizeBtn10" data-size="10" role="radio" aria-checked="false">
+                            <span class="combo-size-card__qty">10 unidades</span>
+                            <span class="combo-size-card__price" id="comboSizePrice10">R$ 0,00</span>
+                            <span class="combo-size-card__badge" id="comboSizeBadge10" hidden></span>
+                        </button>
+                        <button type="button" class="combo-size-card" id="comboSizeBtn15" data-size="15" role="radio" aria-checked="false">
+                            <span class="combo-size-card__qty">15 unidades</span>
+                            <span class="combo-size-card__price" id="comboSizePrice15">R$ 0,00</span>
+                            <span class="combo-size-card__badge" id="comboSizeBadge15" hidden></span>
+                        </button>
                     </div>
+                    <!-- Compatibilidade retroativa com referências legadas -->
+                    <strong id="bundleTotalQuantityDisplay" hidden aria-live="polite">5</strong>
+                    <button type="button" id="bundleQtyDecrease" hidden aria-hidden="true" tabindex="-1"></button>
+                    <button type="button" id="bundleQtyIncrease" hidden aria-hidden="true" tabindex="-1"></button>
                 </div>
 
                 <div class="flavor-distribution-status" id="flavorDistributionStatus" aria-live="polite">
-                    <span id="flavorDistributionCount">0 de 1 selecionados</span>
+                    <span id="flavorDistributionCount">0 de 5 selecionados</span>
                     <span class="flavor-distribution-badge flavor-distribution-badge--pending"
                         id="flavorDistributionBadge">Falta selecionar</span>
                 </div>
@@ -201,12 +217,13 @@
             <div class="flavor-modal__footer">
                 <div class="flavor-modal__summary">
                     <div class="flavor-modal__prices">
-                        <span class="flavor-modal__base-price" id="flavorModalBasePrice">Base: R$ 0,00</span>
-                        <span class="flavor-modal__addons-price" id="flavorModalAddonsPrice" hidden>Acréscimos: + R$
-                            0,00</span>
+                        <span class="flavor-modal__gross-price" id="flavorModalGrossPrice" hidden>Valor sem desconto: R$ 0,00</span>
+                        <span class="flavor-modal__discount-tag" id="flavorModalDiscountTag" hidden>Desconto: 0% (-R$ 0,00)</span>
+                        <span class="flavor-modal__base-price" id="flavorModalBasePrice">Combo com 5 unidades: R$ 0,00</span>
+                        <span class="flavor-modal__addons-price" id="flavorModalAddonsPrice" hidden>Acréscimos: + R$ 0,00</span>
                     </div>
                     <div class="flavor-modal__total-wrapper">
-                        <span>Subtotal:</span>
+                        <span>Total:</span>
                         <strong class="flavor-modal__total-price" id="flavorModalTotalPrice">R$ 0,00</strong>
                     </div>
                 </div>
@@ -223,10 +240,10 @@
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
-    <script src="config.js?v=0.3.9" defer></script>
-    <script src="../assets/catalog/organization.js?v=0.3.9" defer></script>
-    <script src="../assets/catalog/profiles.js?v=0.3.9" defer></script>
-    <script src="assets/js/catalogo.js?v=0.3.9" defer></script>
+    <script src="config.js?v=0.4.0" defer></script>
+    <script src="../assets/catalog/organization.js?v=0.4.0" defer></script>
+    <script src="../assets/catalog/profiles.js?v=0.4.0" defer></script>
+    <script src="assets/js/catalogo.js?v=0.4.0" defer></script>
 </body>
 
 </html>

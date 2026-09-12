@@ -33,7 +33,7 @@
     const typeFilter = document.getElementById("typeFilter");
     const groupFilter = document.getElementById("groupFilter");
 
-    // Elementos do Modal de Sabores
+    // Elementos do Modal de Sabores e Combos
     const flavorModal = document.getElementById("flavorModal");
     const flavorModalOverlay = document.getElementById("flavorModalOverlay");
     const closeFlavorModal = document.getElementById("closeFlavorModal");
@@ -44,9 +44,20 @@
     const bundleQtyDecrease = document.getElementById("bundleQtyDecrease");
     const bundleQtyIncrease = document.getElementById("bundleQtyIncrease");
     const bundleTotalQuantityDisplay = document.getElementById("bundleTotalQuantityDisplay");
+    const comboSizeBtn5 = document.getElementById("comboSizeBtn5");
+    const comboSizeBtn10 = document.getElementById("comboSizeBtn10");
+    const comboSizeBtn15 = document.getElementById("comboSizeBtn15");
+    const comboSizePrice5 = document.getElementById("comboSizePrice5");
+    const comboSizePrice10 = document.getElementById("comboSizePrice10");
+    const comboSizePrice15 = document.getElementById("comboSizePrice15");
+    const comboSizeBadge5 = document.getElementById("comboSizeBadge5");
+    const comboSizeBadge10 = document.getElementById("comboSizeBadge10");
+    const comboSizeBadge15 = document.getElementById("comboSizeBadge15");
     const flavorDistributionCount = document.getElementById("flavorDistributionCount");
     const flavorDistributionBadge = document.getElementById("flavorDistributionBadge");
     const flavorSelectionList = document.getElementById("flavorSelectionList");
+    const flavorModalGrossPrice = document.getElementById("flavorModalGrossPrice");
+    const flavorModalDiscountTag = document.getElementById("flavorModalDiscountTag");
     const flavorModalBasePrice = document.getElementById("flavorModalBasePrice");
     const flavorModalAddonsPrice = document.getElementById("flavorModalAddonsPrice");
     const flavorModalTotalPrice = document.getElementById("flavorModalTotalPrice");
@@ -298,6 +309,76 @@
         }
     }
 
+    /* Funções de Cálculo de Combos */
+    function getComboDiscountPercent(product, quantity) {
+        if (!product) return 0;
+        if (quantity === 5) return Number(product.combo_discount_5) || 0;
+        if (quantity === 10) return Number(product.combo_discount_10) || 0;
+        if (quantity === 15) return Number(product.combo_discount_15) || 0;
+        return 0;
+    }
+
+    function calculateComboPrices(unitPrice, quantity, discountPercent, addonsTotal) {
+        const grossPrice = Math.round(Number(unitPrice) * quantity * 100) / 100;
+        const safeDiscount = Math.min(Math.max(Number(discountPercent) || 0, 0), 100);
+        const discountAmount = Math.round(grossPrice * (safeDiscount / 100) * 100) / 100;
+        const comboBaseFinal = Math.round((grossPrice - discountAmount) * 100) / 100;
+        const safeAddons = Math.round((Number(addonsTotal) || 0) * 100) / 100;
+        const total = Math.round((comboBaseFinal + safeAddons) * 100) / 100;
+        return {
+            grossPrice: grossPrice,
+            discountPercent: safeDiscount,
+            discountAmount: discountAmount,
+            comboBaseFinal: comboBaseFinal,
+            addonsTotal: safeAddons,
+            total: total
+        };
+    }
+
+    function updateComboCardsUI() {
+        if (!currentModalProduct) return;
+        const unitPrice = Number(currentModalProduct.price) || 0;
+        const sizes = [
+            { size: 5, btn: comboSizeBtn5, priceEl: comboSizePrice5, badgeEl: comboSizeBadge5 },
+            { size: 10, btn: comboSizeBtn10, priceEl: comboSizePrice10, badgeEl: comboSizeBadge10 },
+            { size: 15, btn: comboSizeBtn15, priceEl: comboSizePrice15, badgeEl: comboSizeBadge15 }
+        ];
+
+        sizes.forEach(function (item) {
+            if (!item.btn) return;
+            const discount = getComboDiscountPercent(currentModalProduct, item.size);
+            const p = calculateComboPrices(unitPrice, item.size, discount, 0);
+            if (item.priceEl) {
+                item.priceEl.textContent = formatCurrency(p.comboBaseFinal);
+            }
+            if (item.badgeEl) {
+                if (discount > 0) {
+                    item.badgeEl.textContent = discount + "% OFF";
+                    item.badgeEl.hidden = false;
+                } else {
+                    item.badgeEl.hidden = true;
+                }
+            }
+            const isSelected = currentBundleTargetQty === item.size;
+            item.btn.classList.toggle("combo-size-card--active", isSelected);
+            item.btn.setAttribute("aria-checked", isSelected ? "true" : "false");
+        });
+    }
+
+    function selectComboSize(size) {
+        if (![5, 10, 15].includes(size)) return;
+        currentBundleTargetQty = size;
+        if (bundleTotalQuantityDisplay) bundleTotalQuantityDisplay.textContent = String(size);
+        updateComboCardsUI();
+
+        // Se a soma atual dos sabores já exceder o novo tamanho, reseta para zero
+        const totalDistributed = modalAvailableFlavors.reduce(function (sum, f) { return sum + f.quantity; }, 0);
+        if (totalDistributed > size) {
+            modalAvailableFlavors.forEach(function (f) { f.quantity = 0; });
+        }
+        updateFlavorModalState();
+    }
+
     /* Modal de Sabores */
     function openFlavorModal(product) {
         const productPf = productFlavors.filter(function (pf) {
@@ -329,12 +410,13 @@
         }
 
         currentModalProduct = product;
-        currentBundleTargetQty = 1;
+        currentBundleTargetQty = 5;
         modalAvailableFlavors = available;
 
         flavorModalTitle.textContent = product.name;
-        flavorModalDescription.textContent = "Distribua as unidades entre os sabores disponíveis.";
+        flavorModalDescription.textContent = "Escolha o tamanho do combo e distribua as unidades entre os sabores disponíveis.";
 
+        updateComboCardsUI();
         renderFlavorSelectionList();
         updateFlavorModalState();
 
@@ -487,22 +569,37 @@
             }
         });
 
-        // Preços
-        const basePrice = Number(currentModalProduct.price) || 0;
-        const baseTotal = basePrice * currentBundleTargetQty;
+        // Preços e Descontos do Combo
+        const unitPrice = Number(currentModalProduct.price) || 0;
+        const discountPercent = getComboDiscountPercent(currentModalProduct, currentBundleTargetQty);
         const addonsTotal = modalAvailableFlavors.reduce(function (sum, f) {
             return sum + (Number(f.additional_price) || 0) * f.quantity;
         }, 0);
-        const subtotal = baseTotal + addonsTotal;
+        const prices = calculateComboPrices(unitPrice, currentBundleTargetQty, discountPercent, addonsTotal);
 
-        flavorModalBasePrice.textContent = "Base: " + formatCurrency(baseTotal);
+        if (prices.discountPercent > 0) {
+            if (flavorModalGrossPrice) {
+                flavorModalGrossPrice.hidden = false;
+                flavorModalGrossPrice.textContent = "Valor sem desconto: " + formatCurrency(prices.grossPrice);
+            }
+            if (flavorModalDiscountTag) {
+                flavorModalDiscountTag.hidden = false;
+                flavorModalDiscountTag.textContent = "Desconto combo (" + prices.discountPercent + "%): - " + formatCurrency(prices.discountAmount);
+            }
+            flavorModalBasePrice.textContent = "Valor do combo: " + formatCurrency(prices.comboBaseFinal);
+        } else {
+            if (flavorModalGrossPrice) flavorModalGrossPrice.hidden = true;
+            if (flavorModalDiscountTag) flavorModalDiscountTag.hidden = true;
+            flavorModalBasePrice.textContent = "Combo com " + currentBundleTargetQty + " unidades: " + formatCurrency(prices.comboBaseFinal);
+        }
+
         if (addonsTotal > 0) {
             flavorModalAddonsPrice.hidden = false;
             flavorModalAddonsPrice.textContent = "Acréscimos: + " + formatCurrency(addonsTotal);
         } else {
             flavorModalAddonsPrice.hidden = true;
         }
-        flavorModalTotalPrice.textContent = formatCurrency(subtotal);
+        flavorModalTotalPrice.textContent = formatCurrency(prices.total);
     }
 
     function getCartStorageKey() {
@@ -617,23 +714,33 @@
             const product = getProduct(productId);
             if (!product || quantity <= 0) return null;
 
+            const isBundle = entryFlavors.length > 0 || (product.purchase_mode === "flavor_bundle");
             const unitPrice = Number(product.price) || 0;
-            const baseTotal = unitPrice * quantity;
+            const discountPercent = typeof val.discount_percent === "number"
+                ? val.discount_percent
+                : getComboDiscountPercent(product, quantity);
             const addonsTotal = entryFlavors.reduce(function (sum, f) {
                 return sum + (Number(f.additional_price) || 0) * (Number(f.quantity) || 0);
             }, 0);
-            const totalPrice = baseTotal + addonsTotal;
+            const prices = isBundle
+                ? calculateComboPrices(unitPrice, quantity, discountPercent, addonsTotal)
+                : { grossPrice: unitPrice * quantity, discountPercent: 0, discountAmount: 0, comboBaseFinal: unitPrice * quantity, addonsTotal: 0, total: unitPrice * quantity };
 
             return {
                 id: itemId,
                 product: product,
                 quantity: quantity,
-                flavors: entryFlavors,
+                comboQuantity: quantity,
                 unitPrice: unitPrice,
-                baseTotal: baseTotal,
-                addonsTotal: addonsTotal,
-                totalPrice: totalPrice,
-                isBundle: entryFlavors.length > 0
+                grossPrice: prices.grossPrice,
+                discountPercent: prices.discountPercent,
+                discountAmount: prices.discountAmount,
+                comboPrice: prices.comboBaseFinal,
+                baseTotal: prices.comboBaseFinal,
+                flavors: entryFlavors,
+                addonsTotal: prices.addonsTotal,
+                totalPrice: prices.total,
+                isBundle: isBundle
             };
         }).filter(Boolean);
     }
@@ -671,11 +778,11 @@
         const removeButton = document.createElement("button");
         item.className = "cart-item";
         copy.className = "cart-item__copy";
-        name.textContent = entry.product.name;
-        subtotal.textContent = formatCurrency(entry.totalPrice);
-        copy.appendChild(name);
-
         if (entry.isBundle) {
+            name.textContent = "1x Combo " + entry.quantity + " — " + entry.product.name;
+            subtotal.textContent = formatCurrency(entry.totalPrice);
+            copy.appendChild(name);
+
             const flavorsList = document.createElement("div");
             flavorsList.className = "cart-item__flavors";
             entry.flavors.forEach(function (f) {
@@ -683,10 +790,19 @@
                 const addonText = Number(f.additional_price) > 0
                     ? " (+ " + formatCurrency(Number(f.additional_price) * f.quantity) + ")"
                     : "";
-                flavorRow.textContent = f.quantity + "x " + f.name + addonText;
+                flavorRow.textContent = "- " + f.quantity + "x " + f.name + addonText;
                 flavorsList.appendChild(flavorRow);
             });
             copy.appendChild(flavorsList);
+
+            if (entry.discountPercent > 0) {
+                const discRow = document.createElement("small");
+                discRow.style.display = "block";
+                discRow.style.color = "var(--text-muted)";
+                discRow.style.marginTop = "3px";
+                discRow.textContent = "Valor base: " + formatCurrency(entry.grossPrice) + " | Desconto (" + entry.discountPercent + "%): -" + formatCurrency(entry.discountAmount);
+                copy.appendChild(discRow);
+            }
 
             if (entry.addonsTotal > 0) {
                 const addonsTag = document.createElement("span");
@@ -745,25 +861,34 @@
     function buildOrderMessage(entries, total) {
         const lines = ["Olá! Gostaria de fazer este pedido pelo catálogo " + catalog.name + ":", ""];
         entries.forEach(function (entry) {
-            if (!entry.flavors || !entry.flavors.length) {
+            if (!entry.isBundle || !entry.flavors || !entry.flavors.length) {
                 // Produto simples
                 lines.push("• " + entry.quantity + "x " + entry.product.name);
                 lines.push("  " + entry.quantity + " × " + formatCurrency(entry.unitPrice) + " = " + formatCurrency(entry.totalPrice));
             } else {
-                // Produto com sabores (flavor_bundle)
-                lines.push("• " + entry.quantity + "x " + entry.product.name);
+                // Produto combo (flavor_bundle)
+                lines.push("• 1x Combo " + entry.quantity + " — " + entry.product.name);
                 lines.push("");
                 lines.push("  Sabores:");
                 entry.flavors.forEach(function (f) {
                     const addonInfo = Number(f.additional_price) > 0
                         ? " (+ " + formatCurrency(Number(f.additional_price) * f.quantity) + ")"
                         : "";
-                    lines.push("  " + f.quantity + "x " + f.name + addonInfo);
+                    lines.push("  - " + f.quantity + "x " + f.name + addonInfo);
                 });
-                if (entry.addonsTotal > 0) {
+
+                if (entry.discountPercent > 0) {
                     lines.push("");
+                    lines.push("  Valor base: " + formatCurrency(entry.grossPrice));
+                    lines.push("  Desconto combo (" + entry.discountPercent + "%): - " + formatCurrency(entry.discountAmount));
+                    lines.push("  Valor do combo: " + formatCurrency(entry.comboPrice));
+                }
+
+                if (entry.addonsTotal > 0) {
+                    if (entry.discountPercent <= 0) lines.push("");
                     lines.push("  Acréscimos: " + formatCurrency(entry.addonsTotal));
                 }
+
                 lines.push("  Subtotal: " + formatCurrency(entry.totalPrice));
             }
             lines.push("");
@@ -1096,20 +1221,26 @@
 
     if (bundleQtyDecrease) {
         bundleQtyDecrease.addEventListener("click", function () {
-            if (currentBundleTargetQty > 1) {
-                currentBundleTargetQty--;
-                updateFlavorModalState();
-            }
+            if (currentBundleTargetQty === 15) selectComboSize(10);
+            else if (currentBundleTargetQty === 10) selectComboSize(5);
         });
     }
 
     if (bundleQtyIncrease) {
         bundleQtyIncrease.addEventListener("click", function () {
-            if (currentBundleTargetQty < 99) {
-                currentBundleTargetQty++;
-                updateFlavorModalState();
-            }
+            if (currentBundleTargetQty === 5) selectComboSize(10);
+            else if (currentBundleTargetQty === 10) selectComboSize(15);
         });
+    }
+
+    if (comboSizeBtn5) {
+        comboSizeBtn5.addEventListener("click", function () { selectComboSize(5); });
+    }
+    if (comboSizeBtn10) {
+        comboSizeBtn10.addEventListener("click", function () { selectComboSize(10); });
+    }
+    if (comboSizeBtn15) {
+        comboSizeBtn15.addEventListener("click", function () { selectComboSize(15); });
     }
 
     if (confirmFlavorModalButton) {
@@ -1127,19 +1258,35 @@
                 };
             });
 
+            const unitPrice = Number(currentModalProduct.price) || 0;
+            const discountPercent = getComboDiscountPercent(currentModalProduct, currentBundleTargetQty);
+            const addonsTotal = selectedFlavors.reduce(function (sum, f) {
+                return sum + (Number(f.additional_price) || 0) * f.quantity;
+            }, 0);
+            const prices = calculateComboPrices(unitPrice, currentBundleTargetQty, discountPercent, addonsTotal);
+
             const bundleKey = "bundle_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
             cart[bundleKey] = {
                 id: bundleKey,
                 product_id: currentModalProduct.id,
+                purchase_mode: "flavor_bundle",
+                combo_quantity: currentBundleTargetQty,
                 quantity: currentBundleTargetQty,
-                flavors: selectedFlavors
+                unit_price: unitPrice,
+                gross_price: prices.grossPrice,
+                discount_percent: prices.discountPercent,
+                discount_amount: prices.discountAmount,
+                combo_price: prices.comboBaseFinal,
+                flavors: selectedFlavors,
+                addons_total: prices.addonsTotal,
+                total_price: prices.total
             };
 
             const addedProductName = currentModalProduct.name;
             saveCart();
             renderCart();
             closeFlavorModalWindow();
-            showToast(addedProductName + " (" + currentBundleTargetQty + " un.) adicionado ao pedido.");
+            showToast(addedProductName + " (Combo " + currentBundleTargetQty + " un.) adicionado ao pedido.");
         });
     }
 

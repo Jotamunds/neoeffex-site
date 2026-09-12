@@ -12,8 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/image-editor.css?v=0.3.9">
-    <link rel="stylesheet" href="assets/css/admin.css?v=0.3.9">
+    <link rel="stylesheet" href="assets/css/image-editor.css?v=0.4.0">
+    <link rel="stylesheet" href="assets/css/admin.css?v=0.4.0">
 </head>
 <body class="is-loading">
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -96,7 +96,7 @@
                     <strong>Pronto para validação</strong>
                     <p>Permissões mínimas, sessão validada e auditoria para a publicação.</p>
                 </div>
-                <span class="version">ADMIN / 0.3.9</span>
+                <span class="version">ADMIN / 0.4.0</span>
             </div>
         </aside>
 
@@ -608,12 +608,76 @@
                     </fieldset>
                 </div>
                 <div class="form-field form-field--full">
-                    <label for="productPurchaseMode">Comportamento de compra</label>
-                    <select id="productPurchaseMode" name="productPurchaseMode" data-organization-field disabled>
+                    <label class="checkbox-field" id="productIsComboField">
+                        <input id="productIsCombo" name="productIsCombo" type="checkbox" data-organization-field disabled>
+                        <span>
+                            <strong>Este produto é vendido em combo</strong>
+                            <small>Disponibiliza automaticamente combos de 5, 10 e 15 unidades com distribuição de sabores.</small>
+                        </span>
+                    </label>
+                    <select id="productPurchaseMode" name="productPurchaseMode" data-organization-field disabled hidden>
                         <option value="simple">Produto simples (preço fixo por unidade)</option>
                         <option value="flavor_bundle">Escolha de sabores (combos, marmitas ou porções)</option>
                     </select>
-                    <span class="field-hint" id="productPurchaseModeHint">Defina se o cliente adiciona diretamente a unidade ou distribui quantidades entre os sabores.</span>
+                </div>
+                <div class="form-field form-field--full" id="productComboSettings" hidden>
+                    <fieldset class="product-combo-fieldset" id="productComboFieldset">
+                        <legend class="product-combo-legend">COMBOS (5, 10 E 15 UNIDADES)</legend>
+                        <p class="field-hint" style="margin-top: 2px; margin-bottom: 12px;">Configure os descontos para cada tamanho de combo. A prévia atualiza automaticamente com base no preço unitário.</p>
+                        
+                        <div class="product-combo-grid">
+                            <!-- Combo 5 unidades -->
+                            <div class="product-combo-card" id="comboCard5">
+                                <div class="product-combo-card__header">
+                                    <strong class="product-combo-card__title">5 unidades</strong>
+                                    <div class="product-combo-card__input-group">
+                                        <label for="productComboDiscount5" class="product-combo-card__label">Desconto (%):</label>
+                                        <div class="product-combo-card__input-wrapper">
+                                            <input type="number" id="productComboDiscount5" name="productComboDiscount5" min="0" max="100" step="0.5" value="0" placeholder="0">
+                                            <span class="product-combo-card__unit">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-combo-card__preview" id="comboPreview5">
+                                    <span class="combo-preview-text">De R$ 0,00 Por R$ 0,00</span>
+                                </div>
+                            </div>
+
+                            <!-- Combo 10 unidades -->
+                            <div class="product-combo-card" id="comboCard10">
+                                <div class="product-combo-card__header">
+                                    <strong class="product-combo-card__title">10 unidades</strong>
+                                    <div class="product-combo-card__input-group">
+                                        <label for="productComboDiscount10" class="product-combo-card__label">Desconto (%):</label>
+                                        <div class="product-combo-card__input-wrapper">
+                                            <input type="number" id="productComboDiscount10" name="productComboDiscount10" min="0" max="100" step="0.5" value="0" placeholder="0">
+                                            <span class="product-combo-card__unit">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-combo-card__preview" id="comboPreview10">
+                                    <span class="combo-preview-text">De R$ 0,00 Por R$ 0,00</span>
+                                </div>
+                            </div>
+
+                            <!-- Combo 15 unidades -->
+                            <div class="product-combo-card" id="comboCard15">
+                                <div class="product-combo-card__header">
+                                    <strong class="product-combo-card__title">15 unidades</strong>
+                                    <div class="product-combo-card__input-group">
+                                        <label for="productComboDiscount15" class="product-combo-card__label">Desconto (%):</label>
+                                        <div class="product-combo-card__input-wrapper">
+                                            <input type="number" id="productComboDiscount15" name="productComboDiscount15" min="0" max="100" step="0.5" value="0" placeholder="0">
+                                            <span class="product-combo-card__unit">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-combo-card__preview" id="comboPreview15">
+                                    <span class="combo-preview-text">De R$ 0,00 Por R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
                 <div class="form-field form-field--full" id="productFlavorsFieldWrapper" hidden>
                     <fieldset class="product-flavors-fieldset" id="productFlavorsFieldset">
@@ -783,11 +847,11 @@
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" defer></script>
-    <script src="config.js?v=0.3.9" defer></script>
-    <script src="../assets/catalog/organization.js?v=0.3.9" defer></script>
-    <script src="../assets/catalog/profiles.js?v=0.3.9" defer></script>
-    <script src="assets/js/image-editor.js?v=0.3.9" defer></script>
-    <script src="assets/js/admin.js?v=0.3.9" defer></script>
+    <script src="config.js?v=0.4.0" defer></script>
+    <script src="../assets/catalog/organization.js?v=0.4.0" defer></script>
+    <script src="../assets/catalog/profiles.js?v=0.4.0" defer></script>
+    <script src="assets/js/image-editor.js?v=0.4.0" defer></script>
+    <script src="assets/js/admin.js?v=0.4.0" defer></script>
 </body>
 </html>
 

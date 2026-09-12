@@ -342,45 +342,50 @@ describe("Estabilização v0.3.9 — Layout e Responsividade", () => {
     });
 });
 
-describe("Estabilização v0.3.9 — Cache Busting e Versionamento", () => {
-    test("versao_0_3_9_sincronizada_nos_arquivos_de_versao", () => {
+describe("Cache Busting e Versionamento da Plataforma", () => {
+    test("versoes_sincronizadas_nos_arquivos_de_versao", () => {
         const adminVersion = fs.readFileSync(path.join(rootDir, "admin/VERSION"), "utf8").trim();
         const catalogoVersion = fs.readFileSync(path.join(rootDir, "catalogo/VERSION"), "utf8").trim();
 
-        assert.equal(adminVersion, "0.3.9");
-        assert.equal(catalogoVersion, "0.3.9");
+        assert.equal(adminVersion, catalogoVersion, "admin/VERSION e catalogo/VERSION devem ser idênticos");
+        assert.match(adminVersion, /^0\.[3-9]\.[0-9]+/, "Versão deve seguir semver válido");
     });
 
-    test("admin_html_e_config_apontam_para_v0_3_9", () => {
+    test("admin_html_e_config_apontam_para_versao_atual", () => {
+        const currentVersion = fs.readFileSync(path.join(rootDir, "admin/VERSION"), "utf8").trim();
+        const versionEscaped = currentVersion.replace(/\./g, "\\.");
         const adminHtml = fs.readFileSync(path.join(rootDir, "admin/index.html"), "utf8");
         const adminConfig = fs.readFileSync(path.join(rootDir, "admin/config.js"), "utf8");
         const adminIdentity = fs.readFileSync(path.join(rootDir, "admin/assets/js/catalog-identity.js"), "utf8");
 
-        assert.match(adminHtml, /admin\.css\?v=0\.3\.9/);
-        assert.match(adminHtml, /admin\.js\?v=0\.3\.9/);
-        assert.match(adminHtml, /ADMIN\s*\/\s*0\.3\.9/);
+        assert.match(adminHtml, new RegExp(`admin\\.css\\?v=${versionEscaped}`));
+        assert.match(adminHtml, new RegExp(`admin\\.js\\?v=${versionEscaped}`));
+        assert.match(adminHtml, new RegExp(`ADMIN\\s*\\/\\s*${versionEscaped}`));
 
-        assert.match(adminConfig, /catalog-identity\.css\?v=0\.3\.9/);
-        assert.match(adminConfig, /catalog-identity\.js\?v=0\.3\.9/);
+        assert.match(adminConfig, new RegExp(`catalog-identity\\.css\\?v=${versionEscaped}`));
+        assert.match(adminConfig, new RegExp(`catalog-identity\\.js\\?v=${versionEscaped}`));
 
-        assert.match(adminIdentity, /ADMIN\s*\/\s*0\.3\.9/);
-        assert.match(adminIdentity, /Catálogo v0\.3\.9 disponível/);
+        assert.match(adminIdentity, new RegExp(`ADMIN\\s*\\/\\s*${versionEscaped}`));
+        assert.match(adminIdentity, new RegExp(`Catálogo v${versionEscaped} disponível`));
     });
 
-    test("catalogo_html_e_config_apontam_para_v0_3_9", () => {
+    test("catalogo_html_e_config_apontam_para_versao_atual", () => {
+        const currentVersion = fs.readFileSync(path.join(rootDir, "catalogo/VERSION"), "utf8").trim();
+        const versionEscaped = currentVersion.replace(/\./g, "\\.");
         const catalogoHtml = fs.readFileSync(path.join(rootDir, "catalogo/index.html"), "utf8");
         const catalogoConfig = fs.readFileSync(path.join(rootDir, "catalogo/config.js"), "utf8");
 
-        assert.match(catalogoHtml, /catalogo\.css\?v=0\.3\.9/);
-        assert.match(catalogoHtml, /catalogo\.js\?v=0\.3\.9/);
+        assert.match(catalogoHtml, new RegExp(`catalogo\\.css\\?v=${versionEscaped}`));
+        assert.match(catalogoHtml, new RegExp(`catalogo\\.js\\?v=${versionEscaped}`));
 
-        assert.match(catalogoConfig, /catalog-identity\.css\?v=0\.3\.9/);
-        assert.match(catalogoConfig, /catalog-identity\.js\?v=0\.3\.9/);
-        assert.match(catalogoConfig, /themes\/lu-leve-e-saudavel\.css\?v=0\.3\.9/);
+        assert.match(catalogoConfig, new RegExp(`catalog-identity\\.css\\?v=${versionEscaped}`));
+        assert.match(catalogoConfig, new RegExp(`catalog-identity\\.js\\?v=${versionEscaped}`));
+        assert.match(catalogoConfig, new RegExp(`themes\\/lu-leve-e-saudavel\\.css\\?v=${versionEscaped}`));
     });
 
-    test("changelog_contem_versao_0_3_9", () => {
+    test("changelog_contem_versao_atual", () => {
+        const currentVersion = fs.readFileSync(path.join(rootDir, "admin/VERSION"), "utf8").trim();
         const changelog = fs.readFileSync(path.join(rootDir, "admin/CHANGELOG.md"), "utf8");
-        assert.match(changelog, /## \[0\.3\.9\] - 2026-09-12/);
+        assert(changelog.includes(`## [${currentVersion}]`), `CHANGELOG deve conter cabeçalho para v${currentVersion}`);
     });
 });

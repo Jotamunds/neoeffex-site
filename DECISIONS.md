@@ -138,5 +138,24 @@ Não use este arquivo como changelog.
 - **Identidade e Branding Neoeffex**:
   - A presença institucional da marca Neoeffex na plataforma é padronizada utilizando os arquivos SVG oficiais de `img/logos/` (`neoeffex-n-logo-white.svg` via CSS mask e `neoeffex-horizontal-blue.svg`).
   - No catálogo público do cliente, a identidade da loja permanece principal e soberana. A Neoeffex é apresentada de forma discreta no rodapé ("Tecnologia Neoeffex") com proporção protegida contra distorção.
+## Combos do Catálogo e Regras de Preço (v0.4.0)
 
-
+- **Configuração Unificada e Simplificada de Combos**:
+  - Produtos com combo utilizam uma única configuração visual amigável: `[ ] Este produto é vendido em combo`.
+  - A ativação do combo habilita automaticamente os 3 tamanhos padronizados de mercado: 5, 10 e 15 unidades. Não há opções soltas de ativação individual de tamanhos no Admin.
+  - Sob o capô, `purchase_mode` continua sendo `'flavor_bundle'` para produtos em combo e `'simple'` para produtos normais, eliminando conceitos arquiteturais paralelos.
+  - Descontos percentuais são configurados individualmente por tamanho no Admin (`combo_discount_5`, `combo_discount_10`, `combo_discount_15`), iniciando em 0% e validando de 0% a 100%.
+  - O painel administrativo exibe prévia em tempo real com o valor original e o valor com desconto calculado sobre o preço unitário do produto.
+- **Catálogo Público com Escolha Restrita aos Tamanhos de Combo**:
+  - Para produtos em combo, o cliente escolhe exclusivamente entre os cards de 5, 10 ou 15 unidades. Quantidade numérica livre (1, 2, 3...) é proibida nesse fluxo.
+  - O cliente distribui a quantidade exata entre os sabores disponíveis; a confirmação exige que a soma dos sabores seja estritamente igual ao tamanho do combo.
+- **Fórmula de Preço e Não Incidência em Adicionais**:
+  - O desconto do combo incide exclusivamente sobre o valor base do combo:
+    - `comboBruto = unitPrice * comboQuantity`
+    - `comboDiscount = comboBruto * (discountPercent / 100)`
+    - `comboBaseFinal = comboBruto - comboDiscount`
+  - Adicionais de sabor (`additional_price`) são somados separadamente ao final (`total = comboBaseFinal + addonsTotal`). O desconto comercial do combo nunca incide sobre adicionais de sabores.
+  - Ausência de linhas redundantes: quando o desconto for 0%, não se exibe linha de desconto nem "De R$ X Por R$ X", mantendo apenas o valor direto do combo.
+- **Estrutura de Carrinho e WhatsApp**:
+  - O carrinho armazena explicitamente o objeto com todos os valores discriminados e mantém retrocompatibilidade com versões anteriores.
+  - O WhatsApp apresenta o item de forma limpa e discriminada: `1x Combo {qtd} — {produto}`, lista de sabores, valor base, desconto (se houver), valor do combo, acréscimos (se houver) e subtotal final, garantindo exatidão de centavos entre telas.

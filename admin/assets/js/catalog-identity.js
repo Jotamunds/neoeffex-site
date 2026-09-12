@@ -191,14 +191,14 @@
         if (eyebrow) eyebrow.textContent = "ETAPA 10";
         if (phaseTitle) phaseTitle.textContent = "Operação e entrega";
         if (phaseCopy) phaseCopy.textContent = "Catálogo da Lu atualizado e ajustes de interface concluídos."; 
-        if (version) version.textContent = "ADMIN / 0.3.9";
+        if (version) version.textContent = "ADMIN / 0.4.0";
         if (notice) {
             notice.setAttribute("aria-label", "Status da décima etapa");
             const paragraph = notice.querySelector("p");
             if (paragraph) {
                 paragraph.replaceChildren();
                 const strong = document.createElement("strong");
-                strong.textContent = "Catálogo v0.3.9 disponível. ";
+                strong.textContent = "Catálogo v0.4.0 disponível. ";
                 paragraph.append(strong, document.createTextNode("Sessões, edição, logos, carrinho e exclusão de catálogo pausado foram atualizados."));
             }
         }

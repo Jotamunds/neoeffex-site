@@ -2,38 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://neoeffex.com.br/</loc>
-    <lastmod>2026-09-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
-    <loc>https://neoeffex.com.br/sites/lu-leve-e-saudavel/</loc>
-    <lastmod>2026-09-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://neoeffex.com.br/planos/</loc>
+    <lastmod>2026-09-10</lastmod>
   </url>
   <url>
     <loc>https://neoeffex.com.br/modelos/barbearia/</loc>
-    <lastmod>2026-09-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-09-04</lastmod>
+  </url>
+  <url>
+    <loc>https://neoeffex.com.br/modelos/boafont/</loc>
+    <lastmod>2026-09-07</lastmod>
   </url>
   <url>
     <loc>https://neoeffex.com.br/modelos/clinica-odontologica/</loc>
-    <lastmod>2026-09-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-09-03</lastmod>
   </url>
   <url>
     <loc>https://neoeffex.com.br/modelos/hortifruti/</loc>
-    <lastmod>2026-09-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-09-03</lastmod>
+  </url>
+  <url>
+    <loc>https://neoeffex.com.br/sites/lu-leve-e-saudavel/</loc>
+    <lastmod>2026-09-04</lastmod>
   </url>
   <url>
     <loc>https://neoeffex.com.br/privacidade.html</loc>
     <lastmod>2026-09-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
   </url>
 </urlset>

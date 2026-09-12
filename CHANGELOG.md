@@ -2,6 +2,14 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.1.83] - 2026-09-12
+
+### Alterado
+- Atualiza `sitemap.xml` para validação e indexação pelo Google Search Console, removendo campos obsoletos (`changefreq` e `priority`).
+- Sincroniza as datas de `<lastmod>` com o histórico real e auditado do Git para cada página pública.
+- Inclui as páginas públicas ativas `/planos/` e `/modelos/boafont/` no sitemap.
+- Revisa `robots.txt` garantindo mapeamento correto do sitemap e preservação das diretivas de rastreamento.
+
 ## [0.2.2] - 2026-09-09
 
 ### Adicionado

@@ -191,14 +191,14 @@
         if (eyebrow) eyebrow.textContent = "ETAPA 10";
         if (phaseTitle) phaseTitle.textContent = "Operação e entrega";
         if (phaseCopy) phaseCopy.textContent = "Catálogo da Lu atualizado e ajustes de interface concluídos."; 
-        if (version) version.textContent = "ADMIN / 0.1.12";
+        if (version) version.textContent = "ADMIN / 0.3.9";
         if (notice) {
             notice.setAttribute("aria-label", "Status da décima etapa");
             const paragraph = notice.querySelector("p");
             if (paragraph) {
                 paragraph.replaceChildren();
                 const strong = document.createElement("strong");
-                strong.textContent = "Catálogo v0.1.12 disponível. ";
+                strong.textContent = "Catálogo v0.3.9 disponível. ";
                 paragraph.append(strong, document.createTextNode("Sessões, edição, logos, carrinho e exclusão de catálogo pausado foram atualizados."));
             }
         }
@@ -556,27 +556,6 @@
     }
 }());
 
-
-(function loadImageEditorModule() {
-    "use strict";
-
-    const stylesheetPath = "assets/css/image-editor.css";
-    const scriptPath = "assets/js/image-editor.js";
-
-    if (!document.querySelector('link[href="' + stylesheetPath + '"]')) {
-        const stylesheet = document.createElement("link");
-        stylesheet.rel = "stylesheet";
-        stylesheet.href = stylesheetPath;
-        document.head.appendChild(stylesheet);
-    }
-
-    if (!document.querySelector('script[src="' + scriptPath + '"]')) {
-        const script = document.createElement("script");
-        script.src = scriptPath;
-        script.async = false;
-        document.head.appendChild(script);
-    }
-}());
 
 
 (function notifyDuplicateCatalogSlug() {

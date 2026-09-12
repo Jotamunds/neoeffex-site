@@ -2088,18 +2088,69 @@ body.has-modal {
 }
 
 .settings-form__grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
     gap: 12px;
+    align-items: start;
 }
 
 .settings-form__grid .form-field {
-    flex: 1 1 220px;
+    grid-column: span 12;
+    min-width: 0;
 }
 
-.settings-form__grid .form-field--short {
-    flex: 0 0 100px;
-    max-width: 120px;
+.settings-form__grid .form-field--full {
+    grid-column: 1 / -1;
+}
+
+/* Category, Type, Group: Name (span 9), Order (span 3) */
+#rootCategoryForm .settings-form__grid .form-field:not(.form-field--short),
+#productTypeForm .settings-form__grid .form-field:not(.form-field--short),
+#productGroupForm .settings-form__grid .form-field:not(.form-field--short) {
+    grid-column: span 9;
+}
+
+#rootCategoryForm .settings-form__grid .form-field--short,
+#productTypeForm .settings-form__grid .form-field--short,
+#productGroupForm .settings-form__grid .form-field--short {
+    grid-column: span 3;
+}
+
+/* Subcategory: Name (span 5), Parent (span 5), Order (span 2) */
+#subcategoryForm .settings-form__grid .form-field:not(.form-field--short):first-child {
+    grid-column: span 5;
+}
+
+#subcategoryForm .settings-form__grid .form-field:nth-child(2) {
+    grid-column: span 5;
+}
+
+#subcategoryForm .settings-form__grid .form-field--short {
+    grid-column: span 2;
+}
+
+/* Flavor: Name (span 6), Order (span 3), Status (span 3) */
+#flavorForm .settings-form__grid .form-field:first-child {
+    grid-column: span 6;
+}
+
+#flavorForm .settings-form__grid .form-field--short:nth-of-type(2) {
+    grid-column: span 3;
+}
+
+#flavorForm .settings-form__grid .form-field--short:nth-of-type(3) {
+    grid-column: span 3;
+}
+
+.settings-form input[type="text"],
+.settings-form input[type="number"],
+.settings-form select {
+    min-height: 42px;
+}
+
+.settings-form textarea {
+    min-height: 68px;
+    resize: vertical;
 }
 
 .settings-form__actions {
@@ -2165,10 +2216,24 @@ body.has-modal {
     }
 
     .settings-form__grid {
-        flex-direction: column;
+        grid-template-columns: 1fr;
     }
 
-    .settings-form__grid .form-field--short {
+    .settings-form__grid .form-field,
+    .settings-form__grid .form-field--short,
+    .settings-form__grid .form-field--full,
+    #rootCategoryForm .settings-form__grid .form-field,
+    #rootCategoryForm .settings-form__grid .form-field--short,
+    #subcategoryForm .settings-form__grid .form-field,
+    #subcategoryForm .settings-form__grid .form-field--short,
+    #productTypeForm .settings-form__grid .form-field,
+    #productTypeForm .settings-form__grid .form-field--short,
+    #productGroupForm .settings-form__grid .form-field,
+    #productGroupForm .settings-form__grid .form-field--short,
+    #flavorForm .settings-form__grid .form-field,
+    #flavorForm .settings-form__grid .form-field--short {
+        grid-column: 1 / -1;
+        width: 100%;
         max-width: 100%;
     }
 }

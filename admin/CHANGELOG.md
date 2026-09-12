@@ -1,5 +1,27 @@
 # Changelog — Painel administrativo
 
+## [0.3.9] - 2026-09-12
+
+### Estabilização do Editor de Imagens, Sabores, Storage e Responsividade
+- **Editor Universal de Imagens**: Eliminado o carregamento duplicado de `image-editor.js` e `image-editor.css` através da remoção do loader redundante em `catalog-identity.js` e inclusão de guarda global de idempotência (`window.__NEOEFFEX_IMAGE_EDITOR_INITIALIZED__`). Proteção contra duplicação de botões "Ajustar foto atual" e sobreposição de overlays.
+- **Resolução de Reabertura Indesejada**: Corrigido o consumo de `imageEditorBypass` que reabria o editor de imagens imediatamente após o clique em "Aplicar imagem" devido a múltiplos event listeners concorrentes.
+- **Estabilização de `saveFlavor`**: Reestruturado o gerenciamento do botão `saveFlavorButton` com bloco `finally` garantido, assegurando que o botão nunca fique desabilitado permanentemente após salvamento bem-sucedido ou erros.
+- **Ciclo de Vida Seguro de Imagens de Sabores no Storage**:
+  - Na substituição de foto de sabor existente, a foto anterior só é removida do Storage após a confirmação do update no banco de dados. Em caso de falha no update, a imagem recém-enviada é removida e a foto anterior é preservada.
+  - No cadastro de novo sabor com foto, valida-se o retorno do update de `image_path`; em caso de erro, a imagem é removida do Storage e o registro é cancelado, eliminando falsos sucessos.
+  - Na exclusão de sabor com foto, trata-se eventual falha na exclusão do arquivo no Storage informando o usuário adequadamente.
+- **Sincronização Segura Produto ↔ Sabores (`syncProductFlavors`)**: Substituído o padrão destrutivo `DELETE` seguido de `INSERT` por sincronização baseada em diff incremental (inserção de novos vínculos primeiro, atualização de existentes e remoção apenas dos desmarcados), garantindo que falhas parciais não apaguem os relacionamentos existentes.
+- **Layout e Responsividade do Admin**:
+  - Migrado `.settings-form__grid` para CSS Grid com `align-items: start`, eliminando o esticamento vertical de campos vizinhos à área de foto.
+  - Corrigido o `flex-basis: 220px` no mobile que inflava a altura dos campos para 220px, garantindo altura compacta e natural (~42px) para inputs e selects.
+  - Textarea independente com redimensionamento vertical e `.form-field--full` funcional via CSS Grid (`grid-column: 1 / -1`).
+- **Tema Lu Leve e Saudável e Proporções de Logo**:
+  - Tema da Lu atualizado para respeitar as três proporções estruturais de logotipo (1:1 Quadrada, 3:4 Vertical e 4:3 Horizontal) em desktop e breakpoints mobile (620px e 420px).
+  - Alterado `object-fit: cover` para `object-fit: contain` em `.catalog-identity-logo img` no tema da Lu, prevenindo cortes indevidos de logotipos.
+  - Adicionado cache busting para o stylesheet do tema (`lu-leve-e-saudavel.css?v=0.3.9`).
+- **Sincronização de Versão na Interface**: Atualizado texto legado `ADMIN / 0.1.12` para `ADMIN / 0.3.9` no `index.html` e no script `catalog-identity.js`.
+- **Cache Busting e Versionamento**: Sincronização uniforme de `admin/VERSION`, `catalogo/VERSION` e query strings versionadas (`?v=0.3.9`) nos assets do Admin e Catálogo.
+
 ## [0.3.8] - 2026-09-10
 
 ### Padronização de Imagens 1:1, Proporções de Logo, Editor Universal e Branding

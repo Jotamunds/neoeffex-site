@@ -1,6 +1,11 @@
 (function () {
     "use strict";
 
+    if (typeof window !== "undefined") {
+        if (window.__NEOEFFEX_IMAGE_EDITOR_INITIALIZED__) return;
+        window.__NEOEFFEX_IMAGE_EDITOR_INITIALIZED__ = true;
+    }
+
     const INPUT_CONFIG = Object.freeze({
         productImage: Object.freeze({
             kind: "product",
@@ -81,34 +86,45 @@
             return;
         }
 
-        const button = document.createElement("button");
-        const help = document.createElement("span");
+        const container = input.parentElement || input;
+        let button = container.querySelector(".image-editor-launch");
+        let help = container.querySelector(".image-editor-inline-help");
 
-        button.type = "button";
-        button.className = "image-editor-launch";
-        button.textContent = "Ajustar imagem";
-        button.hidden = true;
+        if (!button) {
+            button = document.createElement("button");
+            button.type = "button";
+            button.className = "image-editor-launch";
+            button.textContent = "Ajustar imagem";
+            button.hidden = true;
 
-        help.className = "image-editor-inline-help";
-        if (input.id === "productImage") {
-            help.textContent = "O editor padroniza a foto do produto em 1:1 antes do upload.";
-        } else if (input.id === "flavorImage") {
-            help.textContent = "O editor padroniza a foto do sabor em 1:1 antes do upload.";
+            button.addEventListener("click", function () {
+                openFromLaunchButton(input);
+            });
+            container.append(button);
         } else {
-            help.textContent = "O editor permite enquadrar a logo em 1:1, 3:4 ou 4:3 sem deformá-la.";
+            button.onclick = function () {
+                openFromLaunchButton(input);
+            };
         }
 
-        button.addEventListener("click", function () {
-            openFromLaunchButton(input);
-        });
+        if (!help) {
+            help = document.createElement("span");
+            help.className = "image-editor-inline-help";
+            if (input.id === "productImage") {
+                help.textContent = "O editor padroniza a foto do produto em 1:1 antes do upload.";
+            } else if (input.id === "flavorImage") {
+                help.textContent = "O editor padroniza a foto do sabor em 1:1 antes do upload.";
+            } else {
+                help.textContent = "O editor permite enquadrar a logo em 1:1, 3:4 ou 4:3 sem deformá-la.";
+            }
+            container.append(help);
+        }
 
-        const container = input.parentElement || input;
-        container.append(button, help);
         launchButtons.set(input, button);
 
         const preview = getPreviewImage(input);
 
-        if (preview) {
+        if (preview && !previewObservers.has(input)) {
             const observer = new MutationObserver(function () {
                 syncLaunchControl(input);
             });
@@ -398,6 +414,8 @@
     }
 
     function buildEditor() {
+        if (editor || document.querySelector(".image-editor-overlay")) return;
+
         const overlay = document.createElement("div");
         const dialog = document.createElement("div");
         const header = document.createElement("div");

@@ -1953,6 +1953,96 @@
         return { data: selected };
     }
 
+    async function syncProductFlavors(productId, selectedFlavors) {
+        if (!activeCatalog) return { error: new Error("Catálogo ativo não encontrado") };
+
+        let existingAssocs = [];
+        const queryRes = await client.from("product_flavors")
+            .select("product_id, flavor_id, catalog_id, sort_order, additional_price, is_available")
+            .eq("product_id", productId)
+            .eq("catalog_id", activeCatalog.id);
+
+        if (queryRes.error) {
+            console.warn("Não foi possível carregar associações existentes para diff, usando cache local", queryRes.error);
+            existingAssocs = productFlavorsRelations.filter(function (r) {
+                return r.product_id === productId && r.catalog_id === activeCatalog.id;
+            });
+        } else {
+            existingAssocs = queryRes.data || [];
+        }
+
+        const existingMap = new Map();
+        existingAssocs.forEach(function (r) {
+            existingMap.set(r.flavor_id, r);
+        });
+
+        const selectedMap = new Map();
+        selectedFlavors.forEach(function (s) {
+            selectedMap.set(s.flavor_id, s);
+        });
+
+        const toInsert = selectedFlavors.filter(function (s) {
+            return !existingMap.has(s.flavor_id);
+        });
+
+        const toUpdate = selectedFlavors.filter(function (s) {
+            const old = existingMap.get(s.flavor_id);
+            if (!old) return false;
+            return old.sort_order !== s.sort_order
+                || Number(old.additional_price) !== Number(s.additional_price)
+                || old.is_available !== s.is_available;
+        });
+
+        const toDelete = existingAssocs.filter(function (old) {
+            return !selectedMap.has(old.flavor_id);
+        });
+
+        // 1. Inserir novos vínculos PRIMEIRO: se falhar, os anteriores permanecem 100% intactos
+        if (toInsert.length > 0) {
+            const insertRes = await client.from("product_flavors").insert(toInsert);
+            if (insertRes.error) {
+                console.error("Erro ao vincular novos sabores ao produto", insertRes.error);
+                return { error: insertRes.error };
+            }
+        }
+
+        // 2. Atualizar vínculos existentes modificados
+        for (let i = 0; i < toUpdate.length; i++) {
+            const item = toUpdate[i];
+            const updateRes = await client.from("product_flavors")
+                .update({
+                    sort_order: item.sort_order,
+                    additional_price: item.additional_price,
+                    is_available: item.is_available
+                })
+                .eq("product_id", productId)
+                .eq("flavor_id", item.flavor_id)
+                .eq("catalog_id", activeCatalog.id);
+
+            if (updateRes.error) {
+                console.error("Erro ao atualizar sabor do produto", updateRes.error);
+                return { error: updateRes.error };
+            }
+        }
+
+        // 3. Somente após inserções e atualizações concluídas, remover os desmarcados
+        if (toDelete.length > 0) {
+            const idsToDelete = toDelete.map(function (d) { return d.flavor_id; });
+            const deleteRes = await client.from("product_flavors")
+                .delete()
+                .eq("product_id", productId)
+                .eq("catalog_id", activeCatalog.id)
+                .in("flavor_id", idsToDelete);
+
+            if (deleteRes.error) {
+                console.error("Erro ao remover sabores desmarcados do produto", deleteRes.error);
+                return { error: deleteRes.error, partial: true };
+            }
+        }
+
+        return { success: true };
+    }
+
     function renderFlavors() {
         if (!flavorsTabCount || !flavorList) return;
         flavorsTabCount.textContent = String(flavors.length);
@@ -2070,6 +2160,7 @@
             showFlavorImagePreview("", "S");
             saveFlavorButton.textContent = "Salvar sabor";
         }
+        saveFlavorButton.disabled = false;
         flavorImageInput.value = "";
         flavorForm.hidden = false;
         window.setTimeout(function () { flavorName.focus(); }, 0);
@@ -2130,6 +2221,7 @@
             return;
         }
 
+        const isEditing = Boolean(currentId);
         saveFlavorButton.disabled = true;
         saveFlavorButton.textContent = "Salvando…";
         setFeedback(flavorFeedback, "", "");
@@ -2147,36 +2239,49 @@
 
         try {
             if (currentId) {
+                // 3.1 Substituição de imagem existente
+                const previousImagePath = existingFlavor && existingFlavor.image_path;
+                let shouldRemovePreviousImage = false;
+
                 if (imageFile) {
                     const uploadRes = await uploadCatalogImage(imageFile, currentId);
                     if (uploadRes.error) {
                         console.error("Erro no upload de imagem de sabor", uploadRes.error);
                         setFeedback(flavorFeedback, "Não foi possível enviar a imagem do sabor.", "error");
-                        saveFlavorButton.disabled = false;
-                        saveFlavorButton.textContent = "Salvar alterações";
                         return;
                     }
                     uploadedImagePath = uploadRes.path;
                     payload.image_path = uploadedImagePath;
-                } else if (removeFlavorImage.checked && existingFlavor && existingFlavor.image_path) {
+                    if (previousImagePath && previousImagePath !== uploadedImagePath) {
+                        shouldRemovePreviousImage = true;
+                    }
+                } else if (removeFlavorImage.checked && previousImagePath) {
                     payload.image_path = null;
+                    shouldRemovePreviousImage = true;
                 }
 
                 const updateRes = await client.from("flavors").update(payload).eq("id", currentId).eq("catalog_id", activeCatalog.id).select("id").single();
                 if (updateRes.error) {
                     if (updateRes.error.code !== "23505") console.error("Erro ao atualizar sabor", updateRes.error);
-                    if (uploadedImagePath) await removeStoredProductImage(uploadedImagePath);
+                    // Se o update falhou, remove a nova imagem enviada e preserva a antiga
+                    if (uploadedImagePath) {
+                        await removeStoredProductImage(uploadedImagePath);
+                    }
                     setFeedback(flavorFeedback, updateRes.error.code === "23505"
                         ? "Já existe um sabor com este nome neste catálogo."
                         : "Não foi possível salvar o sabor. Tente novamente.", "error");
-                    saveFlavorButton.disabled = false;
-                    saveFlavorButton.textContent = "Salvar alterações";
                     return;
                 }
-                if (removeFlavorImage.checked && existingFlavor && existingFlavor.image_path) {
-                    await removeStoredProductImage(existingFlavor.image_path);
+
+                // Somente após o update do banco confirmado, remove a imagem anterior
+                if (shouldRemovePreviousImage && previousImagePath) {
+                    const removeErr = await removeStoredProductImage(previousImagePath);
+                    if (removeErr) {
+                        console.warn("Imagem antiga de sabor não pôde ser removida do armazenamento", removeErr);
+                    }
                 }
             } else {
+                // 3.2 Novo sabor com imagem
                 const insertRes = await client.from("flavors").insert(Object.assign({}, payload, {
                     catalog_id: activeCatalog.id
                 })).select("id").single();
@@ -2186,8 +2291,6 @@
                     setFeedback(flavorFeedback, insertRes.error.code === "23505"
                         ? "Já existe um sabor com este nome neste catálogo."
                         : "Não foi possível salvar o sabor. Tente novamente.", "error");
-                    saveFlavorButton.disabled = false;
-                    saveFlavorButton.textContent = "Salvar sabor";
                     return;
                 }
                 savedFlavorId = insertRes.data.id;
@@ -2198,11 +2301,19 @@
                         console.error("Erro no upload de imagem de novo sabor", uploadRes.error);
                         await client.from("flavors").delete().eq("id", savedFlavorId).eq("catalog_id", activeCatalog.id);
                         setFeedback(flavorFeedback, "Não foi possível enviar a foto do sabor. Tente novamente.", "error");
-                        saveFlavorButton.disabled = false;
-                        saveFlavorButton.textContent = "Salvar sabor";
                         return;
                     }
-                    await client.from("flavors").update({ image_path: uploadRes.path }).eq("id", savedFlavorId).eq("catalog_id", activeCatalog.id);
+                    uploadedImagePath = uploadRes.path;
+
+                    const updatePathRes = await client.from("flavors").update({ image_path: uploadedImagePath }).eq("id", savedFlavorId).eq("catalog_id", activeCatalog.id).select("id").single();
+                    if (updatePathRes.error) {
+                        console.error("Erro ao vincular foto ao novo sabor", updatePathRes.error);
+                        // Compensação segura: remove arquivo do Storage e remove o sabor parcial do banco
+                        await removeStoredProductImage(uploadedImagePath);
+                        await client.from("flavors").delete().eq("id", savedFlavorId).eq("catalog_id", activeCatalog.id);
+                        setFeedback(flavorFeedback, "Não foi possível vincular a foto do sabor. Tente novamente.", "error");
+                        return;
+                    }
                 }
             }
 
@@ -2212,8 +2323,11 @@
         } catch (err) {
             console.error("Exceção ao salvar sabor", err);
             setFeedback(flavorFeedback, "Ocorreu um erro ao salvar o sabor.", "error");
+        } finally {
             saveFlavorButton.disabled = false;
-            saveFlavorButton.textContent = currentId ? "Salvar alterações" : "Salvar sabor";
+            saveFlavorButton.textContent = (flavorForm && !flavorForm.hidden && flavorId.value)
+                ? "Salvar alterações"
+                : (isEditing ? "Salvar alterações" : "Salvar sabor");
         }
     }
 
@@ -2567,20 +2681,11 @@
                 if (payload.purchase_mode === "flavor_bundle") {
                     const flavorsResult = getSelectedProductFlavors(savedProductId);
                     const selectedFlavors = flavorsResult.data || [];
-                    const deleteFlavorsRes = await client.from("product_flavors")
-                        .delete()
-                        .eq("product_id", savedProductId)
-                        .eq("catalog_id", activeCatalog.id);
-                    if (deleteFlavorsRes.error) {
-                        console.error("Erro ao sincronizar sabores do produto (delete)", deleteFlavorsRes.error);
-                    }
-                    if (selectedFlavors.length > 0) {
-                        const insertFlavorsRes = await client.from("product_flavors").insert(selectedFlavors);
-                        if (insertFlavorsRes.error) {
-                            console.error("Erro ao salvar sabores do produto", insertFlavorsRes.error);
-                            setFeedback(productFeedback, "Não foi possível vincular os sabores ao produto.", "error");
-                            return;
-                        }
+                    const syncRes = await syncProductFlavors(savedProductId, selectedFlavors);
+                    if (syncRes.error) {
+                        console.error("Erro ao sincronizar sabores do produto", syncRes.error);
+                        setFeedback(productFeedback, "Não foi possível vincular todos os sabores ao produto. As relações anteriores foram preservadas.", "error");
+                        return;
                     }
                 } else {
                     const cleanupFlavorsRes = await client.from("product_flavors")
@@ -2845,13 +2950,17 @@
                 return;
             }
 
+            let storageCleanupFailed = false;
             if (deletion.image_path) {
-                await removeStoredProductImage(deletion.image_path);
+                const storageErr = await removeStoredProductImage(deletion.image_path);
+                storageCleanupFailed = Boolean(storageErr);
             }
 
             closeDeleteModal();
             await loadActiveCatalogData();
-            showToast("Sabor excluído com sucesso.");
+            showToast(storageCleanupFailed
+                ? "Sabor excluído, mas a foto não pôde ser removida do armazenamento."
+                : "Sabor excluído com sucesso.");
             return;
         }
 
@@ -3235,6 +3344,11 @@
         body.classList.remove("is-loading");
         return;
     }
+
+    window.NEOEFFEX_ADMIN_FLAVORS = Object.freeze({
+        saveFlavor: saveFlavor,
+        syncProductFlavors: syncProductFlavors
+    });
 
     initializeConfiguredPanel();
 }());

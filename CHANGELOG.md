@@ -2,6 +2,13 @@
 
 Todas as alterações relevantes desta landing page serão registradas aqui.
 
+## [0.2.4] - 2026-09-13
+
+### Adicionado
+- Instala Google Tag Manager no site institucional e demonstrações públicas da Neoeffex.
+- Adiciona o container GTM-5BCGQ6TT como base da arquitetura de analytics.
+- Mantém áreas administrativas, catálogos e sites de clientes fora do rastreamento corporativo nesta etapa.
+
 ## [0.2.3] - 2026-09-12
 
 ### Alterado

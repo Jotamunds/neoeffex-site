@@ -244,6 +244,7 @@
 ---
 
 ### UI-008
+- **Status:** RESOLVIDO
 - **Severidade:** MÉDIO
 - **Seção:** Manifesto (`#empresa`)
 - **Resolução onde ocorre:** Todas as resoluções
@@ -253,6 +254,13 @@
 - **Evidência:** Inspecionado no DOM via CDP: `getComputedStyle(manifestSymbol).opacity` retorna `"0"` no carregamento inicial da página antes do gatilho de scroll ser atingido.
 - **Causa provável:** No script `animations.js`, `manifestoTimeline.from(manifestSymbol, { autoAlpha: 0, duration: 1.15 })` inicializa o elemento com autoAlpha 0 via GSAP.
 - **Correção sugerida:** Manter o símbolo sempre visível com a opacidade configurada no CSS (`opacity: 0.18` / `0.14`) e usar a timeline apenas para aplicar movimento sutil ou parallax via scrub, sem ocultar a identidade visual antes do scroll.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Removido o parâmetro `autoAlpha: 0` de `manifestoTimeline.from(manifestSymbol, ...)` em `assets/js/animations.js`, substituindo-o por um micro-ajuste de escala (`scale: .96, duration: 1.3, ease: 'power1.out'`). A opacidade base do símbolo permanece ativa e visível continuamente conforme configurado no CSS (`0.18` em desktop, `0.14` em tablet, `0.11` em mobile), eliminando o atraso de carregamento e preservando o parallax suave via scrub no desktop e a compatibilidade integral com `prefers-reduced-motion`.
+  - **Arquivos modificados:** `assets/js/animations.js`
+  - **Valores anteriores:** `opacity: 0` e `visibility: hidden` até o gatilho de 67% da seção.
+  - **Valores novos:** Opacidade constante e visível desde o primeiro instante (`opacity: 0.18` no desktop, `0.14` no tablet, `0.11` no mobile).
+  - **Resoluções usadas para validação:** 390×844, 768×1024, 1366×768, 1440×900, 1920×1080.
+  - **Evidência da correção:** Medição programática via CDP antes da rolagem confirmou `opacity: "0.18"`, `visibility: "visible"` em desktop e `opacity: "0.11"` em mobile, sem jamais zerar ou ocultar a marca.
 
 ---
 

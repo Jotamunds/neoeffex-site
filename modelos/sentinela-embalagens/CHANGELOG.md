@@ -42,4 +42,9 @@ Nenhuma alteração visual intencional foi feita nesta etapa.
 - Correção UI-010: remoção de borda superior na primeira linha da grelha de pilares no mobile via seletor `:nth-child(n+3)`.
 - Correção UI-017: bloqueio de layout shifts com `aspect-ratio: 1 / 1` nas imagens de produtos e registro de listener de recálculo no `ScrollTrigger.refresh()`.
 
+## v0.1.5
+
+- Correção UI-008: preservação da visibilidade contínua da marca d'água no Manifesto, removendo inicialização em `autoAlpha: 0` e mantendo opacidade suave e estável com micro-ajuste de escala.
+
+
 

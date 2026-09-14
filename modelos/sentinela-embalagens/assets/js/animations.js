@@ -76,7 +76,7 @@
             manifestoTimeline
                 .from(manifestCopy, { y: 35, autoAlpha: 0, duration: .84 })
                 .from(manifestProducts, { y: 40, autoAlpha: 0, scale: .96, duration: .94, transformOrigin: 'center bottom' }, '-=.6')
-                .from(manifestSymbol, { autoAlpha: 0, duration: 1.15 }, '-=.7');
+                .from(manifestSymbol, { scale: .96, duration: 1.3, ease: 'power1.out', transformOrigin: 'center center' }, '-=.7');
         }
 
         if (pillars) {

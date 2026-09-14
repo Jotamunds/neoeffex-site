@@ -17,3 +17,12 @@ Nenhuma alteração visual intencional foi feita nesta etapa.
 
 - Estrutura organizada para uso em `modelos/sentinela-embalagens/`.
 - Adicionado `VERSION` e mapa técnico do projeto.
+
+## v0.1.2
+
+- Correção UI-001: remoção de limitação de largura de 13ch em `.hero-copy` para telas <= 920px, restaurando botão e título sem quebras indevidas.
+- Correção UI-002: reestruturação geométrica e vertical dos 4 produtos do showcase apoiados no topo elíptico dos pedestais.
+- Correção UI-003: importação oficial da família tipográfica `Manrope` via Google Fonts no `<head>` do `index.html`.
+- Correção UI-004: transição contínua entre Manifesto e Produto em Destaque via `.manifesto::after` com gradiente suave multicamadas.
+- Correção UI-005: padronização da largura do pedestal do 3º item (Lacres) em 88% e balanceamento de escala/espaçamento do produto.
+

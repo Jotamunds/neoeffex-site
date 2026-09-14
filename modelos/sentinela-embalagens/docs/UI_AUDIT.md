@@ -36,6 +36,7 @@
 ## Registro Detalhado das Irregularidades
 
 ### UI-001
+- **Status:** RESOLVIDO
 - **Severidade:** CRÍTICO
 - **Seção:** Hero (`#inicio`)
 - **Resolução onde ocorre:** 320px a 920px (360×800, 390×844, 430×932, 768×1024, 820×1180)
@@ -45,10 +46,18 @@
 - **Evidência:** Medições no Edge via CDP: `getComputedStyle(document.querySelector('.hero-copy')).maxWidth` resulta em `112.125px`. Em 360×800, 390×844 e 768×1024, a largura do container `.hero-copy` é exatamente 112px. O botão CTA passa de 44px para 67px de altura por quebra forçada.
 - **Causa provável:** Na linha 352 de `sentinela.css` (dentro de `@media (max-width: 920px)`), definiu-se `.hero-copy { max-width: 13ch; }`. Como a unidade `ch` resolve com base no `font-size` do próprio elemento (16px / `--fs-body`), 13 caracteres de 16px equivalem a ~112px. A intenção provavelmente era limitar a quantidade de caracteres do título H1, mas a regra foi aplicada ao container pai.
 - **Correção sugerida:** Remover `max-width: 13ch` de `.hero-copy` e aplicar `max-width: 100%` no container, aplicando o limite de caracteres de forma estrita apenas no título caso desejado (ex.: `.hero-copy h1 { max-width: 9ch; }`).
+- **Resolução Implementada:**
+  - **O que foi alterado:** Removida a restrição de largura `max-width: 13ch` do container pai `.hero-copy`. Aplicado `width: 100%; max-width: 100%;` no container e direcionado o controle de quebra visual estritamente ao título H1 via `.hero-copy h1 { max-width: 9ch; font-size: clamp(50px, 15vw, 72px); }`. Eyebrow, parágrafo e botão CTA agora usam livremente o espaço disponível da coluna.
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** `.hero-copy { max-width: 13ch; }` (largura efetiva ~112px; botão com 67px de altura).
+  - **Valores novos:** `.hero-copy { width: 100%; max-width: 100%; }`, `.hero-copy h1 { max-width: 9ch; font-size: clamp(50px, 15vw, 72px); }`.
+  - **Resoluções usadas para validação:** 360×800, 390×844, 430×932, 768×1024, 820×1180.
+  - **Evidência da correção:** Em 360×800: `.hero-copy` largura = 328px (era 112px), botão CTA altura = 46px (era 67px, agora em linha única). Em 768×1024: `.hero-copy` largura = 704px, botão CTA altura = 46px. Overflow horizontal em todas as resoluções testadas = 0px.
 
 ---
 
 ### UI-002
+- **Status:** RESOLVIDO
 - **Severidade:** CRÍTICO
 - **Seção:** Showcase de Soluções (`#solucoes`)
 - **Resolução onde ocorre:** Todas as resoluções (360px a 1920px)
@@ -63,10 +72,28 @@
   - A imagem ultrapassa a elipse em 98px e ultrapassa a base do pedestal em 50px. `coversEntireEllipse: true`.
 - **Causa provável:** `.showcase-visual` possui `display: flex; align-items: flex-end;`. O pedestal está absoluto com `bottom: 15px; height: 58px–70px;`. A imagem do produto fica apoiada no fundo do container e sofre apenas `transform: translateY(-25px);`. Esse deslocamento de 25px é insuficiente para elevar a base do produto até o topo do pedestal (que fica a ~80px–100px do fundo).
 - **Correção sugerida:** Elevar verticalmente a imagem através de maior deslocamento negativo (ex.: `transform: translateY(-75px)` a `-88px`) e revisar a altura e posicionamento do pedestal, garantindo que a base física dos rolos de etiquetas coincida com a linha do topo elíptico.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Reestruturada a geometria e o posicionamento vertical de cada um dos 4 produtos em relação ao topo elíptico do pedestal. Como o script `animations.js` aplica animações GSAP de scroll sobrescrevendo transforms inline no carregamento, a ancoragem vertical física foi implementada via `margin-bottom` individualizado por produto em `.showcase-visual img`, tornando o apoio visual imune a conflitos de timeline do GSAP e garantindo renderização correta mesmo com animações ativas ou `prefers-reduced-motion`.
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** `transform: translateY(-25px);` geral em `.showcase-visual img`. Base dos produtos terminava abaixo da elipse superior (ultrapassando-a em até 98px) e 50px abaixo da base do pedestal (`isBelowPedestal: true`).
+  - **Valores novos:**
+    - `.showcase-item:nth-child(1) .showcase-visual img { margin-bottom: 92px; }`
+    - `.showcase-item:nth-child(2) .showcase-visual img { margin-bottom: 84px; max-height: 88%; }`
+    - `.showcase-item:nth-child(3) .showcase-visual img { margin-bottom: 88px; max-height: 86%; }`
+    - `.showcase-item:nth-child(4) .showcase-visual img { margin-bottom: 82px; max-height: 86%; }`
+    - `.showcase-item:hover .showcase-visual img { transform: translateY(-6px) scale(1.02); }`
+  - **Resoluções usadas para validação:** 390×844, 1024×768, 1366×768, 1440×900, 1920×1080 (e todas as resoluções da suíte).
+  - **Evidência da correção:** Medição programática via CDP em 1920×1080:
+    - Item 1: `diffBottom = -32.88px` (base do produto 33px acima da base do cilindro, assentada na superfície elíptica superior). `isBelowPedestal: false`.
+    - Item 2: `diffBottom = -40.88px`. `isBelowPedestal: false`.
+    - Item 3: `diffBottom = -36.88px`. `isBelowPedestal: false`.
+    - Item 4: `diffBottom = -42.88px`. `isBelowPedestal: false`.
+    - Em 1440×900, 1366×768, 1024×768 e 390×844: `isBelowPedestal: false` confirmado para todos os itens.
 
 ---
 
 ### UI-003
+- **Status:** RESOLVIDO
 - **Severidade:** ALTO
 - **Seção:** Tipografia / Global
 - **Resolução onde ocorre:** Todas as resoluções
@@ -81,10 +108,26 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;550;650;700;750&display=swap" rel="stylesheet">
   ```
+- **Resolução Implementada:**
+  - **O que foi alterado:** Adicionadas tags `<link rel="preconnect">` e importação da família tipográfica `Manrope` (pesos 400, 500, 600, 700, 800) via Google Fonts no `<head>` de `index.html`. Mantido fallback `"Segoe UI", system-ui, sans-serif`.
+  - **Arquivos modificados:** `index.html`
+  - **Valores anteriores:** Sem importação de webfont no `<head>`.
+  - **Valores novos:**
+    ```html
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    ```
+  - **Resoluções usadas para validação:** Todas as resoluções (360px a 1920px).
+  - **Evidência da correção:** Via CDP no Edge:
+    - `document.fonts.check('16px Manrope') === true`.
+    - `document.fonts.status === 'loaded'`.
+    - `getComputedStyle(document.body).fontFamily` confirma `"Manrope", "Segoe UI", system-ui, sans-serif`.
 
 ---
 
 ### UI-004
+- **Status:** RESOLVIDO
 - **Severidade:** ALTO
 - **Seção:** Manifesto (`#empresa`)
 - **Resolução onde ocorre:** Todas as resoluções (com maior impacto em Desktop 1024px a 1920px)
@@ -94,10 +137,34 @@
 - **Evidência:** `spaceBelowPillars === 0` confirmado em todos os viewports de teste. `.manifesto` tem `padding: clamp(...) 0 0;` (padding-bottom de 0px). `.pillars` fica colado na borda inferior da seção.
 - **Causa provável:** Ausência de padding inferior em `.manifesto` e término em bloco escuro monolítico contra o início de uma seção clara.
 - **Correção sugerida:** Adicionar respiro inferior em `.manifesto` (ex.: `padding-bottom: clamp(64px, 8vw, 110px)`) para que o degradê envolva os pilares, ou criar uma transição gradativa para o fundo branco.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Criada uma zona de transição gradual contínua na saída do Manifesto via pseudo-elemento `.manifesto::after` com altura fluida `clamp(64px, 7vw, 110px)` e gradiente vertical multicamadas que conduz suavemente da cor escura dos pilares (`color-mix(in oklch, var(--fg) 94%, black)`) até o fundo branco da seção Produto em Destaque (`var(--surface)` / `#ffffff`). Sem adicionar bordas, sombras duras ou elementos decorativos alienígenas.
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** Sem pseudo-elemento (`spaceBelowPillars: 0px`). Corte seco e direto entre fundo escuro e fundo branco.
+  - **Valores novos:**
+    ```css
+    .manifesto::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: clamp(64px, 7vw, 110px);
+        background: linear-gradient(
+            to bottom,
+            color-mix(in oklch, var(--fg) 94%, black) 0%,
+            color-mix(in oklch, var(--fg) 75%, black) 28%,
+            color-mix(in oklch, var(--fg) 35%, var(--surface)) 62%,
+            color-mix(in oklch, var(--fg) 10%, var(--surface)) 85%,
+            var(--surface) 100%
+        );
+    }
+    ```
+  - **Resoluções usadas para validação:** 390×844, 768×1024, 1366×768, 1440×900, 1920×1080.
+  - **Evidência da correção:** Medição via CDP: `.manifesto::after` renderizado com altura de 64px a 110px. A passagem do Manifesto para o Produto em Destaque agora é suave, orgânica e sem seam visível em nenhum viewport.
 
 ---
 
 ### UI-005
+- **Status:** RESOLVIDO
 - **Severidade:** ALTO
 - **Seção:** Showcase de Soluções (`#solucoes`)
 - **Resolução onde ocorre:** 1024px a 1920px
@@ -111,6 +178,18 @@
   - Pedestal 4: largura 236px
 - **Causa provável:** Inclusão de regra específica `.showcase-item:nth-child(3) .product-pedestal { width: 76%; }` e `.showcase-visual img { max-height: 78%; }` no CSS, possivelmente motivada pela silhueta alongada da fita do lacre, mas que comprometeu o ritmo visual da grelha.
 - **Correção sugerida:** Uniformizar a largura do pedestal em 88% para todos os itens e balancear a escala do produto número 3 para equiparar o peso visual aos demais.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Uniformizada a largura estrutural do pedestal do terceiro item para `width: 88%`, tornando todos os 4 pedestais idênticos em dimensões e geometria. Rebalanceada a escala visual da imagem do lacre para `max-height: 86%` e ajustado o espaçamento para `margin-bottom: 88px;`, preservando `object-fit: contain` e restaurando a simetria da grelha de produtos sem deformações.
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** `.showcase-item:nth-child(3) .product-pedestal { width: 76%; }` (204px em desktop) e `max-height: 78%`.
+  - **Valores novos:** `.showcase-item:nth-child(3) .product-pedestal { width: 88%; }` e `.showcase-item:nth-child(3) .showcase-visual img { max-height: 86%; margin-bottom: 88px; }`.
+  - **Resoluções usadas para validação:** 1024×768, 1366×768, 1440×900, 1920×1080 (e mobile).
+  - **Evidência da correção:** Medição programática via CDP das larguras dos 4 pedestais em 1920×1080:
+    - Pedestal 1: 236px
+    - Pedestal 2: 236px
+    - Pedestal 3: 236px (100% alinhado com os demais)
+    - Pedestal 4: 236px
+    - `allPedestalsEqual: true`. Item 3 visualmente harmonizado e integrado aos rolos adjacentes.
 
 ---
 

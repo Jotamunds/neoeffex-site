@@ -8,13 +8,17 @@
 
 ---
 
-## Resumo Quantitativo
+## Resumo Quantitativo e Status de Resolução
 
 - **Total de problemas identificados:** 17
-- **Críticos:** 2
-- **Altos:** 4
-- **Médios:** 6
-- **Baixos:** 5
+- **Total resolvidos:** 17 (100%)
+- **Parcialmente resolvidos:** 0
+- **Pendentes / Restantes:** 0
+- **Problemas por severidade:**
+  - **Críticos:** 2 identificados / 2 resolvidos (0 restantes)
+  - **Altos:** 4 identificados / 4 resolvidos (0 restantes)
+  - **Médios:** 6 identificados / 6 resolvidos (0 restantes)
+  - **Baixos:** 5 identificados / 5 resolvidos (0 restantes)
 
 ---
 
@@ -483,12 +487,27 @@
 
 ---
 
-## Conclusão da Etapa de Auditoria
+## Conclusão da Etapa de Resolução e Re-Auditoria
 
-Todas as 17 irregularidades foram estritamente mapeadas, mensuradas e documentadas com suas causas e evidências técnicas no navegador.
+Todas as 17 irregularidades identificadas na auditoria técnica inicial (UI-001 a UI-017) foram **100% resolvidas e validadas**.
 
-**Conforme instruído pelo usuário:**
-- Nenhum arquivo de código-fonte (HTML, CSS, JavaScript ou assets) foi modificado.
-- Nenhuma correção automática foi aplicada.
-- Os arquivos do site permanecem 100% intactos.
-- Aguardando aprovação para definir as etapas de correção.
+- **Lote Inicial (v0.1.2):** UI-001 a UI-005 corrigidos e homologados.
+- **Lote A (v0.1.3):** UI-014, UI-012, UI-006, UI-013, UI-015, UI-016 corrigidos e homologados.
+- **Lote B (v0.1.4):** UI-007, UI-009, UI-010, UI-017 corrigidos e homologados.
+- **Lote C (v0.1.5):** UI-008 corrigido e homologado.
+- **Lote D (v0.1.6):** UI-011 corrigido e homologado.
+
+### Validação Final em 9 Viewports
+
+Foi executada uma re-auditoria completa via Microsoft Edge (CDP) nas 9 resoluções-alvo:
+- **360×800, 390×844, 430×932** (Mobile Compact / Standard / Large)
+- **768×1024, 820×1180** (Tablet Portrait)
+- **1024×768** (Tablet Landscape)
+- **1366×768, 1440×900, 1920×1080** (Desktop Laptop / Standard / Wide)
+
+**Resultados da Re-Auditoria:**
+- **Transbordo horizontal (`scrollWidth > clientWidth`):** 0 ocorrências em todas as 9 resoluções.
+- **Erros / Avisos no Console:** 0 ocorrências.
+- **Menu mobile e interações táteis:** Funcionando perfeitamente.
+- **Validação de formulário do rodapé:** Íntegra e funcional.
+- **Regressões visuais ou estruturais:** 0 detectadas.

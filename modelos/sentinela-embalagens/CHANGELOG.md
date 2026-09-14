@@ -26,3 +26,12 @@ Nenhuma alteração visual intencional foi feita nesta etapa.
 - Correção UI-004: transição contínua entre Manifesto e Produto em Destaque via `.manifesto::after` com gradiente suave multicamadas.
 - Correção UI-005: padronização da largura do pedestal do 3º item (Lacres) em 88% e balanceamento de escala/espaçamento do produto.
 
+## v0.1.3
+
+- Correção UI-014: consolidação dos tokens `:root` em bloco único canônico no início de `sentinela.css`.
+- Correção UI-012: padronização semântica de containers (`--container-normal: 1240px;`, `--container-wide: 1440px;`, `--container-narrow: 820px;`) harmonizando eixos visuais.
+- Correção UI-006: balanceamento deliberado da hierarquia de títulos H2 (Manifesto editorial, Soluções, Produto em Destaque até 64px e CTA 50px).
+- Correção UI-013: remoção de estilo inline na dimensão 40 × 40 do produto em destaque e criação da classe `.product-dimension`.
+- Correção UI-015: ajuste do título H3 dos diferenciais para 15px com peso 700, garantindo hierarquia sobre o texto corrido.
+- Correção UI-016: restauração de badge estruturado com fundo translúcido, borda fina e blur para a legenda `.product-caption`.
+

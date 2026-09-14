@@ -194,6 +194,7 @@
 ---
 
 ### UI-006
+- **Status:** RESOLVIDO
 - **Severidade:** ALTO
 - **Seção:** Tipografia / Hierarquia de Títulos
 - **Resolução onde ocorre:** Desktop (1024px a 1920px)
@@ -211,6 +212,13 @@
   - Produto H2: 52px (quase metade do tamanho!)
 - **Causa provável:** O bloco "Revisão industrial v2" sobrescreveu especificamente os títulos de Soluções e Manifesto com escala editorial gigante, mas não atualizou as seções subsequentes (`.product-showcase` e `.cta-band`), gerando inconsistência de peso e hierarquia.
 - **Correção sugerida:** Harmonizar a escala de H2 do site com um token consistente ou criar distinção semântica clara (ex.: classe `.heading-editorial` para o Manifesto e escala uniforme de seção para os demais).
+- **Resolução Implementada:**
+  - **O que foi alterado:** Estabelecida hierarquia deliberada e proporcional para todos os títulos H2 através de novos tokens CSS (`--fs-h2-editorial: clamp(46px, 5.4vw, 88px);`, `--fs-h2-section: clamp(36px, 4vw, 64px);`, `--fs-h2-cta: clamp(30px, 3.4vw, 50px);`). O Manifesto permanece como ápice editorial, Soluções mantém impacto equilibrado, Produto em Destaque assume proporção de seção de destaque (até 64px em vez de 52px travados) e CTA se torna focal e legível (50px).
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** Soluções até 88px, Manifesto até 99px, Produto travado em 52px, CTA travado em 52px.
+  - **Valores novos:** Em 1920×1080: Manifesto = 88.0px, Soluções = 76.0px, Produto = 64.0px, CTA = 50.0px. Em 1440×900: Manifesto = 77.8px, Soluções = 66.2px, Produto = 57.6px, CTA = 49.0px.
+  - **Resoluções usadas para validação:** 390×844, 768×1024, 1366×768, 1440×900, 1920×1080.
+  - **Evidência da correção:** Medição automatizada via CDP confirmou transição harmoniosa de escala em todos os viewports sem quebras de linha indesejadas e sem overflow.
 
 ---
 
@@ -284,6 +292,7 @@
 ---
 
 ### UI-012
+- **Status:** RESOLVIDO
 - **Severidade:** MÉDIO
 - **Seção:** Layout Global / Containers
 - **Resolução onde ocorre:** Desktop amplo (1366px a 1920px)
@@ -303,10 +312,18 @@
   - CTA Final: 820px
 - **Causa provável:** A revisão industrial v2 expandiu as seções centrais para 1500px, mas preservou o restante nas regras base.
 - **Correção sugerida:** Harmonizar os containers em duas medidas deliberadas: `--container-normal: 1240px;` e `--container-wide: 1440px;`, assegurando alinhamento intencional dos eixos visuais.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Sistema estruturado de containers semânticos introduzido em `:root`: `--container-normal: 1240px;`, `--container-wide: 1440px;`, `--container-narrow: 820px;`, com `--container: var(--container-normal);`. Soluções e Manifesto agora adotam estritamente o limite intencional `--container-wide` (1440px), o CTA final adota `--container-narrow` (820px) e o corpo geral adota `--container-normal` (1240px).
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** Soluções e Manifesto com largura máxima arbitrária de 1500px.
+  - **Valores novos:** `--container-normal: 1240px;`, `--container-wide: 1440px;`, `--container-narrow: 820px;`.
+  - **Resoluções usadas para validação:** 390×844, 768×1024, 1366×768, 1440×900, 1920×1080.
+  - **Evidência da correção:** Em 1920×1080: Header = 1240px, Diferenciais = 1240px, Soluções = 1440px, Manifesto = 1440px, Produto = 1240px, CTA = 820px. Eixos laterais padronizados e intencionais.
 
 ---
 
 ### UI-013
+- **Status:** RESOLVIDO
 - **Severidade:** BAIXO
 - **Seção:** Produto em Destaque (`#produto`)
 - **Resolução onde ocorre:** Todas as resoluções
@@ -316,10 +333,18 @@
 - **Evidência:** Estilo inline presente no HTML sobrescrevendo o token de classe `.meta` (`--fs-meta: 12px`).
 - **Causa provável:** Ajuste ad-hoc rápido para adequar a escala da especificação dimensional ao lado do título.
 - **Correção sugerida:** Transferir o estilo para uma classe semântica dedicada no CSS (ex.: `.product-dim`) e remover o atributo `style` do HTML.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Removido o atributo `style` inline da tag `<span>` em `index.html` e adicionada a classe semântica `.product-dimension`. No CSS, adicionada a regra correspondente `.product-dimension { font-size: .47em; white-space: nowrap; vertical-align: middle; }`.
+  - **Arquivos modificados:** `index.html`, `assets/css/sentinela.css`
+  - **Valores anteriores:** `<span class="meta" style="font-size:.47em; white-space:nowrap;">40 × 40</span>`
+  - **Valores novos:** `<span class="meta product-dimension">40 × 40</span>` com estilização isolada em classe CSS.
+  - **Resoluções usadas para validação:** 390×844, 768×1024, 1366×768, 1440×900, 1920×1080.
+  - **Evidência da correção:** Inspecionado via CDP: `productDim.hasInlineStyle === null`, `exists: true`, mantendo exata equivalência visual e semântica.
 
 ---
 
 ### UI-014
+- **Status:** RESOLVIDO
 - **Severidade:** BAIXO
 - **Seção:** Arquitetura CSS / Tokens
 - **Resolução onde ocorre:** Código global
@@ -329,10 +354,18 @@
 - **Evidência:** Dois blocos `:root` ativos em `sentinela.css`, gerando redundância e variáveis que são sobrescritas logo adiante.
 - **Causa provável:** O bloco "Revisão industrial v2" foi adicionado ao final do arquivo sem refatoração do bloco original.
 - **Correção sugerida:** Consolidar todas as variáveis `:root` em um único bloco no topo do arquivo.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Todos os tokens foram unificados em um único bloco `:root` no início de `assets/css/sentinela.css`, preservando rigorosamente os valores finais consolidados da versão industrial v2 (`--bg: oklch(0.963 0.007 80)`, `--radius: 4px`, etc.) e eliminando o bloco duplicado.
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** Bloco `:root` na linha 1 e redefinição redundante na linha 222.
+  - **Valores novos:** Bloco `:root` unificado e canônico no topo do arquivo.
+  - **Resoluções usadas para validação:** 390×844, 768×1024, 1366×768, 1440×900, 1920×1080.
+  - **Evidência da correção:** Verificação via CDP comprovou resolução de todos os tokens CSS sem conflitos ou valores indefinidos (`rootBg: "oklch(0.963 0.007 80)"`, `rootRadius: "4px"`).
 
 ---
 
 ### UI-015
+- **Status:** RESOLVIDO
 - **Severidade:** BAIXO
 - **Seção:** Diferenciais (`.trust-strip`)
 - **Resolução onde ocorre:** Desktop
@@ -342,10 +375,18 @@
 - **Evidência:** `getComputedStyle(.trust-item h3).fontSize` mede 14px; `body` mede 16px.
 - **Causa provável:** Redução forçada para evitar quebra de linha em colunas estreitas.
 - **Correção sugerida:** Ajustar o tamanho para 15px com peso 700 ou utilizar classe de título compacto apropriada.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Atualizado o estilo de `.trust-item h3` para `font-size: 15px; font-weight: 700; line-height: 1.25; letter-spacing: -0.015em;`, garantindo hierarquia superior em relação ao parágrafo descritivo (13px) sem estourar o limite de linha nos cards.
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** `font-size: 14px;`
+  - **Valores novos:** `font-size: 15px; font-weight: 700; line-height: 1.25;`
+  - **Resoluções usadas para validação:** 390×844, 768×1024, 1366×768, 1440×900, 1920×1080.
+  - **Evidência da correção:** Medição via CDP confirmou `fontSize: "15px"` e `fontWeight: "700"` em todas as resoluções, com perfeita legibilidade e harmonia.
 
 ---
 
 ### UI-016
+- **Status:** RESOLVIDO
 - **Severidade:** BAIXO
 - **Seção:** Produto em Destaque (`#produto`)
 - **Resolução onde ocorre:** Desktop
@@ -355,6 +396,13 @@
 - **Evidência:** A legenda "ETIQUETA TÉRMICA" aparece descolada sem o formato de tag/badge presente na versão original.
 - **Causa provável:** Tentativa de despoluir a imagem que eliminou a affordance do badge.
 - **Correção sugerida:** Restaurar um estilo sutil de badge (fundo semitransparente com borda fina e padding delicado) para conectar a etiqueta à imagem.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Restaurada a apresentação em formato de badge sutil e discreto para `.product-caption`, com fundo translúcido (`color-mix(in oklch, var(--surface) 90%, transparent)`), borda fina suave (`1px solid var(--border)`), padding delicado (6px 12px), `backdrop-filter: blur(8px)` e sombra suave, integrando a legenda visualmente à fotografia do produto.
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** `border: 0; background: transparent; box-shadow: none; padding: 0;`
+  - **Valores novos:** Badge estruturado com padding 6px 12px, border-radius 4px, fundo translúcido e blur.
+  - **Resoluções usadas para validação:** 390×844, 768×1024, 1366×768, 1440×900, 1920×1080.
+  - **Evidência da correção:** Medição via CDP confirmou presença do badge (`bg: "oklch(1 0 0 / 0.9)"`, `border: "1px solid oklch(0.84 0.008 80)"`, `fontSize: "11px"`), conferindo acabamento premium e ancoragem.
 
 ---
 

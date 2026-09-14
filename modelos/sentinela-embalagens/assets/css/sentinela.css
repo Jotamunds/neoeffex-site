@@ -1,10 +1,10 @@
 :root {
-      --bg: oklch(0.985 0.003 80);
+      --bg: oklch(0.963 0.007 80);
       --surface: oklch(1 0 0);
-      --fg: oklch(0.205 0.012 80);
+      --fg: oklch(0.177 0.008 80);
       --muted: oklch(0.49 0.012 80);
-      --border: oklch(0.88 0.006 80);
-      --accent: oklch(0.7 0.12 78);
+      --border: oklch(0.84 0.008 80);
+      --accent: oklch(0.694 0.123 80);
       --accent-soft: color-mix(in oklch, var(--accent) 14%, transparent);
       --fg-soft: color-mix(in oklch, var(--fg) 6%, transparent);
       --font-display: 'Manrope', 'Segoe UI', system-ui, sans-serif;
@@ -12,6 +12,9 @@
       --font-mono: ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, monospace;
       --fs-h1: clamp(48px, 6vw, 82px);
       --fs-h2: clamp(34px, 4vw, 52px);
+      --fs-h2-editorial: clamp(46px, 5.4vw, 88px);
+      --fs-h2-section: clamp(36px, 4vw, 64px);
+      --fs-h2-cta: clamp(30px, 3.4vw, 50px);
       --fs-h3: 21px;
       --fs-lead: 18px;
       --fs-body: 16px;
@@ -22,10 +25,13 @@
       --gap-lg: 32px;
       --gap-xl: 56px;
       --gap-2xl: 96px;
-      --container: 1200px;
+      --container-normal: 1240px;
+      --container-wide: 1440px;
+      --container-narrow: 820px;
+      --container: var(--container-normal);
       --gutter: 32px;
-      --radius: 10px;
-      --radius-lg: 16px;
+      --radius: 4px;
+      --radius-lg: 6px;
       --chrome-h: 116px;
     }
 
@@ -40,7 +46,7 @@
     h1, h2, h3, h4 { text-wrap: balance; }
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
-    .container { width: min(100%, var(--container)); margin-inline: auto; padding-inline: var(--gutter); }
+    .container { width: min(100%, var(--container-normal)); margin-inline: auto; padding-inline: var(--gutter); }
     .section { padding-block: clamp(64px, 9vw, var(--gap-2xl)); }
     .section + .section { border-top: 1px solid var(--border); }
     .stack { display: flex; flex-direction: column; }
@@ -57,6 +63,7 @@
     .lead { max-width: 52ch; margin: 0; color: var(--muted); font-size: var(--fs-lead); line-height: 1.55; }
     .eyebrow { margin: 0 0 var(--gap-md); color: var(--accent); font-family: var(--font-mono); font-size: 11px; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; }
     .meta { color: var(--muted); font-family: var(--font-mono); font-size: var(--fs-meta); }
+    .product-dimension { font-size: .47em; white-space: nowrap; vertical-align: middle; }
 
     .noticebar { min-height: 38px; background: var(--fg); color: color-mix(in oklch, var(--surface) 84%, transparent); font-size: 12px; }
     .noticebar .container { min-height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
@@ -110,7 +117,7 @@
     .trust-item:last-child { border-right: 0; }
     .trust-icon { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 9px; color: var(--fg); }
     .trust-icon svg { width: 17px; height: 17px; }
-    .trust-item h3 { font-size: 14px; }
+    .trust-item h3 { font-size: 15px; font-weight: 700; line-height: 1.25; letter-spacing: -0.015em; }
     .trust-item p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
 
     .section-intro { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 46px; }
@@ -219,18 +226,6 @@
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
     /* Revisão industrial v2 */
-    :root {
-      --bg: oklch(0.963 0.007 80);
-      --surface: oklch(1 0 0);
-      --fg: oklch(0.177 0.008 80);
-      --muted: oklch(0.49 0.012 80);
-      --border: oklch(0.84 0.008 80);
-      --accent: oklch(0.694 0.123 80);
-      --radius: 4px;
-      --radius-lg: 6px;
-      --container: 1240px;
-    }
-
     body { background: var(--bg); }
     .section + .section { border-top: 0; }
     .topnav { background: color-mix(in oklch, var(--bg) 94%, transparent); }
@@ -285,10 +280,10 @@
 
     .solutions-v2 { position: relative; overflow: hidden; padding: clamp(96px, 10vw, 156px) 0 clamp(108px, 12vw, 176px); background: var(--bg); }
     .solutions-v2::before { content: ''; position: absolute; z-index: 0; top: 5%; right: -13%; width: min(38vw, 580px); aspect-ratio: 1; border: 1px solid color-mix(in oklch, var(--fg) 7%, transparent); border-radius: 50%; }
-    .solutions-v2 .container { position: relative; z-index: 1; width: min(100% - clamp(56px, 10vw, 180px), 1500px); max-width: 1500px; }
+    .solutions-v2 .container { position: relative; z-index: 1; width: min(100% - clamp(56px, 10vw, 180px), var(--container-wide)); max-width: var(--container-wide); }
     .solutions-v2 .section-intro { display: block; max-width: 660px; margin-bottom: clamp(62px, 8vw, 116px); }
     .solutions-v2 .section-intro .eyebrow { margin-bottom: 18px; color: var(--accent); }
-    .solutions-v2 .section-intro h2 { max-width: 9ch; font-size: clamp(3rem, 5vw, 5.5rem); line-height: .96; letter-spacing: -.045em; }
+    .solutions-v2 .section-intro h2 { max-width: 9ch; font-size: clamp(40px, 4.6vw, 76px); line-height: .98; letter-spacing: -.042em; }
     .solutions-v2 .section-intro .lead { max-width: 600px; margin-top: 28px; color: var(--muted); font-size: clamp(18px, 1.45vw, 22px); line-height: 1.5; }
     .showcase-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(24px, 3vw, 60px); }
     .showcase-item { display: flex; min-width: 0; flex-direction: column; }
@@ -331,10 +326,10 @@
       pointer-events: none;
     }
     .manifest-symbol { position: absolute; z-index: 1; top: 4%; right: -5%; width: min(54vw, 850px); height: auto; opacity: .18; filter: brightness(.65) sepia(.4) saturate(1.2); mix-blend-mode: screen; }
-    .manifesto .container { position: relative; z-index: 3; width: min(100% - clamp(56px, 10vw, 180px), 1500px); max-width: 1500px; background: transparent; }
+    .manifesto .container { position: relative; z-index: 3; width: min(100% - clamp(56px, 10vw, 180px), var(--container-wide)); max-width: var(--container-wide); background: transparent; }
     .manifest-grid { display: grid; grid-template-columns: minmax(0, 46%) minmax(0, 54%); align-items: center; min-height: 540px; gap: 0; }
     .manifest-copy { max-width: 850px; padding: 0 clamp(28px, 4.2vw, 68px) 0 0; background: transparent; }
-    .manifest-copy h2 { max-width: 850px; font-size: clamp(3.5rem, 5vw, 6.2rem); line-height: .97; letter-spacing: -.045em; color: var(--fg); text-wrap: balance; }
+    .manifest-copy h2 { max-width: 850px; font-size: clamp(46px, 5.4vw, 88px); line-height: .98; letter-spacing: -.045em; color: var(--fg); text-wrap: balance; }
     .manifest-copy h2 span { color: var(--accent); }
     .manifest-copy .lead { max-width: 650px; margin-top: 30px; color: color-mix(in oklch, var(--fg) 66%, var(--bg)); font-size: clamp(18px, 1.5vw, 23px); line-height: 1.45; }
     .manifest-products { position: relative; min-height: 500px; background: transparent; }
@@ -356,11 +351,31 @@
     .product-figure { min-height: 500px; padding: 0; overflow: visible; border: 0; border-radius: 0; background: transparent; }
     .product-figure::before { width: min(78%, 410px); height: auto; aspect-ratio: 1; border-color: color-mix(in oklch, var(--accent) 44%, var(--border)); }
     .content-img { max-height: min(64vh, 600px); border-radius: 0; filter: drop-shadow(0 24px 28px color-mix(in oklch, var(--fg) 14%, transparent)); }
-    .product-caption { right: 0; bottom: 2%; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+    .product-caption {
+      position: absolute;
+      z-index: 2;
+      right: 16px;
+      bottom: 16px;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: color-mix(in oklch, var(--surface) 90%, transparent);
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px color-mix(in oklch, var(--fg) 6%, transparent);
+    }
     .product-copy { max-width: 35ch; }
+    .product-copy h2 { font-size: var(--fs-h2-section); line-height: 1.06; letter-spacing: -.038em; }
     .product-actions .btn-secondary { border-color: var(--fg); }
 
     .cta-band { background: var(--fg); }
+    .cta-band .container { width: min(100%, var(--container-narrow)); max-width: var(--container-narrow); }
+    .cta-band h2 { font-size: var(--fs-h2-cta); line-height: 1.12; letter-spacing: -.035em; max-width: 22ch; margin-inline: auto; }
     .pagefoot { background: color-mix(in oklch, var(--fg) 98%, black); }
 
     @media (max-width: 920px) {
@@ -373,7 +388,7 @@
       .hero-media img { max-height: min(48svh, 500px); }
       .hero-watermark { right: -32%; bottom: 9%; width: min(80vw, 460px); }
       .scroll-cue { display: none; }
-      .solutions-v2 .container, .manifesto .container { width: min(100% - 48px, 1500px); }
+      .solutions-v2 .container, .manifesto .container { width: min(100% - 48px, var(--container-wide)); }
       .showcase-list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 66px; }
       .showcase-visual { min-height: 360px; }
       .manifesto { min-height: 0; padding-top: 96px; background: radial-gradient(circle at 72% 34%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 34%), linear-gradient(131deg, var(--bg) 0%, color-mix(in oklch, var(--bg) 92%, var(--fg)) 36%, color-mix(in oklch, var(--bg) 61%, var(--fg)) 57%, color-mix(in oklch, var(--fg) 86%, var(--bg)) 77%, var(--fg) 100%); }
@@ -390,7 +405,7 @@
       .product-figure { min-height: 360px; }
     }
     @media (max-width: 767px) {
-      .solutions-v2 .container, .manifesto .container { width: min(100% - 40px, 1500px); }
+      .solutions-v2 .container, .manifesto .container { width: min(100% - 40px, var(--container-wide)); }
       .solutions-v2 { padding-top: 88px; }
       .solutions-v2 .section-intro { margin-bottom: 54px; }
       .solutions-v2 .section-intro h2 { max-width: 10ch; font-size: clamp(3rem, 13vw, 4.5rem); }

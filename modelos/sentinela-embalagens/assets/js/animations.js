@@ -120,6 +120,15 @@
             }
         }
 
+        const lazyImgs = document.querySelectorAll('.showcase-visual img[loading="lazy"]');
+        lazyImgs.forEach(function (img) {
+            if (!img.complete) {
+                img.addEventListener('load', function () {
+                    ScrollTrigger.refresh();
+                }, { once: true });
+            }
+        });
+
         window.addEventListener('load', function () {
             ScrollTrigger.refresh();
         }, { once: true });

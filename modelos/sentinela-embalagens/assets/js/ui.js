@@ -38,4 +38,49 @@
             form.reset();
         });
     }
+
+    const showcaseList = document.querySelector('.showcase-list');
+    const dots = document.querySelectorAll('.showcase-dot');
+    const showcaseItems = document.querySelectorAll('.showcase-item');
+
+    if (showcaseList && dots.length > 0 && showcaseItems.length > 0) {
+        let scrollRaf;
+        const updateActiveDot = function () {
+            const listLeft = showcaseList.getBoundingClientRect().left;
+            const listCenter = listLeft + showcaseList.clientWidth / 2;
+            let closestIndex = 0;
+            let minDistance = Infinity;
+
+            showcaseItems.forEach(function (item, index) {
+                const rect = item.getBoundingClientRect();
+                const itemCenter = rect.left + rect.width / 2;
+                const distance = Math.abs(listCenter - itemCenter);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestIndex = index;
+                }
+            });
+
+            dots.forEach(function (dot, index) {
+                dot.classList.toggle('is-active', index === closestIndex);
+            });
+        };
+
+        showcaseList.addEventListener('scroll', function () {
+            if (scrollRaf) cancelAnimationFrame(scrollRaf);
+            scrollRaf = requestAnimationFrame(updateActiveDot);
+        }, { passive: true });
+
+        dots.forEach(function (dot, index) {
+            dot.addEventListener('click', function () {
+                if (showcaseItems[index]) {
+                    showcaseItems[index].scrollIntoView({
+                        behavior: 'smooth',
+                        inline: 'center',
+                        block: 'nearest'
+                    });
+                }
+            });
+        });
+    }
 }());

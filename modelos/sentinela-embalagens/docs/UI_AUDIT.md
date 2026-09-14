@@ -223,6 +223,7 @@
 ---
 
 ### UI-007
+- **Status:** RESOLVIDO
 - **Severidade:** MÉDIO
 - **Seção:** Hero (`#inicio`)
 - **Resolução onde ocorre:** Mobile (360×800, 390×844)
@@ -232,6 +233,13 @@
 - **Evidência:** Em 360×800, a área central da primeira dobra (entre Y=320px e Y=480px) fica vazia apenas com o degradê de fundo, desconectando o botão de ação da imagem do produto.
 - **Causa provável:** A regra `min-height: 100svh` combinada com `justify-content: space-between` em `.hero-content` afasta os dois extremos em viewports alongadas.
 - **Correção sugerida:** Em telas menores que 480px, utilizar alinhamento centralizado ou fluxo natural com gap vertical controlado (ex.: `justify-content: center; gap: 32px;` e min-height adaptativa).
+- **Resolução Implementada:**
+  - **O que foi alterado:** Substituído o alinhamento `space-between` em `.hero-content` por fluxo natural com `justify-content: flex-start; gap: clamp(20px, 4vh, 36px); padding-top: clamp(84px, 11svh, 110px);`. A mídia do produto utiliza `margin-top: auto; margin-bottom: -2%;`, eliminando o vazio desproporcional central, mantendo o botão CTA em evidência com espaçamento orgânico e posicionando os rolos de etiquetas firmemente visíveis na primeira dobra.
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** `justify-content: space-between` com afastamento vertical de mais de 300px em 360×800.
+  - **Valores novos:** Espaçamento vertical controlado entre CTA e imagem: 50px em 360×800, 57px em 390×844 e 88px em 430×932.
+  - **Resoluções usadas para validação:** 360×800, 390×844, 430×932, 768×1024, 820×1180.
+  - **Evidência da correção:** Medição via CDP: em 360×800, `verticalGapBetweenCtaAndMedia: 50px`, CTA visível na dobra (Y=438px) e mídia logo abaixo (Y=488px) sem tela vazia e sem scroll horizontal.
 
 ---
 
@@ -249,6 +257,7 @@
 ---
 
 ### UI-009
+- **Status:** RESOLVIDO
 - **Severidade:** MÉDIO
 - **Seção:** Showcase de Soluções (`#solucoes`)
 - **Resolução onde ocorre:** Mobile (≤ 767px)
@@ -258,10 +267,18 @@
 - **Evidência:** O usuário só enxerga o card 1 e um pequeno recorte do card 2, sem affordance explícita de que existem mais 2 cards na sequência.
 - **Causa provável:** Aplicação de estilo estético limpo que eliminou o feedback de usabilidade para interação touch.
 - **Correção sugerida:** Incluir indicadores discretos de paginação (dots/bullets) abaixo da lista mobile ou uma dica de navegação ("Deslize para ver mais →").
+- **Resolução Implementada:**
+  - **O que foi alterado:** Implementado componente leve e elegante de affordance `.showcase-indicator` com 4 dots interativos logo abaixo do carrossel mobile. Em `sentinela.css`, o indicador é visível exclusivamente em viewports móveis (`display: flex; gap: 8px; margin-top: 24px;`) e oculto em desktop (`display: none;`). O dot ativo expande suavemente para 26px com a cor `--accent`. Em `assets/js/ui.js`, foi adicionada sincronização bidirecional de alta performance via `requestAnimationFrame` que atualiza o dot ativo durante o scroll touch e permite navegar diretamente clicando nos dots.
+  - **Arquivos modificados:** `index.html`, `assets/css/sentinela.css`, `assets/js/ui.js`
+  - **Valores anteriores:** Sem indicadores visuais de paginação ou rolagem.
+  - **Valores novos:** 4 dots com dot ativo de 26px e inativos de 8px; sincronização reativa com o item mais próximo.
+  - **Resoluções usadas para validação:** 360×800, 390×844, 430×932, 768×1024, 1440×900.
+  - **Evidência da correção:** Verificação via CDP comprovou `indicatorDisplay: "flex"` em mobile (360px, 390px, 430px) e `indicatorDisplay: "none"` em tablet/desktop (768px, 1440px). Teste de clique nos dots disparou rolagem fluida com sucesso.
 
 ---
 
 ### UI-010
+- **Status:** RESOLVIDO
 - **Severidade:** MÉDIO
 - **Seção:** Pilares (`.pillars`)
 - **Resolução onde ocorre:** Mobile (≤ 767px)
@@ -275,6 +292,13 @@
   .pillar { border-top: 0; }
   .pillar:nth-child(n+3) { border-top: 1px solid color-mix(in oklch, var(--surface) 17%, transparent); }
   ```
+- **Resolução Implementada:**
+  - **O que foi alterado:** Ajustado o seletor de divisórias da grelha 2×2 mobile no CSS para `.pillar { border-top: 0; }` e `.pillar:nth-child(n+3) { border-top: 1px solid color-mix(in oklch, var(--surface) 17%, transparent); }`. Mantido `border-left: 0` para itens ímpares.
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** `border-top: 1px solid ...` em todos os 4 pilares no mobile.
+  - **Valores novos:** Pilares 0 e 1 com `border-top: 0px`; Pilares 2 e 3 com `border-top: 1px`.
+  - **Resoluções usadas para validação:** 360×800, 390×844, 430×932, 768×1024, 820×1180.
+  - **Evidência da correção:** Medição programática via CDP em 360×800 e 390×844: `pillarsBorders[0].borderTop = '0px'`, `pillarsBorders[1].borderTop = '0px'`, `pillarsBorders[2].borderTop = '1px'`, `pillarsBorders[3].borderTop = '1px'`. A linha cinza superior no container foi eliminada.
 
 ---
 
@@ -407,6 +431,7 @@
 ---
 
 ### UI-017
+- **Status:** RESOLVIDO
 - **Severidade:** BAIXO
 - **Seção:** Performance / Lazy Loading
 - **Resolução onde ocorre:** Mobile (≤ 767px)
@@ -416,6 +441,13 @@
 - **Evidência:** Em teste automatizado CDP em mobile sem rolagem, `imgDimensions` do 4º item reportou 0×0px.
 - **Causa provável:** Combinação de `loading="lazy"` em carrossel horizontal com inicialização imediata do GSAP.
 - **Correção sugerida:** Definir proporção fixa de aspect ratio no container ou gerenciar o refresh do ScrollTrigger após o carregamento completo das imagens.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Adicionada propriedade `aspect-ratio: 1 / 1;` em `.showcase-visual img`, preservando reserva dimensional exata no layout box do navegador antes e durante o download do asset. Adicionalmente, em `assets/js/animations.js`, foram registrados event listeners de carregamento nas imagens com `loading="lazy"` do showcase para disparar `ScrollTrigger.refresh()` no momento do término do download, garantindo que coordenadas e gatilhos de rolagem permaneçam 100% calibrados sem provocar layout shifts.
+  - **Arquivos modificados:** `assets/css/sentinela.css`, `assets/js/animations.js`
+  - **Valores anteriores:** Sem reserva explícita de `aspect-ratio` no CSS e sem listeners de refresh em imagens lazy.
+  - **Valores novos:** `aspect-ratio: 1 / 1;` no CSS e listeners assíncronos no JS.
+  - **Resoluções usadas para validação:** 360×800, 390×844, 430×932, 768×1024, 1440×900.
+  - **Evidência da correção:** CDP confirmou `aspectRatio: "1 / 1"` ativo em todas as resoluções e ausência total de layout shifts ou travamentos no GSAP ScrollTrigger.
 
 ---
 

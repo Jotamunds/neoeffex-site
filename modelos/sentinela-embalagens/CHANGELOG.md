@@ -35,3 +35,11 @@ Nenhuma alteração visual intencional foi feita nesta etapa.
 - Correção UI-015: ajuste do título H3 dos diferenciais para 15px com peso 700, garantindo hierarquia sobre o texto corrido.
 - Correção UI-016: restauração de badge estruturado com fundo translúcido, borda fina e blur para a legenda `.product-caption`.
 
+## v0.1.4
+
+- Correção UI-007: otimização do fluxo vertical do Hero mobile com gap controlado, eliminando vazio excessivo entre CTA e imagem na primeira dobra.
+- Correção UI-009: adição de affordance para o carrossel mobile via indicadores de paginação interativos (`.showcase-indicator`), sincronizados via scroll touch e clique.
+- Correção UI-010: remoção de borda superior na primeira linha da grelha de pilares no mobile via seletor `:nth-child(n+3)`.
+- Correção UI-017: bloqueio de layout shifts com `aspect-ratio: 1 / 1` nas imagens de produtos e registro de listener de recálculo no `ScrollTrigger.refresh()`.
+
+

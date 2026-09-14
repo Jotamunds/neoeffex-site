@@ -46,5 +46,10 @@ Nenhuma alteração visual intencional foi feita nesta etapa.
 
 - Correção UI-008: preservação da visibilidade contínua da marca d'água no Manifesto, removendo inicialização em `autoAlpha: 0` e mantendo opacidade suave e estável com micro-ajuste de escala.
 
+## v0.1.6
+
+- Correção UI-011: refinamento da placa do logotipo no rodapé com superfície translúcida, desfoque de fundo, borda sutil e padding reduzido, integrando a marca ao rodapé escuro.
+
+
 
 

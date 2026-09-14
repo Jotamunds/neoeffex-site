@@ -160,9 +160,23 @@
     .cta-reassurance span::before { content: '•'; color: currentColor; }
 
     .pagefoot { padding: 62px 0 24px; background: color-mix(in oklch, var(--fg) 96%, var(--bg)); color: var(--surface); }
-    .footer-grid { display: grid; grid-template-columns: 1.1fr .8fr 1.25fr; gap: clamp(32px, 5vw, 72px); padding-bottom: 48px; }
-    .footer-logo-plate { display: grid; width: fit-content; place-items: center; padding: 12px 18px; background: var(--surface); border-radius: var(--radius); }
-    .footer-logo-image { display: block; width: 118px; height: auto; }
+    .footer-logo-plate {
+      display: grid;
+      width: fit-content;
+      place-items: center;
+      padding: 8px 14px;
+      background: color-mix(in oklch, var(--surface) 90%, transparent);
+      border: 1px solid color-mix(in oklch, var(--surface) 18%, transparent);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 16px color-mix(in oklch, black 25%, transparent);
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .footer-logo-plate:hover {
+      background: color-mix(in oklch, var(--surface) 96%, transparent);
+      border-color: color-mix(in oklch, var(--surface) 28%, transparent);
+    }
+    .footer-logo-image { display: block; width: 112px; height: auto; }
     .pagefoot .meta { color: color-mix(in oklch, var(--surface) 54%, transparent); }
     .footer-intro { margin: 20px 0 0; max-width: 28ch; color: color-mix(in oklch, var(--surface) 64%, transparent); font-size: 14px; }
     .footer-links { display: grid; gap: 10px; margin-top: 19px; }

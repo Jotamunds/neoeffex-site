@@ -311,6 +311,7 @@
 ---
 
 ### UI-011
+- **Status:** RESOLVIDO
 - **Severidade:** MÉDIO
 - **Seção:** Rodapé (`#contato` / `.pagefoot`)
 - **Resolução onde ocorre:** Todas as resoluções
@@ -320,6 +321,13 @@
 - **Evidência:** `.footer-logo-plate` possui `background: var(--surface); padding: 12px 18px; border-radius: 4px;`.
 - **Causa provável:** O asset de imagem utilizado (`07-logo-vertical-centralizado.png`) possui tipografia preta, inviabilizando sua aplicação direta sem fundo claro.
 - **Correção sugerida:** Utilizar uma versão monocromática branca/dourada do logotipo para aplicação em fundo escuro, ou suavizar a placa com fundo translúcido sutil em vez de branco 100% sólido.
+- **Resolução Implementada:**
+  - **O que foi alterado:** Reestruturada a apresentação da placa da logo `.footer-logo-plate`, substituindo o fundo branco opaco por uma superfície translúcida refinada com `background: color-mix(in oklch, var(--surface) 90%, transparent);`, borda sutil `border: 1px solid color-mix(in oklch, var(--surface) 18%, transparent);`, `backdrop-filter: blur(10px)` e sombra suave `box-shadow: 0 4px 16px color-mix(in oklch, black 25%, transparent)`. O padding foi reduzido de 12px 18px para 8px 14px e a largura da imagem foi ajustada para 112px, integrando o logotipo com harmonia ao rodapé grafite sem perder legibilidade.
+  - **Arquivos modificados:** `assets/css/sentinela.css`
+  - **Valores anteriores:** `background: var(--surface); padding: 12px 18px; border-radius: 4px;` (retângulo branco sólido).
+  - **Valores novos:** Fundo translúcido 90% com blur(10px), borda 18%, sombra suave e padding compacto de 8px 14px.
+  - **Resoluções usadas para validação:** 390×844, 1440×900, 1920×1080.
+  - **Evidência da correção:** Medição programática via CDP confirmou dimensões otimizadas (`w: 142px, h: 130px`), padding reduzido (`8px 14px`), `background: "oklch(1 0 0 / 0.9)"` e acabamento visual integrado.
 
 ---
 

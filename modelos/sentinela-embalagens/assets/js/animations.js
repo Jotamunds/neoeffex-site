@@ -21,6 +21,9 @@
         const heroHeading = document.querySelector('.hero-copy h1');
         const heroProduct = document.querySelector('.hero-media');
         const heroQuote = document.querySelector('.hero-cta .btn-primary');
+        const heroBrandLogo = document.querySelector('.hero-brand-logo');
+        const header = document.querySelector('.site-header');
+        const footer = document.querySelector('.pagefoot');
         const showcases = document.querySelector('.showcase-list');
         const manifesto = document.querySelector('.manifesto');
         const manifestCopy = document.querySelector('.manifest-copy');
@@ -28,13 +31,47 @@
         const manifestSymbol = document.querySelector('.manifest-symbol');
         const pillars = document.querySelector('.pillars');
 
+        if (header && footer) {
+            gsap.fromTo(header,
+                { opacity: 1, y: 0 },
+                {
+                    opacity: 0,
+                    y: -16,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: footer,
+                        start: 'top 85%',
+                        end: 'top 35%',
+                        scrub: true
+                    }
+                }
+            );
+        }
+
         if (heroCopy && heroHeading && heroProduct && heroQuote) {
             const heroTimeline = gsap.timeline({ defaults: { ease: 'power2.out' } });
+            if (heroBrandLogo) {
+                heroTimeline.fromTo(heroBrandLogo,
+                    { opacity: 0.01, y: 12 },
+                    { opacity: 1, y: 0, duration: 0.45 }
+                );
+            }
             heroTimeline
-                .from(heroCopy.querySelector('.eyebrow'), { y: 14, autoAlpha: 0, duration: .52 })
-                .from(heroHeading, { y: 25, autoAlpha: 0, duration: .92 }, '-=.22')
-                .from(heroProduct, { x: 26, autoAlpha: 0, scale: .94, duration: 1.05, transformOrigin: 'center bottom' }, '-=.7')
-                .from(heroQuote, { y: 12, autoAlpha: 0, duration: .5 }, '-=.4');
+                .fromTo(heroHeading,
+                    { opacity: 0.01, y: 20 },
+                    { opacity: 1, y: 0, duration: 0.55 },
+                    heroBrandLogo ? '-=.2' : 0
+                )
+                .fromTo(heroProduct,
+                    { opacity: 0.01, x: 26, scale: 0.95 },
+                    { opacity: 1, x: 0, scale: 1, duration: 0.7, transformOrigin: 'center bottom' },
+                    '-=.4'
+                )
+                .fromTo(heroQuote,
+                    { opacity: 0.01, y: 10 },
+                    { opacity: 1, y: 0, duration: 0.4 },
+                    '-=.3'
+                );
         }
 
         if (showcases) {

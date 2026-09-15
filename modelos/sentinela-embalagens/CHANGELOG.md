@@ -50,6 +50,9 @@ Nenhuma alteração visual intencional foi feita nesta etapa.
 
 - Correção UI-011: refinamento da placa do logotipo no rodapé com superfície translúcida, desfoque de fundo, borda sutil e padding reduzido, integrando a marca ao rodapé escuro.
 
+## v0.1.7
 
-
-
+- Correção refinada UI-004: remoção do pseudo-elemento `.manifesto::after` em `display: block` com gradiente vertical que gerava faixa horizontal reta e separada abaixo dos pilares.
+- O background diagonal claro → escuro do Manifesto agora estende-se como composição única e contínua até o término da seção com `padding-bottom: clamp(72px, 8vw, 120px)`.
+- Implementação de transição inferior sobreposta via `.manifesto::after` com `position: absolute`, `z-index: 1`, `pointer-events: none` e gradiente radial elíptico assimétrico que conecta organicamente a zona escura à seção clara `#produto` sem corte linear perceptível ou aumento artificial de altura.
+- Validação técnica e visual em 1366×768, 1440×900 e 1920×1080 com preservação integral de pilares, produtos e símbolo Sentinela.

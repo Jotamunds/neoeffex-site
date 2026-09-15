@@ -141,29 +141,39 @@
 - **Evidência:** `spaceBelowPillars === 0` confirmado em todos os viewports de teste. `.manifesto` tem `padding: clamp(...) 0 0;` (padding-bottom de 0px). `.pillars` fica colado na borda inferior da seção.
 - **Causa provável:** Ausência de padding inferior em `.manifesto` e término em bloco escuro monolítico contra o início de uma seção clara.
 - **Correção sugerida:** Adicionar respiro inferior em `.manifesto` (ex.: `padding-bottom: clamp(64px, 8vw, 110px)`) para que o degradê envolva os pilares, ou criar uma transição gradativa para o fundo branco.
-- **Resolução Implementada:**
-  - **O que foi alterado:** Criada uma zona de transição gradual contínua na saída do Manifesto via pseudo-elemento `.manifesto::after` com altura fluida `clamp(64px, 7vw, 110px)` e gradiente vertical multicamadas que conduz suavemente da cor escura dos pilares (`color-mix(in oklch, var(--fg) 94%, black)`) até o fundo branco da seção Produto em Destaque (`var(--surface)` / `#ffffff`). Sem adicionar bordas, sombras duras ou elementos decorativos alienígenas.
+- **Resolução Implementada (Refinada v0.1.7):**
+  - **O que foi alterado:** Remoção do pseudo-elemento em `display: block` com gradiente vertical que gerava faixa horizontal reta e separada abaixo dos pilares. O background diagonal claro → escuro do Manifesto foi estendido como composição única até o final da seção com `padding-bottom: clamp(72px, 8vw, 120px)`. A transição inferior foi implementada com `.manifesto::after` em `position: absolute; inset: auto 0 0 0; z-index: 1; pointer-events: none;`, sobreposto diretamente ao fundo da seção com gradiente radial elíptico assimétrico que dissolve suavemente o canto inferior direito escuro em direção à superfície clara (`var(--surface)`), eliminando qualquer linha horizontal evidente ou aumento artificial da altura da seção.
   - **Arquivos modificados:** `assets/css/sentinela.css`
-  - **Valores anteriores:** Sem pseudo-elemento (`spaceBelowPillars: 0px`). Corte seco e direto entre fundo escuro e fundo branco.
+  - **Valores anteriores:** Pseudo-elemento em `display: block` com `linear-gradient(to bottom)` criando faixa horizontal perceptível.
   - **Valores novos:**
     ```css
+    .manifesto {
+        padding: clamp(106px, 10vw, 158px) 0 clamp(72px, 8vw, 120px);
+    }
     .manifesto::after {
-        content: "";
-        display: block;
-        width: 100%;
-        height: clamp(64px, 7vw, 110px);
-        background: linear-gradient(
-            to bottom,
-            color-mix(in oklch, var(--fg) 94%, black) 0%,
-            color-mix(in oklch, var(--fg) 75%, black) 28%,
-            color-mix(in oklch, var(--fg) 35%, var(--surface)) 62%,
-            color-mix(in oklch, var(--fg) 10%, var(--surface)) 85%,
-            var(--surface) 100%
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: auto 0 0 0;
+        height: clamp(160px, 20vw, 260px);
+        background: radial-gradient(
+            ellipse 80% 120% at 85% 100%,
+            var(--surface) 0%,
+            color-mix(in oklch, var(--surface) 88%, transparent) 24%,
+            color-mix(in oklch, var(--surface) 48%, transparent) 54%,
+            color-mix(in oklch, var(--surface) 14%, transparent) 78%,
+            transparent 100%
         );
+        pointer-events: none;
     }
     ```
-  - **Resoluções usadas para validação:** 390×844, 768×1024, 1366×768, 1440×900, 1920×1080.
-  - **Evidência da correção:** Medição via CDP: `.manifesto::after` renderizado com altura de 64px a 110px. A passagem do Manifesto para o Produto em Destaque agora é suave, orgânica e sem seam visível em nenhum viewport.
+  - **Resoluções usadas para validação:** 375×812, 768×1024, 1366×768, 1440×900, 1920×1080.
+  - **Evidência da correção:** Medição e captura via CDP no Edge confirmando:
+    - `hasHScroll: false` em todos os viewports.
+    - `afterPosition === 'absolute'`.
+    - `afterZIndex === '1'` (mantendo pilares em z-index 2 e container em z-index 3 perfeitamente nítidos).
+    - Ausência total de faixa horizontal reta abaixo dos pilares.
+    - Transição contínua e suave da composição diagonal para a seção seguinte `#produto`.
 
 ---
 

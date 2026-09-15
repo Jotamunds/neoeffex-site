@@ -336,22 +336,21 @@
     .showcase-item:hover .btn-arrow::after { transform: translateX(5px); }
     .showcase-indicator { display: none; }
 
-    .manifesto { position: relative; min-height: clamp(850px, 67vw, 1000px); overflow: hidden; padding: clamp(106px, 10vw, 158px) 0 0; background: radial-gradient(circle at 71% 35%, color-mix(in oklch, var(--accent) 16%, transparent), transparent 32%), linear-gradient(108deg, var(--bg) 0%, color-mix(in oklch, var(--bg) 98%, var(--surface)) 25%, color-mix(in oklch, var(--bg) 86%, var(--fg)) 42%, color-mix(in oklch, var(--bg) 66%, var(--fg)) 54%, color-mix(in oklch, var(--bg) 40%, var(--fg)) 63%, color-mix(in oklch, var(--fg) 78%, var(--bg)) 74%, color-mix(in oklch, var(--fg) 92%, black) 86%, var(--fg) 100%); color: var(--fg); }
+    .manifesto { position: relative; min-height: clamp(850px, 67vw, 1000px); overflow: hidden; padding: clamp(106px, 10vw, 158px) 0 clamp(72px, 8vw, 120px); background: radial-gradient(circle at 71% 35%, color-mix(in oklch, var(--accent) 16%, transparent), transparent 32%), linear-gradient(108deg, var(--bg) 0%, color-mix(in oklch, var(--bg) 98%, var(--surface)) 25%, color-mix(in oklch, var(--bg) 86%, var(--fg)) 42%, color-mix(in oklch, var(--bg) 66%, var(--fg)) 54%, color-mix(in oklch, var(--bg) 40%, var(--fg)) 63%, color-mix(in oklch, var(--fg) 78%, var(--bg)) 74%, color-mix(in oklch, var(--fg) 92%, black) 86%, var(--fg) 100%); color: var(--fg); }
     .manifesto::before { position: absolute; z-index: 0; inset: 0; content: ''; background: radial-gradient(ellipse at 84% 74%, color-mix(in oklch, black 18%, transparent), transparent 44%); pointer-events: none; }
     .manifesto::after {
       content: '';
-      display: block;
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      height: clamp(64px, 7vw, 110px);
-      background: linear-gradient(
-        to bottom,
-        color-mix(in oklch, var(--fg) 94%, black) 0%,
-        color-mix(in oklch, var(--fg) 76%, var(--bg)) 30%,
-        color-mix(in oklch, var(--fg) 42%, var(--bg)) 58%,
-        color-mix(in oklch, var(--bg) 88%, var(--surface)) 82%,
-        var(--surface) 100%
+      position: absolute;
+      z-index: 1;
+      inset: auto 0 0 0;
+      height: clamp(160px, 20vw, 260px);
+      background: radial-gradient(
+        ellipse 80% 120% at 85% 100%,
+        var(--surface) 0%,
+        color-mix(in oklch, var(--surface) 88%, transparent) 24%,
+        color-mix(in oklch, var(--surface) 48%, transparent) 54%,
+        color-mix(in oklch, var(--surface) 14%, transparent) 78%,
+        transparent 100%
       );
       pointer-events: none;
     }
